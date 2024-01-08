@@ -1,0 +1,39 @@
+services:
+
+  postgres:
+    container_name: postgres
+    image: postgres:latest
+    restart: on-failure
+    env_file:
+      - .dbenv
+    ports:
+      - "5432:5432"
+    volumes:
+      - /var/db_data:/var/lib/postgresql/data
+  
+  pgadmin:
+    container_name: pgadmin4
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: root
+    ports:
+      - "8080:80"
+ 
+#   db:
+#     image: postgres
+#     restart: always
+#     environment:
+#       POSTGRES_PASSWORD: example
+#     volumes:
+# - pgdata:/var/lib/postgresql/data
+ 
+# volumes:
+#   pgdata:
+ 
+#   adminer:
+#     image: adminer
+#     restart: always
+#     ports:
+#       - 8080:8080
