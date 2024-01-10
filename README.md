@@ -2,7 +2,6 @@
 
 ## Table of Contents
 1. [Installation](#installation)
-    - [Step 1: Configuring SSH](#step-1-configuring-ssh)
 2. [FrontEnd](#frontend)
     - [Figma](#figma)
 3. [BackEnd](#backend)
@@ -10,7 +9,7 @@
     - [Web](#web)
     - [User](#user)
     - [Game](#game)
-    - [IA-Algo](#is-algo)
+    - [IA-Algo](#ia-algo)
     - [Cybersecurity](#cybersecurity)
     - [Devops](#devops)
     - [Graphics](#graphics)
@@ -18,6 +17,13 @@
     - [OOP](#oop)
 
 ## Introduction
+
+The project will be divided into `16 major` and `11 minor` modules. To get 100 points, you need to complete `7 major` modules, note that `2 minor modules = 1 major module`. Modules will represent properties or additional features that your project can have. In other words, you will not be required to do all the modules, you can choose some of them.
+
+Examples of modules are using a framework in the backend or frontend, giving your users additional features related to the game, making the program available for all devices, or using 3D techniques.
+
+- Major 11
+- Minor 4
 
 ## Installation
 
@@ -54,26 +60,52 @@ Web Designe
 
 ## BackEnd
 
-### Backend
-
-Backend
+- non
 
 ## Modules
 
 ### Web
 
+- Major module: Use a Framework as backend.
+- Minor module: Use a database for the backend.
+
 ### User
+
+- Major module: Standard user management, authentication, users across
+tournaments.
+- Major module: Implementing a remote authentication.
 
 ### Game
 
-### IA### go
+- Major module: Remote players
+- Major module: Multiple players
+- Major module: Add Another Game with User History and Matchmaking.
+- Major module: Live chat.
+- Minor module: Game Customization Options.
+
+### IA-Algo
+
+- non
 
 ### Cybersecurity
 
+- Major module: Implement Two-Factor Authentication (2FA) and JWT.
+
 ### Devops
+
+- Major module: Infrastructure Setup for Log Management.
 
 ### Graphics
 
+- non
+
 ### Accessibility
 
+- Minor module: Support on all devices.
+- Minor module: Multiple language supports.
+
 ### OOP
+
+- Major module: Replacing Basic Pong with Server-Side Pong and Implementing an API.
+- Major module: Enabling Pong Gameplay via CLI against Web Users with API
+Integration.
