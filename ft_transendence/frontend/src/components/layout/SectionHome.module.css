@@ -1,0 +1,33 @@
+.homeSection {
+    align-items: start;
+    border-radius: 20px;
+    padding: 50px 80px;
+    background: var(--background-color, 
+    radial-gradient(66.54% 118.23% at 37.47% 107.32%, #D9CBFD 0%, #7758D1 100%));
+}
+.stylemain {
+  display: flex;
+  max-width: 960px;
+  height: 600px;
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.20) 0%, rgba(0, 0, 0, 0.20) 100%), rgba(0, 0, 0, 0.20);
+}
+
+.left{
+  min-width: 76px;
+  width: 203px;
+  height:max-content;
+  align-items: center;
+  background: rgba(29, 32, 62, 0.30);
+  backdrop-filter: blur(10px);
+}
+
+.midle{
+  width: 694px;
+}
+
+
+.right{
+  width: 190px;
+  background: #1D203E;
+  box-shadow: 1px 0px 0px 0px rgba(255, 255, 255, 0.10) inset;
+}

@@ -1,0 +1,35 @@
+.Threepoint{
+    align-items: center;
+    width: 25px;
+    height: 25px;
+}
+
+.Explore{
+    display: flex;
+    color: white;
+    gap: 16px;
+    align-items: center;
+    padding-left: 24px;
+    border-bottom: 2px solid gray;
+}
+
+.link {
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    text-decoration: none;
+    padding-left: 16px;
+}
+
+.NamvMenu{
+    width: all;
+    height: 530px;
+    flex-direction: column;
+}
+
+.nav{
+    display: flex;
+    flex-direction: column;
+    height: 475px;
+}
