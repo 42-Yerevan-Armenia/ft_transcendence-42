@@ -12,4 +12,6 @@ COPY . .
 
 EXPOSE 8000
 
+CMD [".", "../venv/bin/activate"]
+
 CMD ["python3", "manage.py","runserver"]
