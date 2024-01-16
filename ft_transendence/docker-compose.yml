@@ -1,6 +1,20 @@
 version: '3.8'
 
 services:
+  backend:
+    container_name: backend
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    image: transendence_backend
+    volumes:
+      - ${PWD}/backend:/app/backend
+    ports:
+      - 8000:8000
+    restart: unless-stopped
+    depends_on:
+      - postgres
+
   postgres:
     container_name: postgres
     image: postgres:latest
@@ -21,20 +35,3 @@ services:
       PGADMIN_DEFAULT_PASSWORD: root
     ports:
       - "8080:80"
- 
-#   db:
-#     image: postgres
-#     restart: always
-#     environment:
-#       POSTGRES_PASSWORD: example
-#     volumes:
-# - pgdata:/var/lib/postgresql/data
- 
-# volumes:
-#   pgdata:
- 
-#   adminer:
-#     image: adminer
-#     restart: always
-#     ports:
-#       - 8080:8080
