@@ -51,6 +51,15 @@ Run django server.
 
 ## FrontEnd
 
+Install nvm only one time 
+- 1)curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+- 2)npm install node
+- 3)
+export NVM_DIR="$HOME/.nvm"
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+- 4)nvm install node
+- 5)nvm install node --reinstall-packages-from=node
+
 ### Figma
 
 Web Designe

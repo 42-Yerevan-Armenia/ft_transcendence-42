@@ -13,4 +13,6 @@ RUN python3 -m venv venv && \
 
 COPY . .
 
+EXPOSE 8000
+
 CMD ["/bin/bash", "backend.sh"]

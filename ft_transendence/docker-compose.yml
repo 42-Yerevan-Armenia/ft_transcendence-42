@@ -1,12 +1,23 @@
 version: '3.8'
 
 services:
+  frontend:
+    container_name: frontend
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    volumes:
+      - ${PWD}/frontend:/app/frontend
+    ports:
+      - 3000:3000
+    restart: unless-stopped
+    command: npm run dev
+
   backend:
     container_name: backend
     build:
       context: .
       dockerfile: backend/Dockerfile
-    image: transendence_backend
     volumes:
       - ${PWD}/backend:/app/backend
     ports:
