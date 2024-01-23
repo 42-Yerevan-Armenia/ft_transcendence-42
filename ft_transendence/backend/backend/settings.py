@@ -25,12 +25,14 @@ SECRET_KEY = 'django-insecure-shoiy7ep%ii6jr4yp+nd9nd%x_nl1(br#pu7yvwxf(k)wyfa6s
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'blog.apps.BlogConfig',
+    'users.apps.UsersConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -123,3 +125,8 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+#ADDS
+
+LOGIN_REDIRECT_URL = 'blog-home'
+LOGIN_URL = 'login'
