@@ -1,5 +1,5 @@
 import { Inter } from 'next/font/google'
-import './globals.css'
+import Style from './globals.css'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -14,7 +14,7 @@ export default function RootLayout({ children }) {
       <body className={inter.className}>
         <main>
           <header>
-            <h1>ft_transcendence</h1>
+            <h2>ft_transcendence</h2>
           </header>
           {children}
           <footer>
