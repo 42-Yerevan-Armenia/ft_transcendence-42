@@ -3,7 +3,11 @@ import * as React from "react";
 import LeftSection from '@/components/layout/LeftSection/LeftSection';
 import Style from './SectionHome.module.css';
 import Midle from '@/components/layout/midle/Midle';
-import Right from '@/components/layout/right/Right'
+import Right from '@/components/layout/right/Right';
+import MidleSettings from '@/components/layout/settings/MidleSettings';
+import MidleCub from '@/components/layout/cub/MidleCub';
+
+
 
 export default function SectionHome(props) {
   return (
@@ -15,6 +19,11 @@ export default function SectionHome(props) {
           <div className={Style.midle}>
             <Midle />
           </div>
+          
+          <MidleSettings/>
+
+          <MidleCub/>
+
           <div className={Style.right}>
             <Right/>
           </div>

@@ -19,6 +19,7 @@
     padding-right: 15px;
     border-radius: 10px;
     background-color: #00A3FF;
+    text-decoration: none;
     color: white;
     font-size: 20px;
     -webkit-text-stroke-width: 1px;
@@ -46,7 +47,7 @@
 .Rightsignup{
     display: flex;
     justify-content: center;
-    align-items: flex-start;;
+    align-items: flex-start;
 }
 
 .RightgninupButton{
@@ -55,6 +56,7 @@
         background-color: #D823D7;
         color: white;
         font-size: 20px;
+        text-decoration: none;
         -webkit-text-stroke-width: 1px;
 }
 
