@@ -7,7 +7,7 @@
 }
 .stylemain {
   display: flex;
-  max-width: 960px;
+  max-width: 1050px;
   height: 600px;
   margin-left: auto;
   margin-right: auto;
@@ -17,7 +17,7 @@
 .left{
   min-width: 76px;
   width: 27%;
-  height:max-content;
+  height:100%;
   align-items: center;
   background: rgba(29, 32, 62, 0.30);
   backdrop-filter: blur(10px);
@@ -48,6 +48,9 @@
   .right{
     width: 100px;
   }
+  .left{
+    width: 76px;
+  }
 }
 
 @media only screen and (max-width: 779px){
@@ -57,29 +60,35 @@
   .SigninSignout{
     display: block;
   }
+  .midle{
+    width: 100%;
+  }
+  .topplayers{
+    width: 81%;
+  }
 }
 
-@media only screen and (max-width: 680px){
+
+
+
+
+
+
+
+@media only screen and (max-width: 734px){
   .midle{
     width: 100%;
     justify-content: center;
   }
-  .left{
-    width: 70px;
-  }
+}
+@media only screen and (max-width: 300px){
   .topplayers{
-    padding: 0;
+    width: 95%;
   }
 }
 
 
 
-
-
-
-
-
-
-.midle{
+/* .midle{
   display: none;
-}
+} */

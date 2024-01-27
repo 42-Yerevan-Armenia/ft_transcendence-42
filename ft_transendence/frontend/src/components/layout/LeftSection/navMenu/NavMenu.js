@@ -16,7 +16,7 @@ export default function NavMenu(user=""){
                 <div className={Styles.Threepoint}>
                     <Threepoint/>
                 </div>
-                <p>
+                <p className={Styles.navLinkP}>
                     Explore
                 </p>
             </div>
@@ -25,30 +25,37 @@ export default function NavMenu(user=""){
                 <div>
                     <Link href={'/'} className={Styles.link} >
                         <CompasIcon />
-                        <p>Home</p>
+                        <p className={Styles.navLinkP}>Home</p>
                     </Link>
                     <Link href={''} className={Styles.link}>
                         <MenIcon />
-                        <p>Profile</p>
+                        <p className={Styles.navLinkP}>Profile</p>
                     </Link>
                     <Link href={''} className={Styles.link}>
                         <GameIcon />
-                        <p>Game</p>
+                        <p className={Styles.navLinkP}>Game</p>
                     </Link>
                     <Link href={''} className={Styles.link}>
                         <CupIcon/>
-                        <p>Leaderboard</p>
+                        <p className={Styles.navLinkP}>Leaderboard</p>
                     </Link>
                     <Link href={''} className={Styles.link}>
                         <CameraIcon/>
-                        <p>Live</p>
+                        <p className={Styles.navLinkP}>Live</p>
                     </Link>
                     <Link href={''} className={Styles.link}>
                         <Settings/>
-                        <p>Settings</p>
+                        <p className={Styles.navLinkP}>Settings</p>
                     </Link>
+                    <div className={Styles.NavSigninSignout}>
+                        <div className={Styles.NavSignin}>
+                            SignIn
+                        </div>
+                        <div className={Styles.NavSignUp}>
+                            SignUp
+                        </div>
+                    </div>
                 </div>
-                
                 <UserBar />
             </nav>
         </div>

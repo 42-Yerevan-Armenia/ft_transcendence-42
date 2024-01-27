@@ -1,0 +1,302 @@
+.midle{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-top: 10px;
+}
+
+.pingPong{
+    border-radius: 10px;
+    overflow: hidden;
+    background-color: #1B8CCE;
+}
+
+.divpingPong{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.midleplayers{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.topplayers{
+    border-radius: 10px;
+    width: 78%;
+    height: 150px;
+    border: 2px solid #1B8CCE;
+    padding-left: 20px;
+}
+
+.top{
+    font-family: Arial;
+    color: white;
+    margin-top: 5px;
+    margin-bottom: 3px;
+}
+
+.players{
+    display: flex;
+    gap: 8px;
+}
+
+.item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100px;
+    height: 120px;
+    border-radius: 10px;
+}
+
+.imag{
+    width: 60px;
+    height: 60px;
+    border-radius: 10px;
+}
+
+.itemName{
+    color: white;
+    margin: 2px;
+    margin-top: 6px;
+}
+.itemP{
+    width: 100%;
+    margin: 2px;
+    font-size: 14px;
+    color:#1B8CCE
+}
+
+
+.live {
+    display: flex;
+    gap: 10px;
+    padding-left: 71px;
+    justify-content: flex-start;
+}
+
+.liveNow{
+    border: 2px solid #1B8CCE;
+    width: 230px;
+    border-radius: 10px;
+    margin: 0;
+    padding-left: 10px;
+}
+
+.liveNowH6{
+    margin-bottom: 8px;
+    margin-top: 8px;
+    color: white;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.PlayIcon{
+    position: relative;
+    width: 25px;
+    height: 25px;
+    border-radius: 10px;
+    top:-27px;
+    left: 35px;
+    fill-opacity: 0.9;
+}
+
+.AllItem{
+    display: flex;
+    flex-direction: column;
+    height: 130px;
+}
+
+.row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    padding-top: 4px;
+}
+      
+.liveitem{
+    height: 60px;
+}
+
+.howtoplay{
+    border: 2px solid #1B8CCE;
+    width: 230px;
+    border-radius: 10px;
+    margin: 0;
+    padding-left: 10px;
+}
+
+.howtoplayH6{
+    margin-bottom: 8px;
+    margin-top: 8px;
+    color: white;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.howtoplayP{
+    color: white;
+    font-size: 11px;
+}
+
+
+
+
+@media only screen and (max-width: 734px){
+    .pingPong{
+        width:  81%;
+        height: auto;
+    }
+    .divpingPong{
+        height: auto;
+        justify-content: center;
+    }
+    .live{
+        display: flex;
+        flex-direction: column-reverse;
+    }
+    .liveMen{
+        display: none;
+    }
+    .item:not(:nth-child(3n)):nth-child(2n):nth-child(1n){
+        display: none;
+    }
+    .players{
+        justify-content:space-around;
+    }
+    .howtoplayH6{
+        margin: 0;
+        margin-top: 3px;
+    }
+    .howtoplayP{
+        margin: 5px 0;
+    }
+    .liveNowH6{
+        margin: 3px;
+    }
+}
+
+@media only screen and (max-width: 515px){
+    .pingPong{
+        width:  300px;
+    }
+}
+
+@media only screen and (max-width: 434px){
+    .item:nth-child(3n){
+        display: none;
+    }
+}
+@media only screen and (max-width: 407px){
+    .pingPong{
+        width:  200px;
+    }
+    .midle{
+        padding: 0;
+    }
+    .live{
+        padding-left: 5px;
+    }
+}
+@media only screen and (max-width: 352px){
+    .pingPong{
+        width:  200px;
+    }
+    .midle{
+        padding: 0;
+    }
+    .live{
+        padding-left: 5px;
+    }
+    .liveNow{
+        width: 174px;
+    }
+    .AllItem{
+        width: 174px;
+    }
+    .imag{
+        width: 50px;
+        height: 50px;
+        border-radius: 10px;
+    }
+    .PlayIcon{
+        left:24px;
+    }
+    .row {
+        gap:2px;
+        width: 176px;
+    }
+    .item{
+        width: 80px;
+    }
+    .topplayers{
+        width: 170px;
+    }
+    .howtoplay{
+        width: 170px;
+    }
+}
+
+@media only screen and (max-width: 300px){
+    .pingPong{
+        width:  170px;
+        padding: 0;
+        margin: 0;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .divpingPong{
+        width: 175px;
+    }
+    .midleplayers {
+        width: 165px;
+        
+    }
+    .players{
+        width: 165px;
+    }
+    .top{
+        margin: 0;
+        padding: 0;
+    }
+    .midleplayers{
+        width: 175px;
+        padding: 0;
+        margin: 0;
+    }
+    .topplayers{
+        width: 95%;
+        padding: 1px;
+        height: 136px;
+    }
+    .howtoplay, .howtoplay{
+        width: 170px;
+    }
+    .row{
+        width: 156px;
+    }
+    .AllItem{
+        width: 160px;
+        height: 119px;
+    }
+    .liveNow{
+        width: 161px;
+        height: 150px;
+    }
+    .howtoplay{
+        width: 158px;
+        font-size: 10px;
+    }
+    .players{
+        justify-content:space-around;
+    }
+    .liveNowH6{
+        margin:2px 0px;
+    }
+    .item{
+        height: 107px;
+    }
+
+}
