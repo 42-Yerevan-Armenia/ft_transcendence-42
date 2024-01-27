@@ -16,7 +16,7 @@
 
 .left{
   min-width: 76px;
-  width: 203px;
+  width: 27%;
   height:max-content;
   align-items: center;
   background: rgba(29, 32, 62, 0.30);
@@ -72,3 +72,14 @@
   }
 }
 
+
+
+
+
+
+
+
+
+.midle{
+  display: none;
+}
