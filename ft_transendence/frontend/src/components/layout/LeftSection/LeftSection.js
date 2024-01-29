@@ -2,6 +2,7 @@ import Image from 'next/image'
 import Stule from "./LeftSection.module.css";
 import NavMenu from "./navMenu/NavMenu"
 
+
 export default function LeftSection(user=""){
     return (
         <div className={Stule.LeftSection}>

@@ -1,9 +1,10 @@
 import Stule from './Right.module.css';
 import Link from  'next/link';
 
+
 export default function Right(){
     return(
-        <div className={Stule.Rightsection}>
+        <div className={Stule.Rightsection} >
             <div className={Stule.Rightsignin}>
                 <Link href={'/login'} className={Stule.RightsigninButton}>
                     Sign in
