@@ -8,8 +8,18 @@ import CupIcon from "../../../icons/CupIcon";
 import CameraIcon from "../../../icons/CameraIcon";
 import Settings from "../../../icons/Settings";
 import UserBar from "./userBar/UserBar"
+import { useDispatch } from 'react-redux';
+import {MiddleShow} from '@/redux/features/dataSlice';
+
+
+
 
 export default function NavMenu(user=""){
+    function HomeMidle(){
+        
+    }
+
+    const dispatch = useDispatch();
     return(
         <div className={Styles.NamvMenu}>
             <div className={Styles.Explore}>
@@ -23,30 +33,49 @@ export default function NavMenu(user=""){
 
             <nav className={Styles.nav}>
                 <div>
-                    <Link href={'/'} className={Styles.link} >
+                    <div className={Styles.link} onClick={()=>{
+                        dispatch(MiddleShow({homeConteiner: true}))
+                        }} id="CompasIcon">
                         <CompasIcon />
                         <p className={Styles.navLinkP}>Home</p>
-                    </Link>
-                    <Link href={''} className={Styles.link}>
+                    </div>
+
+                    <div onClick={()=>{
+                        dispatch(MiddleShow({Profile: true}))
+                        }}
+                        className={Styles.link} id="MenIcon">
                         <MenIcon />
                         <p className={Styles.navLinkP}>Profile</p>
-                    </Link>
-                    <Link href={''} className={Styles.link}>
+                    </div>
+
+                    <div onClick={()=>{
+                        dispatch(MiddleShow({Game: true}))
+                        }} className={Styles.link}>
                         <GameIcon />
                         <p className={Styles.navLinkP}>Game</p>
-                    </Link>
-                    <Link href={''} className={Styles.link}>
+                    </div>
+
+                    <div onClick={()=>{
+                        dispatch(MiddleShow({Leaderboard: true}))
+                        }} className={Styles.link}>
                         <CupIcon/>
                         <p className={Styles.navLinkP}>Leaderboard</p>
-                    </Link>
-                    <Link href={''} className={Styles.link}>
+                    </div>
+
+                    <div onClick={()=>{
+                        dispatch(MiddleShow({ Live: true }))
+                        }}  className={Styles.link}>
                         <CameraIcon/>
                         <p className={Styles.navLinkP}>Live</p>
-                    </Link>
-                    <Link href={''} className={Styles.link}>
+                    </div>
+
+                    <div onClick={()=>{
+                        dispatch(MiddleShow({ Settings: true }))
+                        }}  className={Styles.link}>
                         <Settings/>
                         <p className={Styles.navLinkP}>Settings</p>
-                    </Link>
+                    </div>
+
                     <div className={Styles.NavSigninSignout}>
                         <div className={Styles.NavSignin}>
                             SignIn

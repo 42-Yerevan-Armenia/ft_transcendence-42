@@ -52,11 +52,11 @@
                             </div>
                             
                             <div class="ConfirmPageCode">
-                                <input class="ConfirmPagepassword"></input>
-                                <input class="ConfirmPagepassword"></input>
-                                <input class="ConfirmPagepassword"></input>
-                                <input class="ConfirmPagepassword"></input>
-                                <input class="ConfirmPagepassword"></input>
+                                <input class="ConfirmPagepassword" value=""></input>
+                                <input class="ConfirmPagepassword" value=""></input>
+                                <input class="ConfirmPagepassword" value=""></input>
+                                <input class="ConfirmPagepassword" value=""></input>
+                                <input class="ConfirmPagepassword" value=""></input>
                             </div>
 
                             <div class="ConfirmPageContinue">Signin</div>
@@ -76,16 +76,20 @@
                                 <h2 class="LoginPageH2">Welcome Back</h2>
                                 <p class="LoginPageP">Signin to your account</p>
                             </div>
-                            <input placeholder='northstargroup@gmail.com' class="LoginPageinput"></input>
-                            <input placeholder='password' class="password"></input>
-                            <a href="/" class="LoginPageForgot">Forgot Password?</a>
-                            <div class="LoginPageContinue">Signin</div>
+                            <input placeholder='northstargroup@gmail.com' class="LoginPageinput" value="" type="email"></input>
+                            <div class="LoginEmailError"></div>
+                            <input placeholder='password' class="password LoginPageinputpassword" type="password" value=""></input>
+                            <div class="LoginPasswordError"></div>
+                            <div class="LoginPageForgotDiv">
+                                <a href="/" class="LoginPageForgot" >Forgot Password?</a>
+                            </div>
+                            <button class="LoginPageContinue" type="button">Signin</button>
                             <div class="LoginPageOR">
                                 <div class="Loginline"></div>OR<div class="Loginline"></div>
                             </div>
-                            <div class="LoginPageContinueWith42">
+                            <button class="LoginPageContinueWith42" type="button">
                                 Continue with 42intra
-                            </div>
+                            </button>
                         </div>
                     </div>        
                 </div>
@@ -103,14 +107,17 @@
                                     42intra account.
                                 </p>
                             </div>
-                            <input placeholder='northstargroup@gmail.com' class="RegisterPageinput"></input>
-                            <div class="RegisterPageContinue">Continue with email</div>
+                            <input placeholder='northstargroup@gmail.com' class="RegisterPageinput" type="email" value=""></input>
+                            <div class="RegisterErrorHandling"></div>
+                            <button class="RegisterPageContinue" type="button">Continue with email</button>
+                            
                             <div class="RegisterPageOR">
                                 <div class="Registerline"></div>OR<div class="Registerline"></div>
                             </div>
-                            <div class="RegisterPageContinueWith42">
+                            
+                            <button class="RegisterPageContinueWith42" type="button">
                                 Continue with 42intra
-                            </div>
+                            </button>
                         </div>
                     </div>        
                 </div>
@@ -143,7 +150,8 @@
                     
                                 <nav class="nav">
                                     <div>
-                                        <a href="#" class="link" >
+                                        <!-- href="#" -->
+                                        <div class="link LEFTHOME" >
                                             <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
                                                 <g opacity="0.9">
                                                 <path d="M12.3483 12.3484L19.4194 10.5806L17.6516 17.6517L10.5806 19.4194L12.3483 12.3484Z" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
@@ -153,8 +161,9 @@
 
                                             
                                             <p class="navLinkP">Home</p>
-                                        </a>
-                                        <a href="#" class="link">
+                                        </div>
+                                        <!-- href="#" -->
+                                        <div href="#" class="link PROFIL">
 
                                             <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
                                                 <g opacity="0.9">
@@ -163,8 +172,9 @@
                                                 </g>
                                             </svg> 
                                             <p class="navLinkP">Profile</p>
-                                        </a>
-                                        <a href="#" class="link">
+                                        </div>
+                                        <!-- href="#" -->
+                                        <div href="#" class="link GAME">
                                     
                                             <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
                                                 <g opacity="0.9">
@@ -178,9 +188,9 @@
 
 
                                             <p class="navLinkP">Game</p>
-                                        </a>
-                                        <a href="#" class="link">
-                                        
+                                        </div>
+                                        <!-- href="#" -->
+                                        <div  class="link  LEADERBOARD">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 30 30" fill="none">
                                                 <g opacity="0.9">
                                                     <path fillRule="evenodd" clipRule="evenodd" d="M6.17417 5.23667C6.52581 4.88504 7.00272 4.6875 7.5 4.6875H22.5C22.9973 4.6875 23.4742 4.88504 23.8258 5.23667C24.1775 5.58831 24.375 6.06522 24.375 6.5625V13.125C24.375 14.3616 24.1304 15.586 23.6552 16.7277C23.18 17.8694 22.4836 18.9058 21.6061 19.7772C20.7287 20.6486 19.6875 21.3378 18.5425 21.8051C17.3976 22.2724 16.1715 22.5086 14.9349 22.5L14.9343 22.5C9.75265 22.4608 5.625 18.1724 5.625 13.0195V6.5625C5.625 6.06522 5.82254 5.58831 6.17417 5.23667ZM22.5 6.5625L7.5 6.5625L7.5 13.0195C7.5 17.1713 10.8255 20.5939 14.9485 20.625C15.9376 20.6318 16.9183 20.4429 17.834 20.0691C18.75 19.6953 19.583 19.1439 20.2849 18.4468C20.9869 17.7497 21.544 16.9206 21.9242 16.0072C22.3043 15.0939 22.5 14.1143 22.5 13.125V6.5625Z" fill="white"/>
@@ -192,8 +202,9 @@
                                             </svg>
 
                                             <p class="navLinkP">Leaderboard</p>
-                                        </a>
-                                        <a href="#" class="link">
+                                        </div>
+                                        <!-- href="#" -->
+                                        <div  class="link LIVE">
                                             
                                             <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
                                                 <path fillRule="evenodd" clipRule="evenodd" d="M1.48667 6.64292C1.83831 6.29129 2.31522 6.09375 2.8125 6.09375H17.8125C19.0557 6.09375 20.248 6.58761 21.1271 7.46669C22.0061 8.34576 22.5 9.53805 22.5 10.7812V22.0312C22.5 22.5285 22.3025 23.0054 21.9508 23.3571C21.5992 23.7087 21.1223 23.9062 20.625 23.9062H5.625C4.3818 23.9062 3.18951 23.4124 2.31044 22.5333C1.43136 21.6542 0.9375 20.462 0.9375 19.2188V7.96875C0.9375 7.47147 1.13504 6.99456 1.48667 6.64292ZM2.8125 7.96875V19.2188C2.8125 19.9647 3.10882 20.68 3.63626 21.2075C4.16371 21.7349 4.87908 22.0312 5.625 22.0312H20.625V10.7812C20.625 10.0353 20.3287 9.31996 19.8012 8.79251C19.2738 8.26507 18.5584 7.96875 17.8125 7.96875L2.8125 7.96875Z" fill="white"/>
@@ -201,8 +212,9 @@
                                             </svg>
 
                                             <p class="navLinkP">Live</p>
-                                        </a>
-                                        <a href="#" class="link">
+                                        </div>
+                                        <!-- href="#" -->
+                                        <div  class="link  SETTINGS">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
                                                 <g opacity="0.9">
                                                 <path fillRule="evenodd" clipRule="evenodd" d="M15 10.3125C12.4112 10.3125 10.3125 12.4112 10.3125 15C10.3125 17.5888 12.4112 19.6875 15 19.6875C17.5888 19.6875 19.6875 17.5888 19.6875 15C19.6875 12.4112 17.5888 10.3125 15 10.3125ZM8.4375 15C8.4375 11.3756 11.3756 8.4375 15 8.4375C18.6244 8.4375 21.5625 11.3756 21.5625 15C21.5625 18.6244 18.6244 21.5625 15 21.5625C11.3756 21.5625 8.4375 18.6244 8.4375 15Z" fill="white"/>
@@ -210,8 +222,9 @@
                                                 </g>
                                             </svg>
                                             <p class="navLinkP">Settings</p>
-                                        </a>
-                                        <div class="NavSigninSignout">
+                                        </div>
+                                        <!-- href="#" -->
+                                        <div class="NAVSIGNINSIGNOUT">
                                             <div class="NavSignin">
                                                 SignIn
                                             </div>
@@ -245,7 +258,7 @@
 
                     <!-- MIDLE -->
                     <!-------------------------------------------------- Midle ------------------------------------------>
-                    <section class="midle">
+                    <section class="midle MIDLESECTION">
                         <div class="midle">
                             <div class="divpingPong">
                                 <Image src="./public/pingPong.png" width="560" height="240"
@@ -596,5 +609,6 @@
         <footer>
           &copy; 2023 all rights reserved
         </footer>
+        <script src="./src/app/index.js"></script>
 </body>
 </html>

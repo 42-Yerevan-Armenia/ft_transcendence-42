@@ -116,6 +116,11 @@
     gap: 16px;
     text-decoration: none;
     padding-left: 16px;
+    cursor: pointer;
+}
+
+.link:hover{
+    background-color:#5C5486;
 }
 
 .NamvMenu{
@@ -151,7 +156,7 @@
     .left{
         width: 76px;
     }
-    .NavSigninSignout{
+    .NAVSIGNINSIGNOUT{
         display: none;
     }
 
@@ -176,7 +181,7 @@
    }
    .dragonPong{
     display: none;
-}
+    }
 }
 
 

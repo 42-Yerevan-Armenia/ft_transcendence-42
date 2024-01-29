@@ -3,10 +3,16 @@ import Image from "next/image";
 import MidleCubItem from "./MidleCubItem/MidleCubItem";
 import Back from "./Back/Back";
 import Next from "./Next/Next";
+import {  useSelector } from 'react-redux';
+import {ShowMidlle} from '@/redux/features/dataSlice';
+
 
 export default function MidleCub(){
+
+    const { Leaderboard } = useSelector(ShowMidlle);
+    console.log("Leaderboard == [" + Leaderboard + "]");
     return(
-        <div className={Style.MidleCub}>
+        <div className={Style.MidleCub} style={{ display: Leaderboard ? "block" : "none" }}>
             <div className={Style.MidleCubProfil}>
                 <div className={Style.MidleCubHeroAll}>
 
