@@ -4,10 +4,15 @@ import EditProfil from '@/components/icons/EditProfilName';
 import EditProfilPhoto from '@/components/icons/EditProfilPhoto';
 import ChangeWallpaper from '@/components/icons/ChangeWallpaper';
 import GameMode from '@/components/icons/GameMode';
+import {  useSelector } from 'react-redux';
+import {ShowMidlle} from '@/redux/features/dataSlice';
+
 
 export default function MidleSettings(){
+    const {Settings} = useSelector(ShowMidlle);
+    console.log("Settings == [" + Settings + "]");
     return (
-        <div className={Style.MidleSettings}>
+        <div className={Style.MidleSettings} style={{ display: Settings ? "block" : "none" }}>
             <div className={Style.MidleSettingsProfil}>
                 <p className={Style.MidleSettingsH}>Profile Settings</p>
                     <div className={Style.MidleSettingsHero}>

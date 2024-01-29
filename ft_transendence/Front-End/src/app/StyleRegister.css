@@ -120,6 +120,9 @@
     font-size: 14px;
     text-align: end;
 }
+.LoginPageForgotDiv{
+    text-align: end;
+}
 
 @media only screen and (max-width: 1060px){
     .LoginPageConteiner{

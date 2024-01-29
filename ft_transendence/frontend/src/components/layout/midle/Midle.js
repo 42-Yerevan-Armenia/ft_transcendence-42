@@ -2,9 +2,12 @@ import Image from "next/image"
 import Stule from "./Midle.module.css";
 import PlayIcon from '@/components/icons/PlayIcon'
 
+
 export default function Midle(){
+    
+
     return (
-            <div className={Stule.midle}>
+            <div className={Stule.midle} >
                 <div className={Stule.divpingPong}>
                     <Image src="/pingPong.png" width={560} height={240} 
                             alt="pingPong"  className={Stule.pingPong}/>

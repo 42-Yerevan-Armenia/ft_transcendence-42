@@ -13,6 +13,8 @@
     border: 2px  solid red;
     width: 80%;
     height: 95%;
+    margin-left: auto;
+    margin-right: auto;
     border-radius: 20px;
     border: 1px solid var(--stroke-blue, rgba(0, 178, 255, 0.65));
     background-color: rgba(92, 81, 143, 0.2);
