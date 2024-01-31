@@ -3,6 +3,25 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm
 
+from .models import User
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework import status
+
+class UserAPIView(APIView):
+    def get(self, request):
+        queryset = User.objects.all()
+        serializer_class = UserUpdateForm(queryset, many=True)
+        return Response(serializer_class.data)
+    
+    def post(self, request):
+        queryset = User.objects.all()
+        serializer_class = UserUpdateForm(queryset, many=True)
+        return Response(serializer_class.data)
+
+    def delete(self, request):
+        return Response({"message":"delet"})
+
 def register(request):
     if request.method == 'POST':
         form = UserRegisterForm(request.POST)
