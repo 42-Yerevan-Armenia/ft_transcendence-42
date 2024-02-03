@@ -1,18 +1,110 @@
-// document.getElementById("myBtn").addEventListener("click", displayDate);
-// element.addEventListener("click", function(){ alert("Hello World!"); });
-// element.addEventListener("click", myFunction);
+//#################################################################################   Controller.js
 
-// function myFunction() {
-//   alert ("Hello World!");
-// }
+async function ControllerCheckEmail(email){
+  try {
+    const response = await fetch(`http://localhost:5001/registerpage?email=${email}`);
+
+    if (!response.ok)
+    {
+      throw Error("Error: Whene Email check status: " + response.status)
+    }
+    const result = await response.json();
+    console.log(JSON.stringify(result, undefined, 2));
+    console.log("Succsse++++++++++++++++++++");
+    return {state:true, massage: result.message};
+  }
+  catch(err) {
+    return {state:false, "massage": err };
+  }
+}
+
+async function ControllerGetUser() {
+  try {
+    // ⛔️ TypeError: Failed to fetch
+    // 👇️ incorrect or incomplete URL
+    const response = await fetch('http://10.12.11.2:8000/api/v1/userlist');
+    
+    if (!response.ok) {
+        throw new Error(`Error! status: ${response.status}`);
+      }
+      
+      const result = await response.json();
+      console.log(JSON.stringify(result, undefined, 2));
+
+      console.log("Succsse++++++++++++++++++++");
+    return result;
+  }
+  catch (err) {
+    console.log("ERROR  +++++++++++++++++");
+    console.log(err);
+  }
+}
+
+const dataDiv = document.getElementById('result-container');
+// const timeContainer = document.getElementById('time-container');
+
+dataDiv.addEventListener("click", () => {
+getUser();
+})
+
+
+// RegisterPageContinue
+
+function ControllerHandleFormSubmit() {
+  preventDefault();
+  let email = "";
+  let password = "";
+  try{
+      fetch('http://10.12.11.2:8000/', {
+          method: 'Post',
+          body: JSON.stringify({email, password}),
+          headers: {'Content-Type' : 'application/json'}
+      }).then((data)=>{
+          console.log("EEEEEEE=");
+          console.log(JSON.stringify(data, null, 2));
+      })
+  }
+  catch(e){
+      console.log("fetch error [" + e + "]");
+  }
+}
 
 
 
-// window.addEventListener("resize", function(){
-//     document.getElementById("demo").innerHTML = sometext;
-//   });
-// element.removeEventListener("mousemove", myFunction);
 
+
+
+
+
+
+
+
+// ################################################################################# Main.js
+
+
+//Utils
+function ValidateEmail(input) {
+
+  console.log("1input =[" + input  + "]");
+  if (!input)
+  {
+    return "Invalid email address!";
+  }
+  var validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+
+  if (input?.match(validRegex)) {
+    return "Valid email address!";
+
+  } else {
+    return "Invalid email address!";
+  }
+}
+
+
+
+//-------------------------------------------------       Pages     ---------------------------------------- 
+
+//user
 class USER{
   constructor(Name, Password) {
     this._name = Name;
@@ -21,45 +113,8 @@ class USER{
   _name = "Name";
   _Password = "password";
 }
-//------------------------------------------         Utils          -------------------------------
 
-function ValidateEmail(input) {
-
-  console.log("1input =[" + input  + "]");
-  if (!input)
-  {
-    return "Invalid email address!";
-  }
-  // var validRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  var validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-  console.log("2input =" + input);
-  if (input?.match(validRegex)) {
-
-    console.log("Valid email address!");
-
-
-    return "Valid email address!";
-
-  } else {
-
-    console.log("Invalid email address!");
-
-    // document.form1.text1.focus();
-
-    return "Invalid email address!";
-
-  }
-
-}
-
-
-
-//-------------------------------------------------       pages     ---------------------------------------- 
-
-
-
-
-
+//parent class
 class HtmlElement {
   constructor(name){
     this._classname = document.querySelector(name);
@@ -69,7 +124,7 @@ class HtmlElement {
   _style;
 }
 
-
+//confirm Page
 class ConfirmPage extends HtmlElement{
   constructor(){
     super(".ConfirmPage")
@@ -77,6 +132,16 @@ class ConfirmPage extends HtmlElement{
   }
 }
 
+
+//password Page
+class PasswordPage extends HtmlElement{
+  constructor(){
+    super(".PasswordPage")
+    this._style.display = "none";
+  }
+}
+
+//login Page 
 class LoginPage extends HtmlElement{
   constructor(){
     super(".LoginPage")
@@ -124,13 +189,6 @@ class LoginPage extends HtmlElement{
       if (LoginPassword.value.length >= 8 && LoginPassword.value.length <= 15)
       {
 
-
-
-        
-
-
-
-
       }
     }
 
@@ -157,13 +215,13 @@ class LoginPage extends HtmlElement{
 }
 
 
-
+//Register Page
 class RegisterPage extends HtmlElement{
   constructor(){
     super(".RegisterPage")
     this._style.display = "none";
   }
-
+  _RegisterPageContinue = document.querySelector(".RegisterPageContinue");
   RegisterPageDisplayNone(){
     this._style.display = "none";
   }
@@ -171,69 +229,46 @@ class RegisterPage extends HtmlElement{
   DisplayBlock(){
     this._style.display = "block";
   }
-  
-  RegistersWithEmail(){
+
+  async RegistersWithEmail(){
     let err = document.querySelector(".RegisterErrorHandling");
     let _RegisterPageinput = document.querySelector(".RegisterPageinput");
+    let value = _RegisterPageinput.value;
     
-    const ContextValidation = ValidateEmail(_RegisterPageinput.value);
+    const ContextValidation = ValidateEmail(value);
     
-    if (ContextValidation[0] == 'V') {
-      console.log("Email is correct must be");
-      err.style.color = "blue";
-      err.innerHTML = ContextValidation;
-      err.innerHTML = "";
-      return _RegisterPageinput.value;
-    }
-    else {
+    if (ContextValidation[0] !== 'V') {
       console.log("Email must by correct");
       err.style.color = "red";
       err.innerHTML = ContextValidation;
       return false;
     }
-  };
-  _RegisterPageContinue = document.querySelector(".RegisterPageContinue");
-}
-
-
-
-
-// -------------------------- Midle Sections
-//sections inside Home page
-class MidleSECTION extends HtmlElement{
-  constructor(){
-    super(".MIDLESECTION")
-    this._style.display = "flex";
+    else {
+      const result  = await ControllerCheckEmail(value)
+      console.log(JSON.stringify(result, undefined, 2));
+      if (result.state){
+        console.log("Email is correct must be");
+        err.style.color = "blue";
+        err.innerHTML = ContextValidation;
+        err.innerHTML = "";
+        return _RegisterPageinput.value;
+    }
+    err.style.color = "orange";
+    err.innerHTML = result?.massage | "Error";
+    return false;
+    }
   }
-}
-class MidleSettings extends HtmlElement{
-  constructor(){
-    super(".MidleSettings")
-    this._style.display = "none";
-  }
+};
 
-
-}
-
-class MidleCub extends HtmlElement{
-  constructor(){
-    super(".MidleCub")
-    this._style.display = "none";
-  }
-
-
-}
-
-
-
+// Home Page
 class HomePage extends HtmlElement{
   constructor(){
     super(".homeSection");
     this._style.display = "block";
   };
 
-  _Midle = new MidleSECTION();
-  _MidleSettings = new MidleSettings();
+  _Midle = new MiddleSECTION();
+  _MiddleSettings = new MiddleSettings();
   _MidleCub = new MidleCub();
 
   _NAV = {
@@ -264,38 +299,73 @@ class HomePage extends HtmlElement{
   }
 
   NavMidleHome = ()=>{
-    this._MidleSettings._style.display = "none";
+    this._MiddleSettings._style.display = "none";
     this._MidleCub._style.display = "none";
     
     this._Midle._style.display = "flex";
   }
 
-  NavMidleSettings = ()=>{
+  NavMiddleSettings = ()=>{
     this._Midle._style.display = "none";
     this._MidleCub._style.display = "none";
 
-    this._MidleSettings._style.display = "flex";
+    this._MiddleSettings._style.display = "flex";
   }
 
   NavMidleCub = () => {
     this._Midle._style.display = "none";
-    this._MidleSettings._style.display = "none";
+    this._MiddleSettings._style.display = "none";
     
     this._MidleCub._style.display = "flex";
   }
 }
+
+//Middle Sections inside for Home Page
+
+class MiddleSECTION extends HtmlElement {
+  constructor(){
+    super(".MIDLESECTION")
+    this._style.display = "flex";
+  }
+
+
+}
+
+class MiddleSettings extends HtmlElement {
+  constructor(){
+    super(".MidleSettings")
+    this._style.display = "none";
+  }
+
+
+}
+
+class MidleCub extends HtmlElement {
+  constructor(){
+    super(".MidleCub")
+    this._style.display = "none";
+  }
+
+
+}
+
+
+
+//-------------------------------------------    Main    -----------
 
 const User = new USER();
 const Confirm = new ConfirmPage();
 const Login = new LoginPage();
 const Register = new RegisterPage();
 const Home = new HomePage();
+const Password = new PasswordPage();
 
 
 //Event Listeners  Home Page
-Home._NAV._SETTINGS._classname.addEventListener("click", Home.NavMidleSettings);
+Home._NAV._SETTINGS._classname.addEventListener("click", Home.NavMiddleSettings);
 Home._NAV._LEADERBOARD._classname.addEventListener("click", Home.NavMidleCub);
 Home._NAV._Home._classname.addEventListener("click", Home.NavMidleHome);
+
 //sign in
 Home._NavSigninSignout._NavSignin.addEventListener("click",()=>{
   Home.ButtonSignIn();
@@ -316,14 +386,22 @@ Home._NavSigninSignout._NavSignUp1.addEventListener("click",()=>{
   Register.DisplayBlock();
 })
 
-Register._RegisterPageContinue.addEventListener("click", ()=>{
-  let value = Register.RegistersWithEmail();
 
-  if (value)
-  {
-    Register.RegisterPageDisplayNone();
-    Login.SignInWithEmail(value);
-  }
+//RegisterPage click confirm email
+Register._RegisterPageContinue.addEventListener("click",  async () => {
+
+  console.log("OK");
+    let value = await Register.RegistersWithEmail();
+    if (value && value)
+    {
+      console.log("111111111controller.CheckEmail();  [" + value + "]");
+    }
+    console.log("22222222222controller.CheckEmail();")
+    if (value)
+    {
+      Register.RegisterPageDisplayNone();
+      Login.SignInWithEmail(value);
+    }
 });
 
 Login._LoginPageContinue.addEventListener("click", ()=>{

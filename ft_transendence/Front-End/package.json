@@ -1,0 +1,11 @@
+{
+  "scripts": {
+    "build": "npm install http-server && npm run dev",
+    "dev": "npx http-server ."
+},
+  "dependencies": {
+    "http-server": "^14.1.1"
+  },
+  "proxy": "http://10.12.11.1:3000/",
+  "main": "index.js"
+}
