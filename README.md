@@ -12,6 +12,7 @@
     - [IA-Algo](#ia-algo)
     - [Cybersecurity](#cybersecurity)
     - [Devops](#devops)
+    - [Gaming](#gaming)
     - [Graphics](#graphics)
     - [Accessibility](#accessibility)
     - [OOP](#oop)
@@ -75,34 +76,40 @@ Web Designe
 
 ### Web
 
-- Major module: Use a Framework as backend.
-- Minor module: Use a database for the backend.
+- Major module: Use a Framework as backend. `Aram`
+- Minor module: Use a database for the backend. `Aram`
 
 ### User
 
 - Major module: Standard user management, authentication, users across
-tournaments.
-- Major module: Implementing a remote authentication.
+tournaments. `Aram` `Hovo`
+- Major module: Implementing a remote authentication. `Aram` `Hovo`
 
 ### Game
 
-- Major module: Remote players
-- Major module: Multiple players
-- Major module: Add Another Game with User History and Matchmaking.
-- Major module: Live chat.
-- Minor module: Game Customization Options.
+- Major module: Remote players `Vahan` `Aram` `Hovo`
+- Major module: Multiple players `Vahan` `Aram` `Hovo`
+- Major module: Add Another Game with User History and Matchmaking. `Vahan` `Aram` `Hovo`
+- Major module: Live chat. `Vlad` `Aram` `Hovo`
+- Minor module: Game Customization Options. `Hovo`
 
 ### IA-Algo
 
-- non
+- Minor module: User and Game Stats Dashboards. `Aram` `Hovo`
 
 ### Cybersecurity
 
-- Major module: Implement Two-Factor Authentication (2FA) and JWT.
+- Major module: Implement Two-Factor Authentication (2FA) and JWT. `Vahe` `Aram`
 
 ### Devops
 
-- Major module: Infrastructure Setup for Log Management.
+- Major module: Infrastructure Setup for Log Management. <?>
+- Major module: Designing the Backend as Microservices. `Aram` `Hovo`
+
+### Gaming
+
+- Major module: Add Another Game with User History and Matchmaking. `Vahan` `Aram`
+- Minor module: Game Customization Options. `Vahan`
 
 ### Graphics
 
@@ -110,11 +117,11 @@ tournaments.
 
 ### Accessibility
 
-- Minor module: Support on all devices.
-- Minor module: Multiple language supports.
+- Minor module: Support on all devices. `Hovo`
+- Minor module: Multiple language supports. <?>
 
 ### OOP
 
-- Major module: Replacing Basic Pong with Server-Side Pong and Implementing an API.
+- Major module: Replacing Basic Pong with Server-Side Pong and Implementing an API. <?>
 - Major module: Enabling Pong Gameplay via CLI against Web Users with API
-Integration.
+Integration. <?>

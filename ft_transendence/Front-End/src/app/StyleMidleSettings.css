@@ -1,0 +1,70 @@
+.MidleSettings{
+    width: 100%;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--background-color, 
+            radial-gradient(66.54% 118.23% at 37.47% 107.32%, #D9CBFD 10%, #7758D1 100%));
+}
+
+
+.MidleSettingsProfil {
+    width: 80%;
+    height: 80%;
+    border-radius: 20px;
+    border: 1px solid var(--stroke-blue, rgba(0, 178, 255, 0.65));
+    background-color: rgba(92, 81, 143, 0.2);
+}
+
+
+.MidleSettingsH{
+    color: white;
+    margin-left: 10PX;
+}
+
+.MidleSettingsHero{
+    width: 76%;
+    height: 15%;
+    margin-left: 15px;
+    display: flex;
+    gap: 10px;
+    color: rgba(255, 255, 255, 1);
+    font-size: bold;
+    font-family: Arial, Helvetica, sans-serif;
+    border-bottom: 1px solid rgba(94, 82, 140, 1);
+}
+
+
+.MidleSettingImage{
+    border-radius: 50px;
+    box-shadow: -0.1px -0.1px 10px 0.1px white;
+}
+
+.MidleSettingsEdit{
+  
+    width: 100%;
+    margin-top: 30px;
+}
+
+.MidleSettingsEditConteiner{
+    width: 40%;
+    margin-left: 5%;
+}
+
+.MidleSettingsBlocks{
+    display: flex;
+    color: white;
+    gap:10px;
+}
+
+.MidleSettingsBlocksImage{
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left: 10px;
+}
+
+.MidleSettingsBlocksP{
+    font-size: clamp(12px, 1.5vw, 19px);
+    text-align: start;
+}

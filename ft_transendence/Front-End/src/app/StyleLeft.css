@@ -1,0 +1,187 @@
+
+.LeftSection{
+    flex-direction: column;
+    color: white;
+    height: 100%;
+}
+
+.menuIcon{
+    display: flex;
+    gap: 8px;
+    padding-left: 16px;
+    padding-top: 16px;  
+}
+
+.dragonPong {
+    color: #FFF;
+    text-align: center;
+    font-family: Space Grotesk;
+    margin-top: 8px;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+
+} 
+
+
+.IconExit {
+    width: 15px;
+    height: 15px;
+    margin-top: -10px; 
+    margin-left: 55px;
+}
+
+
+.Text{
+    margin: 0;
+}
+
+.InfoText{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    height: 100%;
+}
+
+
+
+.StylesOn{
+    position: relative;
+    width: 9px;
+    height: 9px;
+    border-radius: 5px;
+    background-color: #0BEF06;
+    margin-left: 45px;
+    margin-top: -19px ;
+}
+
+.StylesOff {
+    display: none;
+    position: relative;
+    width: 9px;
+    height: 9px;
+    border-radius: 5px;
+    background-color: #0BEF06;
+    margin-left: 45px;
+    margin-top: -19px ;
+}
+
+.Image{
+    border-radius: 50px;
+    margin-left: 10px;
+    margin-top: 10px;
+}
+
+
+
+.Info{
+    width:50%;
+    height: 100%;
+}
+
+
+.Onlain{
+    width: 50%;
+    height: 68px;
+    background-color: #5C5486;
+}
+
+.User{
+    display: flex;
+    margin-top: 49px;
+    height: 70px;
+}
+
+.Threepoint{
+    align-items: center;
+    width: 25px;
+    height: 25px;
+}
+
+.Explore{
+    display: flex;
+    color: white;
+    gap: 16px;
+    align-items: center;
+    padding-left: 24px;
+    border-bottom: 2px solid gray;
+}
+
+.link {
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    text-decoration: none;
+    padding-left: 16px;
+    cursor: pointer;
+}
+
+.link:hover{
+    background-color:#5C5486;
+}
+
+.NamvMenu{
+    width: all;
+    height: 533px;
+    flex-direction: column;
+}
+
+.nav{
+    display: flex;
+    flex-direction: column;
+    height: 481px;
+}
+
+
+.NavSignin, .NavSignUp{
+    background-color:#1B8CCE;
+    text-align: center;
+    border-radius: 10px;
+    border: 2px solid #1B8CCE;
+    width: 70px;
+}
+
+.NavSignUp{
+    background-color: #D823D7;
+    margin-top: 10px;
+}
+
+@media only screen and (min-width: 932px){
+    .User{
+        margin-top: 106px;
+    }
+    .left{
+        width: 76px;
+    }
+    .NAVSIGNINSIGNOUT{
+        display: none;
+    }
+
+}
+
+
+@media only screen and (max-width: 1100px){
+    .Info{
+        display: none;
+    }
+    .Onlain{
+        width: auto;
+        height: 65px;
+    }
+    .navLinkP{
+        display: none;
+   } 
+   .link,.Threepoint{
+       margin-top: 20px;
+       margin-bottom: 16px;
+       width: 60px;
+   }
+   .dragonPong{
+    display: none;
+    }
+}
+
+
