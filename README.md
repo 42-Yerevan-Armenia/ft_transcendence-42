@@ -12,6 +12,7 @@
     - [IA-Algo](#ia-algo)
     - [Cybersecurity](#cybersecurity)
     - [Devops](#devops)
+    - [Gaming](#gaming)
     - [Graphics](#graphics)
     - [Accessibility](#accessibility)
     - [OOP](#oop)
