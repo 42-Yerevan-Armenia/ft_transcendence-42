@@ -3,7 +3,14 @@ https://www.w3schools.com/js/js_htmldom_eventlistener.asp
 https://www.w3schools.com/js/js_htmldom_nodelist.asp
 
 
+1)install  nodemailer for Email
+npm install nodemailer " process.env.EMAIL_USER,"
+
+2)npm install dotenv
+for .env file tack 
+
 export NVM_DIR="$HOME/.nvm"
     [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 
 nvm install node --reinstall-packages-from=node
+

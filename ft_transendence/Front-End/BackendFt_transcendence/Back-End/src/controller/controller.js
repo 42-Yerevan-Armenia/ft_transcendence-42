@@ -1,14 +1,16 @@
 import express from 'express';
 import {Users} from "../bd/data.js"
-import newUser from "../User/UserClass.js";
+import ClientUser from "../User/UserClass.js";
+import CheckEmail from "./email/emailSend.js";
+import codeRandomGenerate from "./codeRandomGenerate/codeRandomGenerate.js";
 
 const router = express.Router();
 
+// http://localhost:5001/registerpage?email=hovhannes_vardanyan1@mail.ru
 //returns RegisterPage check
 router.get("/registerpage", async (req, res) => {
     const email = req.query.email; // Use req.query to access query parameters
-
-    console.log("Email: " + email);
+    console.log("Email     : " + email);
     if (!email)
     {
         return res.status(404).json({ message: `Error: server cannot find the requested resource` });
@@ -16,8 +18,17 @@ router.get("/registerpage", async (req, res) => {
     if (Users.find((user) => user.email === email)) {
         return res.status(403).json({ message: `Error: re-authenticating` });
     }
-    newUser.email = email;
-    return res.send({ message: `received user confirmed` });
+    ClientUser.confirmEmailCode = codeRandomGenerate(5);
+    let obj;
+    await CheckEmail(email, ClientUser.confirmEmailCode)
+    .then(result => {
+        ClientUser.email = email;
+        ClientUser.confirmEmailCodeTime = new Date();
+        return res.send({ message: `received user confirmed` });
+    })
+    .catch(error => {
+        return res.status(500).json({ message: ClientUser.obj.message });
+    });
 });
 
 

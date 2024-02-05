@@ -1,9 +1,16 @@
-const User  = {
+const ClientUser  = {
     id: 0,
     name: "",
     type: "",
     email:"",
-    password : ""
+    password : "",
+    confirmEmailCode: "",
+    confirmEmailCodeTime: 0,
+    confirmEmail: false,
+    obj:{
+        status:false,
+        message: "Error default"
+    }
 }
 
-export default User;
+export default ClientUser;
