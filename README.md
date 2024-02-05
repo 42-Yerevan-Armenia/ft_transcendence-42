@@ -75,40 +75,40 @@ Web Designe
 
 ### Web
 
-- Major module: Use a Framework as backend. <Aram>
-- Minor module: Use a database for the backend. <Aram>
+- Major module: Use a Framework as backend. `Aram`
+- Minor module: Use a database for the backend. `Aram`
 
 ### User
 
 - Major module: Standard user management, authentication, users across
-tournaments. <Aram> <Hovoe>
-- Major module: Implementing a remote authentication. <Aram> <Hovo>
+tournaments. `Aram` `Hovo`
+- Major module: Implementing a remote authentication. `Aram` `Hovo`
 
 ### Game
 
-- Major module: Remote players <Vahan> <Aram> <Hovo>
-- Major module: Multiple players <Vahan> <Aram> <Hovo>
-- Major module: Add Another Game with User History and Matchmaking. <Vahan> <Aram> <Hovo>
-- Major module: Live chat. <Vlad> <Aram> <Hovo>
-- Minor module: Game Customization Options. <Hovo>
+- Major module: Remote players `Vahan` `Aram` `Hovo`
+- Major module: Multiple players `Vahan` `Aram` `Hovo`
+- Major module: Add Another Game with User History and Matchmaking. `Vahan` `Aram` `Hovo`
+- Major module: Live chat. `Vlad` `Aram` `Hovo`
+- Minor module: Game Customization Options. `Hovo`
 
 ### IA-Algo
 
-- Minor module: User and Game Stats Dashboards. <Aram> <Hovo>
+- Minor module: User and Game Stats Dashboards. `Aram` `Hovo`
 
 ### Cybersecurity
 
-- Major module: Implement Two-Factor Authentication (2FA) and JWT. <Vahe> <Aram>
+- Major module: Implement Two-Factor Authentication (2FA) and JWT. `Vahe` `Aram`
 
 ### Devops
 
 - Major module: Infrastructure Setup for Log Management. <?>
-- Major module: Designing the Backend as Microservices. <Aram> <Hovo>
+- Major module: Designing the Backend as Microservices. `Aram` `Hovo`
 
 ### Gaming
 
-- Major module: Add Another Game with User History and Matchmaking. <Vahan> <Aram>
-- Minor module: Game Customization Options. <Vahan>
+- Major module: Add Another Game with User History and Matchmaking. `Vahan` `Aram`
+- Minor module: Game Customization Options. `Vahan`
 
 ### Graphics
 
@@ -116,7 +116,7 @@ tournaments. <Aram> <Hovoe>
 
 ### Accessibility
 
-- Minor module: Support on all devices. <Hovo>
+- Minor module: Support on all devices. `Hovo`
 - Minor module: Multiple language supports. <?>
 
 ### OOP
