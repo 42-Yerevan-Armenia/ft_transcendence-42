@@ -32,6 +32,16 @@ router.get("/registerpage", async (req, res) => {
 });
 
 
+//confirm email with code
+router.post("/confirm", async (req, res) => {
+    const code = req.params.code;
+    const code1 = req.params.code;
+    console.log("code = " + code + " code1 " + code1);
+
+    
+})
+
+
 
 
 //returns data to Users

@@ -1,8 +1,14 @@
+const HostPort="http://localhost:5001"
+
+
 //#################################################################################   Controller.js
 
-async function ControllerCheckEmail(email){
+//queshon too backend Email exist or not and 
+//if create 
+async function ControllerCheckEmail(email) {
   try {
-    const response = await fetch(`http://localhost:5001/registerpage?email=${email}`);
+    debugger
+    const response = await fetch(`${HostPort}/registerpage?email=${email}`);
 
     if (!response.ok)
     {
@@ -18,59 +24,66 @@ async function ControllerCheckEmail(email){
   }
 }
 
-async function ControllerGetUser() {
-  try {
-    // ⛔️ TypeError: Failed to fetch
-    // 👇️ incorrect or incomplete URL
-    const response = await fetch('http://10.12.11.2:8000/api/v1/userlist');
-    
-    if (!response.ok) {
-        throw new Error(`Error! status: ${response.status}`);
-      }
-      
-      const result = await response.json();
-      console.log(JSON.stringify(result, undefined, 2));
 
-      console.log("Succsse++++++++++++++++++++");
-    return result;
+async function ControllerCheckReplayCode(code){
+  try {
+    const respons = await fetch(`${HostPort}/confirm`, {
+      method : 'Post',
+      body : code,
+      header: {'Content-Type' : 'application/json'}
+    })
+    if (!respons.ok)
+      throw new Error("Code is not correct");
+    const data = respons.json();
+    return data;
   }
-  catch (err) {
-    console.log("ERROR  +++++++++++++++++");
-    console.log(err);
+  catch(err) {
+    console.log("Error : " + err);
   }
 }
-
-const dataDiv = document.getElementById('result-container');
-// const timeContainer = document.getElementById('time-container');
-
-dataDiv.addEventListener("click", () => {
-getUser();
-})
 
 
 // RegisterPageContinue
 
-function ControllerHandleFormSubmit() {
-  preventDefault();
-  let email = "";
-  let password = "";
-  try{
-      fetch('http://10.12.11.2:8000/', {
-          method: 'Post',
-          body: JSON.stringify({email, password}),
-          headers: {'Content-Type' : 'application/json'}
-      }).then((data)=>{
-          console.log("EEEEEEE=");
-          console.log(JSON.stringify(data, null, 2));
-      })
-  }
-  catch(e){
-      console.log("fetch error [" + e + "]");
-  }
-}
+// function ControllerHandleFormSubmit() {
+//   preventDefault();
+//   let email = "";
+//   let password = "";
+//   try {
+//       fetch('http://10.12.11.2:8000/', {
+//           method: 'Post',
+//           body: JSON.stringify({email, password}),
+//           headers: {'Content-Type' : 'application/json'}
+//       }).then((data)=> {
+//           console.log("EEEEEEE=");
+//           console.log(JSON.stringify(data, null, 2));
+//       })
+//   }
+//   catch(e) {
+//       console.log("fetch error [" + e + "]");
+//   }
+// }
 
 
 
+// try {
+//   const respons  = await fetch(`${HostPort}/confirm`, {
+//     method: 'Post',
+//     body: code,
+//     headers: {'Content-Type': 'application/json'}
+//   })
+//   if (!respons.ok)
+//   {
+//     throw new Error("Code is not correct");
+//   }
+//   const data = respons.json();
+//   return data;
+// }
+// catch(err) {
+// console.log("Error : " + err);
+// }
+
+// }
 
 
 
@@ -116,7 +129,7 @@ class USER{
 
 //parent class
 class HtmlElement {
-  constructor(name){
+  constructor(name) {
     this._classname = document.querySelector(name);
     this._style = this._classname ? this._classname.style : null;
   }
@@ -126,15 +139,40 @@ class HtmlElement {
 
 //confirm Page
 class ConfirmPage extends HtmlElement{
-  constructor(){
+  constructor() {
     super(".ConfirmPage")
     this._style.display = "none";
+  }
+  ConfirmYourEmail = document.querySelector('ConfirmPageContinue');
+  setDisplayBlock(){
+    this._style.display = "block";
+  }
+
+  async ConfirmPageContinue(){
+    let v0 = document.querySelector(".ConfirmPagepassword0");
+    let v1 = document.querySelector(".ConfirmPagepassword1");
+    let v2 = document.querySelector(".ConfirmPagepassword2");
+    let v3 = document.querySelector(".ConfirmPagepassword3");
+    let v4 = document.querySelector(".ConfirmPagepassword4");
+
+    if (!v0 || !v1 || !v2 || !v3 || !v4)
+    {
+      const err = document.querySelector(".ErrorConfirmPageCode");
+      err.style.color = "red";
+      err.innerHTML = "all items must be recorded";
+    }
+    else {
+      const code = v0 + " " + v1 + " " + v2 + " " + v3 + " " + v4;
+      const data =  await ControllerCheckReplayCode(code);
+      return data;
+    }
+    return null;
   }
 }
 
 
 //password Page
-class PasswordPage extends HtmlElement{
+class PasswordPage extends HtmlElement {
   constructor(){
     super(".PasswordPage")
     this._style.display = "none";
@@ -142,7 +180,7 @@ class PasswordPage extends HtmlElement{
 }
 
 //login Page 
-class LoginPage extends HtmlElement{
+class LoginPage extends HtmlElement {
   constructor(){
     super(".LoginPage")
     this._style.display = "none";
@@ -152,14 +190,14 @@ class LoginPage extends HtmlElement{
     this._style.display = "block";
   }
 
-  ButtonSignIn(){
+  ButtonSignIn() {
     ErrorPassword = querySelector(".LoginPasswordError");
     ErrorEmail = querySelector(".LoginEmailError");
     LoginPassword = querySelector(".LoginPageinputpassword")
-    LoginEmail = querySelector(".LoginPageinput")
+    LoginEmail = querySelector(".LoginPageinput");
 
-    if (!LoginEmail?.value)
-    {
+    if (!LoginEmail?.value) 
+    {//if empty email
       ErrorEmail.style.color = "red";
       ErrorEmail.innerHTML = "Email must not be empty";
       return ;
@@ -167,25 +205,28 @@ class LoginPage extends HtmlElement{
     else {
       const ContextValidation = ValidateEmail(LoginEmail.value);
 
+      //email valid input
       if (ContextValidation[0] == 'V') {
         console.log("Login Page Email is correct");
         ErrorEmail.style.color = "blue";
         ErrorEmail.innerHTML = "";
       }
       else {
+        //Email is not valid
         console.log("Email must by correct");
         ErrorEmail.style.color = "red";
         ErrorEmail.innerHTML = ContextValidation;
         return false;
       }
     }
-    if (!LoginPassword?.value)
-    {
+
+
+    if (!LoginPassword?.value) {
       ErrorPassword.style.color = "red";
       ErrorPassword.innerHTML = "Password must not be empty";
       return ;
     }
-    else{
+    else {
       if (LoginPassword.value.length >= 8 && LoginPassword.value.length <= 15)
       {
 
@@ -216,7 +257,7 @@ class LoginPage extends HtmlElement{
 
 
 //Register Page
-class RegisterPage extends HtmlElement{
+class RegisterPage extends HtmlElement {
   constructor(){
     super(".RegisterPage")
     this._style.display = "none";
@@ -230,13 +271,14 @@ class RegisterPage extends HtmlElement{
     this._style.display = "block";
   }
 
-  async RegistersWithEmail(){
+  async RegistersWithEmail() {
     let err = document.querySelector(".RegisterErrorHandling");
     let _RegisterPageinput = document.querySelector(".RegisterPageinput");
     let value = _RegisterPageinput.value;
-    
+
     const ContextValidation = ValidateEmail(value);
-    
+
+    //check your email address is correct
     if (ContextValidation[0] !== 'V') {
       console.log("Email must by correct");
       err.style.color = "red";
@@ -261,7 +303,7 @@ class RegisterPage extends HtmlElement{
 };
 
 // Home Page
-class HomePage extends HtmlElement{
+class HomePage extends HtmlElement {
   constructor(){
     super(".homeSection");
     this._style.display = "block";
@@ -367,21 +409,21 @@ Home._NAV._LEADERBOARD._classname.addEventListener("click", Home.NavMidleCub);
 Home._NAV._Home._classname.addEventListener("click", Home.NavMidleHome);
 
 //sign in
-Home._NavSigninSignout._NavSignin.addEventListener("click",()=>{
+Home._NavSigninSignout._NavSignin.addEventListener("click", ()=> {
   Home.ButtonSignIn();
   Login.DisplayBlock();
 })
-Home._NavSigninSignout._NavSignin1.addEventListener("click",()=>{
+Home._NavSigninSignout._NavSignin1.addEventListener("click", ()=> {
   Home.ButtonSignIn();
   Login.DisplayBlock();
 })
 
 //sign up
-Home._NavSigninSignout._NavSignUp.addEventListener("click",()=>{
+Home._NavSigninSignout._NavSignUp.addEventListener("click", ()=> {
   Home.ButtonSignUp();
   Register.DisplayBlock();
 })
-Home._NavSigninSignout._NavSignUp1.addEventListener("click",()=>{
+Home._NavSigninSignout._NavSignUp1.addEventListener("click", ()=> {
   Home.ButtonSignUp();
   Register.DisplayBlock();
 })
@@ -392,18 +434,21 @@ Register._RegisterPageContinue.addEventListener("click",  async () => {
 
   console.log("OK");
     let value = await Register.RegistersWithEmail();
-    if (value && value)
-    {
-      console.log("111111111controller.CheckEmail();  [" + value + "]");
-    }
-    console.log("22222222222controller.CheckEmail();")
     if (value)
     {
       Register.RegisterPageDisplayNone();
-      Login.SignInWithEmail(value);
+      Confirm.setDisplayBlock();
     }
 });
 
-Login._LoginPageContinue.addEventListener("click", ()=>{
+Login._LoginPageContinue.addEventListener("click", () => {
   Login.ButtonSignIn();
+})
+
+Confirm.ConfirmYourEmail.addEventListener('click', async () => {
+  const data = await Confirm.ConfirmPageContinue();
+  if (data)
+  {
+    console.log(" data  " + data);
+  }
 })
