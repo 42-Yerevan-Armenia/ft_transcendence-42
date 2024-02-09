@@ -1,0 +1,10 @@
+{
+  "scripts": {
+    "build": "npm install http-server && npm run dev",
+    "dev": "npx http-server ."
+},
+  "dependencies": {
+    "http-server": "^14.1.1"
+  },
+  "main": "index.js"
+}
