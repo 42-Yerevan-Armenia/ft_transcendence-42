@@ -4,12 +4,12 @@ ENV PYTHONUNBUFFERED=1
 
 WORKDIR /app/backend
 
-COPY backend/requirements.txt ./
+COPY backend/requirements.txt ./requirements.txt
 
 RUN python3 -m venv venv && \
     . venv/bin/activate && \
     python -m pip install --upgrade pip && \
-    pip install -r requirements.txt
+    pip install -r ./requirements.txt
 
 COPY . .
 
