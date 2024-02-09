@@ -6,88 +6,51 @@ const HostPort="http://localhost:5001"
 //queshon too backend Email exist or not and 
 //if create 
 async function ControllerCheckEmail(email) {
+  
   try {
-    debugger
     const response = await fetch(`${HostPort}/registerpage?email=${email}`);
 
     if (!response.ok)
     {
-      throw Error("Error: Whene Email check status: " + response.status)
+      throw new  Error("Error: Whene Email check status " + response.status)
     }
     const result = await response.json();
     console.log(JSON.stringify(result, undefined, 2));
-    console.log("Succsse++++++++++++++++++++");
-    return {state:true, massage: result.message};
+    console.log("ControllerCheckEmail   Succsse++++++++++++++++++++");
+    return {state:true, message: result.message};
   }
   catch(err) {
-    return {state:false, "massage": err };
+    const error = err + "";
+    return {state:false, "message": error};
   }
 }
 
 
-async function ControllerCheckReplayCode(code){
+async function ControllerCheckReplayCode(code) {
+  console.log("code = [" + code + "]");
+  
   try {
-    const respons = await fetch(`${HostPort}/confirm`, {
-      method : 'Post',
-      body : code,
-      header: {'Content-Type' : 'application/json'}
-    })
-    if (!respons.ok)
-      throw new Error("Code is not correct");
-    const data = respons.json();
-    return data;
+      const response = await fetch(`${HostPort}/confirm`, {
+          method: 'POST',
+          body: JSON.stringify({ code: code }), // Assuming you want to send the code as JSON
+          headers: { 'Content-Type': 'application/json' } // Fixed 'header' to 'headers'
+      });
+      if (!response.ok)
+        throw new Error(response.statusText  + " " + response.status);
+
+      const data = await response.json(); // Await the parsing of JSON data
+      console.log("ControllerCheckReplayCode  Succsse++++++++++++++++++++");
+      return{state:true, "message": data }; ;
   }
-  catch(err) {
-    console.log("Error : " + err);
+  catch (err) {
+    
+    const error = err + "";
+    
+    console.log("error   === [" + error + "]")
+    
+    return {state:false, "message": error};
   }
 }
-
-
-// RegisterPageContinue
-
-// function ControllerHandleFormSubmit() {
-//   preventDefault();
-//   let email = "";
-//   let password = "";
-//   try {
-//       fetch('http://10.12.11.2:8000/', {
-//           method: 'Post',
-//           body: JSON.stringify({email, password}),
-//           headers: {'Content-Type' : 'application/json'}
-//       }).then((data)=> {
-//           console.log("EEEEEEE=");
-//           console.log(JSON.stringify(data, null, 2));
-//       })
-//   }
-//   catch(e) {
-//       console.log("fetch error [" + e + "]");
-//   }
-// }
-
-
-
-// try {
-//   const respons  = await fetch(`${HostPort}/confirm`, {
-//     method: 'Post',
-//     body: code,
-//     headers: {'Content-Type': 'application/json'}
-//   })
-//   if (!respons.ok)
-//   {
-//     throw new Error("Code is not correct");
-//   }
-//   const data = respons.json();
-//   return data;
-// }
-// catch(err) {
-// console.log("Error : " + err);
-// }
-
-// }
-
-
-
-
 
 
 
@@ -115,16 +78,16 @@ function ValidateEmail(input) {
 
 
 
-//-------------------------------------------------       Pages     ---------------------------------------- 
+//-------------------------------------------------       Pages     ----------------------------------------
 
 //user
 class USER{
-  constructor(Name, Password) {
-    this._name = Name;
-    this._Password = Password;
+  constructor() {
   }
-  _name = "Name";
-  _Password = "password";
+  _name = "";
+  _Password = "";
+  _Email = "";
+  _ConfirmEmail = false;
 }
 
 //parent class
@@ -133,38 +96,112 @@ class HtmlElement {
     this._classname = document.querySelector(name);
     this._style = this._classname ? this._classname.style : null;
   }
+  DisplayBlock()
+  {
+    this._style.display = "block";
+  }
+  DisplayNone()
+  {
+    this._style.display = "none";
+  }
   _classname;
   _style;
 }
 
 //confirm Page
-class ConfirmPage extends HtmlElement{
+class ConfirmPage extends HtmlElement {
   constructor() {
     super(".ConfirmPage")
     this._style.display = "none";
   }
-  ConfirmYourEmail = document.querySelector('ConfirmPageContinue');
-  setDisplayBlock(){
-    this._style.display = "block";
+  ConfirmYourEmail = document.querySelector('.ConfirmPageContinue');
+  TimeDureation = document.querySelector(".ConfirmPageDureation");
+  TimeDureationStart = "";
+  err = document.querySelector(".ErrorConfirmPageCode");
+  v0 = document.querySelector(".ConfirmPagepassword0");
+  v1 = document.querySelector(".ConfirmPagepassword1");
+  v2 = document.querySelector(".ConfirmPagepassword2");
+  v3 = document.querySelector(".ConfirmPagepassword3");
+  v4 = document.querySelector(".ConfirmPagepassword4");
+
+ async TimeDureationPermission(Home){
+    let current = new Date() * 0.0006 + "";
+    current = current.substring(0, current.lastIndexOf("."));
+    current = 30 - (current - this.TimeDureationStart);
+    setTimeout(() => {
+      if (current <= 0)
+      {
+        if (User._ConfirmEmail)
+          return true;
+
+        this._style.display = "none";
+        User._ConfirmEmail = false;
+        Home.DisplayBlock();
+        this.ValuesAllEmpty();
+        return false;
+      }
+      else{
+        this.TimeDureationPermission(Home)
+        this.TimeDureation.innerHTML = current; //minuts
+      }
+    }, 1000);
+    console.log(" ---------------------------  ");
   }
 
-  async ConfirmPageContinue(){
-    let v0 = document.querySelector(".ConfirmPagepassword0");
-    let v1 = document.querySelector(".ConfirmPagepassword1");
-    let v2 = document.querySelector(".ConfirmPagepassword2");
-    let v3 = document.querySelector(".ConfirmPagepassword3");
-    let v4 = document.querySelector(".ConfirmPagepassword4");
+  async setDisplayBlock(){
+    this.TimeDureation.innerHTML = "";
+    this._style.display = "block";
+    this.TimeDureationStart =  new Date() * 0.0006 + "";
+    this.TimeDureationStart = this.TimeDureationStart.substring(0, this.TimeDureationStart.lastIndexOf("."));
+    this.TimeDureationPermission(Home);
+  }
+  ValuesAllEmpty()
+  {
+    this.v0.value="";
+    this.v1.value="";
+    this.v2.value="";
+    this.v3.value="";
+    this.v4.value="";
+  }
+  //when respons have error
+  ErrorHandling(message){
+    console.log("  message " + message)
+    this.err.style.color = "red";
+    this.err.innerHTML = message;
+    this.ValuesAllEmpty();
+  }
 
-    if (!v0 || !v1 || !v2 || !v3 || !v4)
+  //click confirm button and check respons
+  async ConfirmPageContinue(){
+    this.err.innerHTML = "";
+  
+    //each input must not be empty
+    if (!this.v0.value || !this.v1.value || !this.v2.value || !this.v3.value || !this.v4.value)
     {
-      const err = document.querySelector(".ErrorConfirmPageCode");
-      err.style.color = "red";
-      err.innerHTML = "all items must be recorded";
+      this.err.style.color = "red";
+      this.err.innerHTML = "all items must be recorded";
     }
     else {
-      const code = v0 + " " + v1 + " " + v2 + " " + v3 + " " + v4;
-      const data =  await ControllerCheckReplayCode(code);
-      return data;
+      if (this.v0.value.length !== 1 || this.v1.value.length !== 1 || this.v2.value.length !== 1
+              || this.v3.value.length !== 1 || this.v4.value.length !== 1)
+      {
+        this.ErrorHandling("each element must be one number");
+      }
+      else {
+        //the code must be a string for the request sent
+        const code = this.v0.value + "" + this.v1.value + this.v2.value + this.v3.value + this.v4.value;
+        const data =  await ControllerCheckReplayCode(code);
+
+        //Error message
+        if (!data.state)
+        {
+          const message = data.message.substring(0, data.message.length - 3);
+          this.ErrorHandling(message + "");
+        }
+
+        console.log("  data   =  [" + data + "]" + JSON.stringify(data));
+        return data;
+      }
     }
     return null;
   }
@@ -293,10 +330,12 @@ class RegisterPage extends HtmlElement {
         err.style.color = "blue";
         err.innerHTML = ContextValidation;
         err.innerHTML = "";
-        return _RegisterPageinput.value;
+        User._Email = _RegisterPageinput.value;
+        _RegisterPageinput.value = ""
+        return true;
     }
     err.style.color = "orange";
-    err.innerHTML = result?.massage | "Error";
+    err.innerHTML = result?.message | "Error";
     return false;
     }
   }
@@ -321,7 +360,7 @@ class HomePage extends HtmlElement {
     _LIVE : new HtmlElement(".LIVE"),
     _SETTINGS : new HtmlElement(".SETTINGS"),
   };
-  _NavSigninSignout ={
+  _NavSigninSignout = {
     _NavSignin : document.querySelector(".NavSignin"),
     _NavSignin1 :  document.querySelector(".RightsigninButton"),
 
@@ -395,7 +434,7 @@ class MidleCub extends HtmlElement {
 
 //-------------------------------------------    Main    -----------
 
-const User = new USER();
+var User = new USER();
 const Confirm = new ConfirmPage();
 const Login = new LoginPage();
 const Register = new RegisterPage();
@@ -432,12 +471,11 @@ Home._NavSigninSignout._NavSignUp1.addEventListener("click", ()=> {
 //RegisterPage click confirm email
 Register._RegisterPageContinue.addEventListener("click",  async () => {
 
-  console.log("OK");
     let value = await Register.RegistersWithEmail();
     if (value)
     {
       Register.RegisterPageDisplayNone();
-      Confirm.setDisplayBlock();
+      Confirm.setDisplayBlock(Home);
     }
 });
 
@@ -447,8 +485,21 @@ Login._LoginPageContinue.addEventListener("click", () => {
 
 Confirm.ConfirmYourEmail.addEventListener('click', async () => {
   const data = await Confirm.ConfirmPageContinue();
-  if (data)
-  {
-    console.log(" data  " + data);
+
+  Confirm.ValuesAllEmpty();
+  if (!data) {
+    console.log(" data empty()  ");
+    User._ConfirmEmail = false;
+  }
+  else if (data.state) {
+    User._ConfirmEmail = true;
+    Confirm.DisplayNone();
+    Password.DisplayBlock();
+  }
+  else if (data.message.substr(-3) == "408") {
+    User._ConfirmEmail = false;
+    Confirm.DisplayNone();
+    Home.DisplayBlock();
+    Home.NavMidleHome();
   }
 })

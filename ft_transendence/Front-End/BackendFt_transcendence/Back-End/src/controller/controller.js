@@ -1,8 +1,8 @@
-import express from 'express';
+import express, { json } from 'express';
 import {Users} from "../bd/data.js"
-import ClientUser from "../User/UserClass.js";
 import CheckEmail from "./email/emailSend.js";
 import codeRandomGenerate from "./codeRandomGenerate/codeRandomGenerate.js";
+import {ClientUser, Client, clearObject}  from "../User/UserClass.js";
 
 const router = express.Router();
 
@@ -10,7 +10,7 @@ const router = express.Router();
 //returns RegisterPage check
 router.get("/registerpage", async (req, res) => {
     const email = req.query.email; // Use req.query to access query parameters
-    console.log("Email     : " + email);
+
     if (!email)
     {
         return res.status(404).json({ message: `Error: server cannot find the requested resource` });
@@ -18,12 +18,19 @@ router.get("/registerpage", async (req, res) => {
     if (Users.find((user) => user.email === email)) {
         return res.status(403).json({ message: `Error: re-authenticating` });
     }
+    // Create an instance of Client
+    //or clear old user
+    clearObject();
+
+    //random code generation
     ClientUser.confirmEmailCode = codeRandomGenerate(5);
-    let obj;
+
+    // send a confirmation code to the client's email
     await CheckEmail(email, ClientUser.confirmEmailCode)
     .then(result => {
         ClientUser.email = email;
-        ClientUser.confirmEmailCodeTime = new Date();
+        console.log("1new Date()" + new Date());
+        ClientUser.confirmEmailCodeTime = new Date() * 0.0006; //minuts
         return res.send({ message: `received user confirmed` });
     })
     .catch(error => {
@@ -34,11 +41,27 @@ router.get("/registerpage", async (req, res) => {
 
 //confirm email with code
 router.post("/confirm", async (req, res) => {
-    const code = req.params.code;
-    const code1 = req.params.code;
-    console.log("code = " + code + " code1 " + code1);
-
-    
+    const {code} = req.body;
+    console.log("code == [" + code + "] ClientUser.confirmEmailCode {" + ClientUser?.confirmEmailCode + "}")
+    console.log("2new Date()" + new Date());
+    const dureation = new Date() * 0.0006 - ClientUser.confirmEmailCodeTime;
+    if (!code)
+    {
+        return res.status(400).json("Error: Bad Request")
+    }
+    console.log("dureation = " + dureation);
+    if (dureation > 30)
+    {
+        clearObject();
+        return res.status(408).json("Error: Your time slot has been closed");
+    }
+    if (code === ClientUser?.confirmEmailCode)
+    {
+        console.log("++++OK++++");
+        ClientUser.confirmEmail = true;
+        return res.send({ message: "Email confirmed successfully" });
+    }
+    return res.status(404).json("Error: Not Found");
 })
 
 

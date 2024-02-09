@@ -13,7 +13,7 @@ let transporter = nodemailer.createTransport({
     }
 });
 
-
+//send a confirmation code to the client's email
 export default function CheckEmail(clientEmail, confirmEmailCode) {
 
     return new Promise((resolve, reject) => {
@@ -26,11 +26,9 @@ export default function CheckEmail(clientEmail, confirmEmailCode) {
 
         transporter.sendMail(mailOptions, (error, info) => {
             if (error) {
-                console.log(`Error: ${error}`);
                 let obj = { "status": false, "message": error };
                 reject(obj);
             } else {
-                console.log(`Message Sent: ${info.response}`);
                 let obj = { "status": true, "message": info.response };
                 resolve(obj);
             }
