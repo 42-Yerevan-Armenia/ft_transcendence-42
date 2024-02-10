@@ -25,13 +25,9 @@ services:
       - 8000:8000
     volumes:
       - ${PWD}/backend:/app/backend
-    environment:
-      - SECRET_KEY=devsecretkey
-      - DEBUG=1
-      - DB_HOST=db
-      - DB_NAME=devdb
-      - DB_USER=devuser
-      - DB_PASS=changeme
+      - ./data/web:/vol/web
+    env_file:
+      - .dbenv
     restart: unless-stopped
     depends_on:
       - db
@@ -39,22 +35,20 @@ services:
   db:
     container_name: postgres
     image: postgres:13-alpine
-    environment:
-      - POSTGRES_DB=devdb
-      - POSTGRES_USER=devuser
-      - POSTGRES_PASSWORD=changeme
-    # env_file:
-    #   - .dbenv
-    restart: on-failure
+    env_file:
+      - .dbenv
     ports:
       - "5432:5432"
+    restart: on-failure
 
   pgadmin:
     container_name: pgadmin4
     image: dpage/pgadmin4
-    restart: always
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@admin.com
-      PGADMIN_DEFAULT_PASSWORD: root
+    env_file:
+      - .dbenv
     ports:
       - "8080:80"
+    restart: always
+
+# /Users/arakhurs/Desktop/ft_transcendence-42/ft_transendence
+# c2r11s2% docker-compose run --rm backend sh -c "python manage.py createsuperuser"
