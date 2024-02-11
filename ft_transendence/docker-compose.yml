@@ -52,5 +52,5 @@ services:
       - "8080:80"
     restart: always
 
-# /Users/arakhurs/Desktop/ft_transcendence-42/ft_transendence
-# c2r11s2% docker-compose run --rm backend sh -c "python manage.py createsuperuser"
+
+#docker-compose run --rm backend sh -c "python manage.py createsuperuser"
