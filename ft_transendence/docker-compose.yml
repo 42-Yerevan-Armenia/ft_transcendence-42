@@ -1,16 +1,16 @@
 version: '3.9'
 
 services:
-  frontend:
-    container_name: frontend
-    build:
-      context: .
-      dockerfile: frontend/Dockerfile
-    volumes:
-      - ${PWD}/frontend:/app/frontend
-    ports:
-      - 3000:3000
-    restart: unless-stopped
+  # frontend:
+  #   container_name: frontend
+  #   build:
+  #     context: .
+  #     dockerfile: frontend/Dockerfile
+  #   volumes:
+  #     - ${PWD}/frontend:/app/frontend
+  #   ports:
+  #     - 3000:3000
+  #   restart: unless-stopped
 
   backend:
     container_name: backend
@@ -24,7 +24,7 @@ services:
     ports:
       - 8000:8000
     volumes:
-      - ${PWD}/backend:/app/backend
+      - ${PWD}/backend:/backend
       - ./data/web:/vol/web
     env_file:
       - .dbenv
@@ -39,6 +39,8 @@ services:
       - .dbenv
     ports:
       - "5432:5432"
+    volumes:
+      - /var/db_data:/var/lib/postgresql/data
     restart: on-failure
 
   pgadmin:

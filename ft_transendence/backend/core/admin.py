@@ -1,6 +1,5 @@
 from django.contrib import admin
+from .models import Profile
 
-from core.models import Sample
 
-
-admin.site.register(Sample)
+admin.site.register(Profile)
