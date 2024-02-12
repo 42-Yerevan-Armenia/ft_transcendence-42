@@ -52,4 +52,3 @@ node_modules
 *.pem
 
 /data
-*.DS_Store
