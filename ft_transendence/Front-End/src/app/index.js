@@ -6,7 +6,6 @@ const HostPort="http://localhost:5001"
 //queshon too backend Email exist or not and 
 //if create 
 async function ControllerCheckEmail(email) {
-  
   try {
     const response = await fetch(`${HostPort}/registerpage?email=${email}`);
 
@@ -15,20 +14,24 @@ async function ControllerCheckEmail(email) {
       throw new  Error("Error: Whene Email check status " + response.status)
     }
     const result = await response.json();
-    console.log(JSON.stringify(result, undefined, 2));
-    console.log("ControllerCheckEmail   Succsse++++++++++++++++++++");
+
+    if (!result || typeof result !== 'object') {
+      throw new Error("Invalid response data");
+    }
     return {state:true, message: result.message};
   }
   catch(err) {
-    const error = err + "";
+    let error;
+    if (err)
+      error = err  + "";
+    else
+      error = "Error: Server";
     return {state:false, "message": error};
   }
 }
 
 
 async function ControllerCheckReplayCode(code) {
-  console.log("code = [" + code + "]");
-  
   try {
       const response = await fetch(`${HostPort}/confirm`, {
           method: 'POST',
@@ -39,8 +42,12 @@ async function ControllerCheckReplayCode(code) {
         throw new Error(response.statusText  + " " + response.status);
 
       const data = await response.json(); // Await the parsing of JSON data
-      console.log("ControllerCheckReplayCode  Succsse++++++++++++++++++++");
-      return{state:true, "message": data }; ;
+
+      if (!data || typeof data !== 'object') {
+        throw new Error("Invalid response data");
+      }
+
+      return{state:true, "message": data };
   }
   catch (err) {
     
@@ -53,7 +60,35 @@ async function ControllerCheckReplayCode(code) {
 }
 
 
+async function ControllerPessPassword(password, User) {
+  console.log("ControllerPessPassword");
+  try {
+    const response = await fetch(`${HostPort}/password`, {
+      method: 'POST',
+      body: JSON.stringify({ code: password, email: User._Email }),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    });
 
+    if (!response.ok) {
+      throw new Error(`Failed to update password. Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+
+    if (!data || typeof data !== 'object') {
+      throw new Error("Invalid response data");
+    }
+
+    console.log("Response data:", data);
+    console.log("ControllerPessPassword  Succsse++++++++++++++++++++");
+    return { state: true, message: data };
+  } catch (error) {
+    console.error("Error:", error);
+    return { state: false, message: error.message };
+  }
+}
 
 // ################################################################################# Main.js
 
@@ -76,6 +111,35 @@ function ValidateEmail(input) {
   }
 }
 
+
+function PasswordisCorrect(obj, error){
+  if (obj.value.length < 8 || obj.value.length > 16)
+  {
+    error.innerHTML = "password must be 8 to 16 character";
+    error.style.color = "red";
+    return false;
+  }
+    // Define a regular expression to match the password criteria
+    const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])/;
+    
+    // Test if the password matches the regular expression
+  if (!passwordRegex.test(obj.value))
+  {
+    debugger
+    error.innerHTML = "At least one lowercase letter , one uppercase letter, At least one digit";
+    error.style.color = "red";
+    return false;
+  }
+  return true;
+}
+
+
+function HashCodeGeneration(){
+  let hashCode = Array.from({length:10}, (i) =>Math.floor(Math.random() * 10)) + "";
+  const sliceDelete = /,/g;
+  const str = hashCode.replace(sliceDelete, '');
+  return str;
+}
 
 
 //-------------------------------------------------       Pages     ----------------------------------------
@@ -129,11 +193,10 @@ class ConfirmPage extends HtmlElement {
     current = current.substring(0, current.lastIndexOf("."));
     current = 30 - (current - this.TimeDureationStart);
     setTimeout(() => {
+      if (User._ConfirmEmail)
+        return true;
       if (current <= 0)
       {
-        if (User._ConfirmEmail)
-          return true;
-
         this._style.display = "none";
         User._ConfirmEmail = false;
         Home.DisplayBlock();
@@ -145,7 +208,6 @@ class ConfirmPage extends HtmlElement {
         this.TimeDureation.innerHTML = current; //minuts
       }
     }, 1000);
-    console.log(" ---------------------------  ");
   }
 
   async setDisplayBlock(){
@@ -172,7 +234,7 @@ class ConfirmPage extends HtmlElement {
   }
 
   //click confirm button and check respons
-  async ConfirmPageContinue(){
+  async ConfirmPageContinue() {
     this.err.innerHTML = "";
   
     //each input must not be empty
@@ -214,7 +276,55 @@ class PasswordPage extends HtmlElement {
     super(".PasswordPage")
     this._style.display = "none";
   }
+  PasswordConfirm = document.querySelector(".PasswordPageContinue");
+  _NewPassword = document.querySelector(".NewPassword");
+  _RepeatPassword = document.querySelector(".RepeatPassword");
+
+  PasswordConfirmButton(){
+    const NewPasswordError = document.querySelector(".NewPasswordError");
+    const RepeatPasswordError = document.querySelector(".RepeatPasswordError")
+    NewPasswordError.innerHTML = "";
+    RepeatPasswordError.innerHTML = "";
+    if (!this._NewPassword.value)
+    {
+      NewPasswordError.innerHTML = "must not be Empty";
+      NewPasswordError.style.color = "red";
+      return false;
+    }
+    if (!PasswordisCorrect(this._NewPassword, NewPasswordError))
+    {
+      return false;
+    }
+    if (!this._RepeatPassword.value)
+    {
+      RepeatPasswordError.innerHTML = "must not be Empty";
+      RepeatPasswordError.style.color = "red";
+      return false;
+    }
+    if (!PasswordisCorrect(this._RepeatPassword, RepeatPasswordError))
+    {
+      return false;
+    }
+    if (this._RepeatPassword.value !== this._NewPassword.value)
+    {
+      RepeatPasswordError.innerHTML = "replay password must be equal to password";
+      RepeatPasswordError.style.color = "red";
+      return false;
+    }
+    User._Password = this._RepeatPassword.value;
+    return true;
+  }
+
+  async PasswordConfirmWithServer()
+  {
+    let Hash_code = HashCodeGeneration();
+    debugger
+    return await ControllerPessPassword(Hash_code + "" + User._Password + "" + Hash_code, User);
+  }
 }
+
+
+
 
 //login Page 
 class LoginPage extends HtmlElement {
@@ -309,6 +419,7 @@ class RegisterPage extends HtmlElement {
   }
 
   async RegistersWithEmail() {
+    debugger
     let err = document.querySelector(".RegisterErrorHandling");
     let _RegisterPageinput = document.querySelector(".RegisterPageinput");
     let value = _RegisterPageinput.value;
@@ -501,5 +612,17 @@ Confirm.ConfirmYourEmail.addEventListener('click', async () => {
     Confirm.DisplayNone();
     Home.DisplayBlock();
     Home.NavMidleHome();
+  }
+})
+
+
+Password.PasswordConfirm.addEventListener("click", async () => {
+  const isCorrectPassword = Password.PasswordConfirmButton();
+  if (isCorrectPassword)
+  {
+
+   const codeSesion = await Password.PasswordConfirmWithServer();
+   console.log("codeSesion = " + codeSesion + " typeof(codeSesion) " + typeof(codeSesion));
+
   }
 })

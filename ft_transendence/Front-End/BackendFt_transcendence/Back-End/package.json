@@ -25,6 +25,7 @@
     "nodemailer": "^6.9.9",
     "nvm": "^0.0.4",
     "passport": "^0.7.0",
-    "passport-local": "^1.0.0"
+    "passport-local": "^1.0.0",
+    "pg": "^8.11.3"
   }
 }
