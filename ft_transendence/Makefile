@@ -10,6 +10,16 @@ up:
 down:
 	docker compose down
 
+ddown:
+	docker compose -f docker-compose_deploy.yml down --volumes
+
+dbuild:
+	docker compose -f docker-compose_deploy.yml build
+
+dup:
+	docker compose -f docker-compose_deploy.yml up -d
+	docker compose logs -f
+
 start:
 	docker compose start
 
