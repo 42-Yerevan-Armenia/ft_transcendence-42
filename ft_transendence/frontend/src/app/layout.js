@@ -12,7 +12,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={inter.className}>
-        <main>
+        <main className='main'>
           <header>
             <h2>ft_transcendence</h2>
           </header>

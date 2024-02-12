@@ -10,7 +10,6 @@
     height: 100px;
     justify-content: center;
     align-items: flex-end;
-
 }
 
 .RightsigninButton{
@@ -22,6 +21,7 @@
     color: white;
     font-size: 20px;
     -webkit-text-stroke-width: 1px;
+    cursor: pointer;
 }
  
 
@@ -46,7 +46,8 @@
 .Rightsignup{
     display: flex;
     justify-content: center;
-    align-items: flex-start;;
+    align-items: flex-start;
+    cursor: pointer;
 }
 
 .RightgninupButton{

@@ -1,22 +1,25 @@
 import Stule from './Right.module.css';
+import Link from  'next/link';
+
 
 export default function Right(){
     return(
-        <div className={Stule.Rightsection}>
+        <div className={Stule.Rightsection} >
             <div className={Stule.Rightsignin}>
-                <div className={Stule.RightsigninButton}>
+                <Link href={'/login'} className={Stule.RightsigninButton}>
                     Sign in
-                </div>
+                </Link>
             </div>
             <div className={Stule.RightMidle}>
                 <div className={Stule.RightMidLepoint}></div>
                 <div>OR</div>
                 <div className={Stule.RightMidLepoint}></div>
             </div>
-            <div className={Stule.Rightsignup}>
-                <div className={Stule.RightgninupButton}>
+            <div className={Stule.Rightsignup} >
+                <Link href={'/register'} className={Stule.RightgninupButton} >
                     Sign up
-                </div>
+                </Link>
+                
             </div>
         </div>
     )

@@ -1,0 +1,134 @@
+.ConfirmPage{
+    width: auto;
+    height: 700px;
+    border-radius: 20px;
+    padding-top: 100px;
+    background: radial-gradient(66.54% 118.23% at 37.47% 107.32%, #D9CBFD 0%, #7758D1 100%);
+}
+
+
+.ConfirmPageConteiner {
+    width: 1000px;
+    height: 600px;
+    background-color: #302C4A;
+    background-image: url("../../public/Bodygradien.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    margin-left: auto;
+    margin-right: auto; 
+    border-radius: 2px;
+}
+
+.ConfirmPagePosition{
+    display: flex;
+    flex-direction: column;
+    background-color: rgba(54, 47, 82, 0.3);
+    width: 500px;
+    height: 400px;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    top: 100px;
+    position: relative;
+    border-radius: 20px;
+}
+
+.ConfirmPageText{
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    gap: 15px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: auto;
+    margin-bottom: auto;
+    color: rgba(190, 156, 190, 0.8);
+}
+
+.ConfirmPageH2{
+    color: white;
+    margin-bottom:0;
+    margin-top: 0;
+}
+
+
+.ConfirmPagepassword{
+    background-color: black;
+    border-radius: 5px;
+    color: rgba(190, 156, 190, 1);
+    border: 8px solid black;
+    width: 10px;
+}
+
+
+.ConfirmPagepassword::placeholder {
+    color: rgba(190, 156, 190, 1);
+}
+
+
+.ConfirmPageContinue{
+    background-color: rgba(0, 167, 255, 0.8);
+    border-radius: 5px;
+    padding: 4px;
+    color: rgba(245, 238, 243, 1);
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+
+
+.ConfirmPageP{
+    color: rgba(215, 187, 206, 1);
+    margin-bottom: 10px;
+}
+
+
+.ConfirmPageCode{
+    display: flex;
+    justify-content: space-evenly;
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+@media only screen and (max-width: 1060px){
+    .ConfirmPageConteiner{
+       width: 800px;
+    }
+
+}
+
+@media only screen and (max-width: 834px){
+    .ConfirmPageConteiner{
+       width: 600px;
+    }
+
+}
+
+@media only screen and (max-width: 634px){
+    .ConfirmPageConteiner{
+        width: 400px;
+     }
+    .ConfirmPagePosition{
+        width: 323px;
+    }
+    .ConfirmPageH2{
+        font-size: clamp(2px 14vw 20px);
+    }
+}
+
+@media only screen and (max-width: 430px){
+    .ConfirmPage{
+        width: 270px;
+    }
+    .ConfirmPageConteiner{
+        width: 90%;
+    }
+    .ConfirmPagePosition{
+        width: 90%;
+    }
+    .ConfirmPageText{
+        width: 90%;
+        font-size: 10px;
+    }
+}
