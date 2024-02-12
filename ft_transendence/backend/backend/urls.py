@@ -18,10 +18,12 @@ from django.urls import path
 from django.conf.urls.static import static
 from django.conf import settings
 from core.views import UserAPIView
+from core.views import EmailValidation
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/v1/userlist/', UserAPIView.as_view())
+    path('api/v1/userlist/', UserAPIView.as_view()),
+    path('email_validation/', EmailValidation.as_view())
 ]
 
 if settings.DEBUG:
