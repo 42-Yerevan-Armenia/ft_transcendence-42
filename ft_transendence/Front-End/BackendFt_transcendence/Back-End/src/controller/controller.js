@@ -2,7 +2,7 @@ import express, { json } from 'express';
 import {Users} from "../bd/data.js"
 import CheckEmail from "./email/emailSend.js";
 import codeRandomGenerate from "./codeRandomGenerate/codeRandomGenerate.js";
-import {ClientUser, Client, clearObject}  from "../User/UserClass.js";
+import {ClientUser, Client, clearObject}  from "../model/User/UserClass.js";
 
 const router = express.Router();
 
@@ -29,7 +29,6 @@ router.get("/registerpage", async (req, res) => {
     await CheckEmail(email, ClientUser.confirmEmailCode)
     .then(result => {
         ClientUser.email = email;
-        console.log("1new Date()" + new Date());
         ClientUser.confirmEmailCodeTime = new Date() * 0.0006; //minuts
         return res.send({ message: `received user confirmed` });
     })
@@ -42,14 +41,12 @@ router.get("/registerpage", async (req, res) => {
 //confirm email with code
 router.post("/confirm", async (req, res) => {
     const {code} = req.body;
-    console.log("code == [" + code + "] ClientUser.confirmEmailCode {" + ClientUser?.confirmEmailCode + "}")
-    console.log("2new Date()" + new Date());
+
     const dureation = new Date() * 0.0006 - ClientUser.confirmEmailCodeTime;
     if (!code)
     {
         return res.status(400).json("Error: Bad Request")
     }
-    console.log("dureation = " + dureation);
     if (dureation > 30)
     {
         clearObject();
@@ -57,12 +54,42 @@ router.post("/confirm", async (req, res) => {
     }
     if (code === ClientUser?.confirmEmailCode)
     {
-        console.log("++++OK++++");
         ClientUser.confirmEmail = true;
         return res.send({ message: "Email confirmed successfully" });
     }
     return res.status(404).json("Error: Not Found");
 })
+
+//password confirm
+router.post("/password", async (req, res) => {
+    const {code, email} = req.body;
+    let newCode = code;
+    console.log("1code == " + code + " length == " + code?.length);
+    if (!code)
+    {
+        return res.status(401).json("Error: empty password doesn't allow access");
+    }
+    if (code.length > 37 || code.length < 8 )
+    {
+        return res.status(422).json("Error: unable to process the contained instructions")
+    }
+    if (code.length > 8 && code.length < 16)
+    {
+        newCode = process.env.SESSION_SECRET + code + process.env.SESSION_SECRET;
+    }
+
+    newCode = newCode.slice(10, -10);
+    res.send({
+        message: "All ok asda64654sda6sd464awd949",
+        confirmed: true,
+        email: email
+    });
+})
+
+
+
+
+
 
 
 
