@@ -17,8 +17,7 @@ from django.contrib import admin
 from django.urls import path
 from django.conf.urls.static import static
 from django.conf import settings
-from core.views import UserAPIView
-from core.views import EmailValidation
+from core.views import UserAPIView, EmailValidation
 
 urlpatterns = [
     path('admin/', admin.site.urls),
