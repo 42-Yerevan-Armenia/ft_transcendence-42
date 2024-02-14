@@ -8,8 +8,8 @@ const router = express.Router();
 
 // http://localhost:5001/registerpage?email=hovhannes_vardanyan1@mail.ru
 //returns RegisterPage check
-router.get("/registerpage", async (req, res) => {
-    const email = req.query.email; // Use req.query to access query parameters
+router.post("/email_validation", async (req, res) => {
+    const {email} = req.body; // Use req.query to access query parameters
 
     if (!email)
     {
