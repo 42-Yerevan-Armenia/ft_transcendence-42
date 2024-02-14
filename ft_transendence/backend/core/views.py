@@ -2,7 +2,7 @@ from rest_framework import generics, status, viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from .models import Profile
+from .models import Person as Profile
 from .serializers import UserSerializer, EmailSerializer
 from .validations import email_validation, register_validation
 

@@ -20,6 +20,15 @@ dup:
 	docker compose -f docker-compose_deploy.yml up -d
 	docker compose logs -f
 
+dbshell:
+	docker-compose run --rm backend sh -c "python manage.py dbshell"
+
+migration:
+	docker-compose run --rm backend sh -c "python manage.py makemigrations"
+
+migrate:
+	docker-compose run --rm backend sh -c "python manage.py migrate"
+
 start:
 	docker compose start
 
