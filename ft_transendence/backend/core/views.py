@@ -53,14 +53,3 @@ class Register(APIView):
             return JsonResponse({"success": "false","error": e.message}, status=500)
         return JsonResponse({"success": "true", "reg": model_to_dict(data)})
 
-
-# class EmailValidation(APIView):
-#     def post(self, request):
-#         frontdata = email_validator(request.data)
-#         email = frontdata.get('email', '').strip()
-#         try:
-#             profile = Profile.objects.get(email__iexact=email)
-#             return JsonResponse({"message": "Email already exists"})
-#         except Profile.DoesNotExist:
-#             data = Profile.objects.create(email=email)
-#             return JsonResponse({"email": model_to_dict(data)})
