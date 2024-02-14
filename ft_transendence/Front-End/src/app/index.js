@@ -1,5 +1,5 @@
-const HostPort="http://localhost:5001"
-
+// const HostPort="http://localhost:5001"
+const HostPort="http://10.12.11.2:8000"
 
 //#################################################################################   Controller.js
 
@@ -7,7 +7,14 @@ const HostPort="http://localhost:5001"
 //if create 
 async function ControllerCheckEmail(email) {
   try {
-    const response = await fetch(`${HostPort}/registerpage?email=${email}`);
+    // const response = await fetch(`${HostPort}/registerpage?email=${email}`,{
+    const response = await fetch(`${HostPort}/email_validation/`,{
+      method: 'POST',
+      body: JSON.stringify({email:email}),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    });
 
     if (!response.ok)
     {
