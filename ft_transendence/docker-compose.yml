@@ -52,5 +52,4 @@ services:
       - "8080:80"
     restart: always
 
-
 #docker-compose run --rm backend sh -c "python manage.py createsuperuser"
