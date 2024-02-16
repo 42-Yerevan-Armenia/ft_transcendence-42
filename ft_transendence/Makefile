@@ -10,9 +10,6 @@ up:
 down:
 	docker compose down
 
-ddown:
-	docker compose -f docker-compose_deploy.yml down --volumes
-
 dbuild:
 	docker compose -f docker-compose_deploy.yml build
 
@@ -20,23 +17,26 @@ dup:
 	docker compose -f docker-compose_deploy.yml up -d
 	docker compose logs -f
 
+ddown:
+	docker compose -f docker-compose_deploy.yml down --volumes
+
 dbshell:
 	docker-compose run --rm backend sh -c "python manage.py dbshell"
 
-migration:
+migrations:
 	docker-compose run --rm backend sh -c "python manage.py makemigrations"
 
 migrate:
 	docker-compose run --rm backend sh -c "python manage.py migrate"
+
+admin:
+	docker-compose run --rm backend sh -c "python manage.py createsuperuser"
 
 start:
 	docker compose start
 
 stop:
 	docker compose stop
-
-logs:
-	docker compose logs
 	
 prune: down
 	rm -rf database/data
