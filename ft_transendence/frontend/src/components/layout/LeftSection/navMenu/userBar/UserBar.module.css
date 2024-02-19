@@ -1,0 +1,84 @@
+.IconExit {
+    width: 15px;
+    height: 15px;
+    margin-top: -10px; 
+    margin-left: 80px;
+}
+
+
+.Text{
+    margin: 0;
+    margin-left: 10px;
+}
+
+.InfoText{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    height: 100%;
+}
+
+
+
+.On{
+    position: relative;
+    width: 9px;
+    height: 9px;
+    border-radius: 5px;
+    background-color: #0BEF06;
+    margin-left: 45px;
+    margin-top: -24px ;
+}
+
+.Off {
+    position: relative;
+    width: 9px;
+    height: 9px;
+    border-radius: 5px;
+    background-color: grey;
+    margin-left: 40px;
+    margin-top: -10px ;
+}
+
+.Image{
+    border-radius: 50px;
+    margin: 12px;
+}
+
+
+
+.Info{
+    width:100%;
+    height: 100%;
+}
+
+
+.Onlain{
+    width: 40%;
+    background-color: #5C5486;
+}
+
+.User{
+    display: flex;
+    margin-top: 90px;
+    height: 80px;
+}
+
+@media only screen and (max-width: 1100px){
+
+    .Info{
+        display: none;
+    }
+    .Onlain{
+        width: auto;
+        height: 65px;
+    }
+}
+
+@media only screen and (max-width: 779px){
+    .User{
+        margin-top: 35px;
+        height: 80px;
+    }
+}

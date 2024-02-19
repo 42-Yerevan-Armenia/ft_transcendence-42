@@ -1,0 +1,30 @@
+.LeftSection{
+    flex-direction: column;
+    height: max-content;
+    color: white;
+}
+
+.menuIcon{
+    display: flex;
+    gap: 8px;
+    padding-left: 16px;
+    padding-top: 16px;  
+}
+
+.dragonPong {
+    color: #FFF;
+    text-align: center;
+    font-family: Space Grotesk;
+    margin-top: 8px;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+
+} 
+
+@media only screen and (max-width: 1100px){
+    .dragonPong{
+        display: none;
+    }
+}

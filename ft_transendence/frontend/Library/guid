@@ -1,0 +1,33 @@
+// (node:76144) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+// (Use `node --trace-deprecation ...` to show where the warning was created)
+// "start": "cross-env NODE_OPTIONS=--trace-deprecation react-scripts start",
+<!-- needed write in package.json "start": "next start NODE_OPTIONS='--trace-deprecation", and delete "punycode": "^2.3.1", -->
+
+
+//--------------------------  git    --------------------------------------------------
+//This creates the new branch and immediately switches you to it.
+//git checkout -b <branch-name>
+
+//Create a branch without switching
+git branch <branch-name>
+
+
+https://www.atlassian.com/git/tutorials/using-branches#:~:text=In%20Git%2C%20branches%20are%20a,branch%20to%20encapsulate%20your%20changes.
+
+
+
+//-----------------------      Топ-7 фишек HTML/CSS верстки 
+//-----------------------      сайта которые ты должен знать
+    https://www.youtube.com/watch?v=wRZx6ylDfoI
+
+    Flexbox и Grid ⚡️ РЕАЛЬНЫЕ ПРИМЕРЫ, где МОЖНО 
+    и НЕЛЬЗЯ использовать CSS Flexbox и Grid
+
+    https://www.youtube.com/watch?v=KaDz7pxbzyw
+     font-size: clamp(2px 14vw 20px);
+
+//--------------------------  nvm    --------------------------------------------------
+export NVM_DIR="$HOME/.nvm"
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+
+nvm install node --reinstall-packages-from=node

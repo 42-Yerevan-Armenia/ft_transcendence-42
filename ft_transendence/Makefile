@@ -4,10 +4,30 @@ build:
 	docker compose build
 
 up:
-	@docker compose up -d
+	docker compose up -d
+	docker compose logs -f
 
 down:
 	docker compose down
+
+ddown:
+	docker compose -f docker-compose_deploy.yml down --volumes
+
+dbuild:
+	docker compose -f docker-compose_deploy.yml build
+
+dup:
+	docker compose -f docker-compose_deploy.yml up -d
+	docker compose logs -f
+
+dbshell:
+	docker-compose run --rm backend sh -c "python manage.py dbshell"
+
+migration:
+	docker-compose run --rm backend sh -c "python manage.py makemigrations"
+
+migrate:
+	docker-compose run --rm backend sh -c "python manage.py migrate"
 
 start:
 	docker compose start

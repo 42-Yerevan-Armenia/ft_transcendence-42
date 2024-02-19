@@ -1,5 +1,8 @@
-asgiref==3.7.2
-Django==3.2.23
-pytz==2023.3.post1
-sqlparse==0.4.4
-typing-extensions==4.7.1
+Django>=3.2.3,<3.3
+django-cors-headers==4.3.1
+django-extensions==3.2.3
+django-friendship==1.9.6
+djangorestframework==3.14.0
+psycopg2>=2.8.6,<2.9
+uWSGI>=2.0.19.1,<2.1
+pillow==10.2.0

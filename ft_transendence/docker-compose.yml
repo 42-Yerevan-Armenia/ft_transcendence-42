@@ -1,39 +1,55 @@
-services:
+version: '3.9'
 
-  postgres:
+services:
+  # frontend:
+  #   container_name: frontend
+  #   build:
+  #     context: .
+  #     dockerfile: frontend/Dockerfile
+  #   volumes:
+  #     - ${PWD}/frontend:/app/frontend
+  #   ports:
+  #     - 3000:3000
+  #   restart: unless-stopped
+
+  backend:
+    container_name: backend
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    command: >
+      sh -c "python manage.py wait_for_db &&
+             python manage.py migrate &&
+             python manage.py runserver 0.0.0.0:8000"
+    ports:
+      - 8000:8000
+    volumes:
+      - ${PWD}/backend:/backend
+      - ./data/web:/vol/web
+    env_file:
+      - .dbenv
+    restart: unless-stopped
+    depends_on:
+      - db
+
+  db:
     container_name: postgres
-    image: postgres:latest
-    restart: on-failure
+    image: postgres:13-alpine
     env_file:
       - .dbenv
     ports:
       - "5432:5432"
     volumes:
       - /var/db_data:/var/lib/postgresql/data
-  
+    restart: on-failure
+
   pgadmin:
     container_name: pgadmin4
     image: dpage/pgadmin4
-    restart: always
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@admin.com
-      PGADMIN_DEFAULT_PASSWORD: root
+    env_file:
+      - .dbenv
     ports:
       - "8080:80"
- 
-#   db:
-#     image: postgres
-#     restart: always
-#     environment:
-#       POSTGRES_PASSWORD: example
-#     volumes:
-# - pgdata:/var/lib/postgresql/data
- 
-# volumes:
-#   pgdata:
- 
-#   adminer:
-#     image: adminer
-#     restart: always
-#     ports:
-#       - 8080:8080
+    restart: always
+
+#docker-compose run --rm backend sh -c "python manage.py createsuperuser"

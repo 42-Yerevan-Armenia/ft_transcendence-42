@@ -1,0 +1,67 @@
+.Threepoint{
+    align-items: center;
+    width: 25px;
+    height: 25px;
+}
+
+.Explore{
+    display: flex;
+    color: white;
+    gap: 16px;
+    align-items: center;
+    padding-left: 24px;
+    border-bottom: 2px solid gray;
+}
+
+.link {
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    text-decoration: none;
+    padding-left: 16px;
+    cursor: pointer;
+}
+
+.NamvMenu{
+    width: all;
+    height: 530px;
+    flex-direction: column;
+}
+
+.nav{
+    display: flex;
+    flex-direction: column;
+    height: 475px;
+}
+
+@media only screen and (max-width: 1100px){
+
+    .navLinkP{
+         display: none;
+    } 
+    .link,.Threepoint{
+        margin-top: 20px;
+        margin-bottom: 16px;
+        width: 60px;
+    }
+}
+
+@media only screen and (min-width: 779px){
+    .NavSigninSignout{
+        display: none;
+    }
+}
+
+.NavSignin, .NavSignUp{
+    background-color:#1B8CCE;
+    text-align: center;
+    border-radius: 10px;
+    border: 2px solid #1B8CCE;
+    width: 70px;
+}
+
+.NavSignUp{
+    background-color: #D823D7;
+    margin-top: 10px;
+}
