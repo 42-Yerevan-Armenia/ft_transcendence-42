@@ -157,3 +157,13 @@ CORS_ALLOW_METHODS = [
 APPEND_SLASH=False
 
 CORS_ALLOW_CREDENTIALS = True
+
+
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 5001  # or the appropriate port for your SMTP server
+EMAIL_HOST_USER = 'avanesvh@gmail.com'
+EMAIL_HOST_PASSWORD = 'ictb clkk euql qfvq'
+EMAIL_USE_TLS = False  # or False if you are not using TLS
