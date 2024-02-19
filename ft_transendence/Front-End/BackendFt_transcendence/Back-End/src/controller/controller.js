@@ -26,10 +26,10 @@ router.post("/email_validation", async (req, res) => {
     ClientUser.confirmEmailCode = codeRandomGenerate(5);
 
     // send a confirmation code to the client's email
-    await CheckEmail(email, ClientUser.confirmEmailCode)
-    .then(result => {
-        ClientUser.email = email;
-        ClientUser.confirmEmailCodeTime = new Date() * 0.0006; //minuts
+    let ResultConfirm = await CheckEmail(email, ClientUser.confirmEmailCode)
+        .then(result => {
+            ClientUser.email = email;
+            ClientUser.confirmEmailCodeTime = new Date() * 0.0006; //minuts
         return res.send({ message: `received user confirmed` });
     })
     .catch(error => {

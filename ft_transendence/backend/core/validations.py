@@ -16,6 +16,22 @@ def email_validation(email):
     if UserModel.objects.filter(email=email).exists():
         raise ValidationError('Email already exists')
 
+from django.http import JsonResponse
+from django.core.mail import send_mail
+import secrets
+
+def generate_numeric_token(length):
+    return ''.join(str(secrets.randbelow(10)) for _ in range(length))
+
+def send_confirmation_email(email):
+    five_digits = generate_numeric_token(5)
+    subject = 'Confirm Your Email Address'  
+    message = f'Hi, Please confirm your email address by entering the code: {five_digits}'
+    from_email = 'avanesvh@gmail.com'
+    recipient_list = [email]
+    send_mail(subject, message, from_email, recipient_list, fail_silently=False)
+    return five_digits
+
 def register_validation(data):
     password = data['password']
     nickname = data['nickname'].strip()
