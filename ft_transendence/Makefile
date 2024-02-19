@@ -10,16 +10,6 @@ up:
 down:
 	docker compose down
 
-dbuild:
-	docker compose -f docker-compose_deploy.yml build
-
-dup:
-	docker compose -f docker-compose_deploy.yml up -d
-	docker compose logs -f
-
-ddown:
-	docker compose -f docker-compose_deploy.yml down --volumes
-
 dbshell:
 	docker-compose run --rm backend sh -c "python manage.py dbshell"
 

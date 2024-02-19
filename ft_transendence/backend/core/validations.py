@@ -29,9 +29,7 @@ def send_confirmation_email(email):
     message = f'Hi, Please confirm your email address by entering the code: {five_digits}'
     from_email = 'avanesvh@gmail.com'
     recipient_list = [email]
-    confirm = send_mail(subject, message, from_email, recipient_list, fail_silently=False)
-    if not confirm :
-        return JsonResponse({"error": "Failed to send email"})
+    send_mail(subject, message, from_email, recipient_list, fail_silently=False)
     return five_digits
 
 def register_validation(data):

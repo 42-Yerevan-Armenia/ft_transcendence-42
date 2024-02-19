@@ -1,16 +1,16 @@
 version: '3.9'
 
 services:
-  # frontend:
-  #   container_name: frontend
-  #   build:
-  #     context: .
-  #     dockerfile: frontend/Dockerfile
-  #   volumes:
-  #     - ${PWD}/frontend:/app/frontend
-  #   ports:
-  #     - 3000:3000
-  #   restart: unless-stopped
+  frontend:
+    container_name: frontend
+    build:
+      context: .
+      dockerfile: Front-End/Dockerfile
+    volumes:
+      - ${PWD}/Front-End:/app/Front-End
+    ports:
+      - 3000:3000
+    restart: unless-stopped
 
   backend:
     container_name: backend
@@ -51,3 +51,20 @@ services:
     ports:
       - "8080:80"
     restart: always
+
+  nginx:
+    container_name: nginx
+    build:
+      context: .
+      dockerfile: nginx/Dockerfile
+    env_file:
+      - .dbenv
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ${PWD}/backend:/backend
+    restart: unless-stopped
+    depends_on:
+      - backend
+      # - frontend
