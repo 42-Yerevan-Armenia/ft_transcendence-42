@@ -1,5 +1,6 @@
-// const HostPort="http://localhost:5001"
-const HostPort="http://10.12.11.2:8000"
+"use script"
+const HostPort="http://localhost:5001"
+// const HostPort="http://10.12.11.2:8000"
 
 //#################################################################################   Controller.js
 
@@ -39,8 +40,10 @@ async function ControllerCheckEmail(email) {
 
 
 async function ControllerCheckReplayCode(code) {
+  debugger
+  console.log("code" + code);
   try {
-      const response = await fetch(`${HostPort}/confirm`, {
+      const response = await fetch(`${HostPort}/confirm/`, {
           method: 'POST',
           body: JSON.stringify({ code: code }), // Assuming you want to send the code as JSON
           headers: { 'Content-Type': 'application/json' } // Fixed 'header' to 'headers'
