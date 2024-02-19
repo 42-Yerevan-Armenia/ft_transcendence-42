@@ -1,26 +1,26 @@
-FROM node:21.6.0
+# FROM node:21.6.0
 
-WORKDIR /app/frontend
+# WORKDIR /app/frontend
 
-COPY frontend/package*.json ./
+# COPY frontend/package*.json ./
 
-RUN npm install -g npm@latest
+# RUN npm install -g npm@latest
 
-RUN npm install
+# RUN npm install
 
-# RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+# # RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
 
-# RUN npm install node
+# # RUN npm install node
 
-# RUN export NVM_DIR="$HOME/.nvm"
-#     [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+# # RUN export NVM_DIR="$HOME/.nvm"
+# #     [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
-# RUN nvm install node
+# # RUN nvm install node
 
-# RUN nvm install node --reinstall-packages-from=node
+# # RUN nvm install node --reinstall-packages-from=node
 
-COPY . .
+# COPY . .
 
-EXPOSE 3000
+# EXPOSE 3000
 
-CMD ["npm", "run", "dev"]
+# CMD ["npm", "run", "dev"]
