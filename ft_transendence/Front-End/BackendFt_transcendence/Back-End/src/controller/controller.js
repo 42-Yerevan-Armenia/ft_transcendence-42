@@ -8,8 +8,8 @@ const router = express.Router();
 
 // http://localhost:5001/registerpage?email=hovhannes_vardanyan1@mail.ru
 //returns RegisterPage check
-router.get("/registerpage", async (req, res) => {
-    const email = req.query.email; // Use req.query to access query parameters
+router.post("/email_validation", async (req, res) => {
+    const {email} = req.body; // Use req.query to access query parameters
 
     if (!email)
     {
@@ -26,10 +26,10 @@ router.get("/registerpage", async (req, res) => {
     ClientUser.confirmEmailCode = codeRandomGenerate(5);
 
     // send a confirmation code to the client's email
-    await CheckEmail(email, ClientUser.confirmEmailCode)
-    .then(result => {
-        ClientUser.email = email;
-        ClientUser.confirmEmailCodeTime = new Date() * 0.0006; //minuts
+    let ResultConfirm = await CheckEmail(email, ClientUser.confirmEmailCode)
+        .then(result => {
+            ClientUser.email = email;
+            ClientUser.confirmEmailCodeTime = new Date() * 0.0006; //minuts
         return res.send({ message: `received user confirmed` });
     })
     .catch(error => {
