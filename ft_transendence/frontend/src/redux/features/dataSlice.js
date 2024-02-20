@@ -2,7 +2,10 @@ import {createSlice} from "@reduxjs/toolkit";
 
 
 
+
 const initialState = {
+
+  //for navigate in home page middle sections
   HomeMiddleShow:{
     homeConteiner: true,
     Profile: false,
