@@ -14,6 +14,7 @@ from django.forms.models import model_to_dict
 from django.http import JsonResponse
 from django.utils import timezone
 import json
+# import hashlib
 
 class UserAPIView(APIView):
     def get(self, request):
@@ -64,6 +65,8 @@ class Confirmation(APIView):
             return JsonResponse({"success": "false","error": "Invalid confirmation code"}, status=status.HTTP_404_NOT_FOUND)
         return JsonResponse({"success": "true", "message": "Email is validated"})
 
+from django.contrib.auth.hashers import make_password, check_password
+
 class Register(APIView):
     def post(self, request):
         confirmation_data = shared_data.get('confirmation_data', {})
@@ -73,18 +76,19 @@ class Register(APIView):
         shared_data.pop('confirmation_data', None)
         try:
             register_validation(request.data)
+            password = request.data['password'][10:-10]
+            hashed_password = make_password(password)
         except ValidationError as e:
             return JsonResponse({"success": "false","error": e.message}, status=status.HTTP_400_BAD_REQUEST)
         try:
             data = Profile.objects.create(
                 email=email,
                 nickname=request.data['nickname'],
-                password=request.data['password'],
+                password=hashed_password,
                 name = request.data['name'])
         except ValidationError as e:
             return JsonResponse({"success": "false","error": e.message}, status=500)
         return JsonResponse({"success": "true", "reg": model_to_dict(data)})
-
 
 class Password(APIView):
     def post(self, request):
@@ -105,3 +109,7 @@ class Password(APIView):
             return JsonResponse({"success": "false", "error": "Profile not found"}, status=status.HTTP_404_NOT_FOUND)
         except ValidationError as e:
             return JsonResponse({"success": "false", "error": e.message}, status=status.HTTP_400_BAD_REQUEST)
+
+# class Login(APIView): 
+#     def post(self, request):
+#         check_password("albulda", hashed_password)
