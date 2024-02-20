@@ -47,10 +47,18 @@ def register_validation(data):
         raise ValidationError('Waiting for a nickname')
     if UserModel.objects.filter(username=nickname).exists():
         raise ValidationError('Nickname already exists')
-
     if not name:
         raise ValidationError('Waiting for a name')
     try:
         validate_slug(name)
     except ValidationError:
         raise ValidationError('Invalid name format')
+
+def password_validation(new_password):
+    if not new_password:
+        raise ValidationError('Waiting for a new password')
+    try:
+        validate_password(new_password)
+    except ValidationError as e:
+        raise ValidationError(e.messages)
+    return new_password

@@ -17,14 +17,15 @@ from django.contrib import admin
 from django.urls import path
 from django.conf.urls.static import static
 from django.conf import settings
-from core.views import UserAPIView, EmailValidation, Confirmation, Register
+from core.views import UserAPIView, EmailValidation, Confirmation, Register, Password
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/v1/userlist/', UserAPIView.as_view()),
     path('email_validation/', EmailValidation.as_view()),
     path('confirm/', Confirmation.as_view()),
-    path('register/', Register.as_view())
+    path('register/', Register.as_view()),
+    path('password/', Password.as_view()),
 ]
 
 if settings.DEBUG:

@@ -4,9 +4,10 @@ from rest_framework.response import Response
 
 from .models import Person as Profile
 from .serializers import UserSerializer, EmailSerializer
-from .validations import email_validation, register_validation, send_confirmation_email
+from .validations import email_validation, register_validation, send_confirmation_email, password_validation
 from .shared_data import shared_data
 
+from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django.core.serializers import serialize
 from django.forms.models import model_to_dict
@@ -83,3 +84,24 @@ class Register(APIView):
         except ValidationError as e:
             return JsonResponse({"success": "false","error": e.message}, status=500)
         return JsonResponse({"success": "true", "reg": model_to_dict(data)})
+
+
+class Password(APIView):
+    def post(self, request):
+        data = request.data
+        email = data.get('email')
+        password = data.get('password')
+        try:
+            password = password_validation(password)
+            person = Profile.objects.get(email=email)
+            try:
+                validate_password(password)
+            except ValidationError as e:
+                return JsonResponse({"success": "false", "error": e.message}, status=status.HTTP_400_BAD_REQUEST)
+            person.password = password
+            person.save()
+            return JsonResponse({"success": "true", "message": "Password successfully updated"})
+        except Profile.DoesNotExist:
+            return JsonResponse({"success": "false", "error": "Profile not found"}, status=status.HTTP_404_NOT_FOUND)
+        except ValidationError as e:
+            return JsonResponse({"success": "false", "error": e.message}, status=status.HTTP_400_BAD_REQUEST)
