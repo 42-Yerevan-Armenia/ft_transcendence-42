@@ -6,3 +6,4 @@ djangorestframework==3.14.0
 psycopg2>=2.8.6,<2.9
 uWSGI>=2.0.19.1,<2.1
 pillow==10.2.0
+djangorestframework-simplejwt==5.3.1

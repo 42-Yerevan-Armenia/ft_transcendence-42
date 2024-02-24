@@ -27,7 +27,7 @@ start:
 
 stop:
 	docker compose stop
-	
+
 prune: down
 	rm -rf database/data
 	docker system prune -f -a
