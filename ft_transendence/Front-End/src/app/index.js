@@ -46,7 +46,10 @@ async function ControllerCheckReplayCode(code) {
       const response = await fetch(`${HostPort}/confirm/`, {
           method: 'POST',
           body: JSON.stringify({ code: code }), // Assuming you want to send the code as JSON
-          headers: { 'Content-Type': 'application/json' } // Fixed 'header' to 'headers'
+          headers: { 
+            'Content-Type': 'application/json',
+            'AuthToken': '123456'
+           } // Fixed 'header' to 'headers'
       });
       if (!response.ok)
         throw new Error(response.statusText  + " " + response.status);
