@@ -46,7 +46,10 @@ async function ControllerCheckReplayCode(code) {
       const response = await fetch(`${HostPort}/confirm/`, {
           method: 'POST',
           body: JSON.stringify({ code: code }), // Assuming you want to send the code as JSON
-          headers: { 'Content-Type': 'application/json' } // Fixed 'header' to 'headers'
+          headers: { 
+            'Content-Type': 'application/json',
+            'AuthToken': '123456'
+           } // Fixed 'header' to 'headers'
       });
       if (!response.ok)
         throw new Error(response.statusText  + " " + response.status);
@@ -69,6 +72,35 @@ async function ControllerCheckReplayCode(code) {
   }
 }
 
+async function ControllerSignUp(password, User) {
+  console.log("ControllerSignUp");
+  try {
+    const response = await fetch(`${HostPort}/register/`, {
+      method: 'POST',
+      body: JSON.stringify({ name: User._name, password: password, nickname: User._nickname}),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to update password. Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+
+    if (!data || typeof data !== 'object') {
+      throw new Error("Invalid response data");
+    }
+
+    console.log("Response data:", data);
+    console.log("ControllerPessPassword  Succsse++++++++++++++++++++");
+    return { state: true, message: data };
+  } catch (error) {
+    console.error("Error:", error);
+    return { state: false, message: error.message };
+  }
+}
 
 async function ControllerPessPassword(password, User) {
   console.log("ControllerPessPassword");
@@ -115,10 +147,26 @@ function ValidateEmail(input) {
 
   if (input?.match(validRegex)) {
     return "Valid email address!";
-
   } else {
     return "Invalid email address!";
   }
+}
+
+function checkName(str) {
+  // Regular expression to match strings with only characters
+  // and starting with an uppercase letter
+  const regex = /^[A-Z][a-z]*$/;
+
+  // Test the string against the regular expression
+  return regex.test(str);
+}
+function checkNickName(str) {
+  // Regular expression to match strings with only characters
+  // and starting with an uppercase letter
+  const regex = /^[a-z]*$/;
+
+  // Test the string against the regular expression
+  return regex.test(str);
 }
 
 
@@ -159,6 +207,7 @@ class USER{
   constructor() {
   }
   _name = "";
+  _nickname = "";
   _Password = "";
   _Email = "";
   _ConfirmEmail = false;
@@ -325,13 +374,95 @@ class PasswordPage extends HtmlElement {
     return true;
   }
 
-  async PasswordConfirmWithServer()
-  {
+  async PasswordConfirmWithServer() {
     let Hash_code = HashCodeGeneration();
     debugger
     return await ControllerPessPassword(Hash_code + "" + User._Password + "" + Hash_code, User);
   }
 }
+
+//Signup Page
+class SignupPage extends HtmlElement {
+  constructor(){
+    super(".SignupPage")
+    this._style.display = "none";
+  }
+  SignupPageContinue = document.querySelector(".SignupPageContinue");
+  _NewPassword = document.querySelector(".SignupNewPassword");
+  _RepeatPassword = document.querySelector(".SignupRepeatPassword");
+
+  checkNameNickname(){
+    const nickname = document.querySelector(".SignupPageinputNickName");
+    const name = document.querySelector(".SignupPageinputName");
+    const nickError = document.querySelector(".SignupPageinputDivErrorNickname");
+    const nameError = document.querySelector(".SignupPageinputDivErrorName");
+    nickError.innerHTML = "";
+    nameError.innerHTML = "";
+
+    if (!name.value || name.value.length < 5 || name.value.length > 15 || !checkName(name.value))
+    {
+      User._name = "";
+      nameError.innerHTML = "The name must consist of uppercase characters first and then lowercase characters and range from 5 to 15.";
+      return false;
+    }
+    if (!nickname.value || nickname.value.length < 5 || nickname.value.length > 15 || !checkNickName(nickname.value))
+    {
+      User._nickname;
+      nickError.innerHTML = "The name must contain at least 5 characters and no more than 15.";
+      return false;
+    }
+    User._name = name.value;
+    User._nickname = name.value;
+    return true;
+  }
+
+  PasswordConfirmButton(){
+    const NewPasswordError = document.querySelector(".SignupPageinputDivError");
+    const RepeatPasswordError = document.querySelector(".SignupPageinputDivErrorReplay")
+    NewPasswordError.innerHTML = "";
+    RepeatPasswordError.innerHTML = "";
+    if (!this._NewPassword.value)
+    {
+      User._Password = "";
+      NewPasswordError.innerHTML = "must not be Empty";
+      NewPasswordError.style.color = "red";
+      return false;
+    }
+    if (!PasswordisCorrect(this._NewPassword, NewPasswordError))
+    {
+      User._Password = "";
+      return false;
+    }
+    if (!this._RepeatPassword.value)
+    {
+      User._Password = "";
+      RepeatPasswordError.innerHTML = "must not be Empty";
+      RepeatPasswordError.style.color = "red";
+      return false;
+    }
+    if (!PasswordisCorrect(this._RepeatPassword, RepeatPasswordError))
+    {
+      User._Password = "";
+      return false;
+    }
+    if (this._RepeatPassword.value !== this._NewPassword.value)
+    {
+      User._Password = "";
+      RepeatPasswordError.innerHTML = "replay password must be equal to password";
+      RepeatPasswordError.style.color = "red";
+      return false;
+    }
+    User._Password = this._RepeatPassword.value;
+    return true;
+  }
+
+  async PasswordConfirmWithServer() {
+    let Hash_code = HashCodeGeneration();
+    debugger
+    return await ControllerSignUp(Hash_code + "" + User._Password + "" + Hash_code, User);
+  }
+}
+
 
 
 
@@ -561,6 +692,7 @@ const Login = new LoginPage();
 const Register = new RegisterPage();
 const Home = new HomePage();
 const Password = new PasswordPage();
+const SignUp = new SignupPage();
 
 
 //Event Listeners  Home Page
@@ -615,7 +747,7 @@ Confirm.ConfirmYourEmail.addEventListener('click', async () => {
   else if (data.state) {
     User._ConfirmEmail = true;
     Confirm.DisplayNone();
-    Password.DisplayBlock();
+    SignUp.DisplayBlock();
   }
   else if (data.message.substr(-3) == "408") {
     User._ConfirmEmail = false;
@@ -636,3 +768,16 @@ Password.PasswordConfirm.addEventListener("click", async () => {
 
   }
 })
+
+SignUp.SignupPageContinue.addEventListener("click", async () => {
+  const isCorrectPassword = SignUp.PasswordConfirmButton();
+  const ischeckNameNickname = SignUp.checkNameNickname();
+  if (isCorrectPassword && ischeckNameNickname)
+  {
+   const codeSesion = await SignUp.PasswordConfirmWithServer();
+   console.log("codeSesion = " + codeSesion + " typeof(codeSesion) " + typeof(codeSesion));
+
+  }
+})
+
+
