@@ -37,7 +37,11 @@ async function ControllerCheckEmail(email) {
     return {state:false, "message": error};
   }
 }
-
+// headers: { 
+//   'Content-Type': 'application/json',
+//   'AuthToken': '123456'
+//  } // Fixed 'header' to 'headers'
+// });
 
 async function ControllerCheckReplayCode(code) {
   debugger
@@ -47,9 +51,8 @@ async function ControllerCheckReplayCode(code) {
           method: 'POST',
           body: JSON.stringify({ code: code }), // Assuming you want to send the code as JSON
           headers: { 
-            'Content-Type': 'application/json',
-            'AuthToken': '123456'
-           } // Fixed 'header' to 'headers'
+            'Content-Type': 'application/json'
+           }
       });
       if (!response.ok)
         throw new Error(response.statusText  + " " + response.status);
