@@ -142,6 +142,7 @@
     border-radius: 10px;
     border: 2px solid #1B8CCE;
     width: 70px;
+    cursor: pointer;
 }
 
 .NavSignUp{
