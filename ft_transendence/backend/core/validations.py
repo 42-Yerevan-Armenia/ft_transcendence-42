@@ -30,6 +30,7 @@ def send_confirmation_email(email):
     from_email = 'avanesvh@gmail.com'
     recipient_list = [email]
     send_mail(subject, message, from_email, recipient_list, fail_silently=False)
+    print(five_digits)
     return five_digits
 
 def register_validation(data):
@@ -47,10 +48,18 @@ def register_validation(data):
         raise ValidationError('Waiting for a nickname')
     if UserModel.objects.filter(username=nickname).exists():
         raise ValidationError('Nickname already exists')
-
     if not name:
         raise ValidationError('Waiting for a name')
     try:
         validate_slug(name)
     except ValidationError:
         raise ValidationError('Invalid name format')
+
+def password_validation(new_password):
+    if not new_password:
+        raise ValidationError('Waiting for a new password')
+    try:
+        validate_password(new_password)
+    except ValidationError as e:
+        raise ValidationError(e.messages)
+    return new_password
