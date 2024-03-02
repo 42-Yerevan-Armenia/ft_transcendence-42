@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'friendship',
     'rest_framework',
+    'rest_framework_simplejwt.token_blacklist',
 ]
 
 MIDDLEWARE = [
@@ -179,9 +180,12 @@ REST_FRAMEWORK = {
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
-    "ROTATE_REFRESH_TOKENS": False,
-    "BLACKLIST_AFTER_ROTATION": False,
-    "UPDATE_LAST_LOGIN": False,
+    "ROTATE_REFRESH_TOKENS": True, #for security reasons we should rotate the refresh tokens after each use (default is False)
+    "BLACKLIST_AFTER_ROTATION": True, #to maintain the security of the application, we should blacklist the old refresh tokens after rotating (default is False)
+    "UPDATE_LAST_LOGIN": False, #
+
+    'AUTH_COOKIE': 'auth_token',
+    'REFRESH_COOKIE': 'refresh_token',
 
     "ALGORITHM": "HS256",
     "SIGNING_KEY": SECRET_KEY,

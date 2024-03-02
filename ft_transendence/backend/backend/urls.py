@@ -23,10 +23,10 @@ from core.views import (
     Confirmation, 
     Register, 
     Password,
+    PasswordReset,
     Login,
-    Profile,
-    UpdateProfile,
-    DeleteProfile,
+    ProfileById,
+    TokenView,
 )
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
@@ -37,17 +37,18 @@ from rest_framework_simplejwt.views import (
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/v1/userlist/', UserAPIView.as_view()),
-    path('update_profile/', UpdateProfile.as_view(), name='update_profile'),
-    path('delete_profile/', DeleteProfile.as_view(), name='delete_profile'),
+    path('api/v1/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/v1/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('api/v1/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
+    path('token/', TokenView.as_view(), name='token_obtain_pair'),
+
     path('email_validation/', EmailValidation.as_view()),
     path('confirm/', Confirmation.as_view()),
     path('register/', Register.as_view()),
     path('password/', Password.as_view()),
+    path('password_reset/', PasswordReset.as_view()),
     path('login/', Login.as_view()),
-    path('profile/', Profile.as_view()),
-    path('api/v1/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/v1/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('api/v1/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
+    path('api/v1/profile/<int:pk>/', ProfileById.as_view()),
 ]
 
 if settings.DEBUG:
