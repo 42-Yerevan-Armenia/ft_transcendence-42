@@ -1,7 +1,12 @@
 from rest_framework import generics, status, viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import api_view
+from rest_framework.authentication import TokenAuthentication
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from .models import Person
 from .serializers import UserSerializer, EmailSerializer
@@ -12,6 +17,7 @@ from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth.hashers import make_password, check_password
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
+from django.core.files.base import ContentFile
 from django.core.serializers import serialize
 from django.forms.models import model_to_dict
 from django.http import JsonResponse
@@ -19,6 +25,8 @@ from django.utils import timezone
 import json
 import base64
 import os
+
+#TODO: password_reset, 
 
 class UserAPIView(APIView):
     def get(self, request):
@@ -33,36 +41,6 @@ class UserAPIView(APIView):
     def delete(self, request):
         data = {'message': 'Hello, world! This is delete request!'}
         return Response(data)
-
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.authentication import TokenAuthentication
-
-
-from django.core.files.base import ContentFile
-
-class UpdateProfile(APIView):
-    authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated]
-
-    def put(self, request):
-        user = request.user
-        data = request.data
-        user.nickname = data.get('nickname', user.nickname)
-        user.name = data.get('name', user.name)
-        if 'picture' in data:
-            picture = data['picture']
-            image_content = ContentFile(base64.b64decode(picture), name='profile_picture.jpg')
-            user.picture.save('profile_picture.jpg', image_content)
-        user.save()
-        return JsonResponse({"success": "true", "message": "Profile updated successfully"})
-
-class DeleteProfile(APIView):
-    authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated]
-    def delete(self, request):
-        user = request.user
-        user.delete()
-        return JsonResponse({"success": "true", "message": "Person deleted successfully"})
 
 class EmailValidation(APIView):
     def post(self, request):
@@ -149,6 +127,21 @@ class Password(APIView):
         except ValidationError as e:
             return JsonResponse({"success": "false", "error": e.message}, status=status.HTTP_400_BAD_REQUEST)
 
+class PasswordReset(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        user = request.user
+        password = request.data.get('password')
+        try:
+            password = validate_password(password)
+            user.set_password(password)
+            user.save()
+            return JsonResponse({"success": "true", "message": "Password successfully updated"})
+        except ValidationError as e:
+            return JsonResponse({"success": "false", "error": e.messages}, status=status.HTTP_400_BAD_REQUEST)
+
 class Login(APIView):
     def post(self, request):
         email = request.data.get('email')
@@ -165,11 +158,65 @@ class Login(APIView):
         else:
             return JsonResponse({"success": "false", "error": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
 
-class Profile(APIView):
-    def post(self, request):
-        email = request.data.get('email')
+# class Profile(APIView):
+
+#     # authentication_classes = [TokenAuthentication]
+#     # permission_classes = [IsAuthenticated]
+
+    # def get(self, request):
+    #     users = Person.objects.all()
+    #     users_data = [model_to_dict(user) for user in users]
+    #     return JsonResponse({"success": "true", "profile": users_data})
+
+class ProfileById(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, pk):
         try:
-            user = Person.objects.get(email=email)
+            user = Person.objects.get(id=pk)
         except Person.DoesNotExist:
             return JsonResponse({"success": "false", "error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
         return JsonResponse({"success": "true", "profile": model_to_dict(user)})
+    #def put(self, request, pk):
+        
+    def delete(self, request, pk):
+        try:
+            user = Person.objects.get(pk=pk)
+        except Person.DoesNotExist:
+            return JsonResponse({"success": "false", "error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+        user.delete()
+        return JsonResponse({"success": "true", "message": "Person deleted successfully"})
+
+class TokenView(TokenObtainPairView):
+    def post(self, request, *args, **kwargs):
+        response = super().post(request, *args, **kwargs)
+
+        # Set the access token and refresh token as cookies
+        access_token = response.data.get('access')
+        refresh_token = response.data.get('refresh')
+
+        response.set_cookie('auth_token', access_token, httponly=True)
+        response.set_cookie('refresh_token', refresh_token, httponly=True)
+
+        return response
+
+class TokenSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+
+        # Add custom claims
+        token['username'] = user.username
+        return token
+
+class TokenView(TokenObtainPairView):
+    serializer_class = TokenSerializer
+
+    @api_view(['GET'])
+    def getRoutes(request):
+        routes = [
+            '/api/v1/token/',
+            '/api/v1/token/refresh/',
+        ]
+        return Response(routes)
