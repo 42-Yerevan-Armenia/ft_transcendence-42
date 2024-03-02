@@ -3,6 +3,16 @@ https://www.w3schools.com/js/js_htmldom_eventlistener.asp
 https://www.w3schools.com/js/js_htmldom_nodelist.asp
 
 
+/*
+React Login Authentication with JWT Access, Refresh Tokens, Cookies and Axios
+https://www.youtube.com/watch?v=nI8PYZNFtac&t=26s
+*/
+
+/*
+Authentication & Refreshing Tokens Implementation
+https://www.youtube.com/watch?v=xjMP0hspNLE
+*/
+
 1)install  nodemailer for Email
 npm install nodemailer " process.env.EMAIL_USER,"
 

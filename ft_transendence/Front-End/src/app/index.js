@@ -1,6 +1,7 @@
 "use script"
 // const HostPort="http://localhost:5001"
-const HostPort="http://10.12.11.2:8000"
+const HostPort="http://10.12.11.1:8000"
+// const HostPort="http://10.12.11.2:8000"
 
 //#################################################################################   Controller.js
 
@@ -163,15 +164,6 @@ function checkName(str) {
   // Test the string against the regular expression
   return regex.test(str);
 }
-function checkNickName(str) {
-  // Regular expression to match strings with only characters
-  // and starting with an uppercase letter
-  const regex = /^[a-z]*$/;
-
-  // Test the string against the regular expression
-  return regex.test(str);
-}
-
 
 function PasswordisCorrect(obj, error){
   if (obj.value.length < 8 || obj.value.length > 16)
@@ -402,16 +394,16 @@ class SignupPage extends HtmlElement {
     nickError.innerHTML = "";
     nameError.innerHTML = "";
 
-    if (!name.value || name.value.length < 5 || name.value.length > 15 || !checkName(name.value))
+    if (!name.value || name.value.length < 2 || name.value.length > 30 || !checkName(name.value))
     {
       User._name = "";
       nameError.innerHTML = "The name must consist of uppercase characters first and then lowercase characters and range from 5 to 15.";
       return false;
     }
-    if (!nickname.value || nickname.value.length < 5 || nickname.value.length > 15 || !checkNickName(nickname.value))
+    if (!nickname.value || nickname.value.length < 2 || nickname.value.length > 30)
     {
       User._nickname;
-      nickError.innerHTML = "The name must contain at least 5 characters and no more than 15.";
+      nickError.innerHTML = "The name must contain at least 2 characters and no more than 30.";
       return false;
     }
     User._name = name.value;

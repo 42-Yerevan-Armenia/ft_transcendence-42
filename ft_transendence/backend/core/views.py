@@ -75,11 +75,14 @@ class Register(APIView):
         except ValidationError as e:
             return JsonResponse({"success": "false","error": e.message}, status=status.HTTP_400_BAD_REQUEST)
         try:
+            print("email = " + email + "nickname = " + request.data['nickname'])
+            print("password = " + request.data['password'] + "name = " + request.data['name'])
             data = Profile.objects.create(
                 email=email,
                 nickname=request.data['nickname'],
                 password=request.data['password'],
-                name = request.data['name'])
+                name = request.data['name']
+            )
         except ValidationError as e:
             return JsonResponse({"success": "false","error": e.message}, status=500)
         return JsonResponse({"success": "true", "reg": model_to_dict(data)})
