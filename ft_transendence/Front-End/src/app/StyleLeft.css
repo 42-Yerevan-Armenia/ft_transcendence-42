@@ -89,7 +89,7 @@
 }
 
 .User{
-    display: flex;
+    display: block;
     margin-top: 49px;
     height: 70px;
 }
@@ -130,11 +130,23 @@
 }
 
 .nav{
-    display: flex;
     flex-direction: column;
+    display: flex;
     height: 481px;
 }
 
+/* default is not sign in    */
+#homeNavigation{
+    display: none;
+}
+
+.User{
+    display: none;
+}
+
+
+
+/*-----------------end-------------*/
 
 .NavSignin, .NavSignUp{
     background-color:#1B8CCE;
@@ -183,6 +195,7 @@
    .dragonPong{
     display: none;
     }
+
 }
 
 

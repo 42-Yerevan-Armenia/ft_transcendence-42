@@ -51,11 +51,11 @@
                             </div>
                             <div class="ConfirmPageDureation"></div>
                             <div class="ConfirmPageCode">
-                                <input class="ConfirmPagepassword ConfirmPagepassword0" value=""></input>
-                                <input class="ConfirmPagepassword ConfirmPagepassword1" value=""></input>
-                                <input class="ConfirmPagepassword ConfirmPagepassword2" value=""></input>
-                                <input class="ConfirmPagepassword ConfirmPagepassword3" value=""></input>
-                                <input class="ConfirmPagepassword ConfirmPagepassword4" value=""></input>
+                                <input class="ConfirmPagepassword ConfirmPagepassword0"  maxLength="1" value=""></input>
+                                <input class="ConfirmPagepassword ConfirmPagepassword1"  maxLength="1" value=""></input>
+                                <input class="ConfirmPagepassword ConfirmPagepassword2"  maxLength="1" value=""></input>
+                                <input class="ConfirmPagepassword ConfirmPagepassword3"  maxLength="1" value=""></input>
+                                <input class="ConfirmPagepassword ConfirmPagepassword4"  maxLength="1" value=""></input>
                                 
                             </div>
                             <div class="ErrorConfirmPageCode"></div>
@@ -150,7 +150,7 @@
                     
             <!-- Registers -->
             <div class="RegisterPage">
-                <div class="RegisterPageConteiner" background-image="./public/Bodygradien.png">
+                <div class="RegisterPageConteiner">
                     <div class="RegisterPagePosition">
                         <div class="RegisterPageText">
                             <div class="RegisterPageH">
@@ -200,8 +200,8 @@
                                     </p>
                                 </div>
                     
-                                <nav class="nav">
-                                    <div>
+                                <nav class="nav" >
+                                    <div id="homeNavigation">
                                         <!-- href="#" -->
                                         <div class="link LEFTHOME" >
                                             <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
@@ -275,14 +275,15 @@
                                             </svg>
                                             <p class="navLinkP">Settings</p>
                                         </div>
-                                        <!-- href="#" -->
-                                        <div class="NAVSIGNINSIGNOUT">
-                                            <div class="NavSignin">
-                                                SignIn
-                                            </div>
-                                            <div class="NavSignUp">
-                                                SignUp
-                                            </div>
+
+                                    </div>
+                                    <!-- href="#" -->
+                                    <div class="NAVSIGNINSIGNOUT">
+                                        <div class="NavSignin">
+                                            SignIn
+                                        </div>
+                                        <div class="NavSignUp">
+                                            SignUp
                                         </div>
                                     </div>
                                     <div class="User">
@@ -660,7 +661,8 @@
         <footer>
           &copy; 2023 all rights reserved
         </footer>
-       
-        <script  src="./src/app/index.js"></script>
+    <script  src="./src/app/controller.js"></script>
+    <script  src="./src/app/load.js"></script>
+    <script  src="./src/app/index.js"></script>
 </body>
 </html>
