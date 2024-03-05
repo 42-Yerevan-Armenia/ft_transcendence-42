@@ -196,7 +196,19 @@ class Login(APIView):
             refresh['email'] = user.email
             access_token = str(refresh.access_token)
             refresh_token = str(refresh)
-            return JsonResponse({"success": "true", "access_token": access_token, "refresh_token": refresh_token})
+
+            response_data = {
+                "success": "true",
+                "access_token": access_token,
+                "refresh_token": refresh_token,
+                "user": {
+                    "id": user.id,
+                    "name": user.name,
+                    "nickname": user.nickname,
+                    "email": user.email,
+                }
+            }
+            return JsonResponse({"success": "true", "data": response_data})
         else:
             return JsonResponse({"success": "false", "error": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
 
@@ -230,19 +242,6 @@ class ProfileById(APIView):
         user.delete()
         return JsonResponse({"success": "true", "message": "Person deleted successfully"})
 
-class TokenView(TokenObtainPairView):
-    def post(self, request, *args, **kwargs):
-        response = super().post(request, *args, **kwargs)
-
-        # Set the access token and refresh token as cookies
-        access_token = response.data.get('access')
-        refresh_token = response.data.get('refresh')
-
-        response.set_cookie('auth_token', access_token, httponly=True)
-        response.set_cookie('refresh_token', refresh_token, httponly=True)
-
-        return response
-
 class TokenSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
@@ -262,3 +261,15 @@ class TokenView(TokenObtainPairView):
             '/api/v1/token/refresh/',
         ]
         return Response(routes)
+
+    def post(self, request, *args, **kwargs):
+        response = super().post(request, *args, **kwargs)
+
+        # Set the access token and refresh token as cookies
+        access_token = response.data.get('access')
+        refresh_token = response.data.get('refresh')
+
+        response.set_cookie('auth_token', access_token, httponly=True)
+        response.set_cookie('refresh_token', refresh_token, httponly=True)
+
+        return response
