@@ -58,17 +58,21 @@ function HashCodeGeneration(){
 //user
 class USER {
   constructor() {
+    this._name = "";
+    this._nickname = "";
+    this._Password = "";
+    this._Email = "";
+    this._ConfirmEmail = false;
+    this._SignIn = false;
+    this.date = new Date();
+    this._getAccess = localStorage.getItem("access_token");
+    this._geRefresh = localStorage.getItem("refresh_token");
   }
-  _name = "";
-  _nickname = "";
-  _Password = "";
-  _Email = "";
-  _ConfirmEmail = false;
-  _SignIn = false;
-  _getAccess = localStorage.getItem("access_token");
-  _geRefresh = localStorage.getItem("refresh_token");
 
   checkSignIn() {
+    this._getAccess = localStorage.getItem("access_token");
+    this._geRefresh = localStorage.getItem("refresh_token");
+
     if (this._getAccess && this._geRefresh)
       this._SignIn = true;
     else
@@ -89,7 +93,7 @@ class USER {
   }
 
   signIn(tockens) {
-    const {access_token, refresh_token, success} = tockens;
+    const {refresh_token, success, access_token} = tockens;
 
     if (!success || !access_token || !refresh_token)
       return false;
@@ -101,19 +105,21 @@ class USER {
 
   //when refresh_token is not expired call for update access_token
   accessRefresh = async () => {
-    const res = await FetchRequest("POST", "token/refresh", {_geRefresh, _getAccess});    //call for update access_token
+    const res = await FetchRequest("POST", "api/v1/token/refresh", {"refresh_token" : this._geRefresh, "access_token" : this._getAccess});    //call for update access_token
+    this.date = new Date();
 
     if (res.state)                                                                      //set data in to Users attributes
-      signIn(res);
+      this.signIn(res);
     else
     {
-      longOut();
+      this.longOut();
     }
     console.log(res);
   }
 
   menegAccsess() {
-    if(this.checkSignIn())
+
+    if(new Date().getMinutes() - this.date.getMinutes() > 13 ||  this.checkSignIn())
     {
       this.accessRefresh();
       console.log("---true---")
@@ -649,6 +655,7 @@ Register._RegisterPageContinue.addEventListener("click",  async () => {
 });
 
 Login._LoginPageContinue.addEventListener("click", async () => {
+  debugger
   if (Login.ButtonSignIn())
   {
     const hash = HashCodeGeneration();
@@ -656,7 +663,7 @@ Login._LoginPageContinue.addEventListener("click", async () => {
   
     if (data.state)
     {
-      User.signIn(data.message);
+      User.signIn(data?.message?.data);
       if (User.checkSignIn())
       {
         Login.DisplayNone();
