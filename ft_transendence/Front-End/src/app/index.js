@@ -1,145 +1,3 @@
-"use script"
-// const HostPort="http://localhost:5001"
-const HostPort="http://10.12.11.1:8000"
-// const HostPort="http://10.12.11.2:8000"
-
-//#################################################################################   Controller.js
-
-//queshon too backend Email exist or not and 
-//if create 
-async function ControllerCheckEmail(email) {
-  try {
-    // const response = await fetch(`${HostPort}/registerpage?email=${email}`,{
-    const response = await fetch(`${HostPort}/email_validation/`,{
-      method: 'POST',
-      body: JSON.stringify({email:email}),
-      headers: {
-        "Content-Type": "application/json"
-      }
-    });
-
-    if (!response.ok)
-    {
-      throw new  Error("Error: Whene Email check status " + response.status)
-    }
-    const result = await response.json();
-
-    if (!result || typeof result !== 'object') {
-      throw new Error("Invalid response data");
-    }
-    return {state:true, message: result.message};
-  }
-  catch(err) {
-    let error;
-    if (err)
-      error = err  + "";
-    else
-      error = "Error: Server";
-    return {state:false, "message": error};
-  }
-}
-// headers: { 
-//   'Content-Type': 'application/json',
-//   'AuthToken': '123456'
-//  } // Fixed 'header' to 'headers'
-// });
-
-async function ControllerCheckReplayCode(code) {
-  debugger
-  console.log("code" + code);
-  try {
-      const response = await fetch(`${HostPort}/confirm/`, {
-          method: 'POST',
-          body: JSON.stringify({ code: code }), // Assuming you want to send the code as JSON
-          headers: { 
-            'Content-Type': 'application/json'
-           }
-      });
-      if (!response.ok)
-        throw new Error(response.statusText  + " " + response.status);
-
-      const data = await response.json(); // Await the parsing of JSON data
-
-      if (!data || typeof data !== 'object') {
-        throw new Error("Invalid response data");
-      }
-
-      return{state:true, "message": data };
-  }
-  catch (err) {
-    
-    const error = err + "";
-    
-    console.log("error   === [" + error + "]")
-    
-    return {state:false, "message": error};
-  }
-}
-
-async function ControllerSignUp(password, User) {
-  console.log("ControllerSignUp");
-  try {
-    const response = await fetch(`${HostPort}/register/`, {
-      method: 'POST',
-      body: JSON.stringify({ name: User._name, password: password, nickname: User._nickname}),
-      headers: {
-        "Content-Type": "application/json"
-      }
-    });
-
-    if (!response.ok) {
-      throw new Error(`Failed to update password. Status: ${response.status}`);
-    }
-
-    const data = await response.json();
-
-    if (!data || typeof data !== 'object') {
-      throw new Error("Invalid response data");
-    }
-
-    console.log("Response data:", data);
-    console.log("ControllerPessPassword  Succsse++++++++++++++++++++");
-    return { state: true, message: data };
-  } catch (error) {
-    console.error("Error:", error);
-    return { state: false, message: error.message };
-  }
-}
-
-async function ControllerPessPassword(password, User) {
-  console.log("ControllerPessPassword");
-  try {
-    const response = await fetch(`${HostPort}/password`, {
-      method: 'POST',
-      body: JSON.stringify({ code: password, email: User._Email }),
-      headers: {
-        "Content-Type": "application/json"
-      }
-    });
-
-    if (!response.ok) {
-      throw new Error(`Failed to update password. Status: ${response.status}`);
-    }
-
-    const data = await response.json();
-
-    if (!data || typeof data !== 'object') {
-      throw new Error("Invalid response data");
-    }
-
-    console.log("Response data:", data);
-    console.log("ControllerPessPassword  Succsse++++++++++++++++++++");
-    return { state: true, message: data };
-  } catch (error) {
-    console.error("Error:", error);
-    return { state: false, message: error.message };
-  }
-}
-
-// ################################################################################# Main.js
-
-
-//Utils
 function ValidateEmail(input) {
 
   console.log("1input =[" + input  + "]");
@@ -198,7 +56,7 @@ function HashCodeGeneration(){
 //-------------------------------------------------       Pages     ----------------------------------------
 
 //user
-class USER{
+class USER {
   constructor() {
   }
   _name = "";
@@ -206,6 +64,64 @@ class USER{
   _Password = "";
   _Email = "";
   _ConfirmEmail = false;
+  _SignIn = false;
+  _getAccess = localStorage.getItem("access_token");
+  _geRefresh = localStorage.getItem("refresh_token");
+
+  checkSignIn() {
+    if (this._getAccess && this._geRefresh)
+      this._SignIn = true;
+    else
+      this._SignIn = false;
+    return this._SignIn;
+  }
+
+  longOut() {
+    this._SignIn = false;
+    this._name = "";
+    this._nickname = "";
+    this._Password = "";
+    this._Email = "";
+    this._ConfirmEmail = false;
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("refresh_token");
+    ManageAllPage.Manage("Home");
+  }
+
+  signIn(tockens) {
+    const {access_token, refresh_token, success} = tockens;
+
+    if (!success || !access_token || !refresh_token)
+      return false;
+
+    localStorage.setItem("access_token", access_token + "")
+    localStorage.setItem("refresh_token", refresh_token + "")
+    return true;
+  }
+
+  //when refresh_token is not expired call for update access_token
+  accessRefresh = async () => {
+    const res = await FetchRequest("POST", "token/refresh", {_geRefresh, _getAccess});    //call for update access_token
+
+    if (res.state)                                                                      //set data in to Users attributes
+      signIn(res);
+    else
+    {
+      longOut();
+    }
+    console.log(res);
+  }
+
+  menegAccsess() {
+    if(this.checkSignIn())
+    {
+      this.accessRefresh();
+      console.log("---true---")
+    }
+    else {
+      this.longOut();
+    }
+  }
 }
 
 //parent class
@@ -290,7 +206,11 @@ class ConfirmPage extends HtmlElement {
   //click confirm button and check respons
   async ConfirmPageContinue() {
     this.err.innerHTML = "";
-  
+    this.v0.value += ""
+    this.v1.value += ""
+    this.v2.value += ""
+    this.v3.value += ""
+    this.v4.value += ""
     //each input must not be empty
     if (!this.v0.value || !this.v1.value || !this.v2.value || !this.v3.value || !this.v4.value)
     {
@@ -468,25 +388,30 @@ class LoginPage extends HtmlElement {
     super(".LoginPage")
     this._style.display = "none";
   }
-
+  _LoginPassword = document.querySelector(".LoginPageinputpassword")
+  _LoginEmail = document.querySelector(".LoginPageinput");
   DisplayBlock(){
     this._style.display = "block";
   }
 
   ButtonSignIn() {
-    ErrorPassword = querySelector(".LoginPasswordError");
-    ErrorEmail = querySelector(".LoginEmailError");
-    LoginPassword = querySelector(".LoginPageinputpassword")
-    LoginEmail = querySelector(".LoginPageinput");
+    const ErrorPassword = document.querySelector(".LoginPasswordError");
+    const ErrorEmail = document.querySelector(".LoginEmailError");
 
-    if (!LoginEmail?.value) 
+
+
+    
+    console.log("email : " +  this._LoginEmail.value + " password :" + this._LoginPassword.value);
+
+
+    if (!this._LoginEmail?.value)
     {//if empty email
       ErrorEmail.style.color = "red";
       ErrorEmail.innerHTML = "Email must not be empty";
-      return ;
+      return false;
     }
     else {
-      const ContextValidation = ValidateEmail(LoginEmail.value);
+      const ContextValidation = ValidateEmail(this._LoginEmail.value);
 
       //email valid input
       if (ContextValidation[0] == 'V') {
@@ -504,20 +429,18 @@ class LoginPage extends HtmlElement {
     }
 
 
-    if (!LoginPassword?.value) {
+    if (!this._LoginPassword?.value) {
       ErrorPassword.style.color = "red";
       ErrorPassword.innerHTML = "Password must not be empty";
-      return ;
+      return false;
     }
-    else {
-      if (LoginPassword.value.length >= 8 && LoginPassword.value.length <= 15)
-      {
-
-      }
+    if (!(this._LoginPassword.value.length >= 8 && this._LoginPassword.value.length <= 15)){
+      ErrorPassword.style.color = "red";
+      ErrorPassword.innerHTML = "Password must be between 8 and 15 characters";
+      return false;
     }
-
+    return true;
   }
-
 
   SignInWithEmail = (email = "") => {
     this.DisplayBlock();
@@ -528,11 +451,6 @@ class LoginPage extends HtmlElement {
     {
       LoginPageinput.value = email;
     }
-
-
-
-
-
   }
 
   _LoginPageContinue = document.querySelector(".LoginPageContinue");
@@ -588,6 +506,7 @@ class RegisterPage extends HtmlElement {
   }
 };
 
+
 // Home Page
 class HomePage extends HtmlElement {
   constructor(){
@@ -621,7 +540,6 @@ class HomePage extends HtmlElement {
     }
     this._style.display = "none";
   }
-  
   ButtonSignUp = () => {
     this._style.display = "none";
   }
@@ -681,13 +599,16 @@ class MidleCub extends HtmlElement {
 
 //-------------------------------------------    Main    -----------
 
+
+
+
 var User = new USER();
-const Confirm = new ConfirmPage();
-const Login = new LoginPage();
-const Register = new RegisterPage();
-const Home = new HomePage();
-const Password = new PasswordPage();
-const SignUp = new SignupPage();
+var Confirm = new ConfirmPage();
+var Login = new LoginPage();
+var Register = new RegisterPage();
+var Home = new HomePage();
+var Password = new PasswordPage();
+var SignUp = new SignupPage();
 
 
 //Event Listeners  Home Page
@@ -727,8 +648,25 @@ Register._RegisterPageContinue.addEventListener("click",  async () => {
     }
 });
 
-Login._LoginPageContinue.addEventListener("click", () => {
-  Login.ButtonSignIn();
+Login._LoginPageContinue.addEventListener("click", async () => {
+  if (Login.ButtonSignIn())
+  {
+    const hash = HashCodeGeneration();
+    const data =  await FetchRequest("POST", "login", {"email":Login._LoginEmail.value, "password" : hash + Login._LoginPassword.value + hash})
+  
+    if (data.state)
+    {
+      User.signIn(data.message);
+      if (User.checkSignIn())
+      {
+        Login.DisplayNone();
+        document.querySelector("#homeNavigation").style.display  = "block";
+        document.querySelector(".User").style.display  = "block";
+        Home.DisplayBlock();
+        Home.NavMidleHome();
+      }
+    }
+  }
 })
 
 Confirm.ConfirmYourEmail.addEventListener('click', async () => {
@@ -770,9 +708,13 @@ SignUp.SignupPageContinue.addEventListener("click", async () => {
   if (isCorrectPassword && ischeckNameNickname)
   {
    const codeSesion = await SignUp.PasswordConfirmWithServer();
-   console.log("codeSesion = " + codeSesion + " typeof(codeSesion) " + typeof(codeSesion));
-
+   if (codeSesion.state)
+   {
+      SignUp.DisplayNone();
+      Login.DisplayBlock();
+   }
   }
 })
+
 
 
