@@ -55,6 +55,30 @@ function HashCodeGeneration(){
 
 //-------------------------------------------------       Pages     ----------------------------------------
 
+
+const myStorages = {
+  setStorage(tockens) {
+    const {refresh_token, success, access_token} = tockens;
+
+    if (!success || !access_token || !refresh_token)
+      return false;
+
+    localStorage.setItem("access_token", access_token + "")
+    localStorage.setItem("refresh_token", refresh_token + "")
+    return true;
+  },
+  longOut(){
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("refresh_token");
+    User.Destruc();
+    ManageAllPage.Manage("Home");
+  }
+}
+
+
+
+
+
 //user
 class USER {
   constructor() {
@@ -79,29 +103,16 @@ class USER {
       this._SignIn = false;
     return this._SignIn;
   }
-
-  longOut() {
+  Destruc(){
     this._SignIn = false;
     this._name = "";
     this._nickname = "";
     this._Password = "";
     this._Email = "";
     this._ConfirmEmail = false;
-    localStorage.removeItem("access_token");
-    localStorage.removeItem("refresh_token");
-    ManageAllPage.Manage("Home");
   }
 
-  signIn(tockens) {
-    const {refresh_token, success, access_token} = tockens;
 
-    if (!success || !access_token || !refresh_token)
-      return false;
-
-    localStorage.setItem("access_token", access_token + "")
-    localStorage.setItem("refresh_token", refresh_token + "")
-    return true;
-  }
 
   //when refresh_token is not expired call for update access_token
   accessRefresh = async () => {
@@ -109,11 +120,11 @@ class USER {
     const res = await FetchRequest("POST", "api/v1/token/refresh", {"refresh_token" : this._geRefresh});    //call for update access_token
     this.date = new Date();
 
-    if (res.state)                                                                      //set data in to Users attributes
-      this.signIn(res.message.data);
+    if (res?.state)
+      myStorages.setStorage(res?.message?.data)
     else
     {
-      this.longOut();
+      myStorages.longOut();
     }
     console.log(res.message.data);
   }
@@ -126,7 +137,7 @@ class USER {
       console.log("---true---")
     }
     else {
-      this.longOut();
+      myStorages.longOut();
     }
   }
 }
@@ -664,7 +675,7 @@ Login._LoginPageContinue.addEventListener("click", async () => {
   
     if (data.state)
     {
-      User.signIn(data?.message?.data);
+      myStorages.setStorage(data?.message?.data)
       if (User.checkSignIn())
       {
         Login.DisplayNone();
