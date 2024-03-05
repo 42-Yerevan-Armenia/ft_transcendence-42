@@ -3,8 +3,10 @@ FROM nginxinc/nginx-unprivileged:1-alpine
 COPY nginx/default.conf.tpl /etc/nginx/default.conf.tpl
 COPY nginx/uwsgi_params /etc/nginx/uwsgi_params
 COPY nginx/deploy.sh /deploy.sh
+COPY nginx/nginx.crt /etc/nginx/nginx.crt
+COPY nginx/nginx.key /etc/nginx/nginx.key
 
-ENV LISTEN_PORT=8000
+ENV LISTEN_PORT=443
 ENV APP_HOST=backend
 ENV APP_PORT=9000
 
