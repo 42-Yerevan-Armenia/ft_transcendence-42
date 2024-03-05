@@ -55,41 +55,10 @@ function HashCodeGeneration(){
 
 //-------------------------------------------------       Pages     ----------------------------------------
 
-//user
-class USER {
-  constructor() {
-  }
-  _name = "";
-  _nickname = "";
-  _Password = "";
-  _Email = "";
-  _ConfirmEmail = false;
-  _SignIn = false;
-  _getAccess = localStorage.getItem("access_token");
-  _geRefresh = localStorage.getItem("refresh_token");
 
-  checkSignIn() {
-    if (this._getAccess && this._geRefresh)
-      this._SignIn = true;
-    else
-      this._SignIn = false;
-    return this._SignIn;
-  }
-
-  longOut() {
-    this._SignIn = false;
-    this._name = "";
-    this._nickname = "";
-    this._Password = "";
-    this._Email = "";
-    this._ConfirmEmail = false;
-    localStorage.removeItem("access_token");
-    localStorage.removeItem("refresh_token");
-    ManageAllPage.Manage("Home");
-  }
-
-  signIn(tockens) {
-    const {access_token, refresh_token, success} = tockens;
+const myStorages = {
+  setStorage(tockens) {
+    const {refresh_token, success, access_token} = tockens;
 
     if (!success || !access_token || !refresh_token)
       return false;
@@ -97,29 +66,78 @@ class USER {
     localStorage.setItem("access_token", access_token + "")
     localStorage.setItem("refresh_token", refresh_token + "")
     return true;
+  },
+  longOut(){
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("refresh_token");
+    User.Destruc();
+    ManageAllPage.Manage("Home");
   }
+}
+
+
+
+
+
+//user
+class USER {
+  constructor() {
+    this._name = "";
+    this._nickname = "";
+    this._Password = "";
+    this._Email = "";
+    this._ConfirmEmail = false;
+    this._SignIn = false;
+    this.date = new Date();
+    this._getAccess = localStorage.getItem("access_token");
+    this._geRefresh = localStorage.getItem("refresh_token");
+  }
+
+  checkSignIn() {
+    this._getAccess = localStorage.getItem("access_token");
+    this._geRefresh = localStorage.getItem("refresh_token");
+
+    if (this._getAccess && this._geRefresh)
+      this._SignIn = true;
+    else
+      this._SignIn = false;
+    return this._SignIn;
+  }
+  Destruc(){
+    this._SignIn = false;
+    this._name = "";
+    this._nickname = "";
+    this._Password = "";
+    this._Email = "";
+    this._ConfirmEmail = false;
+  }
+
+
 
   //when refresh_token is not expired call for update access_token
   accessRefresh = async () => {
-    const res = await FetchRequest("POST", "token/refresh", {_geRefresh, _getAccess});    //call for update access_token
+    this._geRefresh = localStorage.getItem("refresh_token");
+    const res = await FetchRequest("POST", "api/v1/token/refresh", {"refresh_token" : this._geRefresh});    //call for update access_token
+    this.date = new Date();
 
-    if (res.state)                                                                      //set data in to Users attributes
-      signIn(res);
+    if (res?.state)
+      myStorages.setStorage(res?.message?.data)
     else
     {
-      longOut();
+      myStorages.longOut();
     }
-    console.log(res);
+    console.log(res.message.data);
   }
 
   menegAccsess() {
-    if(this.checkSignIn())
+
+    if(new Date().getMinutes() - this.date.getMinutes() > 13 ||  this.checkSignIn())
     {
       this.accessRefresh();
       console.log("---true---")
     }
     else {
-      this.longOut();
+      myStorages.longOut();
     }
   }
 }
@@ -649,6 +667,7 @@ Register._RegisterPageContinue.addEventListener("click",  async () => {
 });
 
 Login._LoginPageContinue.addEventListener("click", async () => {
+  debugger
   if (Login.ButtonSignIn())
   {
     const hash = HashCodeGeneration();
@@ -656,7 +675,7 @@ Login._LoginPageContinue.addEventListener("click", async () => {
   
     if (data.state)
     {
-      User.signIn(data.message);
+      myStorages.setStorage(data?.message?.data)
       if (User.checkSignIn())
       {
         Login.DisplayNone();

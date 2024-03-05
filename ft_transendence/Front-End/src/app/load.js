@@ -35,14 +35,15 @@ if (mainElement) {
 
 
 
-// hovhannes_vardanyan1@mail.ru
 
-document.addEventListener("DOMContentLoaded", () => {
+
+document.addEventListener("DOMContentLoaded", async () => {
     console.log("Document is loaded");
 
+    debugger
     if(User.checkSignIn())
     {
-        User.accessRefresh();
+       await User.accessRefresh();
         console.log("true")
     }
 });

@@ -1,7 +1,13 @@
-"use script"
+"use strict"
 // const HostPort="http://localhost:5001"
 // const HostPort="http://10.12.11.1:8000"
 const HostPort="http://10.12.11.2:8000"
+
+
+
+// hovhannes_vardanyan1@mail.ru
+
+
 
 //#################################################################################   Controller.js
 
@@ -135,7 +141,7 @@ async function ControllerPessPassword(password, User) {
 async function FetchRequest(Tomethod, Torequest, ToObj) {
   console.log("1----------------------------------------")
   console.log( "method : " + Tomethod);
-  console.log( "request : " + Tomethod);
+  console.log( "request : " + Torequest);
   console.log( ToObj);
   console.log("2----------------------------------------")
   try {
