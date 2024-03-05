@@ -33,7 +33,9 @@ prune: down
 	docker system prune -f -a
 
 fclean: down
-	docker system prune -f -a -volumes
+	docker volume prune -f
+	rm -rf database/data
+	docker system prune -f -a
 
 re: prune all
 
