@@ -40,9 +40,9 @@ if (mainElement) {
 document.addEventListener("DOMContentLoaded", async () => {
     console.log("Document is loaded");
 
+    debugger
     if(User.checkSignIn())
     {
-        debugger
        await User.accessRefresh();
         console.log("true")
     }

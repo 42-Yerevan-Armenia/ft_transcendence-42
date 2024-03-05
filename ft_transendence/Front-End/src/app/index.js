@@ -105,16 +105,17 @@ class USER {
 
   //when refresh_token is not expired call for update access_token
   accessRefresh = async () => {
-    const res = await FetchRequest("POST", "api/v1/token/refresh", {"refresh_token" : this._geRefresh, "access_token" : this._getAccess});    //call for update access_token
+    this._geRefresh = localStorage.getItem("refresh_token");
+    const res = await FetchRequest("POST", "api/v1/token/refresh", {"refresh_token" : this._geRefresh});    //call for update access_token
     this.date = new Date();
 
     if (res.state)                                                                      //set data in to Users attributes
-      this.signIn(res);
+      this.signIn(res.message.data);
     else
     {
       this.longOut();
     }
-    console.log(res);
+    console.log(res.message.data);
   }
 
   menegAccsess() {
