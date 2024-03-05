@@ -125,14 +125,16 @@
 
 .NamvMenu{
     width: all;
-    height: 533px;
+    /* height: 533px; */
+    height:84%;
     flex-direction: column;
 }
 
 .nav{
     flex-direction: column;
     display: flex;
-    height: 481px;
+    /* height: 481px; */
+    height:88%;
 }
 
 /* default is not sign in    */

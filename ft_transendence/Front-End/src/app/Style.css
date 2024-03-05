@@ -1,17 +1,28 @@
+body{
+  height: 100vh;
+  padding: 0%;
+  margin: 0;
+  background: var(--background-color, 
+  radial-gradient(66.54% 118.23% at 37.47% 107.32%, #D9CBFD 0%, #7758D1 100%));
+}
+
+main{
+  height: 100%;
+}
+
 .homeSection {
     align-items: start;
     border-radius: 20px;
     padding: 40px;
-    background: var(--background-color, 
-    radial-gradient(66.54% 118.23% at 37.47% 107.32%, #D9CBFD 0%, #7758D1 100%));
+
+    height: 90%;
 }
 .stylemain {
   display: flex;
-  max-width: 1050px;
-  height: 600px;
   margin-left: auto;
   margin-right: auto;
   background: linear-gradient(0deg, rgba(0, 0, 0, 0.20) 0%, rgba(0, 0, 0, 0.20) 100%), rgba(0, 0, 0, 0.20);
+  height: 100%;
 }
 
 .left{
@@ -24,12 +35,13 @@
 }
 
 .midle{
-  width: 694px;
+  width: 100%;
+  height: 97%;
 }
 
 
 .right{
-  width: 190px;
+  width: 27%;
   background: #1D203E;
   box-shadow: 1px 0px 0px 0px rgba(255, 255, 255, 0.10) inset;
 }

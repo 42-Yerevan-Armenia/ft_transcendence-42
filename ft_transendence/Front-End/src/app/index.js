@@ -65,25 +65,62 @@ class USER {
   _Email = "";
   _ConfirmEmail = false;
   _SignIn = false;
+  _getAccess = localStorage.getItem("access_token");
+  _geRefresh = localStorage.getItem("refresh_token");
 
   checkSignIn() {
-    const getAccess = localStorage.getItem("access_token");
-    const geRefresh = localStorage.getItem("refresh_token");
-    if (getAccess && geRefresh)
+    if (this._getAccess && this._geRefresh)
       this._SignIn = true;
     else
       this._SignIn = false;
     return this._SignIn;
   }
 
-  signIn(tockens){
+  longOut() {
+    this._SignIn = false;
+    this._name = "";
+    this._nickname = "";
+    this._Password = "";
+    this._Email = "";
+    this._ConfirmEmail = false;
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("refresh_token");
+    ManageAllPage.Manage("Home");
+  }
+
+  signIn(tockens) {
     const {access_token, refresh_token, success} = tockens;
 
     if (!success || !access_token || !refresh_token)
       return false;
+
     localStorage.setItem("access_token", access_token + "")
     localStorage.setItem("refresh_token", refresh_token + "")
     return true;
+  }
+
+  //when refresh_token is not expired call for update access_token
+  accessRefresh = async () => {
+    const res = await FetchRequest("POST", "token/refresh", {_geRefresh, _getAccess});    //call for update access_token
+
+    if (res.state)                                                                      //set data in to Users attributes
+      signIn(res);
+    else
+    {
+      longOut();
+    }
+    console.log(res);
+  }
+
+  menegAccsess() {
+    if(this.checkSignIn())
+    {
+      this.accessRefresh();
+      console.log("---true---")
+    }
+    else {
+      this.longOut();
+    }
   }
 }
 
@@ -560,26 +597,18 @@ class MidleCub extends HtmlElement {
 
 
 
-
 //-------------------------------------------    Main    -----------
 
+
+
+
 var User = new USER();
-const Confirm = new ConfirmPage();
-const Login = new LoginPage();
-const Register = new RegisterPage();
-const Home = new HomePage();
-const Password = new PasswordPage();
-const SignUp = new SignupPage();
-const Main = Object.create({}, {
-  display: {
-    value: document.querySelector("main").style.display,
-    writable: true,
-  },
-  query: {
-    value: document.querySelector("main"),
-    writable: true,
-  }
-})
+var Confirm = new ConfirmPage();
+var Login = new LoginPage();
+var Register = new RegisterPage();
+var Home = new HomePage();
+var Password = new PasswordPage();
+var SignUp = new SignupPage();
 
 
 //Event Listeners  Home Page

@@ -34,34 +34,16 @@ if (mainElement) {
 */
 
 
-function LoginALl (){
-    getAccess = localStorage.getItem("access_token") | "";
-    geRefresh = localStorage.getItem("refresh_token") | "";
-    checkLogin = () => {
-        let _SignIn = false;
-        if (getAccess && geRefresh)
-            _SignIn = true;
-        else
-            _SignIn = false;
-        return _SignIn;
-    }
-    accessRequest = async () => {
-        const res = await FetchRequest("POST","token/refresh", {geRefresh, getAccess});
-        console.log(res);
-    }
-}
-
-
 
 // hovhannes_vardanyan1@mail.ru
 
-
 document.addEventListener("DOMContentLoaded", () => {
     console.log("Document is loaded");
-    
+
     if(User.checkSignIn())
     {
-      console.log("true")
+        User.accessRefresh();
+        console.log("true")
     }
 });
 
