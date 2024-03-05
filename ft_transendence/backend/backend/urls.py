@@ -24,6 +24,7 @@ from core.views import (
     Register, 
     Password,
     PasswordReset,
+    ForgetConfirmation,
     Login,
     ProfileById,
     TokenView,
@@ -45,8 +46,9 @@ urlpatterns = [
     path('email_validation/', EmailValidation.as_view()),
     path('confirm/', Confirmation.as_view()),
     path('register/', Register.as_view()),
-    path('password/', Password.as_view()),
     path('password_reset/', PasswordReset.as_view()),
+    path('forget_confirm/', ForgetConfirmation.as_view()),
+    path('password/', Password.as_view()),
     path('login/', Login.as_view()),
     path('api/v1/profile/<int:pk>/', ProfileById.as_view()),
 ]

@@ -16,6 +16,8 @@ from .shared_data import shared_data
 from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth.hashers import make_password, check_password
 from django.contrib.auth.models import User
+from django.contrib.sessions.models import Session
+from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 from django.core.files.base import ContentFile
 from django.core.serializers import serialize
@@ -98,19 +100,71 @@ class Register(APIView):
         try:
             data = Person.objects.create(
                 email=email,
+                name = request.data['name'],
                 nickname=request.data['nickname'],
                 password=hashed_password,
-                name = request.data['name'],
             )
             data.save_base64_image(image_path=os.path.join(os.path.dirname(__file__), 'default.jpg'))
+            model_to_dict(data)
+            data_to_send = {'email': email, 'nickname': request.data['nickname'], 'name': request.data['name']}
         except ValidationError as e:
             user.delete()
             return JsonResponse({"success": "false","error": e.message}, status=500)
-        return JsonResponse({"success": "true", "reg": model_to_dict(data)})
+        return JsonResponse({"success": "true", "reg": data_to_send})
+
+class PasswordReset(APIView):
+    def post(self, request):
+        
+        email = request.data['email'].strip()
+        try:
+            if not email:
+                raise ValidationError('Waiting for an email address') 
+            try:
+                validate_email(email)
+            except ValidationError:
+                raise ValidationError('Invalid email format')
+            code = send_confirmation_email(email)
+        except ValidationError as e:
+            return JsonResponse({"success": "false","error": e.message}, status=status.HTTP_400_BAD_REQUEST)
+        confirmation_data = {
+            'email': email,
+            'code': code,
+            'timestamp': timezone.now().isoformat(),
+        }
+        request.session['confirmation_data'] = confirmation_data
+        request.session.save()
+        return JsonResponse({"success": "true", "email": "model_to_dict(data)"})
+
+class ForgetConfirmation(APIView):
+    def post(self, request):
+        confirm_front = request.data['code']
+        if not confirm_front:
+            return JsonResponse({"success": "false", "error": "Confirmation code not found"}, status=status.HTTP_400_BAD_REQUEST)
+        confirmation_data = request.session.get('confirmation_data', None)
+        if not confirmation_data:
+            return JsonResponse({"success": "false", "error": "Confirmation data not found"}, status=status.HTTP_400_BAD_REQUEST)
+        confirm_back = confirmation_data['code']
+        timer_str = confirmation_data['timestamp']
+        timer = timezone.datetime.fromisoformat(timer_str)
+        expiration_time = timer + timezone.timedelta(seconds=30)
+        if timezone.now() > expiration_time:
+            request.session.pop('confirmation_data', None)
+            request.session.save()
+            return JsonResponse({"success": "false", "error": "Confirmation code expired"}, status=status.HTTP_408_REQUEST_TIMEOUT)
+        if confirm_front != confirm_back:
+            return JsonResponse({"success": "false", "error": "Invalid confirmation code"}, status=status.HTTP_404_NOT_FOUND)
+        request.session.pop('confirmation_data', None)
+        request.session.save()
+        return JsonResponse({"success": "true", "message": "Email is validated"})
 
 class Password(APIView):
     def post(self, request):
-        email = request.data.get('email')
+        confirmation_data = request.session.get('confirmation_data', None)
+
+        if not confirmation_data:
+            return JsonResponse({"success": "false", "error": "Confirmation data not found"}, status=status.HTTP_400_BAD_REQUEST)
+
+        email = confirmation_data.get('email')
         password = request.data.get('password')
         try:
             password = password_validation(password)
@@ -121,37 +175,25 @@ class Password(APIView):
                 return JsonResponse({"success": "false", "error": e.message}, status=status.HTTP_400_BAD_REQUEST)
             person.password = password
             person.save()
+            request.session.pop('confirmation_data', None)
+            request.session.save()
             return JsonResponse({"success": "true", "message": "Password successfully updated"})
         except Person.DoesNotExist:
             return JsonResponse({"success": "false", "error": "Person not found"}, status=status.HTTP_404_NOT_FOUND)
         except ValidationError as e:
             return JsonResponse({"success": "false", "error": e.message}, status=status.HTTP_400_BAD_REQUEST)
 
-class PasswordReset(APIView):
-    authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated]
-
-    def post(self, request):
-        user = request.user
-        password = request.data.get('password')
-        try:
-            password = validate_password(password)
-            user.set_password(password)
-            user.save()
-            return JsonResponse({"success": "true", "message": "Password successfully updated"})
-        except ValidationError as e:
-            return JsonResponse({"success": "false", "error": e.messages}, status=status.HTTP_400_BAD_REQUEST)
-
 class Login(APIView):
     def post(self, request):
-        email = request.data.get('email')
-        password = request.data.get('password')
+        email = request.data['email']
+        password = request.data['password'][10:-10]
         try:
             user = Person.objects.get(email=email)
         except Person.DoesNotExist:
             return JsonResponse({"success": "false", "error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
         if check_password(password, user.password):
-            refresh = RefreshToken.for_user(user)
+            refresh = RefreshToken()
+            refresh['email'] = user.email
             access_token = str(refresh.access_token)
             refresh_token = str(refresh)
             return JsonResponse({"success": "true", "access_token": access_token, "refresh_token": refresh_token})
