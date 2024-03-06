@@ -89,7 +89,7 @@
 }
 
 .User{
-    display: flex;
+    display: block;
     margin-top: 49px;
     height: 70px;
 }
@@ -125,16 +125,30 @@
 
 .NamvMenu{
     width: all;
-    height: 533px;
+    /* height: 533px; */
+    height:84%;
     flex-direction: column;
 }
 
 .nav{
-    display: flex;
     flex-direction: column;
-    height: 481px;
+    display: flex;
+    /* height: 481px; */
+    height:88%;
 }
 
+/* default is not sign in    */
+#homeNavigation{
+    display: none;
+}
+
+.User{
+    display: none;
+}
+
+
+
+/*-----------------end-------------*/
 
 .NavSignin, .NavSignUp{
     background-color:#1B8CCE;
@@ -183,6 +197,7 @@
    .dragonPong{
     display: none;
     }
+
 }
 
 
