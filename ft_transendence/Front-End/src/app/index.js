@@ -58,18 +58,18 @@ function HashCodeGeneration(){
 
 const myStorages = {
   setStorage(tockens) {
-    const {refresh_token, success, access_token} = tockens;
+    const {refresh, success, access} = tockens;
 
-    if (!success || !access_token || !refresh_token)
+    if (!success || !access || !refresh)
       return false;
 
-    localStorage.setItem("access_token", access_token + "")
-    localStorage.setItem("refresh_token", refresh_token + "")
+    localStorage.setItem("access", access + "")
+    localStorage.setItem("refresh", refresh + "")
     return true;
   },
   longOut(){
-    localStorage.removeItem("access_token");
-    localStorage.removeItem("refresh_token");
+    localStorage.removeItem("access");
+    localStorage.removeItem("refresh");
     User.Destruc();
     ManageAllPage.Manage("Home");
   }
@@ -89,13 +89,13 @@ class USER {
     this._ConfirmEmail = false;
     this._SignIn = false;
     this.date = new Date();
-    this._getAccess = localStorage.getItem("access_token");
-    this._geRefresh = localStorage.getItem("refresh_token");
+    this._getAccess = localStorage.getItem("access");
+    this._geRefresh = localStorage.getItem("refresh");
   }
 
   checkSignIn() {
-    this._getAccess = localStorage.getItem("access_token");
-    this._geRefresh = localStorage.getItem("refresh_token");
+    this._getAccess = localStorage.getItem("access");
+    this._geRefresh = localStorage.getItem("refresh");
 
     if (this._getAccess && this._geRefresh)
       this._SignIn = true;
@@ -114,19 +114,22 @@ class USER {
 
 
 
-  //when refresh_token is not expired call for update access_token
+  //when refresh_token is not expired call for update access
   accessRefresh = async () => {
-    this._geRefresh = localStorage.getItem("refresh_token");
-    const res = await FetchRequest("POST", "api/v1/token/refresh", {"refresh" : this._geRefresh});    //call for update access_token
+    this._geRefresh = localStorage.getItem("refresh");
+    const res = await FetchRequest("POST", "api/v1/token/refresh", {"refresh" : this._geRefresh});    //call for update access
     this.date = new Date();
 
     if (res?.state)
+    {
       myStorages.setStorage(res?.message?.data)
+      return true;
+    }
     else
     {
       myStorages.longOut();
+      return false;
     }
-    console.log(res.message.data);
   }
 
   menegAccsess() {
@@ -591,8 +594,10 @@ class MiddleSECTION extends HtmlElement {
     super(".MIDLESECTION")
     this._style.display = "flex";
   }
-
-
+  func(){
+    document.querySelector("#homeNavigation").style.display  = "block";
+    document.querySelector(".User").style.display  = "flex";
+  }
 }
 
 class MiddleSettings extends HtmlElement {
@@ -600,7 +605,8 @@ class MiddleSettings extends HtmlElement {
     super(".MidleSettings")
     this._style.display = "none";
   }
-
+  func(){
+  }
 
 }
 
@@ -609,7 +615,8 @@ class MidleCub extends HtmlElement {
     super(".MidleCub")
     this._style.display = "none";
   }
-
+  func(){
+  }
 
 }
 
@@ -679,8 +686,7 @@ Login._LoginPageContinue.addEventListener("click", async () => {
       if (User.checkSignIn())
       {
         Login.DisplayNone();
-        document.querySelector("#homeNavigation").style.display  = "block";
-        document.querySelector(".User").style.display  = "block";
+        Home._Midle.func();
         Home.DisplayBlock();
         Home.NavMidleHome();
       }

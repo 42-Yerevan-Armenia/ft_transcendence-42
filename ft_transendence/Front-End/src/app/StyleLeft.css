@@ -83,7 +83,8 @@
 
 
 .Onlain{
-    width: 50%;
+    width: 30%;
+    min-width: 70px;
     height: 68px;
     background-color: #5C5486;
 }
@@ -183,7 +184,6 @@
         display: none;
     }
     .Onlain{
-        width: auto;
         height: 65px;
     }
     .navLinkP{
