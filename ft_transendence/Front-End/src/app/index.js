@@ -117,7 +117,7 @@ class USER {
   //when refresh_token is not expired call for update access_token
   accessRefresh = async () => {
     this._geRefresh = localStorage.getItem("refresh_token");
-    const res = await FetchRequest("POST", "api/v1/token/refresh", {"refresh" : this._geRefresh});    //call for update access_token
+    const res = await FetchRequest("POST", "api/v1/token/refresh", {"refresh_token" : this._geRefresh});    //call for update access_token
     this.date = new Date();
 
     if (res?.state)
