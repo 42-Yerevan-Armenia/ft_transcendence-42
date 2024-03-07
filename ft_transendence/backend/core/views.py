@@ -194,13 +194,13 @@ class Login(APIView):
         if check_password(password, user.password):
             refresh = RefreshToken()
             refresh['email'] = user.email
-            access_token = str(refresh.access_token)
-            refresh_token = str(refresh)
+            access = str(refresh.access_token)
+            refresh = str(refresh)
 
             response_data = {
                 "success": "true",
-                "access_token": access_token,
-                "refresh_token": refresh_token,
+                "access": access,
+                "refresh": refresh,
                 "user": {
                     "id": user.id,
                     "name": user.name,
@@ -278,12 +278,16 @@ class CustomTokenRefreshView(TokenRefreshView):
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
-            refresh = serializer.validated_data.get('refresh')
-            access_token = str(refresh)
+            refresh_token = serializer.validated_data.get('refresh')
+            refresh = RefreshToken(refresh_token)
+            access = str(refresh.access_token)
+            new_refresh = str(refresh)
             response_data = {
                 "success": True,
-                "access_token": access_token,
+                "access": access,
+                "refresh": new_refresh,
             }
-            return Response(response_data, status=status.HTTP_200_OK)
+            return JsonResponse({"success": "true", "data": response_data}, status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
