@@ -56,7 +56,7 @@ async function ControllerCheckReplayCode(code) {
   try {
       const response = await fetch(`${HostPort}/confirm/`, {
           method: 'POST',
-          body: JSON.stringify({ code: code }), // Assuming you want to send the code as JSON
+          body: JSON.stringify({ code: code, email: User._Email }), // Assuming you want to send the code as JSON
           headers: { 
             'Content-Type': 'application/json'
            }
@@ -110,11 +110,13 @@ async function ControllerSignUp(password, User) {
 }
 
 async function ControllerPessPassword(password, User) {
-  console.log("ControllerPessPassword");
+  console.log("----------password = [" + password +"] email ["+ User._Email + "]");
+  console.log(User)
+
   try {
-    const response = await fetch(`${HostPort}/password`, {
+    const response = await fetch(`${HostPort}/password/`, {
       method: 'POST',
-      body: JSON.stringify({ code: password, email: User._Email }),
+      body: JSON.stringify({ password: password, email: User._Email }),
       headers: {
         "Content-Type": "application/json"
       }

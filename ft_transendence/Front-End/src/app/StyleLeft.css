@@ -30,6 +30,12 @@
     height: 15px;
     margin-top: -10px; 
     margin-left: 55px;
+    cursor: pointer;
+}
+
+.IconExit:hover {
+    background-color: #5C5486;
+    cursor: pointer;
 }
 
 

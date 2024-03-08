@@ -16,12 +16,14 @@ const ManageAllPage = {
         {"Register": Register},
         {"Home": Home},
         {"Password": Password},
-        {"SignUp": SignUp}
+        {"SignUp": SignUp},
+        {"ResetPage": Reset}
     ]
 };
 
 
-
+//manage Home Page in middle sections
+//give name section name what we need show in middle Home->Midl section
 const ManageMidle = {
     Manage: function(midleName) {
         console.log("midleName = [" + midleName + "]")
@@ -45,3 +47,9 @@ const ManageMidle = {
         // {"SignUp": SignUp}
     ]
 };
+
+
+
+
+
+
