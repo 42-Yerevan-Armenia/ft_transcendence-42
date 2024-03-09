@@ -73,6 +73,7 @@ const myStorages = {
   setStorageLogin(tockens) {
     const {refresh, success, access} = tockens;
 
+
     if (!success || !access || !refresh || !tockens.user)
       return false;
   

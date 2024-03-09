@@ -5,3 +5,4 @@ class ProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = Person
         fields = ['image']
+        fields = ['background']

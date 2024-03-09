@@ -16,6 +16,7 @@ from .shared_data import shared_data
 from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth.hashers import make_password, check_password
 from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.contrib.sessions.models import Session
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
@@ -28,18 +29,18 @@ import json
 import base64
 import os
 
-#TODO: password_reset, 
+#TODO: delet by token, 
 
 class UserAPIView(APIView):
     def get(self, request):
         queryset = Person.objects.all()
         serializer = UserSerializer(queryset, many=True)
-        return Response(serializer.data)
-    
+        return JsonResponse(serializer.data, safe=False)
+
     def post(self, request):
         data = json.loads(request.body)
         return Response(data)
-    
+
     def delete(self, request):
         data = {'message': 'Hello, world! This is delete request!'}
         return Response(data)
@@ -92,20 +93,23 @@ class Register(APIView):
             hashed_password = make_password(password)
         except ValidationError as e:
             return JsonResponse({"success": "false","error": e.message}, status=status.HTTP_400_BAD_REQUEST)
-        user = User.objects.create(
-            username=request.data['nickname'],
+        user = get_user_model().objects.create(
             email=email,
-            password=hashed_password
+            first_name=request.data['name'],
+            username=request.data['nickname'],
+            password=hashed_password,
         )
         try:
             data = Person.objects.create(
+                user=user,
                 email=email,
                 name = request.data['name'],
                 nickname=request.data['nickname'],
                 password=hashed_password,
             )
             data.save_base64_image(image_path=os.path.join(os.path.dirname(__file__), 'default.jpg'))
-            model_to_dict(data)
+            data.save_base64_background(background_path=os.path.join(os.path.dirname(__file__), 'background.jpg'))
+            # model_to_dict(data)
             data_to_send = {'email': email, 'nickname': request.data['nickname'], 'name': request.data['name']}
         except ValidationError as e:
             user.delete()
@@ -126,13 +130,12 @@ class PasswordReset(APIView):
             code = send_confirmation_email(email)
         except ValidationError as e:
             return JsonResponse({"success": "false","error": e.message}, status=status.HTTP_400_BAD_REQUEST)
-        confirmation_data = {
+        confirm_data = {
             'email': email,
             'code': code,
             'timestamp': timezone.now().isoformat(),
         }
-        request.session['confirmation_data'] = confirmation_data
-        request.session.save()
+        shared_data['confirm_data'] = confirm_data
         return JsonResponse({"success": "true", "email": "model_to_dict(data)"})
 
 class ForgetConfirmation(APIView):
@@ -140,7 +143,7 @@ class ForgetConfirmation(APIView):
         confirm_front = request.data['code']
         if not confirm_front:
             return JsonResponse({"success": "false", "error": "Confirmation code not found"}, status=status.HTTP_400_BAD_REQUEST)
-        confirmation_data = request.session.get('confirmation_data', None)
+        confirmation_data = shared_data.get('confirm_data')
         if not confirmation_data:
             return JsonResponse({"success": "false", "error": "Confirmation data not found"}, status=status.HTTP_400_BAD_REQUEST)
         confirm_back = confirmation_data['code']
@@ -148,38 +151,37 @@ class ForgetConfirmation(APIView):
         timer = timezone.datetime.fromisoformat(timer_str)
         expiration_time = timer + timezone.timedelta(seconds=30)
         if timezone.now() > expiration_time:
-            request.session.pop('confirmation_data', None)
-            request.session.save()
+            shared_data.pop('confirm_data', None)
             return JsonResponse({"success": "false", "error": "Confirmation code expired"}, status=status.HTTP_408_REQUEST_TIMEOUT)
         if confirm_front != confirm_back:
             return JsonResponse({"success": "false", "error": "Invalid confirmation code"}, status=status.HTTP_404_NOT_FOUND)
-        request.session.pop('confirmation_data', None)
-        request.session.save()
         return JsonResponse({"success": "true", "message": "Email is validated"})
 
 class Password(APIView):
     def post(self, request):
-        confirmation_data = request.session.get('confirmation_data', None)
-
+        confirmation_data = shared_data.get('confirm_data', {})
         if not confirmation_data:
             return JsonResponse({"success": "false", "error": "Confirmation data not found"}, status=status.HTTP_400_BAD_REQUEST)
-
-        email = confirmation_data.get('email')
-        password = request.data.get('password')
+        shared_data.pop('confirm_data', None)
+        email = request.data['email'].strip()
+        data_email = confirmation_data.get('email')
+        if email != data_email:
+            return JsonResponse({"success": "false", "error": "Email is not validated"}, status=status.HTTP_400_BAD_REQUEST)
+        password = request.data['password'][10:-10]
         try:
             password = password_validation(password)
-            person = Person.objects.get(email=email)
+            try:
+                person = Person.objects.get(email=email)
+            except Person.DoesNotExist:
+                return JsonResponse({"success": "false", "error": "Person not found"}, status=status.HTTP_404_NOT_FOUND)
             try:
                 validate_password(password)
             except ValidationError as e:
                 return JsonResponse({"success": "false", "error": e.message}, status=status.HTTP_400_BAD_REQUEST)
-            person.password = password
+            hashed_password = make_password(password)
+            person.password = hashed_password
             person.save()
-            request.session.pop('confirmation_data', None)
-            request.session.save()
             return JsonResponse({"success": "true", "message": "Password successfully updated"})
-        except Person.DoesNotExist:
-            return JsonResponse({"success": "false", "error": "Person not found"}, status=status.HTTP_404_NOT_FOUND)
         except ValidationError as e:
             return JsonResponse({"success": "false", "error": e.message}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -194,13 +196,12 @@ class Login(APIView):
         if check_password(password, user.password):
             refresh = RefreshToken()
             refresh['email'] = user.email
-            access_token = str(refresh.access_token)
-            refresh_token = str(refresh)
-
+            access = str(refresh.access_token)
+            refresh = str(refresh)
             response_data = {
                 "success": "true",
-                "access_token": access_token,
-                "refresh_token": refresh_token,
+                "access": access,
+                "refresh": refresh,
                 "user": {
                     "id": user.id,
                     "name": user.name,
@@ -222,9 +223,9 @@ class Login(APIView):
     #     users_data = [model_to_dict(user) for user in users]
     #     return JsonResponse({"success": "true", "profile": users_data})
 
-class ProfileById(APIView):
-    authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated]
+class SettingsById(APIView):
+    # authentication_classes = [TokenAuthentication]
+    # permission_classes = [IsAuthenticated]
 
     def get(self, request, pk):
         try:
@@ -232,7 +233,23 @@ class ProfileById(APIView):
         except Person.DoesNotExist:
             return JsonResponse({"success": "false", "error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
         return JsonResponse({"success": "true", "profile": model_to_dict(user)})
-    #def put(self, request, pk):
+
+    def put(self, request, pk):
+        try:
+            user = Person.objects.get(pk=pk)
+        except Person.DoesNotExist:
+            return JsonResponse({"success": "false", "error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+        data = json.loads(request.body)
+        user.name = data.get('name', user.name)
+        user.nickname = data.get('nickname', user.nickname)
+        user.email = data.get('email', user.email)
+        user.image = data.get('image', user.image)
+        user.phone = data.get('phone', user.phone)
+        user.password = data.get('password', user.password)
+        user.gamemode = data.get('gamemode', user.gamemode)
+        user.background = data.get('background', user.background)
+        user.save()
+        return JsonResponse({"success": "true", "profile": model_to_dict(user)})
         
     def delete(self, request, pk):
         try:
@@ -242,48 +259,19 @@ class ProfileById(APIView):
         user.delete()
         return JsonResponse({"success": "true", "message": "Person deleted successfully"})
 
-class TokenSerializer(TokenObtainPairSerializer):
-    @classmethod
-    def get_token(cls, user):
-        token = super().get_token(user)
-
-        # Add custom claims
-        token['username'] = user.username
-        return token
-
-class TokenView(TokenObtainPairView):
-    serializer_class = TokenSerializer
-
-    @api_view(['GET'])
-    def getRoutes(request):
-        routes = [
-            '/api/v1/token/',
-            '/api/v1/token/refresh/',
-        ]
-        return Response(routes)
-
-    def post(self, request, *args, **kwargs):
-        response = super().post(request, *args, **kwargs)
-
-        # Set the access token and refresh token as cookies
-        access_token = response.data.get('access')
-        refresh_token = response.data.get('refresh')
-
-        response.set_cookie('auth_token', access_token, httponly=True)
-        response.set_cookie('refresh_token', refresh_token, httponly=True)
-
-        return response
-
 class CustomTokenRefreshView(TokenRefreshView):
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
-            refresh = serializer.validated_data.get('refresh')
-            access_token = str(refresh)
+            refresh_token = serializer.validated_data.get('refresh')
+            refresh = RefreshToken(refresh_token)
+            access = str(refresh.access_token)
+            new_refresh = str(refresh)
             response_data = {
                 "success": True,
-                "access_token": access_token,
+                "access": access,
+                "refresh": new_refresh,
             }
-            return Response(response_data, status=status.HTTP_200_OK)
+            return JsonResponse({"success": "true", "data": response_data}, status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
