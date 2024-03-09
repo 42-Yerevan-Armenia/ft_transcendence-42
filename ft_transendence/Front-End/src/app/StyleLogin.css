@@ -1,4 +1,4 @@
-.RegisterPage{
+.LoginPage{
     width: auto;
     height: 700px;
     border-radius: 20px;
@@ -7,7 +7,7 @@
 }
 
 
-.RegisterPageConteiner {
+.LoginPageConteiner {
     width: 1000px;
     height: 600px;
     background-color: #302C4A;
@@ -19,7 +19,7 @@
     border-radius: 2px;
 }
 
-.RegisterPagePosition{
+.LoginPagePosition{
     display: flex;
     flex-direction: column;
     background-color: rgba(54, 47, 82, 0.3);
@@ -33,7 +33,7 @@
     border-radius: 20px;
 }
 
-.RegisterPageText{
+.LoginPageText{
     display: flex;
     flex-direction: column;
     width: 300px;
@@ -45,7 +45,7 @@
     color: rgba(190, 156, 190, 0.8);
 }
 
-.RegisterPageH2{
+.LoginPageH2{
     color: white;
     margin-bottom:0;
     margin-top: 0;
@@ -53,7 +53,7 @@
 
 
 
-.RegisterPageinput{
+.LoginPageinput{
     background-color: black;
     border-radius: 5px;
     color: rgba(190, 156, 190, 1);
@@ -61,89 +61,113 @@
 }
 
 
-.RegisterPageinput::placeholder {
+.LoginPageinput::placeholder {
     color: rgba(190, 156, 190, 1);
 }
 
 
-.RegisterPageContinue{
+
+
+.password{
+    background-color: black;
+    border-radius: 5px;
+    color: rgba(190, 156, 190, 1);
+    border: 8px solid black;
+}
+
+
+.password::placeholder {
+    color: rgba(190, 156, 190, 1);
+}
+
+
+.LoginPageContinue{
     background-color: rgba(0, 167, 255, 0.8);
     border-radius: 5px;
     padding: 4px;
     color: rgba(245, 238, 243, 1);
     font-weight: bold;
     margin-top: 10px;
+    cursor: pointer;
 }
 
-.RegisterPageContinueWith42{
+.LoginPageContinueWith42{
     background-color:rgba(255, 255, 255, 1);
     border-radius: 5px;
     padding: 4px;
     color: rgba(101, 94, 105, 1);
     font-weight: bold;
-    mask-type: button;
+    cursor: pointer;
 }
 
-.RegisterPageP{
+.LoginPageP{
     color: rgba(215, 187, 206, 1);
     margin-bottom: 10px;
 }
-.RegisterPageOR{
+.LoginPageOR{
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.Registerline{
+.Loginline{
     background-color: rgba(190, 156, 190, 0.8);
     width: 120px;
     height: 1px;
 }
 
+.LoginPageForgot{
+    color: rgba(0, 170, 255, 1);
+    font-size: 12px;
+}
+
+.LoginPageForgotDiv{
+    text-align: end;
+    color: red;
+}
+
+.LoginPageForgotDiv:hover{
+    cursor: pointer;
+}
+
 @media only screen and (max-width: 1060px){
-    .RegisterPageConteiner{
+    .LoginPageConteiner{
        width: 800px;
     }
 
 }
 
 @media only screen and (max-width: 834px){
-    .RegisterPageConteiner{
+    .LoginPageConteiner{
        width: 600px;
     }
 
 }
 
 @media only screen and (max-width: 634px){
-    .RegisterPageConteiner{
+    .LoginPageConteiner{
         width: 400px;
      }
-    .RegisterPagePosition{
+    .LoginPagePosition{
         width: 323px;
     }
-    .RegisterPageH2{
+    .LoginPageH2{
         font-size: clamp(2px 14vw 20px);
     }
 }
 
 @media only screen and (max-width: 430px){
-    .RegisterPage{
+    .LoginPage{
         width: 270px;
     }
-    .RegisterPageConteiner{
+    .LoginPageConteiner{
         width: 80%;
     }
-    .RegisterPagePosition{
+    .LoginPagePosition{
         width: 80%;
     }
-    .RegisterPageText{
+    .LoginPageText{
         width: 80%;
         font-size: 10px;
     }
 }
-
-
-
-
-
-

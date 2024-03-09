@@ -14,7 +14,7 @@ export default function Password(){
 
                         <input placeholder='Repeat password' className={Style.PasswordPageinput}></input>
 
-                        <div className={Style.PasswordPageContinue}>Continue</div>
+                        <div className={Style.PasswordPageContinue}>Reset password</div>
                     </div>
                 </div>        
             </div>

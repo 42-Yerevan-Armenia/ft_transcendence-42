@@ -43,8 +43,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     debugger
     if(User.checkSignIn())
     {
-       await User.accessRefresh();
+       const res = await User.accessRefresh();
+       if (res)
+       {
+        ManageAllPage.Manage("Home");
+        ManageMidle.Manage("midle")
         console.log("true")
+       }
     }
 });
 
