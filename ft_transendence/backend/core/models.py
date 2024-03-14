@@ -14,6 +14,7 @@ class Person(models.Model):
     wins = models.IntegerField(default=0)
     loses = models.IntegerField(default=0)
     matches = models.IntegerField(default=0)
+    points = models.IntegerField(default=0)
     gamemode = models.CharField(max_length=100, default='classic')
     live = models.BooleanField(default=False)
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='person')
