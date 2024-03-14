@@ -9,9 +9,11 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from .models import Person
-from .serializers import UserSerializer, EmailSerializer
+from .serializers import UserSerializer, SettingsSerializer, HomeSerializer, LederboardSerializer, ProfileSerializer
 from .validations import email_validation, register_validation, send_confirmation_email, password_validation
 from .shared_data import shared_data
+
+from friendship.models import FriendshipRequest
 
 from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth.hashers import make_password, check_password
@@ -29,7 +31,8 @@ import json
 import base64
 import os
 
-#TODO: delet by token, 
+#TODO: delet by token
+
 
 class UserAPIView(APIView):
     def get(self, request):
@@ -213,15 +216,15 @@ class Login(APIView):
         else:
             return JsonResponse({"success": "false", "error": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
 
-# class Profile(APIView):
-
-#     # authentication_classes = [TokenAuthentication]
-#     # permission_classes = [IsAuthenticated]
-
-    # def get(self, request):
-    #     users = Person.objects.all()
-    #     users_data = [model_to_dict(user) for user in users]
-    #     return JsonResponse({"success": "true", "profile": users_data})
+class Profile(APIView):
+    def get(self, request, pk):
+        try:
+            user = Person.objects.get(id=pk)
+            serializer = ProfileSerializer(user)
+        except Person.DoesNotExist:
+            return JsonResponse({"success": "false", "error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+        # return JsonResponse({"success": "true", "profile": serializer.data}, safe=False)
+        return Response(serializer.data)
 
 class SettingsById(APIView):
     # authentication_classes = [TokenAuthentication]
@@ -230,9 +233,10 @@ class SettingsById(APIView):
     def get(self, request, pk):
         try:
             user = Person.objects.get(id=pk)
+            serializer = SettingsSerializer(user)
         except Person.DoesNotExist:
             return JsonResponse({"success": "false", "error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
-        return JsonResponse({"success": "true", "profile": model_to_dict(user)})
+        return JsonResponse({"success": "true", "profile": serializer.data}, safe=False)
 
     def put(self, request, pk):
         try:
@@ -259,6 +263,88 @@ class SettingsById(APIView):
         user.delete()
         return JsonResponse({"success": "true", "message": "Person deleted successfully"})
 
+class Lederboard(APIView):
+
+    def get(self, request, pk):
+        try:
+            user = Person.objects.get(id=pk)
+            serializer = LederboardSerializer(user)
+        except Person.DoesNotExist:
+            return JsonResponse({"success": "false", "error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+        return JsonResponse({"success": "true", "profile": serializer.data}, safe=False)
+        # return Response(serializer.data)
+
+class GameResult(APIView):
+
+    def post(self, request):
+        try:
+            # Assuming you receive the user ids and game result (win or lose) in the request data
+            user1_id = request.data.get('user1_id')
+            user2_id = request.data.get('user2_id')
+            result_user1 = request.data.get('result_user1')  # Assuming 1 for win, 0 for lose
+            result_user2 = request.data.get('result_user2')
+            # Retrieve user objects
+            user1 = Person.objects.get(id=user1_id)
+            user2 = Person.objects.get(id=user2_id)
+            # Update game results
+            if result_user1 == 1:
+                user1.wins += 1
+                score1 = 100
+            else:
+                user1.loses += 1
+                score1 = 50
+            if result_user2 == 1:
+                user2.wins += 1
+                score2 = 100
+            else:
+                user2.loses += 1
+                score2 = 50
+            # Update match count
+            user1.matches += 1
+            user2.matches += 1
+            # Set percentage bonus
+            win_bonus = 0.5
+            lose_bonus = 0.25
+            match_bonus = 0.1
+            # Calculate points
+            points_user1 = ( score1 +
+                user1.wins * win_bonus +
+                user1.loses * lose_bonus +
+                user1.matches * match_bonus
+            )
+            points_user2 = ( score2 +
+                user2.wins * win_bonus +
+                user2.loses * lose_bonus +
+                user2.matches * match_bonus
+            )
+            # Update points
+            user1.points += points_user1
+            user2.points += points_user2
+            # Save changes to the database
+            user1.save()
+            user2.save()
+            # Optional: Return updated leaderboard data for both users
+            serializer_user1 = LederboardSerializer(user1)
+            serializer_user2 = LederboardSerializer(user2)
+            return Response({
+                "success": "true",
+                "user1_profile": serializer_user1.data,
+                "user2_profile": serializer_user2.data
+            }, status=status.HTTP_200_OK)
+        except Person.DoesNotExist:
+            return Response({"success": "false", "error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+
+class Home(APIView):
+
+    def get(self, request, pk):
+        try:
+            user = Person.objects.get(id=pk)
+            serializer = HomeSerializer(user)
+        except Person.DoesNotExist:
+            return JsonResponse({"success": "false", "error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+        # return JsonResponse({"success": "true", "profile": serializer.data}, safe=False)
+        return Response(serializer.data)
+
 class CustomTokenRefreshView(TokenRefreshView):
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -275,3 +361,42 @@ class CustomTokenRefreshView(TokenRefreshView):
             return JsonResponse({"success": "true", "data": response_data}, status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+#FIXME: friend request
+
+class SendFriendRequest(APIView):
+    def post(self, request, *args, **kwargs):
+        try:
+            sender = request.user  # Assuming sender is the authenticated user
+            receiver_id = request.data.get('receiver_id')
+            receiver = Person.objects.get(id=receiver_id).user
+
+            # Check if a friendship request already exists
+            if not FriendshipRequest.objects.filter(from_user=sender, to_user=receiver).exists():
+                # Create a new friendship request
+                FriendshipRequest.objects.create(from_user=sender, to_user=receiver)
+
+                return Response({"success": "true", "message": "Friend request sent"}, status=status.HTTP_201_CREATED)
+            else:
+                return Response({"success": "false", "error": "Friend request already sent"}, status=status.HTTP_400_BAD_REQUEST)
+        except Person.DoesNotExist:
+            return Response({"success": "false", "error": "Receiver user not found"}, status=status.HTTP_404_NOT_FOUND)
+
+class AcceptFriendRequest(APIView):
+    def post(self, request, *args, **kwargs):
+        try:
+            receiver = request.user  # Assuming receiver is the authenticated user
+            sender_id = request.data.get('sender_id')
+            sender = Person.objects.get(id=sender_id).user
+
+            # Check if a friendship request exists
+            friendship_request = FriendshipRequest.objects.filter(from_user=sender, to_user=receiver, status='pending').first()
+            if friendship_request:
+                # Accept the friendship request
+                friendship_request.accept()
+
+                return Response({"success": "true", "message": "Friend request accepted"}, status=status.HTTP_200_OK)
+            else:
+                return Response({"success": "false", "error": "Friend request not found or already accepted"}, status=status.HTTP_400_BAD_REQUEST)
+        except Person.DoesNotExist:
+            return Response({"success": "false", "error": "Sender user not found"}, status=status.HTTP_404_NOT_FOUND)
