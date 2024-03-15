@@ -1,4 +1,5 @@
 class PasswordPage extends HtmlElement {
+   debugger
     constructor(){
       super(".PasswordPage")
       this._style.display = "none";
@@ -8,6 +9,7 @@ class PasswordPage extends HtmlElement {
     _RepeatPassword = document.querySelector(".RepeatPassword");
   
     PasswordConfirmButton(){
+      debugger
       User._Password = "";
       const NewPasswordError = document.querySelector(".NewPasswordError");
       const RepeatPasswordError = document.querySelector(".RepeatPasswordError")
@@ -41,6 +43,7 @@ class PasswordPage extends HtmlElement {
     }
   
     async PasswordConfirmWithServer() {
+       debugger
       let Hash_code = HashCodeGeneration();
       debugger
       return await ControllerPessPassword(Hash_code + "" + User._Password + "" + Hash_code, User);

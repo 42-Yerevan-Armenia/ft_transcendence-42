@@ -4,9 +4,19 @@ class MiddleSECTION extends HtmlElement {
       super(".MIDLESECTION")
       this._style.display = "flex";
     }
-    func(){
-      document.querySelector("#homeNavigation").style.display  = "block";
-      document.querySelector(".User").style.display  = "flex";
+    Drow()
+    {
+      if (User.menegAccsess())
+      {
+        document.querySelector("#homeNavigation").style.display  = "block";
+        document.querySelector(".User").style.display  = "flex";
+        document.querySelector(".right").style.display  = "none";
+      }
+      else
+      {
+        document.querySelector("#homeNavigation").style.display  = "none";
+        document.querySelector(".User").style.display  = "none";
+      }
     }
   }
   

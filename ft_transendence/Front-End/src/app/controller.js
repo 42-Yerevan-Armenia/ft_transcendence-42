@@ -1,7 +1,7 @@
 "use strict"
 // const HostPort="http://localhost:5001"
-// const HostPort="http://10.12.11.1:8000"
-const HostPort="http://10.12.11.2:8000"
+const HostPort="http://10.12.11.1:8000"
+// const HostPort="http://10.12.11.2:8000"
 
 
 
@@ -14,6 +14,7 @@ const HostPort="http://10.12.11.2:8000"
 //queshon too backend Email exist or not and 
 //if create 
 async function ControllerCheckEmail(email) {
+  debugger
   try {
     // const response = await fetch(`${HostPort}/registerpage?email=${email}`,{
     const response = await fetch(`${HostPort}/email_validation/`,{
@@ -33,6 +34,10 @@ async function ControllerCheckEmail(email) {
     if (!result || typeof result !== 'object') {
       throw new Error("Invalid response data");
     }
+    console.log( "Succsse++++++++++++++++++++    222222")
+    console.log( "method : " + "POST");
+    console.log( "request : " + "email_validation");
+    console.log(result);
     return {state:true, message: result.message};
   }
   catch(err) {
@@ -70,6 +75,10 @@ async function ControllerCheckReplayCode(code) {
         throw new Error("Invalid response data");
       }
 
+      console.log( "Succsse++++++++++++++++++++    222222")
+      console.log( "method : " + "POST");
+      console.log( "request : " + "confirm");
+      console.log(data);
       return{state:true, "message": data };
   }
   catch (err) {
@@ -83,6 +92,7 @@ async function ControllerCheckReplayCode(code) {
 }
 
 async function ControllerSignUp(password, User) {
+  debugger
   console.log("ControllerSignUp");
   try {
     const response = await fetch(`${HostPort}/register/`, {
@@ -102,6 +112,10 @@ async function ControllerSignUp(password, User) {
     if (!data || typeof data !== 'object') {
       throw new Error("Invalid response data");
     }
+    console.log( "Succsse++++++++++++++++++++    222222")
+    console.log( "method : " + "POST");
+    console.log( "request : " + "register");
+    console.log(data);
     return { state: true, message: data };
   } catch (error) {
     console.error("Error:", error);
@@ -110,6 +124,7 @@ async function ControllerSignUp(password, User) {
 }
 
 async function ControllerPessPassword(password, User) {
+  debugger
   console.log("----------password = [" + password +"] email ["+ User._Email + "]");
   console.log(User)
 
@@ -131,6 +146,11 @@ async function ControllerPessPassword(password, User) {
     if (!data || typeof data !== 'object') {
       throw new Error("Invalid response data");
     }
+    console.log( "Succsse++++++++++++++++++++    11111")
+    console.log( "method : " + "POST");
+    console.log( "request : " + "password");
+    console.log(data);
+
     return { state: true, message: data };
   } catch (error) {
     console.error("Error:", error);
@@ -141,6 +161,7 @@ async function ControllerPessPassword(password, User) {
 
 //fetch universal
 async function FetchRequest(Tomethod, Torequest, ToObj) {
+  debugger
   console.log("1----------------------------------------")
   console.log( "method : " + Tomethod);
   console.log( "request : " + Torequest);
@@ -164,8 +185,10 @@ async function FetchRequest(Tomethod, Torequest, ToObj) {
     if (!data || typeof data !== 'object') {
       throw new Error("Invalid response data");
     }
-
+    console.log( "method : " + Tomethod);
+    console.log( "request : " + Torequest);
     console.log("ControllerPessPassword  Succsse++++++++++++++++++++");
+    console.log(data);
     return { state: true, message: data };
   } catch (error) {
     console.error("Error:", error);

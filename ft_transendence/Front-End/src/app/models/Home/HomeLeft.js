@@ -10,8 +10,12 @@ class HomeLeft extends HtmlElement {
     _NickName = document.querySelector("#UserH6");
     _Image = document.querySelector("#UserImage");
     Drow() {
+      if (User.checkSignIn())
+      {
         this._Name.innerHTML = User._Name;
         this._NickName.innerHTML = User._NickName;
-        this._Image.src = "../../../../public/User.png";
+        this._Image.src = "/public/User.png";//User._Image;
+        // User
+      }
     }
 }

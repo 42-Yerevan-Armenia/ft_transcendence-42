@@ -1,5 +1,6 @@
 //Reset Page
 class ResetPageA extends HtmlElement {
+  debugger
   constructor() {
     super(".ResetPage");
     this._style.display = "none";

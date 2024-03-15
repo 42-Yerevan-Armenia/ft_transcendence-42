@@ -38,19 +38,19 @@ if (mainElement) {
 
 
 document.addEventListener("DOMContentLoaded", async () => {
-    console.log("Document is loaded");
+    console.log("1-- Document is loaded");
 
     debugger
     if(User.checkSignIn())
     {
+        console.log("2-- Document is loaded");
        const res = await User.accessRefresh();
        if (res)
        {
-        ManageAllPage.Manage("Home");
-        ManageMidle.Manage("midle")
         console.log("true")
        }
     }
+    ManageAllPage.Manage("Home");
 });
 
 
