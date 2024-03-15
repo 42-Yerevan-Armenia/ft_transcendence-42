@@ -43,3 +43,26 @@ class Person(models.Model):
         with open(background_path, "rb") as background_file:
             base64_string = base64.b64encode(background_file.read()).decode("utf-8")
         return base64_string
+
+class GameRoom(models.Model):
+    id = models.AutoField(primary_key=True)
+    THEME_CHOICES = (
+        ('light', 'Light'),
+        ('dark', 'Dark'),
+        ('other', 'Other'),
+    )
+    GAMEMODE_CHOICES = (
+        ('easy', 'Easy'),
+        ('classic', 'Classic'),
+        ('hard', 'Hard'),
+    )
+
+    max_players = models.IntegerField(default=2)  # Number of players in the room
+    live = models.BooleanField(default=False)  # Indicates if the game room is live or not
+    theme = models.CharField(max_length=50, choices=THEME_CHOICES, default='light')  # Theme of the game room
+    gamemode = models.CharField(max_length=50, choices=GAMEMODE_CHOICES, default='easy')  # Game mode
+    creator = models.ForeignKey(Person, on_delete=models.CASCADE)  # Relationship with the Person who created the game room
+    players = models.ManyToManyField(Person, related_name='joined_players', blank=True)  # Relationship with the players in the game room
+
+    def __str__(self):
+        return f"GameRoom {self.id}"

@@ -9,7 +9,18 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from .models import Person
-from .serializers import UserSerializer, SettingsSerializer, HomeSerializer, LederboardSerializer, ProfileSerializer
+from .serializers import (
+    UserSerializer,
+    SettingsSerializer,
+    HomeSerializer,
+    LederboardSerializer,
+    ProfileSerializer,
+    JoinListSerializer,
+    WaitingRoomSerializer,
+    HistorySerializer,
+    FullHistorySerializer,
+    GameRoomSerializer
+)
 from .validations import email_validation, register_validation, send_confirmation_email, password_validation
 from .shared_data import shared_data
 
@@ -340,6 +351,75 @@ class Home(APIView):
         try:
             user = Person.objects.get(id=pk)
             serializer = HomeSerializer(user)
+        except Person.DoesNotExist:
+            return JsonResponse({"success": "false", "error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+        # return JsonResponse({"success": "true", "profile": serializer.data}, safe=False)
+        return Response(serializer.data)
+
+class JoinList(APIView):
+    def get(self, request, pk):
+        try:
+            user = Person.objects.get(id=pk)
+            serializer = JoinListSerializer(user)
+            if serializer.data['game_room'] == None:
+                return JsonResponse({"success": "false", "error": "Game room not found"}, status=status.HTTP_404_NOT_FOUND)
+        except Person.DoesNotExist:
+            return JsonResponse({"success": "false", "error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+        return Response(serializer.data)
+
+    def post(self, request, *args, **kwargs):
+        try:
+            players = request.data.get('number')
+            live = request.data.get('live')
+            theme = request.data.get('theme')
+            gamemode = request.data.get('gamemode')
+            creator_id = request.user.id
+
+            game_room_data = {
+                'max_players': players,
+                'live': live,
+                'theme': theme,
+                'gamemode': gamemode,
+                'creator': creator_id
+            }
+            print(game_room_data)
+            game_room_serializer = GameRoomSerializer(data=game_room_data)
+            if game_room_serializer.is_valid():
+                game_room_serializer.save()
+                return JsonResponse({"success": "true", "message": "Game room created successfully"}, status=status.HTTP_201_CREATED)
+            else:
+                return JsonResponse({"success": "false", "error": game_room_serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return JsonResponse({"success": "false", "error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class WaitingRoom(APIView):
+
+    def get(self, request, pk):
+        try:
+            user = Person.objects.get(id=pk)
+            serializer = WaitingRoomSerializer(user)
+        except Person.DoesNotExist:
+            return JsonResponse({"success": "false", "error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+        # return JsonResponse({"success": "true", "profile": serializer.data}, safe=False)
+        return Response(serializer.data)
+
+class History(APIView):
+
+    def get(self, request, pk):
+        try:
+            user = Person.objects.get(id=pk)
+            serializer = HistorySerializer(user)
+        except Person.DoesNotExist:
+            return JsonResponse({"success": "false", "error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+        # return JsonResponse({"success": "true", "profile": serializer.data}, safe=False)
+        return Response(serializer.data)
+
+class FullHistory(APIView):
+
+    def get(self, request, pk):
+        try:
+            user = Person.objects.get(id=pk)
+            serializer = FullHistorySerializer(user)
         except Person.DoesNotExist:
             return JsonResponse({"success": "false", "error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
         # return JsonResponse({"success": "true", "profile": serializer.data}, safe=False)
