@@ -1,6 +1,7 @@
 
 //confirm Page
 class ConfirmPage extends HtmlElement {
+  debugger
     constructor() {
       super(".ConfirmPage")
       this._style.display = "none";
@@ -107,6 +108,6 @@ class ConfirmPage extends HtmlElement {
       return null;
     }
     Drow(){
-
+      console.log("class ConfirmPage extends HtmlElement")
     }
   }

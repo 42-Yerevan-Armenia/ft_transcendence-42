@@ -1,5 +1,5 @@
 function ValidateEmail(input) {
-
+  debugger
   console.log("1input =[" + input  + "]");
   if (!input)
   {
@@ -17,6 +17,7 @@ function ValidateEmail(input) {
 }
 
 function checkName(str) {
+  debugger
   // Regular expression to match strings with only characters
   // and starting with an uppercase letter
   const regex = /^[A-Z][a-z]*$/;
@@ -26,6 +27,7 @@ function checkName(str) {
 }
 
 function PasswordisCorrect(obj, error){
+  debugger
   if (obj.value.length < 8 || obj.value.length > 16)
   {
     error.innerHTML = "password must be 8 to 16 character";
@@ -48,6 +50,7 @@ function PasswordisCorrect(obj, error){
 
 
 function HashCodeGeneration(){
+  debugger
   let hashCode = Array.from({length:10}, (i) =>Math.floor(Math.random() * 10)) + "";
   const sliceDelete = /,/g;
   const str = hashCode.replace(sliceDelete, '');
@@ -60,17 +63,33 @@ function HashCodeGeneration(){
 //manag browser storage
 const myStorages = {
   setStorage(tockens) {
+    debugger
+    console.log("tockens     --------   " + tockens)
+    console.log(tockens);
     const {refresh, success, access} = tockens;
 
     if (!success || !access || !refresh)
       return false;
 
-    console.log("setStorage  : true")
+
+    User._name = tockens.user.name;
+    User._nickname = tockens.user.nickname;
+    User._ID = tockens.user.id;
+    User._Email = tockens.user.email;
+    User._Imag = tockens.user.image;
+
+    console.log("User._Imag = " + User._Imag);
     localStorage.setItem("access", access + "")
     localStorage.setItem("refresh", refresh + "")
     return true;
   },
+
   setStorageLogin(tockens) {
+    debugger
+    console.log("tockens     --------   " + tockens)
+    console.log(tockens);
+    const {user} = tockens;
+    console.log(user)
     const {refresh, success, access} = tockens;
 
 
@@ -81,22 +100,20 @@ const myStorages = {
     User._nickname = tockens.user.nickname;
     User._ID = tockens.user.id;
     User._Email = tockens.user.email;
+    User._Imag = tockens.user.image;
 
+    console.log("User._Imag = " + User._Imag);
     localStorage.setItem("access", access + "")
     localStorage.setItem("refresh", refresh + "")
     return true;
   },
+
   longOut() {
+    debugger
     localStorage.removeItem("access");
     localStorage.removeItem("refresh");
     User.Destruc();
-    ManageAllPage.Manage("Home");
     console.log("Home._HomeLeft._LongOut.addEventListener");
-  },
-  longOutGoLogin() {
-    localStorage.removeItem("access");
-    localStorage.removeItem("refresh");
-    User.Destruc();
   }
 }
 

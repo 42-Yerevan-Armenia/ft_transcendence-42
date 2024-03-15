@@ -1,5 +1,6 @@
 //Signup Page
 class SignupPage extends HtmlElement {
+  debugger
     constructor(){
       super(".SignupPage")
       this._style.display = "none";

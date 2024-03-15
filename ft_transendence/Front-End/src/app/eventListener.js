@@ -1,17 +1,14 @@
-var User = new USER();
-var Confirm = new ConfirmPage();
-var Login = new LoginPage();
-var Register = new RegisterPage();
-var Reset = new ResetPageA();
-var Home = new HomePage();
-var Password = new PasswordPage();
-var SignUp = new SignupPage();
-
 //-----------------------------------------------------------------------   Home
 //Event Listeners  Home Page
-Home._NAV._SETTINGS._classname.addEventListener("click", Home.NavMiddleSettings);
-Home._NAV._LEADERBOARD._classname.addEventListener("click", Home.NavMidleCub);
-Home._NAV._Home._classname.addEventListener("click", Home.NavMidleHome);
+Home._NAV._SETTINGS._classname.addEventListener("click",()=>{
+  ManageMidle.Manage("MidleSettings")
+})
+Home._NAV._LEADERBOARD._classname.addEventListener("click",()=>{
+  ManageMidle.Manage("MidleCub");
+} )
+Home._NAV._Home._classname.addEventListener("click",()=>{
+  ManageMidle.Manage("midle");
+} );
 
 //sign in
 Home._NavSigninSignout._NavSignin.addEventListener("click", ()=> {
@@ -50,8 +47,9 @@ debugger
 //-------------------------------------------------------------------- left User
 // IconExit
 Home._HomeLeft._LongOut.addEventListener("click", () => {
+
   myStorages.longOut();
-  
+  ManageAllPage.Manage("Home");
 })
 
 //---------------------------------------------------------------------   Login
@@ -69,12 +67,9 @@ Login._LoginPageContinue.addEventListener("click", async () => {
       myStorages.setStorageLogin(data?.message?.data)
       if (User.checkSignIn())
       {
-        Login.DisplayNone();
-        Home._Midle.func();
-        Home.DisplayBlock();
-        Home.NavMidleHome();
+        ManageAllPage.Manage("Home");
+        ManageMidle.Manage("midle");
         
-        Home._HomeLeft.Drow();
         
         Login._LoginEmail.value = "";
         Login._LoginPassword.value = "";
@@ -85,6 +80,7 @@ Login._LoginPageContinue.addEventListener("click", async () => {
 
 //when forgot password
 Login._LoginPageForgot.addEventListener("click", () => {
+  debugger
   ManageAllPage.Manage("ResetPage");
   ManageMidle.Manage("");
   console.log("Clicked!");
@@ -97,6 +93,7 @@ let isReset = false;
 
 
 Reset._ConfirmReset.addEventListener('click', async () => {
+  debugger
   const isValid = Reset.checkValidEmail();
   if (!isValid)
     return ;
@@ -114,7 +111,7 @@ Reset._ConfirmReset.addEventListener('click', async () => {
 //-------------------------------------------------------------------  Confirm  ---------
 
 Confirm.ConfirmYourEmail.addEventListener('click', async () => {
-
+  debugger
   const data = await Confirm.ConfirmPageContinue(isReset);
   Confirm.ValuesAllEmpty();
 
@@ -144,9 +141,8 @@ Confirm.ConfirmYourEmail.addEventListener('click', async () => {
   }
   else if (data.message.substr(-3) == "408") {
     User._ConfirmEmail = false;
-    Confirm.DisplayNone();
-    Home.DisplayBlock();
-    Home.NavMidleHome();
+    ManageMidle.Manage("midle");
+    ManageAllPage.Manage("Home")
   }
   isReset = false;
 })
@@ -155,6 +151,7 @@ Confirm.ConfirmYourEmail.addEventListener('click', async () => {
 //-------------------------------------------------------------------  Password
 
 Password.PasswordConfirm.addEventListener("click", async () => {
+  debugger
   const isCorrectPassword = Password.PasswordConfirmButton();
   if (isCorrectPassword)
   {
@@ -163,7 +160,7 @@ Password.PasswordConfirm.addEventListener("click", async () => {
     
     if (codeSesion.state)
     {
-      myStorages.longOutGoLogin();
+      myStorages.longOut();
       ManageAllPage.Manage("Login");
     }
   }
@@ -173,6 +170,7 @@ Password.PasswordConfirm.addEventListener("click", async () => {
 //-------------------------------------------------------------------  SignUp
 
 SignUp.SignupPageContinue.addEventListener("click", async () => {
+  debugger
   const isCorrectPassword = SignUp.PasswordConfirmButton();
   const ischeckNameNickname = SignUp.checkNameNickname();
   if (isCorrectPassword && ischeckNameNickname)

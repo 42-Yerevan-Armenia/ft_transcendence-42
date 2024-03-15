@@ -2,6 +2,7 @@
 
 // Home Page
 class HomePage extends HtmlElement {
+  debugger
     constructor(){
       super(".homeSection");
       this._style.display = "block";
@@ -37,28 +38,10 @@ class HomePage extends HtmlElement {
     ButtonSignUp = () => {
       this._style.display = "none";
     }
-  
-    NavMidleHome = ()=>{
-      this._MiddleSettings._style.display = "none";
-      this._MidleCub._style.display = "none";
-      
-      this._Midle._style.display = "flex";
-    }
-  
-    NavMiddleSettings = ()=>{
-      this._Midle._style.display = "none";
-      this._MidleCub._style.display = "none";
-  
-      this._MiddleSettings._style.display = "flex";
-    }
-  
-    NavMidleCub = () => {
-      this._Midle._style.display = "none";
-      this._MiddleSettings._style.display = "none";
-      
-      this._MidleCub._style.display = "flex";
-    }
+
     Drow(){
+      ManageMidle.Manage("midle")
+      
       this._HomeLeft.Drow();
     }
   }

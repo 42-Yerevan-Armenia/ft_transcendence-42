@@ -1,6 +1,6 @@
-
 //user
 class USER {
+  debugger
     constructor() {
       this._name = "";
       this._nickname = "";
@@ -8,6 +8,7 @@ class USER {
       this._Email = "";
       this._ConfirmEmail = false;
       this._SignIn = false;
+      this._Imag = "";
       this.date = new Date();
       this._getAccess = localStorage.getItem("access");
       this._geRefresh = localStorage.getItem("refresh");
@@ -29,6 +30,7 @@ class USER {
       this._nickname = "";
       this._Password = "";
       this._Email = "";
+      this._Imag = "";
       this._ConfirmEmail = false;
     }
   
@@ -42,26 +44,32 @@ class USER {
   
       if (res?.state)
       {
-        myStorages.setStorage(res?.message?.data)
+        // myStorages.setStorage(res?.message?.data)
+        myStorages.setStorageLogin(res?.message?.data)
         return true;
       }
       else
       {
         myStorages.longOut();
+        ManageAllPage.Manage("Home");
         return false;
       }
     }
   
     menegAccsess() {
-  
-      if(new Date().getMinutes() - this.date.getMinutes() > 13 ||  this.checkSignIn())
+      if (!this.checkSignIn())
+        return false;
+      if(new Date().getMinutes() - this.date.getMinutes() > 13)
       {
-        this.accessRefresh();
-        console.log("---true---")
+        if (this.accessRefresh())
+         true
+        else{
+          false;
+        } 
       }
       else {
-        myStorages.longOut();
+        return true;
       }
     }
-  }
+}
   

@@ -1,5 +1,6 @@
 //login Page 
 class LoginPage extends HtmlElement {
+  debugger
     constructor(){
       super(".LoginPage")
       this._style.display = "none";
@@ -8,7 +9,7 @@ class LoginPage extends HtmlElement {
     _LoginEmail = document.querySelector(".LoginPageinput");
     _LoginPageForgot = document.querySelector(".LoginPageForgot");
     _LoginPageContinue = document.querySelector(".LoginPageContinue");
-    DisplayBlock(){
+    DisplayBlock() {
       this._style.display = "block";
     }
   
@@ -67,9 +68,9 @@ class LoginPage extends HtmlElement {
         LoginPageinput.value = email;
       }
     }
-    Drow(){
+  
+    Drow() {
       
     }
     
-  }
-  
+}
