@@ -30,6 +30,12 @@
     height: 15px;
     margin-top: -10px; 
     margin-left: 55px;
+    cursor: pointer;
+}
+
+.IconExit:hover {
+    background-color: #5C5486;
+    cursor: pointer;
 }
 
 
@@ -83,13 +89,14 @@
 
 
 .Onlain{
-    width: 50%;
+    width: 30%;
+    min-width: 70px;
     height: 68px;
     background-color: #5C5486;
 }
 
 .User{
-    display: flex;
+    display: block;
     margin-top: 49px;
     height: 70px;
 }
@@ -125,16 +132,30 @@
 
 .NamvMenu{
     width: all;
-    height: 533px;
+    /* height: 533px; */
+    height:84%;
     flex-direction: column;
 }
 
 .nav{
-    display: flex;
     flex-direction: column;
-    height: 481px;
+    display: flex;
+    /* height: 481px; */
+    height:88%;
 }
 
+/* default is not sign in    */
+#homeNavigation{
+    display: none;
+}
+
+.User{
+    display: none;
+}
+
+
+
+/*-----------------end-------------*/
 
 .NavSignin, .NavSignUp{
     background-color:#1B8CCE;
@@ -142,6 +163,7 @@
     border-radius: 10px;
     border: 2px solid #1B8CCE;
     width: 70px;
+    cursor: pointer;
 }
 
 .NavSignUp{
@@ -168,7 +190,6 @@
         display: none;
     }
     .Onlain{
-        width: auto;
         height: 65px;
     }
     .navLinkP{
@@ -182,6 +203,7 @@
    .dragonPong{
     display: none;
     }
+
 }
 
 

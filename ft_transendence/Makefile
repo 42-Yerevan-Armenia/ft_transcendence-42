@@ -27,14 +27,16 @@ start:
 
 stop:
 	docker compose stop
-	
+
 prune: down
 	rm -rf database/data
 	docker system prune -f -a
 
 fclean: down
+	docker volume prune -f
+	rm -rf database/data
 	docker system prune -f -a
 
-re: prune all 
+re: prune all
 
 .PHONY: all build up down start stop logs prune re fclean   
