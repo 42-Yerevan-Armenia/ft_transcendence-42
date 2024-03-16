@@ -46,7 +46,8 @@ INSTALLED_APPS = [
     'daphne', #web server for ASGI
     'django.contrib.staticfiles',
     'core',
-    'chat', 
+    'chat',
+    'game',
     'channels', #channels for websockets async communication
     'friendship',
     'corsheaders',
@@ -86,6 +87,14 @@ TEMPLATES = [
 WSGI_APPLICATION = 'backend.wsgi.application'
 
 ASGI_APPLICATION = 'backend.asgi.application'
+
+# ASGI_APPLICATION = 'game.routing.application'
+
+CHANNEL_LAYERS = {
+	"default": {
+		"BACKEND": "channels.layers.InMemoryChannelLayer"
+	}
+}
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
@@ -179,12 +188,6 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
-}
-
-CHANNEL_LAYERS = {
-	"default": {
-		"BACKEND": "channels.layers.InMemoryChannelLayer"
-	}
 }
 
 LOGIN_REDIRECT_URL = "chat-page"

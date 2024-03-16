@@ -42,7 +42,7 @@ import json
 import base64
 import os
 
-#TODO: delet by token
+#TODO: activate all Tokens
 
 
 class UserAPIView(APIView):
