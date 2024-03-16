@@ -10,12 +10,13 @@ class MiddleSECTION extends HtmlElement {
       {
         document.querySelector("#homeNavigation").style.display  = "block";
         document.querySelector(".User").style.display  = "flex";
-        document.querySelector(".right").style.display  = "none";
+        ManageRight.Manage("Message");
       }
       else
       {
         document.querySelector("#homeNavigation").style.display  = "none";
         document.querySelector(".User").style.display  = "none";
+        ManageRight.Manage("right");
       }
     }
   }

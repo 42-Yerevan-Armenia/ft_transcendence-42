@@ -62,28 +62,6 @@ function HashCodeGeneration(){
 
 //manag browser storage
 const myStorages = {
-  setStorage(tockens) {
-    debugger
-    console.log("tockens     --------   " + tockens)
-    console.log(tockens);
-    const {refresh, success, access} = tockens;
-
-    if (!success || !access || !refresh)
-      return false;
-
-
-    User._name = tockens.user.name;
-    User._nickname = tockens.user.nickname;
-    User._ID = tockens.user.id;
-    User._Email = tockens.user.email;
-    User._Imag = tockens.user.image;
-
-    console.log("User._Imag = " + User._Imag);
-    localStorage.setItem("access", access + "")
-    localStorage.setItem("refresh", refresh + "")
-    return true;
-  },
-
   setStorageLogin(tockens) {
     debugger
     console.log("tockens     --------   " + tockens)
@@ -92,10 +70,11 @@ const myStorages = {
     console.log(user)
     const {refresh, success, access} = tockens;
 
-
     if (!success || !access || !refresh || !tockens.user)
       return false;
-  
+
+
+    ManageRight.Manage("Message");
     User._name = tockens.user.name;
     User._nickname = tockens.user.nickname;
     User._ID = tockens.user.id;

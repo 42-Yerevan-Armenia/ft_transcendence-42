@@ -1,5 +1,3 @@
-
-
 // Home Page
 class HomePage extends HtmlElement {
   debugger
@@ -12,6 +10,8 @@ class HomePage extends HtmlElement {
     _MiddleSettings = new MiddleSettings();
     _MidleCub = new MidleCub();
     _HomeLeft = new HomeLeft();
+    _HomeRight = new HomeRight(".right");
+    _HomeMessage = new MessagePage(".Message");
 
     _NAV = {
       _Home : new HtmlElement(".LEFTHOME"),
@@ -39,7 +39,7 @@ class HomePage extends HtmlElement {
       this._style.display = "none";
     }
 
-    Drow(){
+    Drow() {
       ManageMidle.Manage("midle")
       
       this._HomeLeft.Drow();

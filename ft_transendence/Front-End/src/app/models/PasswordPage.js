@@ -8,6 +8,16 @@ class PasswordPage extends HtmlElement {
     _NewPassword = document.querySelector(".NewPassword");
     _RepeatPassword = document.querySelector(".RepeatPassword");
   
+    errorSetNull(){
+      document.querySelector(".LoginEmailError").innerHTML = ""
+      document.querySelector(".LoginPasswordError").innerHTML = ""
+    }
+    notFined(){
+      document.querySelector(".LoginEmailError").style.color = "red"
+      document.querySelector(".LoginPasswordError").style.color = "red"
+      document.querySelector(".LoginEmailError").innerHTML = "ERROR login or password is not correct"
+      document.querySelector(".LoginPasswordError").innerHTML = "ERROR login or password is not correct"
+    }
     PasswordConfirmButton(){
       debugger
       User._Password = "";
@@ -48,6 +58,7 @@ class PasswordPage extends HtmlElement {
       debugger
       return await ControllerPessPassword(Hash_code + "" + User._Password + "" + Hash_code, User);
     }
+
     Drow(){
       
     }
