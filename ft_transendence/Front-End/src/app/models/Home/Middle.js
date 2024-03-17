@@ -6,18 +6,7 @@ class MiddleSECTION extends HtmlElement {
     }
     Drow()
     {
-      if (User.menegAccsess())
-      {
-        document.querySelector("#homeNavigation").style.display  = "block";
-        document.querySelector(".User").style.display  = "flex";
-        ManageRight.Manage("Message");
-      }
-      else
-      {
-        document.querySelector("#homeNavigation").style.display  = "none";
-        document.querySelector(".User").style.display  = "none";
-        ManageRight.Manage("right");
-      }
+
     }
   }
   

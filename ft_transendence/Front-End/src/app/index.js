@@ -74,7 +74,6 @@ const myStorages = {
       return false;
 
 
-    ManageRight.Manage("Message");
     User._name = tockens.user.name;
     User._nickname = tockens.user.nickname;
     User._ID = tockens.user.id;

@@ -70,8 +70,6 @@ Login._LoginPageContinue.addEventListener("click", async () => {
       if (User.checkSignIn())
       {
         ManageAllPage.Manage("Home");
-        ManageMidle.Manage("midle");
-        
         
         Login._LoginEmail.value = "";
         Login._LoginPassword.value = "";

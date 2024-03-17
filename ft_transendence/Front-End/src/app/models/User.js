@@ -34,7 +34,10 @@ class USER {
       this._ConfirmEmail = false;
     }
   
-  
+    getAccessTocken(){
+      this.checkSignIn();
+      return this._getAccess;
+    }
   
     //when refresh_token is not expired call for update access
     accessRefresh = async () => {

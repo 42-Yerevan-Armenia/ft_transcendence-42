@@ -24,45 +24,179 @@ Hovo@1234
     color:white;
 }
 
+/* 3 colons */
+
 .MessagGroups{
     background: radial-gradient(80% 150.23% at 20% 107.32%, #D234AA 35%, #1598F7 100%);
     width: 90%;
-    height:235px;
+    max-height:235px;
     border-radius:30px;
 }
-
-.GrupADD{
-    display: flex;
-    height: 50px;
-    padding: 0;
-}
-.GrupADD> h5 p{
-    margin-top: 0;
-    margin-bottom: 0;
-    padding: 0;
-}
-
-.GrupADDSubject{
-
-}
-
-
-
-
-
-
 .MessagFriends{
 
     background: radial-gradient(80% 250.23% at 20% 107.32%, #1598F7 -35%, #D234AA 100%);
     width:90%;
-    height:178.5px;
+    max-height:178.5px;
     border-radius:30px;
 }
-
 .MessagPrivate{
     background-image: linear-gradient(to top, #D334AA, #1497E2);
     width:90%;
-    height:401px;
+    max-height:401px;
     border-radius:30px;
 
 }
+/* GROUPS */
+
+
+#MessageGrupAll{
+    width: 90%;
+    margin: auto;
+}
+
+#addChildGrup{
+    max-height: 135px;
+    overflow: scroll; /* Add the ability to scroll */
+}
+
+#addChildGrup{
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+#addChildGrup::-webkit-scrollbar {
+    display: none;
+}
+
+.GrupADD{
+    display: flex;
+    height: 40px;
+    padding: 0;
+    gap: 10px;
+    width:100%;
+    margin-bottom: 5px;
+}
+
+
+.GrupADD>img{
+    max-width: 40px;
+    height: 40px;
+    border-radius: 30px;
+    overflow: hidden;
+}
+
+.GrupADDSubject{
+    display: flex;
+    background-color: white;
+    color: black;
+    border-radius: 20px;
+    width: 60%;
+    padding:5px 15px;
+    line-height: 15px;
+}
+
+.GrupADDSubject>div:first-child {
+    width: 80%;
+}
+
+.GrupADDSubject>div>h5, .GrupADDSubject>div>p{
+    margin: 0px;
+}
+.GrupADDSubject>div>p{
+    font-size: 10px;
+}
+#GrupADDPoint{
+    background-color: #8F8F8F;
+    width: 30px;
+    height: 30px;
+    border-radius: 30px;
+    margin: auto auto;
+    text-align: center;
+}
+
+#GrupADDPoint>p{
+    font-size: 15px;
+    margin-top: 5px
+}
+
+
+
+
+
+/* PERSONAL */
+
+
+
+#MessagePersonalAll{
+    width: 90%;
+    margin: auto;
+}
+#addChildPersonal{
+    max-height: 114px;
+    overflow: scroll; /* Add the ability to scroll */
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+#addChildPersonal::-webkit-scrollbar {
+    display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+#addChildPersonal {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.PersonalADD{
+    display: flex;
+    height: 33px;
+    padding: 0;
+    gap: 10px;
+    width:100%;
+    margin-bottom: 5px;
+    
+}
+
+
+.PersonalADD>img{
+    max-width: 33px;
+    height: 33px;
+    border-radius: 30px;
+}
+
+.PersonalADDSubject{
+    display: flex;
+    background-color: white;
+    color: black;
+    border-radius: 20px;
+    width: 60%;
+    padding:5px 15px;
+    line-height: 15px;
+}
+
+.PersonalADDSubject>div:first-child {
+    width: 80%;
+}
+
+.PersonalADDSubject>div>h5, .PersonalADDSubject>div>p{
+    margin: 0px;
+}
+.PersonalADDSubject>div>p{
+    font-size: 10px;
+}
+#PersonalADDPoint{
+    background-color: #8F8F8F;
+    width: 25px;
+    height: 25px;
+    border-radius: 25px;
+    margin: auto auto;
+    text-align: center;
+}
+
+#PersonalADDPoint>p{
+
+    font-size: 15px;
+    margin-top: 5px
+}
+
+
+/* PRIVATE */

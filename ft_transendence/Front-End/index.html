@@ -703,26 +703,42 @@
 <section class="Message">
     <div class="MessagDiv">
         <div class="MessagGroups">
-            <div>
+            <div id="MessageGrupAll">
                 <h4>Groups</h4>
-                <div class="GrupADD">
-                    <img src="./public/Grup1.png" alt="Grup1">
-                    <div class="GrupADDSubject">
-                        <h5>Family Group<h5>
-                        <p>Hey, Whats up</p>
-                    </div>
-                </div>
+                <div id="addChildGrup">
+                <!-- <div class="GrupADD">                             //divSubject
+                        <img src="./public/Grup1.png" alt="Grup1">   //imag
+                        <div class="GrupADDSubject">
+                            <div>                                    // divFirst
+                                <h5>Family Group</h5>
+                               <p>Hey, Whats up</p>
+                             </div>                                   //divSecond
+                             <div id="GrupADDPoint">
+                                 <p>15</p>
+                             </div>
+                         </div>
+                     </div>  -->
+                </div> 
             </div>
         </div>
 
 
         <div class="MessagFriends">
-            <div>
-                <h4>Friends</h4>
-                <div>
-                    <div>
-                        <img src="./public/">
-                    </div>
+            <div id="MessagePersonalAll">
+                <h4>Personal</h4>
+                <div id="addChildPersonal">
+                    <div class="PersonalADD">                             
+                        <img src="./public/Grup1.png" alt="GPersonal">   
+                        <div class="PersonalADDSubject">
+                            <div>                                    
+                                <h5>Family Group</h5>
+                                <p>Hey, Whats up</p>
+                            </div>
+                            <div id="PersonalADDPoint">
+                                <p>15</p>
+                            </div>
+                        </div>
+                    </div> 
                 </div>
             </div>
         </div>
@@ -748,7 +764,6 @@
 
         </main>
 
-        <script  src="./src/app/models/Messag.js"></script>
         <script  src="./src/app/index.js"></script>
         <script  src="./src/app/Controller.js"></script>
         <script  src="./src/app/models/HtmlElement.js"></script>
@@ -765,6 +780,7 @@
         <script src="./src/app/models/RegisterPage.js"></script>
         <script src="./src/app/models/PasswordPage.js"></script>
         <script src="./src/app/models/LoginPage.js"></script>
+        <script  src="./src/app/models/Messag.js"></script>
         <script src="./src/app/models/HomePage.js"></script>
         <script src="./src/app/models/ConfirmPage.js"></script>
         

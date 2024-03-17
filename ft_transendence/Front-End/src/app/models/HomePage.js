@@ -10,7 +10,7 @@ class HomePage extends HtmlElement {
     _MiddleSettings = new MiddleSettings();
     _MidleCub = new MidleCub();
     _HomeLeft = new HomeLeft();
-    _HomeRight = new HomeRight(".right");
+    _HomeRight = new HomeRight();
     _HomeMessage = new MessagePage(".Message");
 
     _NAV = {
@@ -27,6 +27,20 @@ class HomePage extends HtmlElement {
   
       _NavSignUp : document.querySelector(".NavSignUp"),
       _NavSignUp1 : document.querySelector(".RightgninupButton"),
+    };
+    usersDro = () => {
+        if (User.menegAccsess())
+        {
+          document.querySelector("#homeNavigation").style.display  = "block";
+          document.querySelector(".User").style.display  = "flex";
+          ManageRight.Manage("Message");
+        }
+        else
+        {
+          document.querySelector("#homeNavigation").style.display  = "none";
+          document.querySelector(".User").style.display  = "none";
+          ManageRight.Manage("right");
+        }
     }
     ButtonSignIn = (email = "") => {
       if (email.length > 0)
@@ -41,8 +55,9 @@ class HomePage extends HtmlElement {
 
     Drow() {
       ManageMidle.Manage("midle")
-      
-      this._HomeLeft.Drow();
+      this.usersDro();
+  
+      this._HomeLeft.Drow();      //left botton User section
     }
   }
   
