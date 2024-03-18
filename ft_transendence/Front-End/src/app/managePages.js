@@ -62,7 +62,25 @@ var ManageMidle = {
 };
 
 
+var ManageRight = {
+    Manage: function(name) {
+        debugger
+        ManageRight.pages.forEach((element) => {
+            const [key, obj] = Object.entries(element)[0]; // Get the key-value pair of the element
 
+            if (key === name) {
+                obj.DisplayBlock();
+                obj.Drow();
+            } else {
+                obj.DisplayNone();
+            }
+        });
+    },
+    pages: [
+        {"right": Home._HomeRight},
+        {"Message": Home._HomeMessage},
+    ]
+}
 
 
 

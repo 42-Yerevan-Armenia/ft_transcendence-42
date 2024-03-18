@@ -1,4 +1,4 @@
-//Home Page left section User
+//Home Page left botton section User
 class HomeLeft extends HtmlElement {
     constructor(){
       super(".User")

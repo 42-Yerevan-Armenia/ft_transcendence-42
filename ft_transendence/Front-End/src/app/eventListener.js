@@ -61,19 +61,22 @@ Login._LoginPageContinue.addEventListener("click", async () => {
   {
     const hash = HashCodeGeneration();
     const data =  await FetchRequest("POST", "login", {"email":Login._LoginEmail.value, "password" : hash + Login._LoginPassword.value + hash})
-  
+
+    Password.errorSetNull();
+
     if (data.state)
     {
       myStorages.setStorageLogin(data?.message?.data)
       if (User.checkSignIn())
       {
         ManageAllPage.Manage("Home");
-        ManageMidle.Manage("midle");
-        
         
         Login._LoginEmail.value = "";
         Login._LoginPassword.value = "";
       }
+    }
+    else{
+      Password.notFined();
     }
   }
 })

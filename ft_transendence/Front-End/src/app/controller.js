@@ -195,3 +195,44 @@ async function FetchRequest(Tomethod, Torequest, ToObj) {
     return { state: false, message: error.message };
   }
 }
+
+
+
+//fetch universal
+async function getFetchRequest(Torequest) {
+  debugger
+  console.log("1----------------------GET------------------")
+
+  console.log( "request : " + Torequest);
+
+  const ToObj = User.getAccessTocken();
+
+  if (!ToObj)
+    return null;
+  console.log("2---------------------GET-------------------")
+  try {
+    const response = await fetch(`${HostPort}/${Torequest}/`, {
+      method: "GET",
+      body: JSON.stringify(ToObj),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to ${response.message} Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+
+    if (!data || typeof data !== 'object') {
+      throw new Error("Invalid response data");
+    }
+    console.log("ControllerPessPassword  Succsse++++++++++++++++++++");
+    console.log(data);
+    return { state: true, message: data };
+  } catch (error) {
+    console.error("Error:", error);
+    return { state: false, message: error.message };
+  }
+}
