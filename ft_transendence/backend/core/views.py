@@ -15,6 +15,7 @@ from .serializers import (
     HomeSerializer,
     LederboardSerializer,
     ProfileSerializer,
+    FriendSerializer,
     JoinListSerializer,
     WaitingRoomSerializer,
     HistorySerializer,
@@ -24,7 +25,7 @@ from .serializers import (
 from .validations import email_validation, register_validation, send_confirmation_email, password_validation
 from .shared_data import shared_data
 
-from friendship.models import FriendshipRequest
+from friendship.models import Friend, FriendshipRequest
 
 from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth.hashers import make_password, check_password
@@ -44,7 +45,6 @@ import os
 
 #TODO: delet by token
 
-
 class UserAPIView(APIView):
     def get(self, request):
         queryset = Person.objects.all()
@@ -58,6 +58,19 @@ class UserAPIView(APIView):
     def delete(self, request):
         data = {'message': 'Hello, world! This is delete request!'}
         return Response(data)
+
+class UsersAPIView(APIView):
+    def get(self, request):
+        user_id = request.body('user_id')
+        if user_id:
+            try:
+                user = Person.objects.get(id=user_id)
+                serializer = UserSerializer(user)
+                return JsonResponse(serializer.data)
+            except Person.DoesNotExist:
+                return JsonResponse({'error': 'User not found'}, status=404)
+        else:
+            return JsonResponse({'error': 'User ID not provided'}, status=400)
 
 class EmailValidation(APIView):
     def post(self, request):
@@ -200,6 +213,7 @@ class Password(APIView):
             return JsonResponse({"success": "false", "error": e.message}, status=status.HTTP_400_BAD_REQUEST)
 
 class Login(APIView):
+
     def post(self, request):
         email = request.data['email']
         password = request.data['password'][10:-10]
@@ -221,11 +235,32 @@ class Login(APIView):
                     "name": user.name,
                     "nickname": user.nickname,
                     "email": user.email,
+                    "image": user.image,
                 }
             }
             return JsonResponse({"success": "true", "data": response_data})
         else:
             return JsonResponse({"success": "false", "error": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
+
+class ProfileById(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, pk):
+        try:
+            user = Person.objects.get(id=pk)
+        except Person.DoesNotExist:
+            return JsonResponse({"success": "false", "error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+        return JsonResponse({"success": "true", "profile": model_to_dict(user)})
+    #def put(self, request, pk):
+        
+    def delete(self, request, pk):
+        try:
+            user = Person.objects.get(pk=pk)
+        except Person.DoesNotExist:
+            return JsonResponse({"success": "false", "error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+        user.delete()
+        return JsonResponse({"success": "true", "message": "Person deleted successfully"})
 
 class Profile(APIView):
     def get(self, request, pk):
@@ -238,8 +273,8 @@ class Profile(APIView):
         return Response(serializer.data)
 
 class SettingsById(APIView):
-    # authentication_classes = [TokenAuthentication]
-    # permission_classes = [IsAuthenticated]
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request, pk):
         try:
@@ -445,17 +480,15 @@ class CustomTokenRefreshView(TokenRefreshView):
 #FIXME: friend request
 
 class SendFriendRequest(APIView):
+    permission_classes = [IsAuthenticated]
     def post(self, request, *args, **kwargs):
         try:
-            sender = request.user  # Assuming sender is the authenticated user
+            sender = request.user
             receiver_id = request.data.get('receiver_id')
             receiver = Person.objects.get(id=receiver_id).user
-
             # Check if a friendship request already exists
             if not FriendshipRequest.objects.filter(from_user=sender, to_user=receiver).exists():
-                # Create a new friendship request
                 FriendshipRequest.objects.create(from_user=sender, to_user=receiver)
-
                 return Response({"success": "true", "message": "Friend request sent"}, status=status.HTTP_201_CREATED)
             else:
                 return Response({"success": "false", "error": "Friend request already sent"}, status=status.HTTP_400_BAD_REQUEST)
@@ -463,20 +496,72 @@ class SendFriendRequest(APIView):
             return Response({"success": "false", "error": "Receiver user not found"}, status=status.HTTP_404_NOT_FOUND)
 
 class AcceptFriendRequest(APIView):
+    permission_classes = [IsAuthenticated]
     def post(self, request, *args, **kwargs):
         try:
-            receiver = request.user  # Assuming receiver is the authenticated user
+            receiver = request.user
             sender_id = request.data.get('sender_id')
             sender = Person.objects.get(id=sender_id).user
-
             # Check if a friendship request exists
-            friendship_request = FriendshipRequest.objects.filter(from_user=sender, to_user=receiver, status='pending').first()
+            friendship_request = FriendshipRequest.objects.filter(from_user=sender, to_user=receiver).first()
             if friendship_request:
-                # Accept the friendship request
-                friendship_request.accept()
-
+                friendship_request.accept()# Accept the friendship request
                 return Response({"success": "true", "message": "Friend request accepted"}, status=status.HTTP_200_OK)
             else:
                 return Response({"success": "false", "error": "Friend request not found or already accepted"}, status=status.HTTP_400_BAD_REQUEST)
         except Person.DoesNotExist:
             return Response({"success": "false", "error": "Sender user not found"}, status=status.HTTP_404_NOT_FOUND)
+
+class RejectFriendRequest(APIView):
+    def post(self, request, *args, **kwargs):
+        permission_classes = [IsAuthenticated]
+        try:
+            receiver = request.user
+            sender_id = request.data.get('sender_id')
+            sender = Person.objects.get(id=sender_id).user
+            # Check if a friendship request exists
+            friendship_request = Friend.objects.filter(from_user=sender, to_user=receiver).first()
+            if friendship_request:
+                friendship_request.reject()# Reject the friendship request
+                return Response({"success": "true", "message": "Friend request rejected"}, status=status.HTTP_200_OK)
+            else:
+                return Response({"success": "false", "error": "Friend request not found or already rejected"}, status=status.HTTP_400_BAD_REQUEST)
+        except Person.DoesNotExist:
+            return Response({"success": "false", "error": "Sender user not found"}, status=status.HTTP_404_NOT_FOUND)
+
+class DeleteFriend(APIView):
+    permission_classes = [IsAuthenticated]
+    def post(self, request, *args, **kwargs):
+        try:
+            sender = request.user
+            friend_id = request.data.get('friend_id')
+            friend = Person.objects.get(id=friend_id).user
+
+            # Check if the friendship exists
+            friendship = Friend.objects.are_friends(sender, friend)
+            if friendship:
+                return Response({"success": "true", "message": "Are you sure you want to delete this friend?"}, status=status.HTTP_200_OK)
+            else:
+                return Response({"success": "false", "error": "Friendship not found"}, status=status.HTTP_400_BAD_REQUEST)
+        except Person.DoesNotExist:
+            return Response({"success": "false", "error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+
+    permission_classes = [IsAuthenticated]
+    def delete(self, request, *args, **kwargs):
+        try:
+            sender = request.user
+            friend_id = request.data.get('friend_id')
+            friend = Person.objects.get(id=friend_id).user
+
+            # Check if the friendship exists
+            friendship = Friend.objects.are_friends(sender, friend)
+            friend1 = Friend.objects.get(from_user=sender, to_user=friend)
+            friend2 = Friend.objects.get(from_user=friend, to_user=sender)
+            if friendship:
+                friend1.delete()
+                friend2.delete()
+                return Response({"success": "true", "message": "Friend deleted successfully"}, status=status.HTTP_200_OK)
+            else:
+                return Response({"success": "false", "error": "Friendship not found or already deleted"}, status=status.HTTP_400_BAD_REQUEST)
+        except Person.DoesNotExist:
+            return Response({"success": "false", "error": "User not found"}, status=status.HTTP_404_NOT_FOUND)

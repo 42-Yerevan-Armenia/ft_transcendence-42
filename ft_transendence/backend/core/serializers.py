@@ -2,7 +2,7 @@ from rest_framework import serializers
 from django import forms
 from django.contrib.auth import get_user_model, authenticate
 from django.core.exceptions import ValidationError
-from .models import Person, GameRoom
+from .models import User, Person, GameRoom
 from friendship.models import Friend
 
 class UserSerializer(serializers.ModelSerializer):
@@ -46,16 +46,24 @@ class FullHistorySerializer(serializers.ModelSerializer):
         fields = ('id', 'nickname', 'image', 'gamemode', 'points', 'matches', 'wins', 'loses', 'gamedata')
 
 #TODO: check friends data
+
+class UsersSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('id', 'username')
+
 class FriendSerializer(serializers.ModelSerializer):
-    user = UserSerializer()
+    user = UsersSerializer(source='user')
     class Meta:
         model = Friend
-        fields = ('__all__')
+        fields = ('id', 'friend_user')
+
 class ProfileSerializer(serializers.ModelSerializer):
     friends = serializers.SerializerMethodField()
+
     class Meta:
         model = Person
-        fields = ('id', 'name', 'nickname', 'image', 'background', 'wins', 'loses', 'friends')
+        fields = ('id', 'nickname', 'image', 'background', 'wins', 'loses', 'friends')
 
     def get_friends(self, obj):
         friends = Friend.objects.friends(obj.user)
