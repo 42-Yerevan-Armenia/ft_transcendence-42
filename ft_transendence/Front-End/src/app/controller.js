@@ -97,7 +97,7 @@ async function ControllerSignUp(password, User) {
   try {
     const response = await fetch(`${HostPort}/register/`, {
       method: 'POST',
-      body: JSON.stringify({ name: User._name, password: password, nickname: User._nickname}),
+      body: JSON.stringify({ name: User._Name, password: password, nickname: User._Nickname}),
       headers: {
         "Content-Type": "application/json"
       }
@@ -159,7 +159,7 @@ async function ControllerPessPassword(password, User) {
 }
 
 
-//fetch universal
+//fetch universal POST request
 async function FetchRequest(Tomethod, Torequest, ToObj) {
   debugger
   console.log("1----------------------------------------")
@@ -198,20 +198,21 @@ async function FetchRequest(Tomethod, Torequest, ToObj) {
 
 
 
-//fetch universal
-async function getFetchRequest(Torequest) {
+//fetch universal  GET request
+async function getFetchRequest(ToRequest) {
   debugger
   console.log("1----------------------GET------------------")
 
-  console.log( "request : " + Torequest);
+  console.log( "request : " + ToRequest);
 
+  //get access tocken and id
   const ToObj = User.getAccessTocken();
 
-  if (!ToObj)
+  if (!ToObj || ToObj.access)
     return null;
   console.log("2---------------------GET-------------------")
   try {
-    const response = await fetch(`${HostPort}/${Torequest}/`, {
+    const response = await fetch(`${HostPort}/${ToRequest}/`, {
       method: "GET",
       body: JSON.stringify(ToObj),
       headers: {

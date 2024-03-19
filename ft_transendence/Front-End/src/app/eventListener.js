@@ -54,18 +54,24 @@ Home._HomeLeft._LongOut.addEventListener("click", () => {
 
 //---------------------------------------------------------------------   Login
 
-
+//when want to login you press button login
 Login._LoginPageContinue.addEventListener("click", async () => {
   debugger
+  //check is correct email and password
   if (Login.ButtonSignIn())
   {
+    //code random 10 numbers
     const hash = HashCodeGeneration();
+
+    //respons beck-end to tack user
     const data =  await FetchRequest("POST", "login", {"email":Login._LoginEmail.value, "password" : hash + Login._LoginPassword.value + hash})
 
+    //error div innerHTML =""
     Password.errorSetNull();
 
     if (data.state)
     {
+      //set local storage data access and refresh tokin
       myStorages.setStorageLogin(data?.message?.data)
       if (User.checkSignIn())
       {
@@ -76,6 +82,7 @@ Login._LoginPageContinue.addEventListener("click", async () => {
       }
     }
     else{
+      //set error in frontend
       Password.notFined();
     }
   }

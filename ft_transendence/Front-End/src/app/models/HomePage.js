@@ -28,8 +28,8 @@ class HomePage extends HtmlElement {
       _NavSignUp : document.querySelector(".NavSignUp"),
       _NavSignUp1 : document.querySelector(".RightgninupButton"),
     };
-    usersDro = () => {
-        if (User.menegAccsess())
+    usersDro = async () => {
+        if (await User.menegAccsess())
         {
           document.querySelector("#homeNavigation").style.display  = "block";
           document.querySelector(".User").style.display  = "flex";
@@ -53,9 +53,9 @@ class HomePage extends HtmlElement {
       this._style.display = "none";
     }
 
-    Drow() {
+    async Drow() {
       ManageMidle.Manage("midle")
-      this.usersDro();
+      await this.usersDro();
   
       this._HomeLeft.Drow();      //left botton User section
     }

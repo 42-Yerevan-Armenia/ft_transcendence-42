@@ -26,6 +26,8 @@ function checkName(str) {
   return regex.test(str);
 }
 
+
+//check if the password is correct
 function PasswordisCorrect(obj, error){
   debugger
   if (obj.value.length < 8 || obj.value.length > 16)
@@ -57,41 +59,4 @@ function HashCodeGeneration(){
   return str;
 }
 
-
-//-------------------------------------------------       browser storage     ----------------------------------------
-
-//manag browser storage
-const myStorages = {
-  setStorageLogin(tockens) {
-    debugger
-    console.log("tockens     --------   " + tockens)
-    console.log(tockens);
-    const {user} = tockens;
-    console.log(user)
-    const {refresh, success, access} = tockens;
-
-    if (!success || !access || !refresh || !tockens.user)
-      return false;
-
-
-    User._name = tockens.user.name;
-    User._nickname = tockens.user.nickname;
-    User._ID = tockens.user.id;
-    User._Email = tockens.user.email;
-    User._Imag = tockens.user.image;
-
-    console.log("User._Imag = " + User._Imag);
-    localStorage.setItem("access", access + "")
-    localStorage.setItem("refresh", refresh + "")
-    return true;
-  },
-
-  longOut() {
-    debugger
-    localStorage.removeItem("access");
-    localStorage.removeItem("refresh");
-    User.Destruc();
-    console.log("Home._HomeLeft._LongOut.addEventListener");
-  }
-}
 

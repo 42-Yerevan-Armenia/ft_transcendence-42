@@ -12,7 +12,8 @@ class LoginPage extends HtmlElement {
     DisplayBlock() {
       this._style.display = "block";
     }
-  
+
+    //check valid email and password and set [Error Div].innerHtml answer
     ButtonSignIn() {
       const ErrorPassword = document.querySelector(".LoginPasswordError");
       const ErrorEmail = document.querySelector(".LoginEmailError");
@@ -57,7 +58,7 @@ class LoginPage extends HtmlElement {
       }
       return true;
     }
-  
+
     SignInWithEmail = (email = "") => {
       this.DisplayBlock();
   
@@ -68,7 +69,7 @@ class LoginPage extends HtmlElement {
         LoginPageinput.value = email;
       }
     }
-  
+
     Drow() {
       
     }

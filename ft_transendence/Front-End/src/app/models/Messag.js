@@ -138,7 +138,7 @@ var MessagePage = function(name) {
 
     this.Drow = async () => {
         debugger
-        if (!User.menegAccsess())
+        if (!await User.menegAccsess())
             return null;
         
         this.Groups();

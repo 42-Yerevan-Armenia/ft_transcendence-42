@@ -3,6 +3,7 @@ import cors from 'cors';
 import useController from "./src/controller/controller.js"
 import session from "express-session";
 import passport from "passport"
+const fs = require('fs');
 
 const app = express();
 
@@ -39,6 +40,16 @@ app.use("/", useController);
 
 app.get("/", async (req, res) => {
   return res.send("I em Server");
+});
+
+
+
+// Route handler to download the image
+app.get('/download-image', (req, res) => {
+  const imagePath = './public/User.png'; // Replace with actual path
+
+  res.setHeader('Content-Disposition', 'attachment; filename=image.png'); // Set download headers
+  fs.createReadStream(imagePath).pipe(res); // Stream the image data
 });
 
 

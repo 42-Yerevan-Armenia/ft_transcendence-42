@@ -221,6 +221,7 @@ class Login(APIView):
                     "name": user.name,
                     "nickname": user.nickname,
                     "email": user.email,
+                    "image" : user.image
                 }
             }
             return JsonResponse({"success": "true", "data": response_data})
