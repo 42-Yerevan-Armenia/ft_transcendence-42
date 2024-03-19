@@ -1,5 +1,6 @@
 //Register Page
 class RegisterPage extends HtmlElement {
+  debugger
     constructor(){
       super(".RegisterPage")
       this._style.display = "none";

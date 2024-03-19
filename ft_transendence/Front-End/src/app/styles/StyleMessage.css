@@ -1,0 +1,351 @@
+.Message {
+    display: none;
+    min-width: 76px;
+    width: 27%;
+    height: 100%;
+    align-items: center;
+    background: rgba(29, 32, 62, 0.3);
+    backdrop-filter: blur(10px);
+}
+
+.MessagDiv {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    gap: 15px;
+    margin-top: 28px;
+    color: white;
+}
+
+.MessagGroups {
+    background: radial-gradient(80% 150.23% at 20% 107.32%, rgb(210, 52, 170) 35%, rgb(21, 152, 247) 100%);
+    width: 90%;
+    max-height: 235px;
+    border-radius: 30px;
+}
+
+.MessagFriends {
+    background: radial-gradient(80% 250.23% at 20% 107.32%, rgb(21, 152, 247) -35%, rgb(210, 52, 170) 100%);
+    width: 90%;
+    max-height: 178.5px;
+    border-radius: 30px;
+}
+
+.MessagePrivate {
+    background-image: linear-gradient(to top, rgb(211, 52, 170), rgb(20, 151, 226));
+    width: 90%;
+    height: 401px;
+    border-radius: 30px;
+}
+
+#MessageGrupAll {
+    width: 90%;
+    margin: auto;
+}
+
+#addChildGrup {
+    max-height: 135px;
+    overflow: scroll;
+}
+
+#addChildGrup {
+}
+
+#addChildGrup::-webkit-scrollbar {
+    display: none;
+}
+
+.GrupADD {
+    display: flex;
+    height: 40px;
+    padding: 0px;
+    gap: 10px;
+    width: 100%;
+    margin-bottom: 5px;
+}
+
+.GrupADD > img {
+    max-width: 40px;
+    height: 40px;
+    border-radius: 30px;
+    overflow: hidden;
+}
+
+.GrupADDSubject {
+    display: flex;
+    background-color: white;
+    color: black;
+    border-radius: 20px;
+    width: 60%;
+    padding: 5px 15px;
+    line-height: 15px;
+}
+
+.GrupADDSubject > div:first-child {
+    width: 80%;
+}
+
+.GrupADDSubject > div > h5, .GrupADDSubject > div > p {
+    margin: 0px;
+}
+
+.GrupADDSubject > div > p {
+    font-size: 10px;
+}
+
+#GrupADDPoint {
+    background-color: rgb(143, 143, 143);
+    width: 30px;
+    height: 30px;
+    border-radius: 30px;
+    margin: auto;
+    text-align: center;
+}
+
+#GrupADDPoint > p {
+    font-size: 15px;
+    margin-top: 5px;
+}
+
+#MessagePersonalAll {
+    width: 90%;
+    margin: auto;
+}
+
+#addChildPersonal {
+    max-height: 114px;
+    overflow: scroll;
+}
+
+#addChildPersonal::-webkit-scrollbar {
+    display: none;
+}
+
+#addChildPersonal {
+}
+
+.PersonalADD {
+    display: flex;
+    height: 33px;
+    padding: 0px;
+    gap: 10px;
+    width: 100%;
+    margin-bottom: 5px;
+}
+
+.PersonalADD > img {
+    max-width: 33px;
+    height: 33px;
+    border-radius: 30px;
+}
+
+.PersonalADDSubject {
+    display: flex;
+    background-color: white;
+    color: black;
+    border-radius: 20px;
+    width: 60%;
+    padding: 5px 15px;
+    line-height: 15px;
+}
+
+.PersonalADDSubject > div:first-child {
+    width: 80%;
+}
+
+.PersonalADDSubject > div > h5, .PersonalADDSubject > div > p {
+    margin: 0px;
+}
+
+.PersonalADDSubject > div > p {
+    font-size: 10px;
+}
+
+#PersonalADDPoint {
+    background-color: rgb(143, 143, 143);
+    width: 25px;
+    height: 25px;
+    border-radius: 25px;
+    margin: auto;
+    text-align: center;
+}
+
+#PersonalADDPoint > p {
+    font-size: 15px;
+    margin-top: 5px;
+}
+
+.MessagePrivateContent {
+    width: 90%;
+    height: 90%;
+}
+
+.MessagePrivateUser {
+    display: flex;
+    width: 90%;
+    height: 17%;
+    border-radius: 30px;
+    background-image: linear-gradient(rgb(211, 53, 170), rgb(79, 60, 115));
+    margin: 10px auto;
+}
+
+.MessagePrivateUserImag {
+    width: 15%;
+    padding: 10px;
+    margin: auto 0px;
+}
+
+.MessagePrivateUserImag {
+    position: relative;
+}
+
+.MessagePrivateUserImag > img {
+    border-radius: 40px;
+    width: 40px;
+    height: 40px;
+}
+
+.MessagePrivateUserImagOnlain {
+    position: absolute;
+    background-color: green;
+    width: 10px;
+    height: 10px;
+    border-radius: 10px;
+    bottom: 14px;
+    left: 39px;
+}
+
+.MessagPrivateSubject {
+    width: 90%;
+    height: 80%;
+    margin: 0px auto;
+}
+
+.MessagPrivateSubjectMessag {
+    width: 100%;
+    max-height: 250px;
+    font-size: 12px;
+    overflow: scroll;
+}
+
+.MessagPrivateSubjectMessag::-webkit-scrollbar {
+    display: none;
+}
+
+.MessagPrivateSubjectMessagDaye {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 30px;
+}
+
+.MessagPrivateSubjectMessagDaye > div {
+    width: 76px;
+    height: 30px;
+    border-radius: 10px;
+    background-color: white;
+    color: black;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.MessagPrivateSubjectMessagDaye > div > p {
+    margin: 0px;
+    text-align: justify;
+}
+
+.MessagPrivateSubjectMessagPerson, .MessagPrivateSubjectMessagSender {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.MessagPrivateSubjectMessagPerson {
+    justify-content: center;
+    align-items: end;
+    margin: 0px;
+}
+
+.MessagPrivateSubjectMessagDivPerson {
+    display: flex;
+    width: 80%;
+    margin: 10px 0px;
+    min-height: 40px;
+    text-align: center;
+    border-radius: 35px 0px 35px 35px;
+    background-color: white;
+    place-content: flex-end center;
+    align-items: center;
+    padding: 0px 10px;
+}
+
+.MessagPrivateSubjectMessagPerson p, .MessagPrivateSubjectMessagSender p {
+    margin: 0px;
+}
+.MessagPrivateSubjectMessagSenderMessag, .MessagPrivateSubjectMessagPersonChat{
+    line-height: 12px;
+    padding: 10px;
+}
+
+
+.MessagPrivateSubjectMessagSender {
+    justify-content: center;
+    align-items: start;
+
+}
+
+.MessagPrivateSubjectMessagSenderDivMessag {
+    display: flex;
+    background-color: rgb(0, 163, 255);
+    width: 80%;
+    margin: 10px 0px;
+    min-height: 40px;
+    border-radius: 0px 35px 35px;
+    align-items: center;
+    justify-content: center;
+    text-align: justify;
+    padding: 0px 10px;
+}
+
+.MessagPrivateSubjectMessagPersonChat {
+    color: black;
+    line-height: 12px;
+}
+
+.MessagPrivateSubjectMessagSenderMessag {
+    line-height: 12px;
+}
+
+
+
+/* Enter inpust */
+
+.MessagPrivateSubjectPrivate{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.MessagPrivateSubjectPrivate>input{
+    height: 40px;
+    width: 80%;
+    border-radius: 5px;
+    border: none;
+    text-align:20px;
+}
+.MessagPrivateSubjectPrivate>input::placeholder{
+    text-align: center;
+    color: white;
+    font-size: 15px;
+}
+.MessagPrivateSubjectPrivate>input:focus{
+    outline: none;
+}
+
+
+.MessagPrivateSubjectPrivate>input{
+    background-image:linear-gradient(to right,#009DFF,#11348F);
+}

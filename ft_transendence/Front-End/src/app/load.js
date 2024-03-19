@@ -38,21 +38,25 @@ if (mainElement) {
 
 
 document.addEventListener("DOMContentLoaded", async () => {
-    console.log("Document is loaded");
+    console.log("1-- Document is loaded");
 
     debugger
     if(User.checkSignIn())
     {
-       const res = await User.accessRefresh();
-       if (res)
-       {
-        ManageAllPage.Manage("Home");
-        ManageMidle.Manage("midle")
-        console.log("true")
-       }
+        console.log("2-- Document is loaded");
+
+        //once expiration a new refresh token is generated
+        const res = await User.accessRefresh();
+
+        //set data from backend
+        if (res && await User.setDataFromBackEnd())
+        {
+
+            console.log("true")
+        }
+        else
+            myStorages.longOut();
     }
+    ManageAllPage.Manage("Home");
 });
-
-
-
 

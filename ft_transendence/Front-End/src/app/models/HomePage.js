@@ -1,7 +1,6 @@
-
-
 // Home Page
 class HomePage extends HtmlElement {
+  debugger
     constructor(){
       super(".homeSection");
       this._style.display = "block";
@@ -11,6 +10,8 @@ class HomePage extends HtmlElement {
     _MiddleSettings = new MiddleSettings();
     _MidleCub = new MidleCub();
     _HomeLeft = new HomeLeft();
+    _HomeRight = new HomeRight();
+    _HomeMessage = new MessagePage(".Message");
 
     _NAV = {
       _Home : new HtmlElement(".LEFTHOME"),
@@ -26,6 +27,20 @@ class HomePage extends HtmlElement {
   
       _NavSignUp : document.querySelector(".NavSignUp"),
       _NavSignUp1 : document.querySelector(".RightgninupButton"),
+    };
+    usersDro = async () => {
+        if (await User.menegAccsess())
+        {
+          document.querySelector("#homeNavigation").style.display  = "block";
+          document.querySelector(".User").style.display  = "flex";
+          ManageRight.Manage("Message");
+        }
+        else
+        {
+          document.querySelector("#homeNavigation").style.display  = "none";
+          document.querySelector(".User").style.display  = "none";
+          ManageRight.Manage("right");
+        }
     }
     ButtonSignIn = (email = "") => {
       if (email.length > 0)
@@ -37,29 +52,12 @@ class HomePage extends HtmlElement {
     ButtonSignUp = () => {
       this._style.display = "none";
     }
+
+    async Drow() {
+      ManageMidle.Manage("midle")
+      await this.usersDro();
   
-    NavMidleHome = ()=>{
-      this._MiddleSettings._style.display = "none";
-      this._MidleCub._style.display = "none";
-      
-      this._Midle._style.display = "flex";
-    }
-  
-    NavMiddleSettings = ()=>{
-      this._Midle._style.display = "none";
-      this._MidleCub._style.display = "none";
-  
-      this._MiddleSettings._style.display = "flex";
-    }
-  
-    NavMidleCub = () => {
-      this._Midle._style.display = "none";
-      this._MiddleSettings._style.display = "none";
-      
-      this._MidleCub._style.display = "flex";
-    }
-    Drow(){
-      this._HomeLeft.Drow();
+      this._HomeLeft.Drow();      //left botton User section
     }
   }
   
