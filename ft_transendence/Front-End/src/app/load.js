@@ -44,15 +44,19 @@ document.addEventListener("DOMContentLoaded", async () => {
     if(User.checkSignIn())
     {
         console.log("2-- Document is loaded");
-       const res = await User.accessRefresh();
-       if (res)
-       {
-        console.log("true")
-       }
+
+        //once expiration a new refresh token is generated
+        const res = await User.accessRefresh();
+
+        //set data from backend
+        if (res && await User.setDataFromBackEnd())
+        {
+
+            console.log("true")
+        }
+        else
+            myStorages.longOut();
     }
     ManageAllPage.Manage("Home");
 });
-
-
-
 

@@ -19,18 +19,18 @@ class SignupPage extends HtmlElement {
   
       if (!name.value || name.value.length < 2 || name.value.length > 30 || !checkName(name.value))
       {
-        User._name = "";
+        User._Name = "";
         nameError.innerHTML = "The name must consist of uppercase characters first and then lowercase characters and range from 5 to 15.";
         return false;
       }
       if (!nickname.value || nickname.value.length < 2 || nickname.value.length > 30)
       {
-        User._nickname;
+        User._Nickname;
         nickError.innerHTML = "The name must contain at least 2 characters and no more than 30.";
         return false;
       }
-      User._name = name.value;
-      User._nickname = name.value;
+      User._Name = name.value;
+      User._Nickname = name.value;
       return true;
     }
   
