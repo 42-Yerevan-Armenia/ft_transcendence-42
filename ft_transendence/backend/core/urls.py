@@ -47,7 +47,8 @@ urlpatterns = [
 
     path('gameresult/', GameResult.as_view()),
     path('api/v1/createroom/<int:pk>/', CreateRoom.as_view()),
-    path('gameroom/', GameRoom.as_view()),
+    path('api/v1/gameroom/<int:pk>/', GameRoom.as_view()),
+    # path('gameroom/', GameRoom.as_view()),
 
     path('api/v1/send/<int:pk>/', SendFriendRequest.as_view()),
     path('api/v1/accept/<int:pk>/', AcceptFriendRequest.as_view()),

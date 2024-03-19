@@ -421,7 +421,7 @@ class WaitingRoom(APIView):
             return Response({"success": "false", "error": "User or opponent not found"}, status=status.HTTP_404_NOT_FOUND)
 
 #FIXME: JoinList + CreateRoom = GameRoom
-from django.shortcuts import get_object_or_404
+
 class JoinList(APIView):
     permission_classes = [IsAuthenticated]
     def get(self, request, pk):
@@ -436,14 +436,18 @@ class JoinList(APIView):
 
     def post(self, request, pk):
         try:
-            # user = Person.objects.get(id=pk)
-            user = get_object_or_404(Person, id=pk)
+            user = Person.objects.get(id=pk)
             game_room_id = request.data.get('game_room_id')
             # try:
-            #     game_room = GameRoom.objects.get(id=game_room_id)
+            # game_rooms = GameRoom.filter(id=game_room_id)
+            game_room = GameRoom.objects.filter(id=game_room_id)
+
+            print("❌", game_room)
+            if not game_rooms.exists():
+                return JsonResponse({"success": "false", "error": "Game room not found"}, status=status.HTTP_404_NOT_FOUND)
+            
             # except ObjectDoesNotExist:
             #     return JsonResponse({"success": "false", "error": "Game room not found"}, status=status.HTTP_404_NOT_FOUND)
-            game_room = get_object_or_404(GameRoom.objects.filter(id=game_room_id, creator=pk))
             # Check if the user is already in a game room
             if user.ongoing:
                 return JsonResponse({"success": "false", "error": "User is already in a game room"}, status=status.HTTP_400_BAD_REQUEST)
@@ -460,7 +464,7 @@ class JoinList(APIView):
 class CreateRoom(APIView):
     permission_classes = [IsAuthenticated]
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request, pk):
         try:
             max_players = request.data.get('number')
             live = request.data.get('live')
@@ -486,13 +490,14 @@ class CreateRoom(APIView):
             return JsonResponse({"success": "false", "error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class GameRoom(APIView):
-    def post(self, request):
+    def post(self, request, *args, **kwargs):
         try:
             # Assuming the user creating the game room is the creator
+            max_players = request.data.get('number')
+            live = request.data.get('live')
+            theme = request.data.get('theme')
+            gamemode = request.data.get('gamemode')
             creator = request.user.person
-            max_players = request.data.get('max_players')
-            theme = request.data.get('theme', 'default')
-            gamemode = request.data.get('gamemode', 'easy')
 
             # Create the game room
             game_room = GameRoom.objects.create(

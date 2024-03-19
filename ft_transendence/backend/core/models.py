@@ -66,4 +66,4 @@ class GameRoom(models.Model):
     ongoing = models.BooleanField(default=False)  # Indicates if the game is ongoing or not
 
     def __str__(self):
-        return f"GameRoom {self.id}"
+        return str(self.id)
