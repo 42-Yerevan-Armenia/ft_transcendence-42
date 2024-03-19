@@ -18,6 +18,7 @@ class Person(models.Model):
     gamemode = models.CharField(max_length=100, default='classic')
     live = models.BooleanField(default=False)
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='person')
+    ongoing = models.OneToOneField('GameRoom', on_delete=models.SET_NULL, null=True, blank=True, related_name='player_in_game')
 
     def __str__(self):
         return self.nickname
@@ -56,13 +57,13 @@ class GameRoom(models.Model):
         ('classic', 'Classic'),
         ('hard', 'Hard'),
     )
-
     max_players = models.IntegerField(default=2)  # Number of players in the room
     live = models.BooleanField(default=False)  # Indicates if the game room is live or not
     theme = models.CharField(max_length=50, choices=THEME_CHOICES, default='light')  # Theme of the game room
     gamemode = models.CharField(max_length=50, choices=GAMEMODE_CHOICES, default='easy')  # Game mode
     creator = models.ForeignKey(Person, on_delete=models.CASCADE)  # Relationship with the Person who created the game room
     players = models.ManyToManyField(Person, related_name='joined_players', blank=True)  # Relationship with the players in the game room
+    ongoing = models.BooleanField(default=False)  # Indicates if the game is ongoing or not
 
     def __str__(self):
         return f"GameRoom {self.id}"

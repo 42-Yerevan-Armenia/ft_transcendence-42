@@ -52,19 +52,19 @@ services:
       - "8080:80"
     restart: always
 
-  nginx:
-    container_name: nginx
-    build:
-      context: .
-      dockerfile: nginx/Dockerfile
-    env_file:
-      - .dbenv
-    ports:
-      - 80:80
-      - 443:443
-    volumes:
-      - ${PWD}/backend:/backend
-    restart: unless-stopped
-    depends_on:
-      - backend
+  # nginx:
+  #   container_name: nginx
+  #   build:
+  #     context: .
+  #     dockerfile: nginx/Dockerfile
+  #   env_file:
+  #     - .dbenv
+  #   ports:
+  #     - 80:80
+  #     - 443:443
+  #   volumes:
+  #     - ${PWD}/backend:/backend
+  #   restart: unless-stopped
+  #   depends_on:
+  #     - backend
       # - frontend

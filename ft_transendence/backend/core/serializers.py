@@ -69,9 +69,15 @@ class ProfileSerializer(serializers.ModelSerializer):
         friends = Friend.objects.friends(obj.user)
         return FriendSerializer(friends, many=True).data if friends else []
 
-from rest_framework import serializers
-
 class GameRoomSerializer(serializers.ModelSerializer):
     class Meta:
         model = GameRoom
-        fields = ['id', 'max_players', 'live', 'theme', 'gamemode', 'creator']
+        fields = ['id', 'max_players', 'live', 'theme', 'gamemode', 'creator', 'players', 'ongoing']
+
+    def create(self, validated_data):
+        creator_id = validated_data.pop('creator').id
+        players_data = validated_data.pop('players', [])
+        game_room = GameRoom.objects.create(creator_id=creator_id, **validated_data)
+        game_room.players.set(players_data)
+        print("❌", players_data, game_room, game_room.players.all())
+        return game_room

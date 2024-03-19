@@ -8,7 +8,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
-from .models import Person
+from .models import Person, GameRoom
 from .serializers import (
     UserSerializer,
     SettingsSerializer,
@@ -22,7 +22,12 @@ from .serializers import (
     FullHistorySerializer,
     GameRoomSerializer
 )
-from .validations import email_validation, register_validation, send_confirmation_email, password_validation
+from .validations import (
+    email_validation,
+    register_validation,
+    send_confirmation_email,
+    password_validation
+)
 from .shared_data import shared_data
 
 from friendship.models import Friend, FriendshipRequest
@@ -33,7 +38,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
 from django.contrib.sessions.models import Session
 from django.core.validators import validate_email
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from django.core.files.base import ContentFile
 from django.core.serializers import serialize
 from django.forms.models import model_to_dict
@@ -391,44 +396,8 @@ class Home(APIView):
         # return JsonResponse({"success": "true", "profile": serializer.data}, safe=False)
         return Response(serializer.data)
 
-class JoinList(APIView):
-    def get(self, request, pk):
-        try:
-            user = Person.objects.get(id=pk)
-            serializer = JoinListSerializer(user)
-            if serializer.data['game_room'] == None:
-                return JsonResponse({"success": "false", "error": "Game room not found"}, status=status.HTTP_404_NOT_FOUND)
-        except Person.DoesNotExist:
-            return JsonResponse({"success": "false", "error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
-        return Response(serializer.data)
-
-    def post(self, request, *args, **kwargs):
-        try:
-            players = request.data.get('number')
-            live = request.data.get('live')
-            theme = request.data.get('theme')
-            gamemode = request.data.get('gamemode')
-            creator_id = request.user.id
-
-            game_room_data = {
-                'max_players': players,
-                'live': live,
-                'theme': theme,
-                'gamemode': gamemode,
-                'creator': creator_id
-            }
-            print(game_room_data)
-            game_room_serializer = GameRoomSerializer(data=game_room_data)
-            if game_room_serializer.is_valid():
-                game_room_serializer.save()
-                return JsonResponse({"success": "true", "message": "Game room created successfully"}, status=status.HTTP_201_CREATED)
-            else:
-                return JsonResponse({"success": "false", "error": game_room_serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
-        except Exception as e:
-            return JsonResponse({"success": "false", "error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
 class WaitingRoom(APIView):
-
+    permission_classes = [IsAuthenticated]
     def get(self, request, pk):
         try:
             user = Person.objects.get(id=pk)
@@ -438,6 +407,107 @@ class WaitingRoom(APIView):
         # return JsonResponse({"success": "true", "profile": serializer.data}, safe=False)
         return Response(serializer.data)
 
+    def post(self, request, pk):
+        try:
+            user = Person.objects.get(id=pk)
+            opponent_id = request.data.get('opponent_id')
+            opponent = Person.objects.get(id=opponent_id)
+
+            # Check if the opponent is in the game room
+            if opponent.ongoing is not None:
+                return JsonResponse({"success": "false", "error": "Opponent is already in a game room"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"success": "true", "message": "Invitation sent successfully"}, status=status.HTTP_200_OK)
+        except Person.DoesNotExist:
+            return Response({"success": "false", "error": "User or opponent not found"}, status=status.HTTP_404_NOT_FOUND)
+
+#FIXME: JoinList + CreateRoom = GameRoom
+from django.shortcuts import get_object_or_404
+class JoinList(APIView):
+    permission_classes = [IsAuthenticated]
+    def get(self, request, pk):
+        try:
+            user = Person.objects.get(id=pk)
+            serializer = JoinListSerializer(user)
+            if serializer.data['id'] == None:
+                return JsonResponse({"success": "false", "error": "Game room not found"}, status=status.HTTP_404_NOT_FOUND)
+        except Person.DoesNotExist:
+            return JsonResponse({"success": "false", "error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+        return Response(serializer.data)
+
+    def post(self, request, pk):
+        try:
+            # user = Person.objects.get(id=pk)
+            user = get_object_or_404(Person, id=pk)
+            game_room_id = request.data.get('game_room_id')
+            # try:
+            #     game_room = GameRoom.objects.get(id=game_room_id)
+            # except ObjectDoesNotExist:
+            #     return JsonResponse({"success": "false", "error": "Game room not found"}, status=status.HTTP_404_NOT_FOUND)
+            game_room = get_object_or_404(GameRoom.objects.filter(id=game_room_id, creator=pk))
+            # Check if the user is already in a game room
+            if user.ongoing:
+                return JsonResponse({"success": "false", "error": "User is already in a game room"}, status=status.HTTP_400_BAD_REQUEST)
+            # Add the user to the game room
+            game_room.players.add(user)
+            game_room.save()
+            # Set ongoing flag for the user
+            user.ongoing = True
+            user.save()
+            return JsonResponse({"success": "true", "message": "Successfully joined the game room"}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return JsonResponse({"success": "false", "error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class CreateRoom(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        try:
+            max_players = request.data.get('number')
+            live = request.data.get('live')
+            theme = request.data.get('theme')
+            gamemode = request.data.get('gamemode')
+            creator_id = request.user.id  # Get the numeric ID of the authenticated user
+
+            game_room_data = {
+                'max_players': max_players,
+                'live': live,
+                'theme': theme,
+                'gamemode': gamemode,
+                'creator': creator_id,
+                'players': [creator_id],
+            }
+            game_room_serializer = GameRoomSerializer(data=game_room_data)
+            if game_room_serializer.is_valid():
+                game_room_serializer.save()
+                return JsonResponse({"success": "true", "message": "Game room created successfully"}, status=status.HTTP_201_CREATED)
+            else:
+                return JsonResponse({"success": "false", "error": game_room_serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return JsonResponse({"success": "false", "error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class GameRoom(APIView):
+    def post(self, request):
+        try:
+            # Assuming the user creating the game room is the creator
+            creator = request.user.person
+            max_players = request.data.get('max_players')
+            theme = request.data.get('theme', 'default')
+            gamemode = request.data.get('gamemode', 'easy')
+
+            # Create the game room
+            game_room = GameRoom.objects.create(
+                creator=creator,
+                max_players=max_players,
+                theme=theme,
+                gamemode=gamemode
+            )
+            game_room.players.add(creator)
+            game_room.save()
+
+            return Response({"success": "true", "message": "Game room created successfully"}, status=status.HTTP_201_CREATED)
+        except Exception as e:
+            return Response({"success": "false", "error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+ 
 class History(APIView):
 
     def get(self, request, pk):
@@ -476,8 +546,6 @@ class CustomTokenRefreshView(TokenRefreshView):
             return JsonResponse({"success": "true", "data": response_data}, status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-#FIXME: friend request
 
 class SendFriendRequest(APIView):
     permission_classes = [IsAuthenticated]
