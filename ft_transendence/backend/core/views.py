@@ -420,8 +420,6 @@ class WaitingRoom(APIView):
         except Person.DoesNotExist:
             return Response({"success": "false", "error": "User or opponent not found"}, status=status.HTTP_404_NOT_FOUND)
 
-#FIXME: JoinList + CreateRoom = GameRoom
-
 class JoinList(APIView):
     permission_classes = [IsAuthenticated]
     def get(self, request, pk):
@@ -437,26 +435,23 @@ class JoinList(APIView):
     def post(self, request, pk):
         try:
             user = Person.objects.get(id=pk)
+            creator_id = request.data.get('creator_id')
             game_room_id = request.data.get('game_room_id')
-            # try:
-            # game_rooms = GameRoom.filter(id=game_room_id)
-            game_room = GameRoom.objects.filter(id=game_room_id)
+            try:
+                creator = Person.objects.get(id=creator_id)
+                game_room = creator.game_room
+            except Person.DoesNotExist:
+                return JsonResponse({"success": "false", "error": "Creator not found"}, status=status.HTTP_404_NOT_FOUND)
 
-            print("❌", game_room)
-            if not game_rooms.exists():
+            if not game_room or game_room.id != game_room_id:
                 return JsonResponse({"success": "false", "error": "Game room not found"}, status=status.HTTP_404_NOT_FOUND)
-            
-            # except ObjectDoesNotExist:
-            #     return JsonResponse({"success": "false", "error": "Game room not found"}, status=status.HTTP_404_NOT_FOUND)
-            # Check if the user is already in a game room
-            if user.ongoing:
+            if creator.ongoing:
                 return JsonResponse({"success": "false", "error": "User is already in a game room"}, status=status.HTTP_400_BAD_REQUEST)
-            # Add the user to the game room
             game_room.players.add(user)
             game_room.save()
-            # Set ongoing flag for the user
-            user.ongoing = True
+            user.game_room = game_room
             user.save()
+            creator.save()
             return JsonResponse({"success": "true", "message": "Successfully joined the game room"}, status=status.HTTP_200_OK)
         except Exception as e:
             return JsonResponse({"success": "false", "error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -482,12 +477,17 @@ class CreateRoom(APIView):
             }
             game_room_serializer = GameRoomSerializer(data=game_room_data)
             if game_room_serializer.is_valid():
-                game_room_serializer.save()
+                game_room = game_room_serializer.save()
+                creator = Person.objects.get(id=creator_id)
+                creator.game_room = game_room
+                creator.save()
                 return JsonResponse({"success": "true", "message": "Game room created successfully"}, status=status.HTTP_201_CREATED)
             else:
                 return JsonResponse({"success": "false", "error": game_room_serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             return JsonResponse({"success": "false", "error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+#FIXME: Send info about the game room to game/ code
 
 class GameRoom(APIView):
     def post(self, request, *args, **kwargs):

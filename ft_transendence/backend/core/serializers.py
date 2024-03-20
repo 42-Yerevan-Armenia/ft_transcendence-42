@@ -79,4 +79,5 @@ class GameRoomSerializer(serializers.ModelSerializer):
         players_data = validated_data.pop('players', [])
         game_room = GameRoom.objects.create(creator_id=creator_id, **validated_data)
         game_room.players.set(players_data)
+        print("❌", game_room)
         return game_room
