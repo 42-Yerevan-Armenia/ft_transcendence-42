@@ -60,3 +60,9 @@ function HashCodeGeneration(){
 }
 
 
+function scrollToLastTag() {
+  var container = document.getElementById('containerScroll');
+  if (container) {
+    container.scrollTop = container.scrollHeight;
+  }
+}
