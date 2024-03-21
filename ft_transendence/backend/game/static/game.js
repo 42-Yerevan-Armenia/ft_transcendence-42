@@ -1,13 +1,4 @@
 
-// const canvas = document.querySelector("canvas");
-// const context = canvas.getContext("2d");
-
-// function loop() {
-//     requestAnimationFrame(loop);
-//     update();
-//     context.clearRect(0, 0, canvas.width, canvas.height);
-//     data.ball.update();
-// }
 console.log("narev");
 
 let uuid = function(){
@@ -21,11 +12,14 @@ let uuid = function(){
      .join('-')
 }
 
+let isStarted = false;
+
 function isOpen(ws) { return ws.readyState === ws.OPEN }
 
 //HTML elements
-let clientId = null;
-clientId = uuid();
+let clientId = User_Id;
+if (!clientId)
+    clientId = uuid();
 let gameId = null;
 let playerColor = null;
 
@@ -42,17 +36,17 @@ const board = document.getElementById("board");
 //wiring events
 document.addEventListener("keydown", event => {
     // console.log(event);
-    if (gameId === null)
-        return ;
+    // if (gameId === null)
+    //     return ;
     const payLoad = {
         "method": "updateKey",
         "clientId": clientId,
         "gameId": gameId
     }
     if (event.key === "ArrowUp") {
-        payLoad["keyCode"] = "up";
+        payLoad["direction"] = "up";
     } else if (event.key === "ArrowDown") {
-        payLoad["keyCode"] = "down";
+        payLoad["direction"] = "down";
     } else {
         return;
     }
@@ -101,7 +95,7 @@ btnCreate.addEventListener("click", e => {
 
 ws.onmessage = message => {
     //message.data
-    console.log(message);
+    // console.log(message);
     let response;
     if (message) {
         try {
@@ -112,7 +106,7 @@ ws.onmessage = message => {
             return console.error(e);
         }
     }
-
+    // console.log(response);
     if (response.method === "connect"){
         console.log("response = ", response);
         clientId = response.clientId;
@@ -129,8 +123,51 @@ ws.onmessage = message => {
 
     //update
     if (response.method === "update"){
+        if (isStarted === false) {
+            isStarted = true;
+            const a = document.createElement("div");
+            // console.log("response.game = " ,response.game);
+            const paddle1 = response.state.paddle1;
+            a.id = "paddle1";
+            a.className = "paddle";
+            a.style.width = paddle1.width + "px";
+            a.style.height = paddle1.height + "px";
+            a.style.left = paddle1.x + "px";
+            a.style.top = paddle1.y + "px";
+            board.appendChild(a);
+    
+            const b = document.createElement("div");
+            const paddle2 = response.state.paddle2;
+            b.id = "paddle2";
+            b.className = "paddle";
+            b.style.width = paddle2.width + "px";
+            b.style.height = paddle2.height + "px";
+            b.style.left = paddle2.x + "px";
+            b.style.top = paddle2.y + "px";
+            board.appendChild(b);
+            const c = document.createElement("div");
+            const ballRadius = response.state.ball.radius;
+            c.className = "ball";
+            c.id = "ball";
+            c.style.width = ballRadius * 2 + "px";
+            c.style.height = ballRadius * 2 + "px";
+            c.style.borderRadius = "30px";
+            c.style.left = response.state.ball.x - ballRadius + "px";
+            c.style.top = response.state.ball.y - ballRadius + "px";
+            board.appendChild(c);
+    
+            const score1 = document.createElement("span");
+            score1.className = "score";
+            score1.id = "score1";
+            score1.appendChild(document.createTextNode("0"));
+            const score2 = document.createElement("span");
+            score2.className = "score";
+            score2.id = "score2";
+            score2.appendChild(document.createTextNode("0"));
+            board.appendChild(score1);
+            board.appendChild(score2);
+        }
         if (!response.state) return;
-
         for(const b of Object.keys(response.state))
         {
             const objToDraw = response.state[b];
@@ -146,10 +183,10 @@ ws.onmessage = message => {
                 } else {
                     let ballRadius = 0;
                     if (b === "ball") {
-                        ballRadius = response.state.ball.ballRadius;
+                        ballRadius = response.state.ballRadius;
                     }
-                    ballObject.style.left = objToDraw.x - ballRadius + "px";
-                    ballObject.style.top = objToDraw.y - ballRadius + "px";
+                    ballObject.style.left = objToDraw.x + "px";
+                    ballObject.style.top = objToDraw.y + "px";
                 }
             }
         }
