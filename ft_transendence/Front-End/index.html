@@ -8,36 +8,36 @@
     <link rel="stylesheet" href="./src/app/styles/StyleMidle.css">
     <link rel="stylesheet" href="./src/app/styles/StuleRight.css">
     <link rel="stylesheet" href="./src/app/styles/Style.css">
-
-<!-- Registers -->
+    
+    <!-- Registers -->
     <link rel="stylesheet" href="./src/app/styles/StyleRegister.css">
-
-<!-- Login -->
+    
+    <!-- Login -->
     <link rel="stylesheet" href="./src/app/styles/StyleLogin.css">
-
-<!-- Confirm -->
+    
+    <!-- Confirm -->
     <link rel="stylesheet" href="./src/app/styles/ConfirmPage.css">
-
-<!-- Password -->
+    
+    <!-- Password -->
     <link rel="stylesheet" href="./src/app/styles/Password.css">
-
-<!-- Reset -->
+    
+    <!-- Reset -->
     <link rel="stylesheet" href="./src/app/styles/ResetPage.css">
-
-<!-- MidleSettings -->
+    
+    <!-- MidleSettings -->
     <link rel="stylesheet" href="./src/app/styles/StyleMidleSettings.css">
-
-<!-- MidleCub -->
+    
+    <!-- MidleCub -->
     <link rel="stylesheet" href="./src/app/styles/StyleMidleCup.css">
-
-<!-- Messag -->
-<link rel="stylesheet" href="./src/app/styles/StyleMessage.css">
-
-
-<!-- SignUp -->
+    
+    <!-- Messag -->
+    <link rel="stylesheet" href="./src/app/styles/StyleMessage.css">
+    
+    
+    <!-- SignUp -->
     <link rel="stylesheet" href="./src/app/styles/Signup.css">
-
-
+    
+    
 
     <title>ft_transcendence</title>
 </head>
@@ -250,7 +250,7 @@
                                         </svg>
                                     </div>
                                     <p class="navLinkP">
-                                        Explore
+                                        Message
                                     </p>
                                 </div>
                     
@@ -646,6 +646,7 @@
                                     <!-- MidleCubItem -->
                                 </div>
                             </div>
+                            
                             <div class="MidleCubList">
                                 <div class="Back">
                                     <div>
@@ -678,7 +679,7 @@
 
 
                     <!-- RIGHT -->
-                    <section class="right">
+                    <section class="right" id="RiteSection">
 
                         <div class="Rightsection">
                             <div class="Rightsignin">
@@ -762,7 +763,7 @@
                 <!-- Content -->
 
                 <div class="MessagPrivateSubject">
-                    <div class="MessagPrivateSubjectMessag">
+                    <div class="MessagPrivateSubjectMessag" id="containerScroll">
                         <div class="MessagPrivateSubjectMessagDaye">
                             <div>
                                 <p>
@@ -770,8 +771,14 @@
                                 </p>
                             </div>
                         </div>
+
+
+
+
+
+
                         <!-- person -->
-                        <div class="MessagPrivateSubjectMessagPerson">
+                        <!-- <div class="MessagPrivateSubjectMessagPerson">
                             <div class="MessagPrivateSubjectMessagDivPerson">
                                 <p class="MessagPrivateSubjectMessagPersonChat">
                                     Hi there, How are you?
@@ -780,10 +787,10 @@
                             <p>
                                 9.20 AM
                             </p>
-                        </div>
+                        </div> -->
 
                         <!-- Sender -->
-                        <div class="MessagPrivateSubjectMessagSender">
+                        <!-- <div class="MessagPrivateSubjectMessagSender">
                             <div class="MessagPrivateSubjectMessagSenderDivMessag">
                                 <p class="MessagPrivateSubjectMessagSenderMessag">
                                     I am great, Thanks!
@@ -792,10 +799,10 @@
                             <p class="MessagPrivateSubjectMessagSenderDaye">
                                 9.23 AM
                             <p>
-                        </div>
+                        </div> -->
 
                          <!-- person -->
-                        <div class="MessagPrivateSubjectMessagPerson">
+                        <!-- <div class="MessagPrivateSubjectMessagPerson">
                             <div class="MessagPrivateSubjectMessagDivPerson">
                                 <p class="MessagPrivateSubjectMessagPersonChat">
                                     Can you send me my newest work schedule?
@@ -805,10 +812,10 @@
                             <p>
                                 9.25 AM
                             </p>
-                        </div>
+                        </div> -->
 
                         <!-- Sender -->
-                        <div class="MessagPrivateSubjectMessagSender">
+                        <!-- <div class="MessagPrivateSubjectMessagSender">
                             <div class="MessagPrivateSubjectMessagSenderDivMessag">
                                 <p class="MessagPrivateSubjectMessagSenderMessag">
                                     Okay, give me some time to make a schedule for you
@@ -818,11 +825,16 @@
                             <p class="MessagPrivateSubjectMessagSenderDaye">
                                 9.27 AM
                             <p>
-                        </div>
+                        </div> -->
+
+
+
+
+
                     </div>
                 </div>
                 <div class="MessagPrivateSubjectPrivate">
-                    <input type="text"  placeholder="Enter Your Message"/>
+                    <input type="text" id="id_message_send_input" placeholder="Enter Your Message"/>
                 </div>
             </div>
         </div>
@@ -855,6 +867,7 @@
         <script src="./src/app/models/RegisterPage.js"></script>
         <script src="./src/app/models/PasswordPage.js"></script>
         <script src="./src/app/models/LoginPage.js"></script>
+        <script  src="./src/app/models/Chat.js"></script>
         <script  src="./src/app/models/Messag.js"></script>
         <script src="./src/app/models/HomePage.js"></script>
         <script src="./src/app/models/ConfirmPage.js"></script>

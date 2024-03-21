@@ -59,8 +59,3 @@
         -webkit-text-stroke-width: 1px;
 }
 
-@media only screen and (max-width: 932px){
-    .right{
-        display: none;
-    }
-}
