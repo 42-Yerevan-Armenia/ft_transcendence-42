@@ -15,7 +15,6 @@ from .serializers import (
     HomeSerializer,
     LederboardSerializer,
     ProfileSerializer,
-    FriendSerializer,
     JoinListSerializer,
     WaitingRoomSerializer,
     HistorySerializer,
@@ -29,8 +28,6 @@ from .validations import (
     password_validation
 )
 from .shared_data import shared_data
-
-from friendship.models import Friend, FriendshipRequest
 
 from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth.hashers import make_password, check_password
@@ -420,8 +417,6 @@ class WaitingRoom(APIView):
         except Person.DoesNotExist:
             return Response({"success": "false", "error": "User or opponent not found"}, status=status.HTTP_404_NOT_FOUND)
 
-#FIXME: JoinList + CreateRoom = GameRoom
-
 class JoinList(APIView):
     permission_classes = [IsAuthenticated]
     def get(self, request, pk):
@@ -437,27 +432,31 @@ class JoinList(APIView):
     def post(self, request, pk):
         try:
             user = Person.objects.get(id=pk)
+            creator_id = request.data.get('creator_id')
             game_room_id = request.data.get('game_room_id')
-            # try:
-            # game_rooms = GameRoom.filter(id=game_room_id)
-            game_room = GameRoom.objects.filter(id=game_room_id)
+            try:
+                creator = Person.objects.get(id=creator_id)
+                game_room = creator.game_room
+            except Person.DoesNotExist:
+                return JsonResponse({"success": "false", "error": "Creator not found"}, status=status.HTTP_404_NOT_FOUND)
 
-            print("❌", game_room)
-            if not game_rooms.exists():
+            if not game_room or game_room.id != game_room_id:
                 return JsonResponse({"success": "false", "error": "Game room not found"}, status=status.HTTP_404_NOT_FOUND)
-            
-            # except ObjectDoesNotExist:
-            #     return JsonResponse({"success": "false", "error": "Game room not found"}, status=status.HTTP_404_NOT_FOUND)
-            # Check if the user is already in a game room
-            if user.ongoing:
+            if creator.ongoing:
                 return JsonResponse({"success": "false", "error": "User is already in a game room"}, status=status.HTTP_400_BAD_REQUEST)
-            # Add the user to the game room
-            game_room.players.add(user)
-            game_room.save()
-            # Set ongoing flag for the user
-            user.ongoing = True
-            user.save()
-            return JsonResponse({"success": "true", "message": "Successfully joined the game room"}, status=status.HTTP_200_OK)
+            if game_room.is_full():
+                return JsonResponse({"success": "false", "error": "Game room is full"}, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                game_room.players.add(user)
+                game_room.save()
+                user.game_room = game_room
+                user.save()
+                creator.save()
+                # Check if the game room is now full after adding the user
+                if game_room.is_full():
+                    return JsonResponse({"success": "true", "message": "Successfully joined the game room. Game will start soon."}, status=status.HTTP_200_OK)
+                else:
+                    return JsonResponse({"success": "true", "message": "Successfully joined the game room"}, status=status.HTTP_200_OK)
         except Exception as e:
             return JsonResponse({"success": "false", "error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
@@ -482,37 +481,41 @@ class CreateRoom(APIView):
             }
             game_room_serializer = GameRoomSerializer(data=game_room_data)
             if game_room_serializer.is_valid():
-                game_room_serializer.save()
+                game_room = game_room_serializer.save()
+                creator = Person.objects.get(id=creator_id)
+                creator.game_room = game_room
+                creator.save()
                 return JsonResponse({"success": "true", "message": "Game room created successfully"}, status=status.HTTP_201_CREATED)
             else:
                 return JsonResponse({"success": "false", "error": game_room_serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             return JsonResponse({"success": "false", "error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+#FIXME: Run game/ by Accept/Ignore
+
 class GameRoom(APIView):
-    def post(self, request, *args, **kwargs):
-        try:
-            # Assuming the user creating the game room is the creator
-            max_players = request.data.get('number')
-            live = request.data.get('live')
-            theme = request.data.get('theme')
-            gamemode = request.data.get('gamemode')
-            creator = request.user.person
+    def post(self, request, pk):
+        # Logic to handle game room invitation
+        # Send invitation/notification to UserB
+        # Wait for UserB's response (Accept/Ignore)
+        user_response = request.data.get('response')
 
-            # Create the game room
-            game_room = GameRoom.objects.create(
-                creator=creator,
-                max_players=max_players,
-                theme=theme,
-                gamemode=gamemode
-            )
-            game_room.players.add(creator)
+        if user_response == "Accept":
+            game_room = Person.objects.get(id=pk).game_room
+            game_room.ongoing = True
             game_room.save()
+            # Set ongoing to True for all players in the game room
+            for player in game_room.players.all():
+                player.ongoing = True
+                player.save()
+            # Start the game application
+            return JsonResponse({"success": "true", "message": "Game will start soon."}, status=status.HTTP_200_OK)
+        elif user_response == "Ignore":
+            # No changes needed
+            return JsonResponse({"success": "true", "message": "Invitation ignored."}, status=status.HTTP_200_OK)
+        else:
+            return JsonResponse({"success": "false", "error": "Invalid response"}, status=status.HTTP_400_BAD_REQUEST)
 
-            return Response({"success": "true", "message": "Game room created successfully"}, status=status.HTTP_201_CREATED)
-        except Exception as e:
-            return Response({"success": "false", "error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
- 
 class History(APIView):
 
     def get(self, request, pk):
@@ -551,90 +554,3 @@ class CustomTokenRefreshView(TokenRefreshView):
             return JsonResponse({"success": "true", "data": response_data}, status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-class SendFriendRequest(APIView):
-    permission_classes = [IsAuthenticated]
-    def post(self, request, *args, **kwargs):
-        try:
-            sender = request.user
-            receiver_id = request.data.get('receiver_id')
-            receiver = Person.objects.get(id=receiver_id).user
-            # Check if a friendship request already exists
-            if not FriendshipRequest.objects.filter(from_user=sender, to_user=receiver).exists():
-                FriendshipRequest.objects.create(from_user=sender, to_user=receiver)
-                return Response({"success": "true", "message": "Friend request sent"}, status=status.HTTP_201_CREATED)
-            else:
-                return Response({"success": "false", "error": "Friend request already sent"}, status=status.HTTP_400_BAD_REQUEST)
-        except Person.DoesNotExist:
-            return Response({"success": "false", "error": "Receiver user not found"}, status=status.HTTP_404_NOT_FOUND)
-
-class AcceptFriendRequest(APIView):
-    permission_classes = [IsAuthenticated]
-    def post(self, request, *args, **kwargs):
-        try:
-            receiver = request.user
-            sender_id = request.data.get('sender_id')
-            sender = Person.objects.get(id=sender_id).user
-            # Check if a friendship request exists
-            friendship_request = FriendshipRequest.objects.filter(from_user=sender, to_user=receiver).first()
-            if friendship_request:
-                friendship_request.accept()# Accept the friendship request
-                return Response({"success": "true", "message": "Friend request accepted"}, status=status.HTTP_200_OK)
-            else:
-                return Response({"success": "false", "error": "Friend request not found or already accepted"}, status=status.HTTP_400_BAD_REQUEST)
-        except Person.DoesNotExist:
-            return Response({"success": "false", "error": "Sender user not found"}, status=status.HTTP_404_NOT_FOUND)
-
-class RejectFriendRequest(APIView):
-    def post(self, request, *args, **kwargs):
-        permission_classes = [IsAuthenticated]
-        try:
-            receiver = request.user
-            sender_id = request.data.get('sender_id')
-            sender = Person.objects.get(id=sender_id).user
-            # Check if a friendship request exists
-            friendship_request = Friend.objects.filter(from_user=sender, to_user=receiver).first()
-            if friendship_request:
-                friendship_request.reject()# Reject the friendship request
-                return Response({"success": "true", "message": "Friend request rejected"}, status=status.HTTP_200_OK)
-            else:
-                return Response({"success": "false", "error": "Friend request not found or already rejected"}, status=status.HTTP_400_BAD_REQUEST)
-        except Person.DoesNotExist:
-            return Response({"success": "false", "error": "Sender user not found"}, status=status.HTTP_404_NOT_FOUND)
-
-class DeleteFriend(APIView):
-    permission_classes = [IsAuthenticated]
-    def post(self, request, *args, **kwargs):
-        try:
-            sender = request.user
-            friend_id = request.data.get('friend_id')
-            friend = Person.objects.get(id=friend_id).user
-
-            # Check if the friendship exists
-            friendship = Friend.objects.are_friends(sender, friend)
-            if friendship:
-                return Response({"success": "true", "message": "Are you sure you want to delete this friend?"}, status=status.HTTP_200_OK)
-            else:
-                return Response({"success": "false", "error": "Friendship not found"}, status=status.HTTP_400_BAD_REQUEST)
-        except Person.DoesNotExist:
-            return Response({"success": "false", "error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
-
-    permission_classes = [IsAuthenticated]
-    def delete(self, request, *args, **kwargs):
-        try:
-            sender = request.user
-            friend_id = request.data.get('friend_id')
-            friend = Person.objects.get(id=friend_id).user
-
-            # Check if the friendship exists
-            friendship = Friend.objects.are_friends(sender, friend)
-            friend1 = Friend.objects.get(from_user=sender, to_user=friend)
-            friend2 = Friend.objects.get(from_user=friend, to_user=sender)
-            if friendship:
-                friend1.delete()
-                friend2.delete()
-                return Response({"success": "true", "message": "Friend deleted successfully"}, status=status.HTTP_200_OK)
-            else:
-                return Response({"success": "false", "error": "Friendship not found or already deleted"}, status=status.HTTP_400_BAD_REQUEST)
-        except Person.DoesNotExist:
-            return Response({"success": "false", "error": "User not found"}, status=status.HTTP_404_NOT_FOUND)

@@ -18,7 +18,8 @@ class Person(models.Model):
     gamemode = models.CharField(max_length=100, default='classic')
     live = models.BooleanField(default=False)
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='person')
-    ongoing = models.OneToOneField('GameRoom', on_delete=models.SET_NULL, null=True, blank=True, related_name='player_in_game')
+    game_room = models.ForeignKey('GameRoom', on_delete=models.SET_NULL, null=True, blank=True, related_name='participants')
+    ongoing = models.BooleanField(default=False)
 
     def __str__(self):
         return self.nickname
@@ -66,4 +67,12 @@ class GameRoom(models.Model):
     ongoing = models.BooleanField(default=False)  # Indicates if the game is ongoing or not
 
     def __str__(self):
-        return str(self.id)
+        return f"GameRoom {self.id}"
+    
+    def is_full(self):
+        """
+        Check if the GameRoom is full.
+        Returns:
+            bool: True if the room is full, False otherwise.
+        """
+        return self.players.count() == self.max_players

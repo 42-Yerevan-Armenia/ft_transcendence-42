@@ -22,6 +22,9 @@ migrate:
 admin:
 	docker-compose run --rm backend sh -c "python manage.py createsuperuser"
 
+# app:
+# 	docker-compose run --rm backend sh -c "python manage.py startapp appname"
+
 start:
 	docker compose start
 

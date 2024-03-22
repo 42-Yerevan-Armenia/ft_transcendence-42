@@ -16,10 +16,6 @@ from core.views import (
     WaitingRoom,
     History,
     FullHistory,
-    SendFriendRequest,
-    AcceptFriendRequest,
-    RejectFriendRequest,
-    DeleteFriend,
     Lederboard,
     CreateRoom,
     GameRoom,
@@ -48,10 +44,4 @@ urlpatterns = [
     path('gameresult/', GameResult.as_view()),
     path('api/v1/createroom/<int:pk>/', CreateRoom.as_view()),
     path('api/v1/gameroom/<int:pk>/', GameRoom.as_view()),
-    # path('gameroom/', GameRoom.as_view()),
-
-    path('api/v1/send/<int:pk>/', SendFriendRequest.as_view()),
-    path('api/v1/accept/<int:pk>/', AcceptFriendRequest.as_view()),
-    path('api/v1/reject/<int:pk>/', RejectFriendRequest.as_view()),
-    path('api/v1/delete/<int:pk>/', DeleteFriend.as_view()),
 ]
