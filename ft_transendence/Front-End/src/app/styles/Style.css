@@ -93,6 +93,5 @@ main{
 @media only screen and (max-width:932px){
   .right{
       display: none !important;
-       /* !important; */
   }
 }

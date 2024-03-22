@@ -397,6 +397,9 @@
 } 
 
 @media only screen and (max-width:400px){
+    .Message{
+        width: 70%;
+    }
     .GrupADDSubject, .PersonalADDSubject{
         width: 70%;
     }

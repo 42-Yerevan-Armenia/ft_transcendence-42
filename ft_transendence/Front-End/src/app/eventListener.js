@@ -1,14 +1,33 @@
 //-----------------------------------------------------------------------   Home
 //Event Listeners  Home Page
+
+//2
 Home._NAV._SETTINGS._classname.addEventListener("click",()=>{
+  debugger
   ManageMidle.Manage("MidleSettings")
 })
+
+
+
+// 1
 Home._NAV._LEADERBOARD._classname.addEventListener("click",()=>{
+  debugger
   ManageMidle.Manage("MidleCub");
 } )
+
+//4
+Home._NAV._JoinListGame._classname.addEventListener("click",()=>{
+  debugger
+  ManageMidle.Manage("JoinList");
+} )
+
+//3
 Home._NAV._Home._classname.addEventListener("click",()=>{
+  debugger
   ManageMidle.Manage("midle");
 } );
+
+
 
 //sign in
 Home._NavSigninSignout._NavSignin.addEventListener("click", ()=> {
@@ -48,8 +67,17 @@ Home._HomeLeft._ExploreMessag.addEventListener("click",  ()=>{
   if (!User.checkSignIn())
     return;
 
-  // Home._HomeMessage?._style?.displey = Home._HomeMessage?._style?.displey == "none" ? "block" : "none";
-  ManageRight.Manage("Message");
+
+
+  const style = Home._HomeMessage?._style;
+  console.log("d.display == " + style.display)
+
+  const flag = style.display == "none" ? "block" : "none";
+
+  if (flag == "block")
+    ManageRight.Manage("Message");
+  else
+  style.display = "none";
 })
 
 //-------------------------------------------------------------------- left User
