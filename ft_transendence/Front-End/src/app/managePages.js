@@ -54,8 +54,8 @@ var ManageMidle = {
     pages: [
         {"MidleCub": Home._MidleCub},
         {"MidleSettings": Home._MiddleSettings},
-        {"midle": Home._Midle}
-        // {"MidleCub": MidleCubx},
+        {"midle": Home._Midle},
+        {"JoinList": Home._MidleJoinList}
         // {"Password": Password},
         // {"SignUp": SignUp}
     ]
@@ -78,7 +78,7 @@ var ManageRight = {
     },
     pages: [
         {"right": Home._HomeRight},
-        {"Message": Home._HomeMessage},
+        {"Message": Home._HomeMessage}
     ]
 }
 

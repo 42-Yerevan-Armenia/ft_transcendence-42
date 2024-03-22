@@ -1,0 +1,9 @@
+.Next{
+    display: flex;
+    color:white;
+    cursor: grab;
+}
+
+.NextLeft{
+    transform:scale(-1,1);
+}

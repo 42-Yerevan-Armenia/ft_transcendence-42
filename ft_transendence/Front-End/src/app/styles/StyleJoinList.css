@@ -1,0 +1,208 @@
+.JoinList{
+    width: 100%;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--background-color, 
+            radial-gradient(66.54% 118.23% at 37.47% 107.32%, #D9CBFD 10%, #7758D1 100%));
+}
+
+
+.JoinListProfil {
+    border: 2px  solid red;
+    width: 80%;
+    height: 95%;
+    border-radius: 20px;
+    border: 1px solid var(--stroke-blue, rgba(0, 178, 255, 0.65));
+    background-color: rgba(92, 81, 143, 0.2);
+}
+
+.JoinListHeroAll{
+    border-radius: 20px;
+    margin-bottom: 3px;
+    width: 100%;
+    height: 18%; 
+    color: rgba(255, 255, 255, 1);
+    font-size: bold;
+    font-family: Arial, Helvetica, sans-serif;
+    border: 1px solid var(--stroke-blue, rgba(0, 178, 255, 0.65));
+    box-shadow: 0px 2px 1px 0.1px rgba(84, 72, 128, 1);
+}
+
+.JoinListHero{
+    width: 100%;
+    height: 100%;
+}
+
+.JoinListHeroP{
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.JoinListImage{
+    border-radius: 50px;
+    box-shadow: -0.1px -0.1px 10px 0.1px white;
+}
+
+.JoinListEdit{
+    width: 100%;
+    margin-top: 30px;
+}
+
+.JoinListConteinerTable{
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.JoinListTable{
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr 1fr 1fr;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid white;
+    color: white;
+    text-align: center;
+}
+
+.JoinListTableBody{
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr 1fr 1fr;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    color: white;
+    text-align: center;
+}
+.JoinListTd{
+    display: flex;
+    justify-content: space-around;
+}
+
+.JoinListTableImageBody{
+    margin-top: -7px;
+}
+
+.JoinListList{
+    display: flex;
+    justify-content: space-between;
+    padding-left: 10%;
+    padding-right: 10%;
+}
+
+.JoinListTableName, .JoinListTableBodyNAme{
+    font-size: clamp(12px, 2.5vw, 20px); 
+}
+.JoinListHeroDivTemeTheme,.JoinListHeroDivTemeGameMode{
+    height: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.JoinListHeroDiv{
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    height: 100%;
+}
+
+.JoinListHeroDiv>div{
+    width: 25%;
+    height: 100%;
+}
+.JoinListHeroDiv p{
+    margin: 0px;
+}
+.JoinListHeroDivProfil{
+    justify-content: center;
+    align-items: center;
+}
+.JoinListHeroDivProfilPlayer,.JoinListHeroDivProfilLive{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 50%;
+}
+
+.JoinListHeroDivButton{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 50%;
+}
+
+.JoinListHeroDivButtonBack{
+    width: 164px;
+    height: 100%;
+}
+.JoinListHeroDivButtonB{
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    width: 164px;
+    height: 100%;
+    height: 51px;
+    border-radius: 30px;
+    border: none;
+    background-image: linear-gradient(to right, #EDF1FF, #624DE3);
+    box-shadow: 1px 1px 10px #6A42B0;
+    cursor: pointer;
+    color: #4939ED;
+}
+
+.JoinListHeroDivButtonB:active{
+    background-color: red;
+    transform: translate(2px,2px);
+}
+
+
+.JoinListHeroDivProfilLive>div{
+    justify-content: center;
+    align-items: center;
+}
+.Next{
+    display: flex;
+    color:white;
+    cursor: grab;
+}
+
+.NextLeft{
+
+    transform:scale(-1,1);
+}
+.JoinListHeroDivTemeTheme>div, .JoinListHeroDivTemeGameMode>div{
+    width: 50px;
+    margin: auto 0px;
+}
+
+.JoinListHeroDivTemeTheme>p, .JoinListHeroDivTemeGameMode>p{
+    width: 100px;
+}
+
+.Back{
+    display: flex;
+    color:white;
+    cursor: grab;
+}
+
+
+@media only screen and (max-width: 400px){
+    .JoinListProfil{
+        width: 95%;
+    } 
+}
+
+@media only screen and (max-width: 339px){
+    .JoinListConteinerTable{
+        overflow: hidden;
+        width: 250px;
+    }
+
+    .JoinListEdit{
+        overflow: scroll;
+        width: 169px;
+    }
+}
+
+
