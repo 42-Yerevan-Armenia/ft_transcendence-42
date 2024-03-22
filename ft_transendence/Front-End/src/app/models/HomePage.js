@@ -9,14 +9,16 @@ class HomePage extends HtmlElement {
     _Midle = new MiddleSECTION();
     _MiddleSettings = new MiddleSettings();
     _MidleCub = new MidleCub();
+    _MidleJoinList = new JoinList();
     _HomeLeft = new HomeLeft();
     _HomeRight = new HomeRight();
     _HomeMessage = new MessagePage(".Message");
+    _HomeRight = new HomeRight();
 
     _NAV = {
       _Home : new HtmlElement(".LEFTHOME"),
       _Profile : new HtmlElement(".PROFIL"),
-      _GAME : new HtmlElement(".GAME"),
+      _JoinListGame : new HtmlElement(".GAME"),
       _LEADERBOARD : new HtmlElement(".LEADERBOARD"),
       _LIVE : new HtmlElement(".LIVE"),
       _SETTINGS : new HtmlElement(".SETTINGS"),
@@ -55,6 +57,7 @@ class HomePage extends HtmlElement {
 
     async Drow() {
       ManageMidle.Manage("midle")
+      // ManageMidle.Manage("JoinList");
       await this.usersDro();
   
       this._HomeLeft.Drow();      //left botton User section

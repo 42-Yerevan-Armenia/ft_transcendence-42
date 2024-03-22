@@ -86,6 +86,17 @@ function ElementData(name) {
     this._classname = document.querySelector(name);
     this._style = this._classname ? this._classname.style : null;
 }
+ElementData.prototype.Classname = function(){
+    console.log(" this._classname   ======= " + this._classname)
+    return this._classname;
+}
+
+ElementData.prototype.Style = function(){
+    console.log(" this._style    =======    " + this._style)
+    return this._style;
+}
+
+
 
 ElementData.prototype.DisplayBlock = function() {
     if (this._style)
@@ -228,7 +239,7 @@ ElementData.prototype.MessagPrivateSubjectMessagSender = function(Person) {
 
 
 var MessagePage = function(name) {
-    ElementData.call(this,name);                                                     // Call the parent constructor
+    ElementData.call(this, name);                                                     // Call the parent constructor
     this.name = name;
 
     //for chat Groups
