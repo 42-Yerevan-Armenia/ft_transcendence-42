@@ -68,3 +68,11 @@ class GameRoom(models.Model):
 
     def __str__(self):
         return f"GameRoom {self.id}"
+    
+    def is_full(self):
+        """
+        Check if the GameRoom is full.
+        Returns:
+            bool: True if the room is full, False otherwise.
+        """
+        return self.players.count() == self.max_players

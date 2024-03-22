@@ -46,7 +46,8 @@ INSTALLED_APPS = [
     'daphne', #web server for ASGI
     'django.contrib.staticfiles',
     'core',
-    'chat', 
+    'chat',
+    'friends_api',
     'channels', #channels for websockets async communication
     'friendship',
     'corsheaders',
