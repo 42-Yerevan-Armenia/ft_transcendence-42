@@ -57,6 +57,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         else
             myStorages.longOut();
     }
+   
     ManageAllPage.Manage("Home");
 });
 
