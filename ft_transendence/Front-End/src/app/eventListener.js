@@ -44,6 +44,14 @@ debugger
 
 
 
+Home._HomeLeft._ExploreMessag.addEventListener("click",  ()=>{
+  if (!User.checkSignIn())
+    return;
+
+  // Home._HomeMessage?._style?.displey = Home._HomeMessage?._style?.displey == "none" ? "block" : "none";
+  ManageRight.Manage("Message");
+})
+
 //-------------------------------------------------------------------- left User
 // IconExit
 Home._HomeLeft._LongOut.addEventListener("click", () => {

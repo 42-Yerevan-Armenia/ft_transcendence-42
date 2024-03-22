@@ -9,7 +9,7 @@ class HomeLeft extends HtmlElement {
     _Name = document.querySelector("#UserH5");
     _Nickname = document.querySelector("#UserH6");
     _Image = document.querySelector("#UserImage");
-
+    _ExploreMessag = document.querySelector(".Explore")
 
     
     Drow() {
