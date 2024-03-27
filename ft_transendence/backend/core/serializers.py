@@ -45,7 +45,10 @@ class FullHistorySerializer(serializers.ModelSerializer):
         model = Person
         fields = ('id', 'nickname', 'image', 'gamemode', 'points', 'matches', 'wins', 'loses', 'gamedata')
 
-#TODO: check friends data
+class MatchSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Person
+        fields = ('id', 'wins', 'loses', 'matches', 'points')
 
 class UsersSerializer(serializers.ModelSerializer):
     class Meta:

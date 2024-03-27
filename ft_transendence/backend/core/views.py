@@ -19,7 +19,8 @@ from .serializers import (
     WaitingRoomSerializer,
     HistorySerializer,
     FullHistorySerializer,
-    GameRoomSerializer
+    GameRoomSerializer,
+    MatchSerializer
 )
 from .validations import (
     email_validation,
@@ -42,6 +43,7 @@ from django.forms.models import model_to_dict
 from django.http import JsonResponse
 from django.utils import timezone
 import json
+import time
 import base64
 import os
 
@@ -515,6 +517,84 @@ class GameRoom(APIView):
             return JsonResponse({"success": "true", "message": "Invitation ignored."}, status=status.HTTP_200_OK)
         else:
             return JsonResponse({"success": "false", "error": "Invalid response"}, status=status.HTTP_400_BAD_REQUEST)
+
+class PlayRandom(APIView):
+    permission_classes = [IsAuthenticated]
+    def post(self, request, pk):
+        try:
+            user_id = Person.objects.get(id=pk)
+            mms = MatchmakingSystem()
+            if user_id.id in mms.player_pool:
+                return JsonResponse({"success": "false", "error": "User is already in a game room"}, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                mms.add_player_to_pool(user_id)
+                return JsonResponse({"success": "true", "message": "User successfully added in a game room"}, status=status.HTTP_200_OK)
+        except Person.DoesNotExist:
+            return Response({"success": "false", "error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+
+class MatchmakingSystem():
+    _instance = None
+    
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+            cls._instance.player_pool = []  # Initialize player_pool only once
+        return cls._instance
+
+    def add_player_to_pool(self, player_id):
+        if player_id.id not in self.player_pool:  # Append the id of the player
+            self.player_pool.append(player_id.id)
+            self.match_players()
+    
+    def remove_player_from_pool(self, player_id):
+        if player_id in self.player_pool:
+            self.player_pool.remove(player_id)
+
+    def get_player_info(self, player_id):  # Define the function within the class
+        try:
+            player = Person.objects.get(id=player_id)
+            serializer = MatchSerializer(player)  # Assuming MatchSerializer is properly defined
+            return serializer.data
+        except Person.DoesNotExist:
+            # Handle the case where the player is not found
+            return None
+
+    def match_players(self):
+        if len(self.player_pool) < 2:
+            return # Not enough players to match
+        start_time = time.time()
+        while time.time() - start_time < 180: # Try matching for 3 minutes
+            players = [self.get_player_info(player_id) for player_id in self.player_pool]  # Use self.get_player_info
+            sorted_players = sorted(players, key=lambda x: (x['wins'] - x['loses']) / x['matches'] if x['matches'] > 0 else 0, reverse=True)
+            # Pair players with similar points
+            while len(sorted_players) >= 2:
+                player_1 = sorted_players.pop(0)
+                player_2 = sorted_players.pop(0)
+                self.start_match(player_1['id'], player_2['id']) # Redirect to game application
+                self.remove_player_from_pool(player_1['id'])
+                self.remove_player_from_pool(player_2['id'])
+                return
+            time.sleep(10)
+        self.match_players_by_points()
+
+    def match_players_by_points(self):
+        if len(self.player_pool) < 2:
+            return  # Not enough players to match
+        players = [self.get_player_info(player_id) for player_id in self.player_pool]  # Use self.get_player_info
+        sorted_players = sorted(players, key=lambda x: x['points'])
+        # Pair players with similar points
+        while len(sorted_players) >= 2:
+            player_1 = sorted_players.pop(0)
+            player_2 = sorted_players.pop(0)
+            self.start_match(player_1['id'], player_2['id'])  # Redirect to game application
+            self.remove_player_from_pool(player_1['id'])
+            self.remove_player_from_pool(player_2['id'])
+
+    def start_match(self, player1_id, player2_id):
+        print("✅", player1_id, player2_id)
+        pass # Redirect to game application
+
+#TODO: Tournament
 
 class History(APIView):
 

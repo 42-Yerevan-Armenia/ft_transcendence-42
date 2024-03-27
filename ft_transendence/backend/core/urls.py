@@ -17,6 +17,7 @@ from core.views import (
     History,
     FullHistory,
     Lederboard,
+    PlayRandom,
     CreateRoom,
     GameRoom,
     GameResult,
@@ -44,4 +45,5 @@ urlpatterns = [
     path('gameresult/', GameResult.as_view()),
     path('api/v1/createroom/<int:pk>/', CreateRoom.as_view()),
     path('api/v1/gameroom/<int:pk>/', GameRoom.as_view()),
+    path('api/v1/playrandom/<int:pk>/', PlayRandom.as_view()),
 ]
