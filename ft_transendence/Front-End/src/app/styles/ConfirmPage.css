@@ -1,4 +1,4 @@
-.PasswordPage{
+.ConfirmPage{
     width: auto;
     height: 700px;
     border-radius: 20px;
@@ -7,11 +7,11 @@
 }
 
 
-.PasswordPageConteiner {
+.ConfirmPageConteiner {
     width: 1000px;
     height: 600px;
     background-color: #302C4A;
-    background-image: url("../../public/Bodygradien.png");
+    background-image: url("../../../public/Bodygradien.png");
     background-repeat: no-repeat;
     background-size: cover;
     margin-left: auto;
@@ -19,7 +19,7 @@
     border-radius: 2px;
 }
 
-.PasswordPagePosition{
+.ConfirmPagePosition{
     display: flex;
     flex-direction: column;
     background-color: rgba(54, 47, 82, 0.3);
@@ -33,7 +33,7 @@
     border-radius: 20px;
 }
 
-.PasswordPageText{
+.ConfirmPageText{
     display: flex;
     flex-direction: column;
     width: 300px;
@@ -45,29 +45,28 @@
     color: rgba(190, 156, 190, 0.8);
 }
 
-.PasswordPageH2{
+.ConfirmPageH2{
     color: white;
     margin-bottom:0;
     margin-top: 0;
 }
 
 
-
-.PasswordPageinput{
+.ConfirmPagepassword{
     background-color: black;
     border-radius: 5px;
     color: rgba(190, 156, 190, 1);
     border: 8px solid black;
-    width: 100%;
+    width: 10px;
 }
 
 
-.PasswordPageinput::placeholder {
+.ConfirmPagepassword::placeholder {
     color: rgba(190, 156, 190, 1);
 }
 
 
-.PasswordPageContinue{
+.ConfirmPageContinue{
     background-color: rgba(0, 167, 255, 0.8);
     border-radius: 5px;
     padding: 4px;
@@ -76,68 +75,60 @@
     margin-top: 10px;
 }
 
-.PasswordPageContinueWith42{
-    background-color:rgba(255, 255, 255, 1);
-    border-radius: 5px;
-    padding: 4px;
-    color: rgba(101, 94, 105, 1);
-    font-weight: bold;
-}
 
-.PasswordPageP{
+
+.ConfirmPageP{
     color: rgba(215, 187, 206, 1);
     margin-bottom: 10px;
 }
-.PasswordPageOR{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
 
-.Passwordline{
-    background-color: rgba(190, 156, 190, 0.8);
-    width: 120px;
-    height: 1px;
+
+.ConfirmPageCode{
+    display: flex;
+    justify-content: space-evenly;
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 @media only screen and (max-width: 1060px){
-    .PasswordPageConteiner{
+    .ConfirmPageConteiner{
        width: 800px;
     }
 
 }
 
 @media only screen and (max-width: 834px){
-    .PasswordPageConteiner{
+    .ConfirmPageConteiner{
        width: 600px;
     }
 
 }
 
 @media only screen and (max-width: 634px){
-    .PasswordPageConteiner{
+    .ConfirmPageConteiner{
         width: 400px;
      }
-    .PasswordPagePosition{
+    .ConfirmPagePosition{
         width: 323px;
     }
-    .PasswordPageH2{
+    .ConfirmPageH2{
         font-size: clamp(2px 14vw 20px);
     }
 }
 
 @media only screen and (max-width: 430px){
-    .PasswordPage{
+    .ConfirmPage{
         width: 270px;
     }
-    .PasswordPageConteiner{
-        width: 80%;
+    .ConfirmPageConteiner{
+        width: 90%;
     }
-    .PasswordPagePosition{
-        width: 80%;
+    .ConfirmPagePosition{
+        width: 90%;
     }
-    .PasswordPageText{
-        width: 80%;
+    .ConfirmPageText{
+        width: 90%;
         font-size: 10px;
     }
 }

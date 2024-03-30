@@ -1,5 +1,5 @@
 function ValidateEmail(input) {
-
+  debugger
   console.log("1input =[" + input  + "]");
   if (!input)
   {
@@ -17,6 +17,7 @@ function ValidateEmail(input) {
 }
 
 function checkName(str) {
+  debugger
   // Regular expression to match strings with only characters
   // and starting with an uppercase letter
   const regex = /^[A-Z][a-z]*$/;
@@ -25,7 +26,10 @@ function checkName(str) {
   return regex.test(str);
 }
 
+
+//check if the password is correct
 function PasswordisCorrect(obj, error){
+  debugger
   if (obj.value.length < 8 || obj.value.length > 16)
   {
     error.innerHTML = "password must be 8 to 16 character";
@@ -48,6 +52,7 @@ function PasswordisCorrect(obj, error){
 
 
 function HashCodeGeneration(){
+  debugger
   let hashCode = Array.from({length:10}, (i) =>Math.floor(Math.random() * 10)) + "";
   const sliceDelete = /,/g;
   const str = hashCode.replace(sliceDelete, '');
@@ -55,48 +60,9 @@ function HashCodeGeneration(){
 }
 
 
-//-------------------------------------------------       browser storage     ----------------------------------------
-
-//manag browser storage
-const myStorages = {
-  setStorage(tockens) {
-    const {refresh, success, access} = tockens;
-
-    if (!success || !access || !refresh)
-      return false;
-
-    console.log("setStorage  : true")
-    localStorage.setItem("access", access + "")
-    localStorage.setItem("refresh", refresh + "")
-    return true;
-  },
-  setStorageLogin(tockens) {
-    const {refresh, success, access} = tockens;
-
-
-    if (!success || !access || !refresh || !tockens.user)
-      return false;
-  
-    User._name = tockens.user.name;
-    User._nickname = tockens.user.nickname;
-    User._ID = tockens.user.id;
-    User._Email = tockens.user.email;
-
-    localStorage.setItem("access", access + "")
-    localStorage.setItem("refresh", refresh + "")
-    return true;
-  },
-  longOut() {
-    localStorage.removeItem("access");
-    localStorage.removeItem("refresh");
-    User.Destruc();
-    ManageAllPage.Manage("Home");
-    console.log("Home._HomeLeft._LongOut.addEventListener");
-  },
-  longOutGoLogin() {
-    localStorage.removeItem("access");
-    localStorage.removeItem("refresh");
-    User.Destruc();
+function scrollToLastTag() {
+  var container = document.getElementById('containerScroll');
+  if (container) {
+    container.scrollTop = container.scrollHeight;
   }
 }
-

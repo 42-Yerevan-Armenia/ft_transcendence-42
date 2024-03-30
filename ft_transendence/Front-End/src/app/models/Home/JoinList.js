@@ -1,9 +1,9 @@
-class MidleCub extends HtmlElement {
+class JoinList extends HtmlElement {
     constructor(){
-      super(".MidleCub")
+      super(".JoinList")
       this._style.display = "none";
     }
-    func(){
+    Drow(){
     }
   
   }

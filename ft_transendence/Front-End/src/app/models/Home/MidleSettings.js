@@ -4,7 +4,7 @@ class MiddleSettings extends HtmlElement {
       super(".MidleSettings")
       this._style.display = "none";
     }
-    func(){
+    Drow(){
     }
   
   }

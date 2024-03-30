@@ -4,9 +4,9 @@ class MiddleSECTION extends HtmlElement {
       super(".MIDLESECTION")
       this._style.display = "flex";
     }
-    func(){
-      document.querySelector("#homeNavigation").style.display  = "block";
-      document.querySelector(".User").style.display  = "flex";
+    Drow()
+    {
+
     }
   }
   

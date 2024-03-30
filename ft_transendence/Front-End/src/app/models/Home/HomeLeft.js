@@ -1,4 +1,4 @@
-//Home Page left section User
+//Home Page left botton section User
 class HomeLeft extends HtmlElement {
     constructor(){
       super(".User")
@@ -7,11 +7,21 @@ class HomeLeft extends HtmlElement {
     }
     _LongOut  = document.querySelector(".IconExit");
     _Name = document.querySelector("#UserH5");
-    _NickName = document.querySelector("#UserH6");
+    _Nickname = document.querySelector("#UserH6");
     _Image = document.querySelector("#UserImage");
+    _ExploreMessag = document.querySelector(".Explore")
+
+    
     Drow() {
+      debugger
+      console.warn("++++++++++++++++++1")
+      if (User.checkSignIn())
+      {
+        console.warn("++++++++++++++++++2")
         this._Name.innerHTML = User._Name;
-        this._NickName.innerHTML = User._NickName;
-        this._Image.src = "../../../../public/User.png";
+        this._Nickname.innerHTML = User._Nickname;
+        // Get the Base64-encoded string
+        this._Image.src = `data:image/png;base64,${User._Image}`;
+      }
     }
 }
