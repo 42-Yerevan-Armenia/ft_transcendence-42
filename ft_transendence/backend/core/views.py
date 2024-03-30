@@ -19,7 +19,8 @@ from .serializers import (
     WaitingRoomSerializer,
     HistorySerializer,
     FullHistorySerializer,
-    GameRoomSerializer
+    GameRoomSerializer,
+    MatchSerializer
 )
 from .validations import (
     email_validation,
@@ -42,6 +43,7 @@ from django.forms.models import model_to_dict
 from django.http import JsonResponse
 from django.utils import timezone
 import json
+import time
 import base64
 import os
 
@@ -322,66 +324,6 @@ class Lederboard(APIView):
         return JsonResponse({"success": "true", "profile": serializer.data}, safe=False)
         # return Response(serializer.data)
 
-class GameResult(APIView):
-
-    def post(self, request):
-        try:
-            # Assuming you receive the user ids and game result (win or lose) in the request data
-            user1_id = request.data.get('user1_id')
-            user2_id = request.data.get('user2_id')
-            result_user1 = request.data.get('result_user1')  # Assuming 1 for win, 0 for lose
-            result_user2 = request.data.get('result_user2')
-            # Retrieve user objects
-            user1 = Person.objects.get(id=user1_id)
-            user2 = Person.objects.get(id=user2_id)
-            # Update game results
-            if result_user1 == 1:
-                user1.wins += 1
-                score1 = 100
-            else:
-                user1.loses += 1
-                score1 = 50
-            if result_user2 == 1:
-                user2.wins += 1
-                score2 = 100
-            else:
-                user2.loses += 1
-                score2 = 50
-            # Update match count
-            user1.matches += 1
-            user2.matches += 1
-            # Set percentage bonus
-            win_bonus = 0.5
-            lose_bonus = 0.25
-            match_bonus = 0.1
-            # Calculate points
-            points_user1 = ( score1 +
-                user1.wins * win_bonus +
-                user1.loses * lose_bonus +
-                user1.matches * match_bonus
-            )
-            points_user2 = ( score2 +
-                user2.wins * win_bonus +
-                user2.loses * lose_bonus +
-                user2.matches * match_bonus
-            )
-            # Update points
-            user1.points += points_user1
-            user2.points += points_user2
-            # Save changes to the database
-            user1.save()
-            user2.save()
-            # Optional: Return updated leaderboard data for both users
-            serializer_user1 = LederboardSerializer(user1)
-            serializer_user2 = LederboardSerializer(user2)
-            return Response({
-                "success": "true",
-                "user1_profile": serializer_user1.data,
-                "user2_profile": serializer_user2.data
-            }, status=status.HTTP_200_OK)
-        except Person.DoesNotExist:
-            return Response({"success": "false", "error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
-
 class Home(APIView):
 
     def get(self, request, pk):
@@ -439,7 +381,6 @@ class JoinList(APIView):
                 game_room = creator.game_room
             except Person.DoesNotExist:
                 return JsonResponse({"success": "false", "error": "Creator not found"}, status=status.HTTP_404_NOT_FOUND)
-
             if not game_room or game_room.id != game_room_id:
                 return JsonResponse({"success": "false", "error": "Game room not found"}, status=status.HTTP_404_NOT_FOUND)
             if creator.ongoing:
