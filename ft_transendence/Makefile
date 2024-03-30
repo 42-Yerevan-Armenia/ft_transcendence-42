@@ -1,14 +1,14 @@
 all: up
 
 build:
-	docker compose build
+	docker-compose build
 
 up:
-	docker compose up -d
-	docker compose logs -f
+	docker-compose up -d
+	docker-compose logs -f
 
 down:
-	docker compose down
+	docker-compose down
 
 dbshell:
 	docker-compose run --rm backend sh -c "python manage.py dbshell"
@@ -26,10 +26,10 @@ admin:
 # 	docker-compose run --rm backend sh -c "python manage.py startapp appname"
 
 start:
-	docker compose start
+	docker-compose start
 
 stop:
-	docker compose stop
+	docker-compose stop
 
 prune: down
 	rm -rf database/data

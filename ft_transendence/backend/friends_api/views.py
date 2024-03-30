@@ -21,7 +21,6 @@ class SendFriendRequest(APIView):
             # Check if the sender is banned
             if Block.objects.is_blocked(sender, receiver) == True:
                 return Response({"success": "false", "error": "You are banned by this user"}, status=status.HTTP_400_BAD_REQUEST)
-            
             # Check if the receiver is friends with the sender
             if Friend.objects.are_friends(sender, receiver):
                 return Response({"success": "false", "error": "You are already friends with this user"}, status=status.HTTP_400_BAD_REQUEST)
