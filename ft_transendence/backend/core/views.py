@@ -48,7 +48,7 @@ import base64
 import os
 import random
 
-#TODO: delet by token
+#TODO: activate all Tokens
 
 class UserAPIView(APIView):
     def get(self, request):
