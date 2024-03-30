@@ -20,6 +20,7 @@ from core.views import (
     PlayRandom,
     CreateRoom,
     GameRoom,
+    PlayTournament,
     GameResult,
     SettingsById
 )
@@ -45,5 +46,6 @@ urlpatterns = [
     path('gameresult/', GameResult.as_view()),
     path('api/v1/createroom/<int:pk>/', CreateRoom.as_view()),
     path('api/v1/gameroom/<int:pk>/', GameRoom.as_view()),
-    path('api/v1/playrandom/<int:pk>/', PlayRandom.as_view()),
+    path('api/v1/random/<int:pk>/', PlayRandom.as_view()),
+    path('tournament/', PlayTournament.as_view()),
 ]

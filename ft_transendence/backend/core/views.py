@@ -46,6 +46,7 @@ import json
 import time
 import base64
 import os
+import random
 
 #TODO: delet by token
 
@@ -441,7 +442,6 @@ class JoinList(APIView):
                 game_room = creator.game_room
             except Person.DoesNotExist:
                 return JsonResponse({"success": "false", "error": "Creator not found"}, status=status.HTTP_404_NOT_FOUND)
-
             if not game_room or game_room.id != game_room_id:
                 return JsonResponse({"success": "false", "error": "Game room not found"}, status=status.HTTP_404_NOT_FOUND)
             if creator.ongoing:
@@ -592,9 +592,101 @@ class MatchmakingSystem():
 
     def start_match(self, player1_id, player2_id):
         print("✅", player1_id, player2_id)
-        pass # Redirect to game application
+        return player1_id
 
-#TODO: Tournament
+#FIXME: Tournament
+
+class PlayTournament(APIView):
+    def post(self, request):
+        creator_id = request.data.get('creator_id')
+        game_room_id = request.data.get('game_room_id')
+        creator = Person.objects.get(id=creator_id)
+        game_room = creator.game_room
+        tns = TournamentSystem(game_room.players.all())
+        tns.run_tournament()
+        # winner = tns.winners[0]
+        # return JsonResponse({"success": "true", "winner": winner}, status=status.HTTP_200_OK)
+        return JsonResponse({"success": "true"}, status=status.HTTP_200_OK)
+       
+class TournamentSystem:
+    def __init__(self, players):
+        self.players = players
+        self.groups = []
+        self.winners = []
+    
+    def run_tournament(self):
+        self.create_groups() # Divide players into initial groups
+        all_round_winners = []
+        for group in self.groups:
+            round_winners = self.run_rounds(group)  # Run initial matches for each group
+            all_round_winners.extend(round_winners)  # Collect round winners from each group
+        self.round_winners(all_round_winners) # Add winners for next rounds
+        while len(self.winners) > 1:
+            self.next_round()
+            for group in self.groups:
+                round_winners = self.run_matches(group) # Run matches for each new group
+                print("❌", round_winners)
+            self.get_winners()
+        winner = self.winners[0]
+        print(f"Tournament winner is: {winner}")
+
+    def create_groups(self): # Finished
+        player_ids = list(self.players.values_list('id', flat=True))  # Extract player IDs from queryset
+        random.shuffle(player_ids)  # Shuffle the list of player IDs
+        num_players = len(player_ids)
+        num_groups = num_players // 2
+        # Divide shuffled player IDs into groups of two
+        self.groups = [player_ids[i:i+2] for i in range(0, num_players, 2)]
+        print("START", self.groups)
+
+    def run_rounds(self, group): # Finished
+        round_winners = []
+        for i in range(0, len(group), 2):
+            player_1 = group[i]
+            player_2 = group[i+1]
+            round_winner = self.run_match(player_1, player_2)
+            round_winners.append(round_winner)
+            print("Winners", round_winners)
+        return round_winners
+
+    def round_winners(self, round_winners): 
+        self.winners.extend(round_winners)
+
+    def next_round(self):
+        self.groups.clear() # Clear the existing groups
+        num_winners = len(self.winners)
+        # If there's an odd number of winners, add the last one to the next round without pairing
+        if num_winners % 2 == 1:
+            self.groups.append([self.winners[-1]])
+            num_winners -= 1
+        # Pair up the winners for the next round
+        for i in range(0, num_winners, 2):
+            group = self.winners[i:i+2]
+            self.groups.append(group)
+
+    def run_match(self, player_1, player_2): # Finished
+        mms = MatchmakingSystem()
+        win = mms.start_match(player_1, player_2)
+        return win
+
+    def run_matches(self, group):
+        mms = MatchmakingSystem()
+        round_winners = []
+        for i in range(0, len(group), 2):
+            player_1 = group[i]
+            player_2 = group[i+1]
+            win = mms.start_match(player_1, player_2)
+            round_winners.append(win)
+        return round_winners
+
+    def get_winners(self):
+        # Assuming each match returns a winner randomly for demonstration purposes
+        round_winners = []
+        for group in self.groups:
+            round_winner = random.choice(group)
+            round_winners.append(round_winner)
+            print("❎", group)
+        self.winners = round_winners
 
 class History(APIView):
 
