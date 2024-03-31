@@ -26,13 +26,29 @@ const urlRoutes = {
 		description: "Page not found",
 	},
 	"/signin": {
+		url: "/signin/signin",
+		class:".LoginPage",
+		path: "/signin/signin.html",
+		title: "Login",
+		description: "This is the SignIn page",
+	},
+	"/signin/": {
+		url: "/signin/signin/",
 		class:".LoginPage",
 		path: "/signin/signin.html",
 		title: "Login",
 		description: "This is the SignIn page",
 	},
 	"/signup": {
-		class:".ResetPage",
+		url: "/signup/signup",
+		class:".RegisterPage",
+		path: "/signup/signup.html",
+		title: "Register",
+		description: "This is the SignIn page",
+	},
+	"/signup/": {
+		url: "/signup/signup",
+		class:".RegisterPage",
 		path: "/signup/signup.html",
 		title: "Register",
 		description: "This is the SignIn page",
@@ -130,11 +146,10 @@ function changStack(n, index){
 	navigationHistory[index] = currentTop;
 }
 
-
 //function  back()  and   forward()
 const urlLocationHandlerForNavigateBackForward = async () => {
 	debugger
-	const Url = window.location.pathname; // get the url path
+	const Url =  window.location.pathname; // get the url path
 		
 	if (typeof(Url) !== "string")
 	{
@@ -149,20 +164,23 @@ const urlLocationHandlerForNavigateBackForward = async () => {
 	if (item < 2 || (navigationHistory[item - 1].title == route.title))
 		return;
 	let index = isInNavigationStack(window.location.pathname);
-	if ((item - 1 - index) == 1)
+	if (navigationHistory[item - 1].page > navigationHistory[index].page)
 	{
-		changStack(item, index)
 		history.back();
+		changStack(item, index)
+		// window.location.pathname = route.url;
 	}
 	else
 	{
-		changStack(item, index);
 		history.forward();
+		changStack(item, index);
+		// window.location.pathname = route.url;
 	}
 	// set the content of the content div to the html
 	ManageAllPage.Manage(route.title)
 	if (route.title !== "404" && route.title !== "Home")
 	{
+		
 		const html = await fetch(route.path).then((response) => response.text());
 		document.querySelector(route.class).innerHTML = html;
 	}
@@ -170,7 +188,7 @@ const urlLocationHandlerForNavigateBackForward = async () => {
 	{
 		
 	}
-
+	
 	// set the title of the document to the title of the route
 	document.title = route.title;
 
@@ -181,11 +199,11 @@ const urlLocationHandlerForNavigateBackForward = async () => {
 };
 
 // // add an event listener to the window that watches for url changes
-window.addEventListener("popstate", function(event) {
+window.addEventListener("popstate", async function(event) {
 	debugger
     console.log("History state changed:", event.state);
 
-	urlLocationHandlerForNavigateBackForward();
+	await urlLocationHandlerForNavigateBackForward();
 });
 
 

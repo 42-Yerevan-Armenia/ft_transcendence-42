@@ -10,19 +10,19 @@ Home._NAV._SETTINGS._classname.addEventListener("click",()=>{
 
 
 // 1
-Home._NAV._LEADERBOARD._classname.addEventListener("click",()=>{
+Home._NAV?._LEADERBOARD?._classname?.addEventListener("click",()=>{
   //debugger
   ManageMidle.Manage("MidleCub");
 } )
 
 //4
-Home._NAV._JoinListGame._classname.addEventListener("click",()=>{
+Home._NAV?._JoinListGame?._classname?.addEventListener("click",()=>{
   //debugger
   ManageMidle.Manage("JoinList");
 } )
 
 //3
-Home._NAV._Home._classname.addEventListener("click",()=>{
+Home._NAV?._Home?._classname?.addEventListener("click",()=>{
   //debugger
   ManageMidle.Manage("midle");
 } );
@@ -30,28 +30,28 @@ Home._NAV._Home._classname.addEventListener("click",()=>{
 
 
 //sign in
-Home._NavSigninSignout._NavSignin.addEventListener("click", ()=> {
+Home._NavSigninSignout?._NavSignin?.addEventListener("click", ()=> {
   Home.ButtonSignIn();
   Login.DisplayBlock();
 })
-Home._NavSigninSignout._NavSignin1.addEventListener("click", ()=> {
+Home._NavSigninSignout?._NavSignin1?.addEventListener("click", ()=> {
   Home.ButtonSignIn();
   Login.DisplayBlock();
 })
 
 //sign up
-Home._NavSigninSignout._NavSignUp.addEventListener("click", ()=> {
+Home._NavSigninSignout?._NavSignUp.addEventListener("click", ()=> {
   Home.ButtonSignUp();
   Register.DisplayBlock();
 })
-Home._NavSigninSignout._NavSignUp1.addEventListener("click", ()=> {
+Home._NavSigninSignout?._NavSignUp1.addEventListener("click", ()=> {
   Home.ButtonSignUp();
   Register.DisplayBlock();
 })
 
 
 //RegisterPage click confirm email
-Register._RegisterPageContinue.addEventListener("click",  async () => {
+Register?._RegisterPageContinue?.addEventListener("click",  async () => {
 //debugger
     let value = await Register.RegistersWithEmail();
     if (value)
@@ -63,7 +63,7 @@ Register._RegisterPageContinue.addEventListener("click",  async () => {
 
 
 
-Home._HomeLeft._ExploreMessag.addEventListener("click",  ()=>{
+Home._HomeLeft?._ExploreMessag?.addEventListener("click",  ()=>{
   if (!User.checkSignIn())
     return;
 
