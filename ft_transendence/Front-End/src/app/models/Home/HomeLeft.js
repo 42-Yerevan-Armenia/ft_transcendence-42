@@ -13,7 +13,7 @@ class HomeLeft extends HtmlElement {
 
     
     Drow() {
-      debugger
+      // debugger
       console.warn("++++++++++++++++++1")
       if (User.checkSignIn())
       {

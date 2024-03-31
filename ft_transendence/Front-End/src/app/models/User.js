@@ -44,7 +44,7 @@ class USER {
     }
 
     async setDataFromBackEnd(){
-      debugger
+      // debugger
       // check signin
       if (!await this.menegAccsess())
         return false
