@@ -1,5 +1,5 @@
 class PasswordPage extends HtmlElement {
-   debugger
+   //debugger
     constructor(){
       super(".PasswordPage")
       this._style.display = "none";
@@ -19,7 +19,7 @@ class PasswordPage extends HtmlElement {
       document.querySelector(".LoginPasswordError").innerHTML = "ERROR login or password is not correct"
     }
     PasswordConfirmButton(){
-      debugger
+      //debugger
       User._Password = "";
       const NewPasswordError = document.querySelector(".NewPasswordError");
       const RepeatPasswordError = document.querySelector(".RepeatPasswordError")
@@ -53,14 +53,14 @@ class PasswordPage extends HtmlElement {
     }
   
     async PasswordConfirmWithServer() {
-       debugger
+       //debugger
       let Hash_code = HashCodeGeneration();
-      debugger
+      //debugger
       return await ControllerPessPassword(Hash_code + "" + User._Password + "" + Hash_code, User);
     }
 
     Drow(){
-      
+      this.errorSetNull();
     }
   }
   

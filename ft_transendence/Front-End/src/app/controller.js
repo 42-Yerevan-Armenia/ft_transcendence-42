@@ -14,7 +14,7 @@ const HostPort="http://10.12.11.2:8000"
 //queshon too backend Email exist or not and 
 //if create 
 async function ControllerCheckEmail(email) {
-  debugger
+  // debugger
   try {
     // const response = await fetch(`${HostPort}/registerpage?email=${email}`,{
     const response = await fetch(`${HostPort}/email_validation/`,{
@@ -35,9 +35,6 @@ async function ControllerCheckEmail(email) {
       throw new Error("Invalid response data");
     }
     console.log( "Succsse++++++++++++++++++++    222222")
-    console.log( "method : " + "POST");
-    console.log( "request : " + "email_validation");
-    console.log(result);
     return {state:true, message: result.message};
   }
   catch(err) {
@@ -56,8 +53,7 @@ async function ControllerCheckEmail(email) {
 // });
 
 async function ControllerCheckReplayCode(code) {
-  debugger
-  console.log("code" + code);
+  // debugger
   try {
       const response = await fetch(`${HostPort}/confirm/`, {
           method: 'POST',
@@ -76,23 +72,19 @@ async function ControllerCheckReplayCode(code) {
       }
 
       console.log( "Succsse++++++++++++++++++++    222222")
-      console.log( "method : " + "POST");
-      console.log( "request : " + "confirm");
-      console.log(data);
+
       return{state:true, "message": data };
   }
   catch (err) {
     
     const error = err + "";
     
-    console.log("error   === [" + error + "]")
-    
     return {state:false, "message": error};
   }
 }
 
 async function ControllerSignUp(password, User) {
-  debugger
+  // debugger
   console.log("ControllerSignUp");
   try {
     const response = await fetch(`${HostPort}/register/`, {
@@ -113,9 +105,6 @@ async function ControllerSignUp(password, User) {
       throw new Error("Invalid response data");
     }
     console.log( "Succsse++++++++++++++++++++    222222")
-    console.log( "method : " + "POST");
-    console.log( "request : " + "register");
-    console.log(data);
     return { state: true, message: data };
   } catch (error) {
     console.error("Error:", error);
@@ -124,9 +113,8 @@ async function ControllerSignUp(password, User) {
 }
 
 async function ControllerPessPassword(password, User) {
-  debugger
-  console.log("----------password = [" + password +"] email ["+ User._Email + "]");
-  console.log(User)
+  // debugger
+
 
   try {
     const response = await fetch(`${HostPort}/password/`, {
@@ -147,9 +135,6 @@ async function ControllerPessPassword(password, User) {
       throw new Error("Invalid response data");
     }
     console.log( "Succsse++++++++++++++++++++    11111")
-    console.log( "method : " + "POST");
-    console.log( "request : " + "password");
-    console.log(data);
 
     return { state: true, message: data };
   } catch (error) {
@@ -161,7 +146,7 @@ async function ControllerPessPassword(password, User) {
 
 //fetch universal POST request
 async function FetchRequest(Tomethod, Torequest, ToObj) {
-  debugger
+  // debugger
   console.log("1----------------------------------------")
   console.log( "method : " + Tomethod);
   console.log( "request : " + Torequest);
@@ -185,10 +170,7 @@ async function FetchRequest(Tomethod, Torequest, ToObj) {
     if (!data || typeof data !== 'object') {
       throw new Error("Invalid response data");
     }
-    console.log( "method : " + Tomethod);
-    console.log( "request : " + Torequest);
     console.log("ControllerPessPassword  Succsse++++++++++++++++++++");
-    console.log(data);
     return { state: true, message: data };
   } catch (error) {
     console.error("Error:", error);
@@ -200,17 +182,14 @@ async function FetchRequest(Tomethod, Torequest, ToObj) {
 
 //fetch universal  GET request
 async function getFetchRequest(ToRequest) {
-  debugger
-  console.log("1----------------------GET------------------")
+  // debugger
 
-  console.log( "request : " + ToRequest);
 
   //get access tocken and id
   const ToObj = User.getAccessTocken();
 
   if (!ToObj || ToObj.access)
     return null;
-  console.log("2---------------------GET-------------------")
   try {
     const response = await fetch(`${HostPort}/${ToRequest}/`, {
       method: "GET",
@@ -230,7 +209,7 @@ async function getFetchRequest(ToRequest) {
       throw new Error("Invalid response data");
     }
     console.log("ControllerPessPassword  Succsse++++++++++++++++++++");
-    console.log(data);
+
     return { state: true, message: data };
   } catch (error) {
     console.error("Error:", error);

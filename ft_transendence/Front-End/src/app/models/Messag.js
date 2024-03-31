@@ -87,12 +87,10 @@ function ElementData(name) {
     this._style = this._classname ? this._classname.style : null;
 }
 ElementData.prototype.Classname = function(){
-    console.log(" this._classname   ======= " + this._classname)
     return this._classname;
 }
 
 ElementData.prototype.Style = function(){
-    console.log(" this._style    =======    " + this._style)
     return this._style;
 }
 
@@ -179,7 +177,7 @@ ElementData.prototype.createBlock = function(Group, nameElement) {
 */}
 
 ElementData.prototype.MessagPrivateSubjectMessagPerson = function(Person) {
-    debugger
+    //debugger
     const node = document.createElement("div")
     node.setAttribute("class", "MessagPrivateSubjectMessagPerson");
       const PersonDiv = document.createElement("div")
@@ -214,7 +212,7 @@ ElementData.prototype.MessagPrivateSubjectMessagPerson = function(Person) {
 */}
 
 ElementData.prototype.MessagPrivateSubjectMessagSender = function(Person) {
-    debugger
+    //debugger
     const node = document.createElement("div");
     node.setAttribute("class", "MessagPrivateSubjectMessagSender");
     const nodeDiv = document.createElement("div")
@@ -254,7 +252,6 @@ var MessagePage = function(name) {
         Groups.message.forEach(element => {
              this.createBlock(element, "Grup")
             });
-        console.log("Groups " + this.name);
     };
 
 
@@ -270,13 +267,11 @@ var MessagePage = function(name) {
         Persons.message.forEach(element => {
          this.createBlock(element, "Personal")
         });
-        console.log("PersonalAnnons " + this.name);
     };
 
     // for chat private
     this.chat = (chatPersonal) => {
-        debugger
-        console.log("chat " + this.name);
+        //debugger
 
         chatPersonal.forEach((Person)=>{
             if(Person.id == User._Id)
@@ -288,7 +283,7 @@ var MessagePage = function(name) {
 
 
     this.Drow = async () => {
-        debugger
+        //debugger
         if (!await User.menegAccsess())
             return null;
         

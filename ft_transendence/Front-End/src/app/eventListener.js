@@ -3,56 +3,56 @@
 
 //2
 Home._NAV._SETTINGS._classname.addEventListener("click",()=>{
-  debugger
+  //debugger
   ManageMidle.Manage("MidleSettings")
 })
 
 
 
 // 1
-Home._NAV._LEADERBOARD._classname.addEventListener("click",()=>{
-  debugger
+Home._NAV?._LEADERBOARD?._classname?.addEventListener("click",()=>{
+  //debugger
   ManageMidle.Manage("MidleCub");
 } )
 
 //4
-Home._NAV._JoinListGame._classname.addEventListener("click",()=>{
-  debugger
+Home._NAV?._JoinListGame?._classname?.addEventListener("click",()=>{
+  //debugger
   ManageMidle.Manage("JoinList");
 } )
 
 //3
-Home._NAV._Home._classname.addEventListener("click",()=>{
-  debugger
+Home._NAV?._Home?._classname?.addEventListener("click",()=>{
+  //debugger
   ManageMidle.Manage("midle");
 } );
 
 
 
 //sign in
-Home._NavSigninSignout._NavSignin.addEventListener("click", ()=> {
+Home._NavSigninSignout?._NavSignin?.addEventListener("click", ()=> {
   Home.ButtonSignIn();
   Login.DisplayBlock();
 })
-Home._NavSigninSignout._NavSignin1.addEventListener("click", ()=> {
+Home._NavSigninSignout?._NavSignin1?.addEventListener("click", ()=> {
   Home.ButtonSignIn();
   Login.DisplayBlock();
 })
 
 //sign up
-Home._NavSigninSignout._NavSignUp.addEventListener("click", ()=> {
+Home._NavSigninSignout?._NavSignUp.addEventListener("click", ()=> {
   Home.ButtonSignUp();
   Register.DisplayBlock();
 })
-Home._NavSigninSignout._NavSignUp1.addEventListener("click", ()=> {
+Home._NavSigninSignout?._NavSignUp1.addEventListener("click", ()=> {
   Home.ButtonSignUp();
   Register.DisplayBlock();
 })
 
 
 //RegisterPage click confirm email
-Register._RegisterPageContinue.addEventListener("click",  async () => {
-debugger
+Register?._RegisterPageContinue?.addEventListener("click",  async () => {
+//debugger
     let value = await Register.RegistersWithEmail();
     if (value)
     {
@@ -63,7 +63,7 @@ debugger
 
 
 
-Home._HomeLeft._ExploreMessag.addEventListener("click",  ()=>{
+Home._HomeLeft?._ExploreMessag?.addEventListener("click",  ()=>{
   if (!User.checkSignIn())
     return;
 
@@ -91,8 +91,8 @@ Home._HomeLeft._LongOut.addEventListener("click", () => {
 //---------------------------------------------------------------------   Login
 
 //when want to login you press button login
-Login._LoginPageContinue.addEventListener("click", async () => {
-  debugger
+Login?._LoginPageContinue?.addEventListener("click", async () => {
+  //debugger
   //check is correct email and password
   if (Login.ButtonSignIn())
   {
@@ -124,12 +124,11 @@ Login._LoginPageContinue.addEventListener("click", async () => {
   }
 })
 
-//when forgot password
-Login._LoginPageForgot.addEventListener("click", () => {
-  debugger
+// when forgot password
+Login?._LoginPageForgot?.addEventListener("click", () => {
+  //debugger
   ManageAllPage.Manage("ResetPage");
   ManageMidle.Manage("");
-  console.log("Clicked!");
 })
 
 
@@ -138,8 +137,8 @@ Login._LoginPageForgot.addEventListener("click", () => {
 let isReset = false;
 
 
-Reset._ConfirmReset.addEventListener('click', async () => {
-  debugger
+Reset?._ConfirmReset?.addEventListener('click', async () => {
+  //debugger
   const isValid = Reset.checkValidEmail();
   if (!isValid)
     return ;
@@ -157,7 +156,7 @@ Reset._ConfirmReset.addEventListener('click', async () => {
 //-------------------------------------------------------------------  Confirm  ---------
 
 Confirm.ConfirmYourEmail.addEventListener('click', async () => {
-  debugger
+  //debugger
   const data = await Confirm.ConfirmPageContinue(isReset);
   Confirm.ValuesAllEmpty();
 
@@ -177,7 +176,6 @@ Confirm.ConfirmYourEmail.addEventListener('click', async () => {
 
   //when came this page Welcome to ft_transcendence
   if (!data) {
-    console.log(" data empty()  ");
     User._ConfirmEmail = false;
   }
   else if (data.state) {
@@ -197,7 +195,7 @@ Confirm.ConfirmYourEmail.addEventListener('click', async () => {
 //-------------------------------------------------------------------  Password
 
 Password.PasswordConfirm.addEventListener("click", async () => {
-  debugger
+  //debugger
   const isCorrectPassword = Password.PasswordConfirmButton();
   if (isCorrectPassword)
   {
@@ -216,7 +214,7 @@ Password.PasswordConfirm.addEventListener("click", async () => {
 //-------------------------------------------------------------------  SignUp
 
 SignUp.SignupPageContinue.addEventListener("click", async () => {
-  debugger
+  //debugger
   const isCorrectPassword = SignUp.PasswordConfirmButton();
   const ischeckNameNickname = SignUp.checkNameNickname();
   if (isCorrectPassword && ischeckNameNickname)
