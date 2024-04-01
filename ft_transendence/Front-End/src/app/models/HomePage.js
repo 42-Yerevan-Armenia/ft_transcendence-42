@@ -1,6 +1,6 @@
 // Home Page
 class HomePage extends HtmlElement {
-  debugger
+  // debugger
     constructor(){
       super(".homeSection");
       this._style.display = "block";

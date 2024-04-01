@@ -8,9 +8,12 @@ var Password = new PasswordPage();
 var SignUp = new SignupPage();
 
 
+
+
+
 var ManageAllPage = {
     Manage: function(pageName) {
-        debugger
+        //debugger
         ManageAllPage.pages.forEach((element) => {
             const [key, obj] = Object.entries(element)[0]; // Get the key-value pair of the element
 
@@ -38,11 +41,9 @@ var ManageAllPage = {
 //give name section name what we need show in middle Home->Midl section
 var ManageMidle = {
     Manage: function(midleName) {
-         debugger
-        console.log("midleName = [" + midleName + "]")
+         //debugger
         ManageMidle.pages.forEach((element) => {
             const [key, obj] = Object.entries(element)[0]; // Get the key-value pair of the element
-            console.log("key = [" + key  +  "obj " + obj + "]")
             if (key === midleName) {
                 obj.DisplayBlock();
                 obj.Drow();
@@ -64,7 +65,7 @@ var ManageMidle = {
 
 var ManageRight = {
     Manage: function(name) {
-        debugger
+        //debugger
         ManageRight.pages.forEach((element) => {
             const [key, obj] = Object.entries(element)[0]; // Get the key-value pair of the element
 

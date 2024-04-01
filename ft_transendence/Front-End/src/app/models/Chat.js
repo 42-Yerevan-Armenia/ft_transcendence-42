@@ -4,7 +4,7 @@
 const chatSocket = new WebSocket("ws://" + HostPort.slice(7) + "/");
 
 console.log("window.location.host  = " + window.location.host);
-console.log(window.location.host);
+
 console.log("["+ HostPort.slice(7) + "]");
 
 //Whene opened socket
@@ -36,8 +36,7 @@ chatSocket.onmessage = function (e) {
     const data = JSON.parse(e.data);
     var div = document.createElement("div");
 
-    console.log(data + "---------- " )
-    console.log(data);
+
     div.innerHTML = data.username + " : " + data.message;
 
 
@@ -45,5 +44,5 @@ chatSocket.onmessage = function (e) {
     document.querySelector("#id_message_send_input").value = "";
 
     document.querySelector("#containerScroll").appendChild(div);
-    scrollToLastTag();
+    scrollToLastTag();                                                  //for show new messag
 };
