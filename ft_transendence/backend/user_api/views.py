@@ -33,21 +33,15 @@ class Login42(APIView):
             if (user_info == None or user_info == {}):
                 return Response({"success": "false", "error": "invalid login"}, status=401)
             user = get_user_model().objects.create(
-                email=user_info['email'],
                 first_name=user_info['first_name'],
-                last_name=user_info['last_name'],
                 username=user_info['login'],
-                password=hashed_password,
             )
             data = Person.objects.create(
                 user=user,
-                email=user_info['email'],
                 name = user_info['first_name'],
                 nickname=user_info['login']
             )
-            # refresh = RefreshToken.for_user(data)
-            refresh = RefreshToken()
-            refresh['email'] = user.email
+            refresh = RefreshToken.for_user(data)
             access = str(refresh.access_token)
             refresh = str(refresh)
             response_data = {
@@ -58,7 +52,6 @@ class Login42(APIView):
                     "id": user.id,
                     "name": user.name,
                     "nickname": user.nickname,
-                    "email": user.email,
                     "image": user.image,
                 }
             }
