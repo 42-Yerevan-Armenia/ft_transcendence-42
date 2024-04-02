@@ -56,16 +56,7 @@ class LoginPage extends HtmlElement {
       }
       return true;
     }
-    // notFined(){
-    //   document.querySelector(".LoginEmailError").style.color = "red"
-    //   document.querySelector(".LoginPasswordError").style.color = "red"
-    //   document.querySelector(".LoginEmailError").innerHTML = "ERROR login or password is not correct"
-    //   document.querySelector(".LoginPasswordError").innerHTML = "ERROR login or password is not correct"
-    // }
-    // errorSetNull(){
-    //   document.querySelector(".LoginEmailError").innerHTML = ""
-    //   document.querySelector(".LoginPasswordError").innerHTML = ""
-    // }
+
     SignInWithEmail = (email = "") => {
       this.DisplayBlock();
   

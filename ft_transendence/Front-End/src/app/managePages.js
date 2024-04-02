@@ -12,16 +12,16 @@ var SignUp = new SignupPage();
 
 
 var ManageAllPage = {
-    Manage: function(pageName) {
+    Manage: async function(pageName) {
         //debugger
-        ManageAllPage.pages.forEach((element) => {
+        ManageAllPage.pages.forEach(async (element) => {
             const [key, obj] = Object.entries(element)[0]; // Get the key-value pair of the element
 
             if (key === pageName) {
                 obj.DisplayBlock();
-                obj.Drow();
+                await obj.Drow();
             } else {
-                obj.DisplayNone();
+                await obj.DisplayNone();
             }
         });
     },

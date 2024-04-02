@@ -40,9 +40,9 @@ Home._NavSigninSignout?._NavSignin1?.addEventListener("click", ()=> {
 })
 
 //sign up
-Home._NavSigninSignout?._NavSignUp.addEventListener("click", ()=> {
+Home._NavSigninSignout?._NavSignUp.addEventListener("click", async ()=> {
   Home.ButtonSignUp();
-  Register.DisplayBlock();
+  await Register.DisplayBlock();
 })
 Home._NavSigninSignout?._NavSignUp1.addEventListener("click", ()=> {
   Home.ButtonSignUp();
@@ -82,10 +82,10 @@ Home._HomeLeft?._ExploreMessag?.addEventListener("click",  ()=>{
 
 //-------------------------------------------------------------------- left User
 // IconExit
-Home._HomeLeft._LongOut.addEventListener("click", () => {
+Home._HomeLeft._LongOut.addEventListener("click", async () => {
 
   myStorages.longOut();
-  ManageAllPage.Manage("Home");
+  await ManageAllPage.Manage("Home");
 })
 
 //---------------------------------------------------------------------   Login
@@ -181,7 +181,7 @@ Confirm.ConfirmYourEmail.addEventListener('click', async () => {
   else if (data.state) {
     User._ConfirmEmail = true;
     Confirm.DisplayNone();
-    SignUp.DisplayBlock();
+    await SignUp.DisplayBlock();
   }
   else if (data.message.substr(-3) == "408") {
     User._ConfirmEmail = false;

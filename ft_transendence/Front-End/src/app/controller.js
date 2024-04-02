@@ -85,7 +85,7 @@ async function ControllerCheckReplayCode(code) {
 
 async function ControllerSignUp(password, User) {
   // debugger
-  console.log("ControllerSignUp");
+
   try {
     const response = await fetch(`${HostPort}/register/`, {
       method: 'POST',
