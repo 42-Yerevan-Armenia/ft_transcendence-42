@@ -1,4 +1,5 @@
 from django.shortcuts import redirect
+from django.contrib.auth.models import User
 from core.models import Person
 from rest_framework import generics, status, viewsets
 from rest_framework.views import APIView
@@ -86,8 +87,6 @@ class IntraMe(APIView):
         return Response({
             'username': user.username,
             'first_name': user.first_name,
-            'last_name': user.last_name,
-            'email': user.email
         }, status=200)
 
 class IntraCallback(APIView):
