@@ -58,7 +58,7 @@
 
 .JoinListTable{
     display: grid;
-    grid-template-columns: 1fr 2fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
     padding-top: 10px;
     padding-bottom: 10px;
     border-bottom: 1px solid white;
@@ -68,12 +68,48 @@
 
 .JoinListTableBody{
     display: grid;
-    grid-template-columns: 1fr 2fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
     padding-top: 10px;
     padding-bottom: 10px;
     color: white;
     text-align: center;
+    justify-content: center;
 }
+
+.JoinListTableBody div{
+    margin: auto 0;
+}
+
+/* Lojic */
+
+.JoinListTableClassView{
+    display: block;
+    background-color: #D823D7;
+    color: white;
+}
+.JoinListTableClassJoin{
+    display: block;
+    background-color: #00A3FF;
+    color: white;
+}
+#JoinListTableID{
+    width: 84px;
+    height: 34px;
+    border-radius: 10px;
+}
+.JoinListTableBodyNAmeMembers{
+    display: block;
+    width: 100px;
+    height: 34px;
+    border-radius: 10px;
+    background-color: #00A3FF;
+    color:white;
+}
+
+/* Lojic */
+
+
+
 .JoinListTd{
     display: flex;
     justify-content: space-around;
@@ -93,6 +129,7 @@
 .JoinListTableName, .JoinListTableBodyNAme{
     font-size: clamp(12px, 2.5vw, 20px); 
 }
+
 .JoinListHeroDivTemeTheme,.JoinListHeroDivTemeGameMode{
     height: 50%;
     display: flex;

@@ -56,6 +56,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             myStorages.longOut();
     }
    
-    ManageAllPage.Manage("Home");
+    await ManageAllPage.Manage("Home");
 });
 
