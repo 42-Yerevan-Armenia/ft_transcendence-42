@@ -100,7 +100,7 @@ const urlRoute = (event) => {
 const urlLocationHandler = async () => {
 	debugger
 	const Url = window.location.pathname; // get the url path
-		
+		console.log("window.location.pathname == " + window.location.pathname);
 	if (typeof(Url) !== "string")
 	{
 		let x = Url.pathname;
@@ -115,24 +115,26 @@ const urlLocationHandler = async () => {
 	if (route.title !== "404" || route.title !== "Home")
 	{
 		const html = await fetch(route.path).then((response) => response.text());
-		document.querySelector(route.class).innerHTML = html;
+		if (!html)
+			document.querySelector(route.class).innerHTML = html;
 	}
 
+	console.log("route.title == " + route.title)
 	// set the title of the document to the title of the route
 	document.title = route.title;
 
 	// set the description of the document to the description of the route
-	const meta = document.querySelector('meta[name="description"]');
+	const meta = await document.querySelector('meta[name="description"]');
 
-	meta.setAttribute("content", route.description);
+	await meta.setAttribute("content", route.description);
 };
 
 
 
 
 // Function to check if a state is in the navigation stack
-function isInNavigationStack(path) {
-    const index = navigationHistory.findLastIndex((element) => element.path == path)
+async function  isInNavigationStack(path) {
+    const index = await navigationHistory.findLastIndex((element) => element.path == path)
 	return index;
 }
 
@@ -149,7 +151,7 @@ function changStack(n, index){
 //function  back()  and   forward()
 const urlLocationHandlerForNavigateBackForward = async () => {
 	debugger
-	const Url =  window.location.pathname; // get the url path
+	const Url =  await window.location.pathname; // get the url path
 		
 	if (typeof(Url) !== "string")
 	{
@@ -163,32 +165,35 @@ const urlLocationHandlerForNavigateBackForward = async () => {
 	//check when Home Page
 	if (item < 2 || (navigationHistory[item - 1].title == route.title))
 		return;
-	let index = isInNavigationStack(window.location.pathname);
+	let index = await isInNavigationStack(window.location.pathname);
 	if (navigationHistory[item - 1].page > navigationHistory[index].page)
 	{
 		history.back();
-		changStack(item, index)
+		await changStack(item, index)
 		// window.location.pathname = route.url;
 	}
 	else
 	{
 		history.forward();
-		changStack(item, index);
+		await changStack(item, index);
 		// window.location.pathname = route.url;
 	}
 	// set the content of the content div to the html
-	ManageAllPage.Manage(route.title)
+	await ManageAllPage.Manage(route.title)
 	if (route.title !== "404" && route.title !== "Home")
 	{
 		
 		const html = await fetch(route.path).then((response) => response.text());
-		document.querySelector(route.class).innerHTML = html;
+		if (!html)
+		{
+			document.querySelector(route.class).innerHTML = "<h1> PAGE Empty<h1>";
+		}
 	}
 	else if (route.title !== "404")
 	{
 		
 	}
-	
+	console.log("route.title == " + route.title)
 	// set the title of the document to the title of the route
 	document.title = route.title;
 
@@ -215,3 +220,9 @@ const urlRouteForward = () => {
 };
 
 urlRouteForward();
+
+// window.addEventListener("click",(e)=>{
+// 	e.preventDefault();
+// 	console.log("1 DOMContentLoaded   + " + e.target);
+// 	console.log("2 DOMContentLoaded   + " + location.pathname);
+// })
