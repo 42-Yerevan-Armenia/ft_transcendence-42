@@ -17,21 +17,21 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
-from core.views import UserAPIView, CustomTokenRefreshView
-from rest_framework_simplejwt.views import (
-    TokenObtainPairView,
-    TokenVerifyView
-)
+from core.views import UserAPIView, UsersAPIView, CustomTokenRefreshView
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenVerifyView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('users/', UserAPIView.as_view()),
+    path('api/v1/users/<int:pk>/', UsersAPIView.as_view()),
     path('api/v1/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/v1/token/refresh/', CustomTokenRefreshView.as_view(), name='token_refresh'),
     path('api/v1/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
 
     path("", include("core.urls")),
     path("", include("chat.urls")),
+    path("", include("game.urls")),
+    path("", include("friends_api.urls")),
 ]
 
 if settings.DEBUG:

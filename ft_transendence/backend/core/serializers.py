@@ -2,7 +2,7 @@ from rest_framework import serializers
 from django import forms
 from django.contrib.auth import get_user_model, authenticate
 from django.core.exceptions import ValidationError
-from .models import Person, GameRoom
+from .models import User, Person, GameRoom
 from friendship.models import Friend
 
 class UserSerializer(serializers.ModelSerializer):
@@ -45,25 +45,41 @@ class FullHistorySerializer(serializers.ModelSerializer):
         model = Person
         fields = ('id', 'nickname', 'image', 'gamemode', 'points', 'matches', 'wins', 'loses', 'gamedata')
 
-#TODO: check friends data
-class FriendSerializer(serializers.ModelSerializer):
-    user = UserSerializer()
-    class Meta:
-        model = Friend
-        fields = ('__all__')
-class ProfileSerializer(serializers.ModelSerializer):
-    friends = serializers.SerializerMethodField()
+class MatchSerializer(serializers.ModelSerializer):
     class Meta:
         model = Person
-        fields = ('id', 'name', 'nickname', 'image', 'background', 'wins', 'loses', 'friends')
+        fields = ('id', 'wins', 'loses', 'matches', 'points')
+
+class UsersSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('id', 'username')
+
+class FriendSerializer(serializers.ModelSerializer):
+    user = UsersSerializer(source='user')
+    class Meta:
+        model = Friend
+        fields = ('id', 'friend_user')
+
+class ProfileSerializer(serializers.ModelSerializer):
+    friends = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Person
+        fields = ('id', 'nickname', 'image', 'background', 'wins', 'loses', 'friends')
 
     def get_friends(self, obj):
         friends = Friend.objects.friends(obj.user)
         return FriendSerializer(friends, many=True).data if friends else []
 
-from rest_framework import serializers
-
 class GameRoomSerializer(serializers.ModelSerializer):
     class Meta:
         model = GameRoom
-        fields = ['id', 'max_players', 'live', 'theme', 'gamemode', 'creator']
+        fields = ['id', 'max_players', 'live', 'theme', 'gamemode', 'creator', 'players', 'ongoing']
+
+    def create(self, validated_data):
+        creator_id = validated_data.pop('creator').id
+        players_data = validated_data.pop('players', [])
+        game_room = GameRoom.objects.create(creator_id=creator_id, **validated_data)
+        game_room.players.set(players_data)
+        return game_room
