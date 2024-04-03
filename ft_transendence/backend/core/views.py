@@ -9,6 +9,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from .models import Person, GameRoom
+from .shared_data import shared_data
 from .serializers import (
     UserSerializer,
     SettingsSerializer,
@@ -20,7 +21,8 @@ from .serializers import (
     HistorySerializer,
     FullHistorySerializer,
     GameRoomSerializer,
-    MatchSerializer
+    MatchSerializer,
+    CustomSerializer
 )
 from .validations import (
     email_validation,
@@ -28,7 +30,6 @@ from .validations import (
     send_confirmation_email,
     password_validation
 )
-from .shared_data import shared_data
 
 from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth.hashers import make_password, check_password
@@ -42,6 +43,9 @@ from django.core.serializers import serialize
 from django.forms.models import model_to_dict
 from django.http import JsonResponse
 from django.utils import timezone
+
+from collections import defaultdict
+
 import json
 import time
 import base64
@@ -336,6 +340,7 @@ class Home(APIView):
         return Response(serializer.data)
 
 class WaitingRoom(APIView):
+    authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
     def get(self, request, pk):
         try:
@@ -360,16 +365,41 @@ class WaitingRoom(APIView):
             return Response({"success": "false", "error": "User or opponent not found"}, status=status.HTTP_404_NOT_FOUND)
 
 class JoinList(APIView):
+    # authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
+
     def get(self, request, pk):
         try:
-            user = Person.objects.get(id=pk)
-            serializer = JoinListSerializer(user)
-            if serializer.data['id'] == None:
-                return JsonResponse({"success": "false", "error": "Game room not found"}, status=status.HTTP_404_NOT_FOUND)
+            # Retrieve all persons with their associated game rooms
+            persons = Person.objects.exclude(game_room=None).select_related('game_room').order_by('game_room_id')
+            # Group persons by game_room_id
+            game_room_data = defaultdict(list)
+            for person in persons:
+                game_room_data[person.game_room_id].append(person)
+            # Construct JSON response
+            result = {"success": True, "game_rooms": []}
+            for game_room_id, persons_in_room in game_room_data.items():
+                # Ensure there are at least two persons in the room
+                if len(persons_in_room) >= 2:
+                    # Construct JSON data for the game room
+                    room_data = {
+                        "gameroom_id": game_room_id,
+                        "players": [],
+                        "gamemode": person.game_room.gamemode,
+                        "current_players": len(persons_in_room),
+                        "max_players": person.game_room.max_players,
+                        "ongoing": person.game_room.ongoing,
+                    }
+                    for person in persons_in_room:
+                        room_data["players"].append({
+                            "id": person.id,
+                            "image": person.image
+                        })
+                    # Add the game room data to the result
+                    result["game_rooms"].append(room_data)
+            return JsonResponse(result)
         except Person.DoesNotExist:
-            return JsonResponse({"success": "false", "error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
-        return Response(serializer.data)
+            return JsonResponse({"success": False, "error": "No game rooms found"})
 
     def post(self, request, pk):
         try:
@@ -402,15 +432,16 @@ class JoinList(APIView):
             return JsonResponse({"success": "false", "error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class CreateRoom(APIView):
+    # authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
-
     def post(self, request, pk):
         try:
-            max_players = request.data.get('number')
+            max_players = int(request.data.get('number'))
             live = request.data.get('live')
             theme = request.data.get('theme')
             gamemode = request.data.get('gamemode')
             creator_id = request.user.id  # Get the numeric ID of the authenticated user
+            is_tournament = max_players > 2
 
             game_room_data = {
                 'max_players': max_players,
@@ -419,6 +450,7 @@ class CreateRoom(APIView):
                 'gamemode': gamemode,
                 'creator': creator_id,
                 'players': [creator_id],
+                'is_tournament': is_tournament,
             }
             game_room_serializer = GameRoomSerializer(data=game_room_data)
             if game_room_serializer.is_valid():

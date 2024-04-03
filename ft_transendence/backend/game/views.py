@@ -93,15 +93,21 @@ class MatchmakingSystem():
 
 class PlayTournament(APIView):
     def post(self, request):
-        creator_id = request.data.get('creator_id')
-        game_room_id = request.data.get('game_room_id')
-        creator = Person.objects.get(id=creator_id)
-        game_room = creator.game_room
-        tns = TournamentSystem(game_room.players.all())
-        tns.run_tournament()
-        winner = tns.winners[0]
-        return JsonResponse({"success": "true", "winner": winner}, status=status.HTTP_200_OK)
-        # return JsonResponse({"success": "true"}, status=status.HTTP_200_OK)
+        try:
+            creator_id = request.data.get('creator_id')
+            game_room_id = request.data.get('game_room_id')
+            creator = Person.objects.get(id=creator_id)
+            game_room = creator.game_room
+            game_room.ongoing = True
+            game_room.save()
+            tns = TournamentSystem(game_room.players.all())
+            tns.run_tournament()
+            winner = tns.winners[0]
+            game_room.ongoing = False
+            game_room.save()
+            return JsonResponse({"success": "true", "winner": winner}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return JsonResponse({"success": "false", "error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
        
 class TournamentSystem:
     def __init__(self, players):

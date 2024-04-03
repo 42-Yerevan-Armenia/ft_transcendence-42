@@ -26,9 +26,37 @@ class SettingsSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'nickname', 'email', 'password', 'phone', 'image', 'background', 'gamemode')
 
 class JoinListSerializer(serializers.ModelSerializer):
+    max_players = serializers.SerializerMethodField()
     class Meta:
         model = Person
-        fields = ('id', 'nickname', 'image', 'gamemode')
+        fields = ('id', 'image', 'game_room_id', 'gamemode', 'max_players')
+    
+    def get_max_players(self, obj):
+        try:
+            game_room = GameRoom.objects.get(players=obj)
+            return game_room.max_players
+        except GameRoom.DoesNotExist:
+            return None
+
+class CustomSerializer(serializers.ModelSerializer):
+    person_id = serializers.IntegerField(source='id')
+    person_image = serializers.CharField(source='image')
+    gameroom_id = serializers.SerializerMethodField()
+    gameroom_max_players = serializers.SerializerMethodField()
+    gameroom_gamemode = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Person
+        fields = ('person_id', 'person_image', 'gameroom_id', 'gameroom_max_players', 'gameroom_gamemode')
+
+    def get_gameroom_id(self, obj):
+        return obj.game_room.id if obj.game_room else None
+
+    def get_gameroom_max_players(self, obj):
+        return obj.game_room.max_players if obj.game_room else None
+
+    def get_gameroom_gamemode(self, obj):
+        return obj.game_room.gamemode if obj.game_room else None
 
 class WaitingRoomSerializer(serializers.ModelSerializer):
     class Meta:
