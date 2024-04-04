@@ -2,7 +2,7 @@ from rest_framework import serializers
 from django import forms
 from django.contrib.auth import get_user_model, authenticate
 from django.core.exceptions import ValidationError
-from .models import User, Person, GameRoom
+from .models import User, Person, GameRoom, History
 from friendship.models import Friend
 
 class UserSerializer(serializers.ModelSerializer):
@@ -63,16 +63,6 @@ class WaitingRoomSerializer(serializers.ModelSerializer):
         model = Person
         fields = ('id', 'nickname', 'image', 'gamemode', 'points')
 
-class HistorySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Person
-        fields = ('id', 'nickname', 'image', 'gamemode', 'points', 'matches')
-
-class FullHistorySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Person
-        fields = ('id', 'nickname', 'image', 'gamemode', 'points', 'matches', 'wins', 'loses', 'gamedata')
-
 class MatchSerializer(serializers.ModelSerializer):
     class Meta:
         model = Person
@@ -103,7 +93,7 @@ class ProfileSerializer(serializers.ModelSerializer):
 class GameRoomSerializer(serializers.ModelSerializer):
     class Meta:
         model = GameRoom
-        fields = ['id', 'max_players', 'live', 'theme', 'gamemode', 'creator', 'players', 'ongoing']
+        fields = ['id', 'max_players', 'live', 'theme', 'gamemode', 'creator', 'players', 'ongoing', 'game_date']
 
     def create(self, validated_data):
         creator_id = validated_data.pop('creator').id
@@ -111,3 +101,25 @@ class GameRoomSerializer(serializers.ModelSerializer):
         game_room = GameRoom.objects.create(creator_id=creator_id, **validated_data)
         game_room.players.set(players_data)
         return game_room
+
+class HistorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = History
+        fields = '__all__'
+
+class FullHistorySerializer(serializers.ModelSerializer):
+    game_date = serializers.SerializerMethodField()
+    class Meta:
+        model = Person
+        fields = ('id', 'nickname', 'image', 'gamemode', 'points', 'matches', 'wins', 'loses', 'game_date')
+    
+    def get_game_date(self, obj):
+        try:
+            game_rooms = GameRoom.objects.filter(players=obj)
+            if game_rooms.exists():
+                # Return the game_date from the first GameRoom instance
+                return game_rooms.first().game_date
+            else:
+                return None
+        except GameRoom.DoesNotExist:
+            return None

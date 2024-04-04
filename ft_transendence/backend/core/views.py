@@ -8,7 +8,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
-from .models import Person, GameRoom
+from .models import Person, GameRoom, History
 from .shared_data import shared_data
 from .serializers import (
     UserSerializer,
@@ -489,18 +489,17 @@ class GameRoom(APIView):
         else:
             return JsonResponse({"success": "false", "error": "Invalid response"}, status=status.HTTP_400_BAD_REQUEST)
 
-class History(APIView):
-
+class HistoryView(APIView):
     def get(self, request, pk):
         try:
             user = Person.objects.get(id=pk)
-            serializer = HistorySerializer(user)
+            history_data = History.objects.filter(player=user)
+            serializer = HistorySerializer(history_data, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         except Person.DoesNotExist:
-            return JsonResponse({"success": "false", "error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
-        # return JsonResponse({"success": "true", "profile": serializer.data}, safe=False)
-        return Response(serializer.data)
+            return JsonResponse({"success": False, "error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
 
-class FullHistory(APIView):
+class FullHistoryView(APIView):
 
     def get(self, request, pk):
         try:
@@ -508,8 +507,7 @@ class FullHistory(APIView):
             serializer = FullHistorySerializer(user)
         except Person.DoesNotExist:
             return JsonResponse({"success": "false", "error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
-        # return JsonResponse({"success": "true", "profile": serializer.data}, safe=False)
-        return Response(serializer.data)
+        return JsonResponse({"success": "true", "profile": serializer.data}, safe=False)
 
 class CustomTokenRefreshView(TokenRefreshView):
     def post(self, request, *args, **kwargs):

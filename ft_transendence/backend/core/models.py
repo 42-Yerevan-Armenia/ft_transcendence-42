@@ -65,14 +65,21 @@ class GameRoom(models.Model):
     creator = models.ForeignKey(Person, on_delete=models.CASCADE)  # Relationship with the Person who created the game room
     players = models.ManyToManyField(Person, related_name='joined_players', blank=True)  # Relationship with the players in the game room
     ongoing = models.BooleanField(default=False)  # Indicates if the game is ongoing or not
+    game_date = models.DateTimeField(null=True, blank=True) # Date of the game
 
     def __str__(self):
         return f"GameRoom {self.id}"
     
     def is_full(self):
-        """
-        Check if the GameRoom is full.
-        Returns:
-            bool: True if the room is full, False otherwise.
-        """
         return self.players.count() == self.max_players
+
+class History(models.Model):
+    player = models.ForeignKey(Person, on_delete=models.CASCADE)
+    opponent = models.ForeignKey(Person, on_delete=models.CASCADE, related_name='opponent_history')
+    game_room = models.ForeignKey(GameRoom, on_delete=models.CASCADE)
+    date = models.DateTimeField(auto_now_add=True)
+    win = models.BooleanField()
+    lose = models.BooleanField()
+
+    def __str__(self):
+        return f"{self.player.nickname} vs {self.opponent.nickname} - {self.date}"

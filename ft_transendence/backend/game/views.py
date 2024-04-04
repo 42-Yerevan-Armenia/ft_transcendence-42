@@ -11,8 +11,10 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
-from core.models import Person, GameRoom
+from core.models import Person, GameRoom, History
 from django.http import JsonResponse
+from django.utils import timezone
+from django.views.decorators.csrf import csrf_exempt
 import random
 
 class PlayRandom(APIView):
@@ -92,6 +94,7 @@ class MatchmakingSystem():
         return player1_id
 
 class PlayTournament(APIView):
+    @csrf_exempt
     def post(self, request):
         try:
             creator_id = request.data.get('creator_id')
@@ -99,16 +102,19 @@ class PlayTournament(APIView):
             creator = Person.objects.get(id=creator_id)
             game_room = creator.game_room
             game_room.ongoing = True
+            game_room.game_date = timezone.now().strftime('%Y-%m-%d %H:%M:%S')
             game_room.save()
             tns = TournamentSystem(game_room.players.all())
             tns.run_tournament()
             winner = tns.winners[0]
             game_room.ongoing = False
+            game_room.players.update(game_room_id=None)
             game_room.save()
+            Person.objects.filter(game_room_id=game_room_id).update(game_room_id=None)
             return JsonResponse({"success": "true", "winner": winner}, status=status.HTTP_200_OK)
         except Exception as e:
             return JsonResponse({"success": "false", "error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-       
+
 class TournamentSystem:
     def __init__(self, players):
         self.players = players
@@ -168,7 +174,35 @@ class TournamentSystem:
     def run_match(self, player_1, player_2): # Finished
         mms = MatchmakingSystem()
         win = mms.start_match(player_1, player_2)
+        self.update_game_results(player_1, player_2, win)
+        self.save_game_history(player_1, player_2, win)
         return win
+
+    def update_game_results(self, player1_id, player2_id, win):
+        user1 = Person.objects.get(id=player1_id)
+        user2 = Person.objects.get(id=player2_id)
+        # Update game results
+        if win == player1_id:
+            result_user1 = 1
+            result_user2 = 0
+        else:
+            result_user1 = 0
+            result_user2 = 1
+        # Call the existing update_game_results function
+        GameResult.update_game_results(user1, user2, result_user1, result_user2)
+
+    def save_game_history(self, player1_id, player2_id, win):
+        user1 = Person.objects.get(id=player1_id)
+        user2 = Person.objects.get(id=player2_id)
+        # Save game history
+        if win == player1_id:
+            result_user1 = 1
+            result_user2 = 0
+        else:
+            result_user1 = 0
+            result_user2 = 1
+        # Call the existing save_game_history function
+        save_game_history(user1, user2, result_user1, result_user2)
 
     def run_matches(self, group):
         mms = MatchmakingSystem()
@@ -189,62 +223,52 @@ class TournamentSystem:
             print("❎", group)
         self.winners = round_winners
 
-class GameResult(APIView):
+class GameResult:
+    @staticmethod
+    def update_game_results(user1, user2, result_user1, result_user2):
+        # Update game results
+        if result_user1 == 1:
+            user1.wins += 1
+            score1 = 100
+        else:
+            user1.loses += 1
+            score1 = 50
+        if result_user2 == 1:
+            user2.wins += 1
+            score2 = 100
+        else:
+            user2.loses += 1
+            score2 = 50
+        # Update match count
+        user1.matches += 1
+        user2.matches += 1
+        # Set percentage bonus
+        win_bonus = 0.5
+        lose_bonus = 0.25
+        match_bonus = 0.1
+        # Calculate points
+        points_user1 = ( score1 +
+            user1.wins * win_bonus +
+            user1.loses * lose_bonus +
+            user1.matches * match_bonus
+        )
+        points_user2 = ( score2 +
+            user2.wins * win_bonus +
+            user2.loses * lose_bonus +
+            user2.matches * match_bonus
+        )
+        # Update points
+        user1.points += points_user1
+        user2.points += points_user2
+        # Save changes to the database
+        user1.save()
+        user2.save()
 
-    def post(self, request):
-        try:
-            # Assuming you receive the user ids and game result (win or lose) in the request data
-            user1_id = request.data.get('user1_id')
-            user2_id = request.data.get('user2_id')
-            result_user1 = request.data.get('result_user1')  # Assuming 1 for win, 0 for lose
-            result_user2 = request.data.get('result_user2')
-            # Retrieve user objects
-            user1 = Person.objects.get(id=user1_id)
-            user2 = Person.objects.get(id=user2_id)
-            # Update game results
-            if result_user1 == 1:
-                user1.wins += 1
-                score1 = 100
-            else:
-                user1.loses += 1
-                score1 = 50
-            if result_user2 == 1:
-                user2.wins += 1
-                score2 = 100
-            else:
-                user2.loses += 1
-                score2 = 50
-            # Update match count
-            user1.matches += 1
-            user2.matches += 1
-            # Set percentage bonus
-            win_bonus = 0.5
-            lose_bonus = 0.25
-            match_bonus = 0.1
-            # Calculate points
-            points_user1 = ( score1 +
-                user1.wins * win_bonus +
-                user1.loses * lose_bonus +
-                user1.matches * match_bonus
-            )
-            points_user2 = ( score2 +
-                user2.wins * win_bonus +
-                user2.loses * lose_bonus +
-                user2.matches * match_bonus
-            )
-            # Update points
-            user1.points += points_user1
-            user2.points += points_user2
-            # Save changes to the database
-            user1.save()
-            user2.save()
-            # Optional: Return updated leaderboard data for both users
-            serializer_user1 = LederboardSerializer(user1)
-            serializer_user2 = LederboardSerializer(user2)
-            return Response({
-                "success": "true",
-                "user1_profile": serializer_user1.data,
-                "user2_profile": serializer_user2.data
-            }, status=status.HTTP_200_OK)
-        except Person.DoesNotExist:
-            return Response({"success": "false", "error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+def save_game_history(user1, user2, result_user1, result_user2):
+    # Determine win/lose based on the result
+    win_user1 = result_user1 == 1
+    win_user2 = result_user2 == 1
+    
+    # Create history instances for both players
+    History.objects.create(player=user1, opponent=user2, game_room=user1.game_room, win=win_user1, lose=not win_user1)
+    History.objects.create(player=user2, opponent=user1, game_room=user2.game_room, win=win_user2, lose=not win_user2)
