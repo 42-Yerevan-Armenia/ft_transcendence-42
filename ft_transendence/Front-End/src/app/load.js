@@ -38,12 +38,10 @@ if (mainElement) {
 
 
 document.addEventListener("DOMContentLoaded", async () => {
-    console.log("1-- Document is loaded");
 
-    debugger
+    // debugger
     if(User.checkSignIn())
     {
-        console.log("2-- Document is loaded");
 
         //once expiration a new refresh token is generated
         const res = await User.accessRefresh();
@@ -58,6 +56,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             myStorages.longOut();
     }
    
-    ManageAllPage.Manage("Home");
+    await ManageAllPage.Manage("Home");
 });
 

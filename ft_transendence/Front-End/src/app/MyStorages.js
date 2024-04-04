@@ -5,11 +5,10 @@
 //manag browser storage
 const myStorages = {
     setStorageLogin(tockens) {
-      debugger
+      //debugger
       console.log("tockens     --------   " + tockens)
       console.log(tockens);
       const {user} = tockens;
-      console.log(user)
       const {refresh, success, access} = tockens;
   
       if (!success || !access || !refresh || !tockens.user)
@@ -22,7 +21,6 @@ const myStorages = {
       User._Email = tockens.user.email;
       User._Image = tockens.user.image;
   
-      console.log("User._Imag = " + User._Image);
       localStorage.setItem("id", User._ID + "")
       localStorage.setItem("access", access + "")
       localStorage.setItem("refresh", refresh + "")
@@ -43,12 +41,22 @@ const myStorages = {
     },
   
     longOut() {
-      debugger
+      //debugger
       localStorage.removeItem("id");
       localStorage.removeItem("access");
       localStorage.removeItem("refresh");
       User.Destruc();
-      console.log("Home._HomeLeft._LongOut.addEventListener");
+    },
+    checkSignIn() {
+      this._getAccess = localStorage.getItem("access");
+      this._geRefresh = localStorage.getItem("refresh");
+      this._Id = localStorage.getItem("id");
+  
+      if (this._getAccess && this._geRefresh && this._Id)
+        this._SignIn = true;
+      else
+        this._SignIn = false;
+      return this._SignIn;
     }
   }
   

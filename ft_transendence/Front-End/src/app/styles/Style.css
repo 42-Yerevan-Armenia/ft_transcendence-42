@@ -5,7 +5,9 @@ body{
   background: var(--background-color, 
   radial-gradient(66.54% 118.23% at 37.47% 107.32%, #D9CBFD 0%, #7758D1 100%));
 }
-
+a{
+  text-decoration:none
+}
 main{
   height: 100%;
 }

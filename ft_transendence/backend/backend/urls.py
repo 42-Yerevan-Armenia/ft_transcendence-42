@@ -30,7 +30,9 @@ urlpatterns = [
 
     path("", include("core.urls")),
     path("", include("chat.urls")),
+    path("", include("game.urls")),
     path("", include("friends_api.urls")),
+    path("", include("user_api.urls")),
 ]
 
 if settings.DEBUG:

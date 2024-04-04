@@ -1,9 +1,10 @@
 //login Page 
 class LoginPage extends HtmlElement {
-  debugger
+  // debugger
     constructor(){
       super(".LoginPage")
-      this._style.display = "none";
+      // this._style.display = "none";
+      this._style.display = "block";
     }
     _LoginPassword = document.querySelector(".LoginPageinputpassword")
     _LoginEmail = document.querySelector(".LoginPageinput");
@@ -18,7 +19,6 @@ class LoginPage extends HtmlElement {
       const ErrorPassword = document.querySelector(".LoginPasswordError");
       const ErrorEmail = document.querySelector(".LoginEmailError");
   
-      console.log("email : " +  this._LoginEmail.value + " password :" + this._LoginPassword.value);
   
   
       if (!this._LoginEmail?.value)
@@ -32,13 +32,11 @@ class LoginPage extends HtmlElement {
   
         //email valid input
         if (ContextValidation[0] == 'V') {
-          console.log("Login Page Email is correct");
           ErrorEmail.style.color = "blue";
           ErrorEmail.innerHTML = "";
         }
         else {
           //Email is not valid
-          console.log("Email must by correct");
           ErrorEmail.style.color = "red";
           ErrorEmail.innerHTML = ContextValidation;
           return false;
