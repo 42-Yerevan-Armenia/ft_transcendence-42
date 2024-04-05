@@ -1,0 +1,34 @@
+<!-- chat/room.html -->
+<h1>Private Chat with User {{ user_id }}</h1>
+<div id="chat">
+    <!-- Сообщения будут отображаться здесь -->
+</div>
+<textarea id="message-input"></textarea>
+<button onclick="sendMessage()">Send</button>
+
+<script>
+    const userId = "{{ user_id }}";
+    const chatSocket = new WebSocket(
+        'ws://' + window.location.host +
+        '/ws/chat/' + userId + '/'
+    );
+
+    chatSocket.onmessage = function(e) {
+        const data = JSON.parse(e.data);
+        document.querySelector('#chat').innerHTML += (`${data.message} <br>`);
+        
+    };
+
+    chatSocket.onclose = function(e) {
+        console.error('Chat socket closed unexpectedly');
+    };
+
+    function sendMessage() {
+        const messageInputDom = document.querySelector('#message-input');
+        const message = messageInputDom.value;
+        chatSocket.send(JSON.stringify({
+            'message': message
+        }));
+        messageInputDom.value = '';
+    }
+</script>

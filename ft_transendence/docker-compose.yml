@@ -1,16 +1,16 @@
 version: '3.9'
 
 services:
-  frontend:
-    container_name: frontend
-    build:
-      context: .
-      dockerfile: Front-End/Dockerfile
-    volumes:
-      - ${PWD}/Front-End:/app/Front-End
-    ports:
-      - 3000:3000
-    restart: unless-stopped
+  # frontend:
+  #   container_name: frontend
+  #   build:
+  #     context: .
+  #     dockerfile: Front-End/Dockerfile
+  #   volumes:
+  #     - ${PWD}/Front-End:/app/Front-End
+  #   ports:
+  #     - 3000:3000
+  #   restart: unless-stopped
 
   backend:
     container_name: backend

@@ -1,10 +1,11 @@
-# направит соединения WebSocket к consumers
+from channels.auth import AuthMiddlewareStack
+from channels.routing import ProtocolTypeRouter, URLRouter
+from django.urls import re_path
+from chat import consumers
 
-from django.urls import path , include
-from chat.consumers import ChatConsumer
-
-# Here, "" is routing to the URL ChatConsumer which 
-# will handle the chat functionality.
-websocket_urlpatterns = [
-	path("" , ChatConsumer.as_asgi()) , 
-]
+# URLs that handle the WebSocket connection are placed here.
+websocket_urlpatterns=[
+                    re_path(
+                        r"ws/chat/(?P<chat_box_name>\w+)/$", consumers.ChatRoomConsumer.as_asgi()
+                    ),
+                ]

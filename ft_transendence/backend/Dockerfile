@@ -5,9 +5,13 @@ ENV PYTHONUNBUFFERED 1
 COPY ./requirements.txt /requirements.txt
 COPY ./backend /backend
 COPY ../scripts /scripts
+COPY ./backend/manage.py  /backend/manage.py 
+
 
 WORKDIR /backend
 EXPOSE 8000
+
+RUN apk add --update --no-cache libffi-dev
 
 RUN python -m venv /py && \
     /py/bin/pip install --upgrade pip && \

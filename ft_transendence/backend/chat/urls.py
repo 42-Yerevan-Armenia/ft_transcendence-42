@@ -1,15 +1,8 @@
-# перенаправит DjangoApp на другие views в приложении
+from django.contrib import admin
+from django.urls import path
+from chat.views import chat_box
 
-from django.urls import path, include
-from chat import views as chat_views
-from django.contrib.auth.views import LoginView, LogoutView
-
-
+# урлы для чата, который сейчас работает
 urlpatterns = [
-	path("chat/", chat_views.chatPage, name="chat-page"),
-
-	# login-section
-	path("auth/login/", LoginView.as_view(template_name="loginPage.html"), name="login-user"),
-	path("auth/logout/", LogoutView.as_view(), name="logout-user"),
+    path("chat/<str:chat_box_name>/", chat_box, name="chat"),
 ]
-
