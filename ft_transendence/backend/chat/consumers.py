@@ -1,43 +1,63 @@
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
+from friendship.models import Friend
+from .models import Chat
 
 class ChatRoomConsumer(AsyncWebsocketConsumer):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.chatId = None  # Идентификатор чата
+        self.messages = {}  # Словарь для хранения сообщений
+
     async def connect(self):
-        self.chat_box_name = self.scope["url_route"]["kwargs"]["chat_box_name"]
-        self.group_name = "chat_%s" % self.chat_box_name
+        # Получение chatId из URL запроса
+        self.chatId = self.scope['url_route']['kwargs']['chatId']
+        self.room_group_name = f'chat_{self.chatId}'  # Формирование имени группы чата
 
-        await self.channel_layer.group_add(self.group_name, self.channel_name)
+        # Присоединение к группе комнат
+        await self.channel_layer.group_add(
+            self.room_group_name,
+            self.channel_name
+        )
 
-        await self.accept()
+        await self.accept()  # Принятие соединения
 
     async def disconnect(self, close_code):
-        await self.channel_layer.group_discard(self.group_name, self.channel_name)
-    # This function receive messages from WebSocket.
+        # Отсоединение от группы комнат
+        await self.channel_layer.group_discard(
+            self.room_group_name,
+            self.channel_name
+        )
+
+    # Получение сообщения от WebSocket
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
-        message = text_data_json["message"]
-        username = text_data_json["username"]
+        message = text_data_json['message']
+        sender = self.scope['user'].username  # Получение имени отправителя
 
+        # Сохранение сообщения в памяти
+        if self.chatId in self.messages:
+            self.messages[self.chatId].append({"sender": sender, "message": message})
+        else:
+            self.messages[self.chatId] = [{"sender": sender, "message": message}]
+
+        # Отправка сообщения в группу комнат
         await self.channel_layer.group_send(
-            self.group_name,
+            self.room_group_name,
             {
-                "type": "chatbox_message",
-                "message": message,
-                "username": username,
-            },
-        )
-    # Receive message from room group.
-    async def chatbox_message(self, event):
-        message = event["message"]
-        username = event["username"]
-        #send message and username of sender to websocket
-        await self.send(
-            text_data=json.dumps(
-                {
-                    "message": message,
-                    "username": username,
-                }
-            )
+                'type': 'chat_message',
+                'message': message,
+                'sender': sender
+            }
         )
 
-    pass
+    # Получение сообщения от группы комнат
+    async def chat_message(self, event):
+        message = event['message']
+        sender = event['sender']
+
+        # Отправка сообщения обратно на WebSocket
+        await self.send(text_data=json.dumps({
+            'message': message,
+            'sender': sender
+        }))

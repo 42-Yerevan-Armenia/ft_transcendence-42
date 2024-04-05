@@ -1,11 +1,12 @@
-from channels.auth import AuthMiddlewareStack
-from channels.routing import ProtocolTypeRouter, URLRouter
-from django.urls import re_path
-from chat import consumers
+from channels.auth import AuthMiddlewareStack  # Middleware для аутентификации в Channels
+from channels.routing import ProtocolTypeRouter, URLRouter  # Импорт роутера для определения протокола
+from django.urls import re_path  # Импорт функции re_path для определения URL-шаблонов
+from chat import consumers  # Импорт консьюмера для WebSocket
 
-# URLs that handle the WebSocket connection are placed here.
-websocket_urlpatterns=[
-                    re_path(
-                        r"ws/chat/(?P<chat_box_name>\w+)/$", consumers.ChatRoomConsumer.as_asgi()
-                    ),
-                ]
+# Определение URL-шаблонов для WebSocket
+websocket_urlpatterns = [
+    re_path(
+        r"ws/chat/(?P<chatId>\w+)/$",  # URL-шаблон для WebSocket с chatId в качестве переменной
+        consumers.ChatRoomConsumer.as_asgi()  # Консьюмер для обработки WebSocket соединения
+    ),
+]
