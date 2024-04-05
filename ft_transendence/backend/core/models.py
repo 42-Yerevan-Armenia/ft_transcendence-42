@@ -9,6 +9,7 @@ class Person(models.Model):
     email = models.EmailField(unique=True)
     phone = models.CharField(max_length=20, blank=True, null=True)
     password = models.CharField(max_length=100)
+    twofactor = models.BooleanField(default=False) 
     image = models.TextField(blank=True, null=True)
     background = models.TextField(blank=True, null=True)
     wins = models.IntegerField(default=0)

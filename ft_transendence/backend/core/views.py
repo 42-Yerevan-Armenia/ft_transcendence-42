@@ -281,7 +281,7 @@ class Profile(APIView):
         return Response(serializer.data)
 
 class SettingsById(APIView):
-    authentication_classes = [TokenAuthentication]
+    # authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
     def get(self, request, pk):
@@ -302,10 +302,9 @@ class SettingsById(APIView):
         user.nickname = data.get('nickname', user.nickname)
         user.email = data.get('email', user.email)
         user.image = data.get('image', user.image)
-        user.phone = data.get('phone', user.phone)
         user.password = data.get('password', user.password)
         user.gamemode = data.get('gamemode', user.gamemode)
-        user.background = data.get('background', user.background)
+        user.twofactor = data.get('twofactor', user.twofactor)
         user.save()
         return JsonResponse({"success": "true", "profile": model_to_dict(user)})
         
@@ -364,6 +363,10 @@ class WaitingRoom(APIView):
         except Person.DoesNotExist:
             return Response({"success": "false", "error": "User or opponent not found"}, status=status.HTTP_404_NOT_FOUND)
 
+def save_base64_image(image_path):
+    with open(image_path, "rb") as img_file:
+        return base64.b64encode(img_file.read()).decode('utf-8')
+
 class JoinList(APIView):
     # authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
@@ -380,21 +383,42 @@ class JoinList(APIView):
             result = {"success": True, "game_rooms": []}
             for game_room_id, persons_in_room in game_room_data.items():
                 # Ensure there are at least two persons in the room
-                if len(persons_in_room) >= 2:
+                if len(persons_in_room) >= 1:
                     # Construct JSON data for the game room
                     room_data = {
-                        "gameroom_id": game_room_id,
-                        "players": [],
-                        "gamemode": person.game_room.gamemode,
-                        "current_players": len(persons_in_room),
-                        "max_players": person.game_room.max_players,
-                        "ongoing": person.game_room.ongoing,
+                        "id": game_room_id,
+                        "src": [],
+                        "GameLevele": person.game_room.gamemode,
+                        # "current_players": len(persons_in_room),
+                        # "max_players": person.game_room.max_players,
+                        "isJoin": person.game_room.ongoing,
                     }
-                    for person in persons_in_room:
-                        room_data["players"].append({
-                            "id": person.id,
-                            "image": person.image
-                        })
+                    # Check if there are exactly two players in the room
+                    if len(persons_in_room) <= 2:
+                        # Check if the second player exists in the room
+                        if len(persons_in_room) == 2:
+                            # Add images for both players
+                            room_data["src"].append({
+                                "url": persons_in_room[0].image,
+                                "urlClient": persons_in_room[1].image
+                            })
+                        else:
+                            # Add image for the first player and default image for the second player if he is not in the room
+                            default = os.path.join(os.path.dirname(__file__), 'default.jpg')
+                            default_img = save_base64_image(default)
+                            room_data["src"].append({
+                                "url": persons_in_room[0].image,
+                                "urlClient": default_img  # Replace with your default image URL
+                            })
+                        room_data["type"] = "User"
+                    else:
+                        # Add only player IDs when there are not exactly two players
+                        for person in persons_in_room:
+                            room_data["src"].append({
+                                "id": person.id,
+                                # "image": person.image  # Optionally include the image if needed
+                            })
+                        room_data["type"] = "Tournament"
                     # Add the game room data to the result
                     result["game_rooms"].append(room_data)
             return JsonResponse(result)
