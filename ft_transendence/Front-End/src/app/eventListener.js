@@ -2,12 +2,35 @@
 //Event Listeners  Home Page
 
 //2
-Home._NAV._SETTINGS._classname.addEventListener("click",()=>{
+Home._NAV._SETTINGS._classname?.addEventListener("click",()=>{
   //debugger
   ManageMidle.Manage("MidleSettings")
 })
 
 
+Home._MiddleSettings?._Save?.addEventListener("click",async ()=>{
+  console.log("SAVE")
+
+
+
+
+
+  await Home._MiddleSettings.changeData();
+})
+
+Home._MiddleSettings?._DeleteAccount.addEventListener("click",async ()=>{
+  console.log("_DeleteAccount")
+
+  const deleteUser = await FetchRequest("DELETE", `api/v1/settings/${User._Id}`,{});
+  
+  myStorages.longOut();
+})
+
+
+Home._NAV?._Profile?._classname?.addEventListener("click", async ()=>{
+  console.log("Home._NAV?._Profile?._classname?.addEventListener");
+  ManageMidle.Manage("ProfileMidle");
+})
 
 // 1
 Home._NAV?._LEADERBOARD?._classname?.addEventListener("click",()=>{
@@ -19,6 +42,7 @@ Home._NAV?._LEADERBOARD?._classname?.addEventListener("click",()=>{
 Home._NAV?._JoinListGame?._classname?.addEventListener("click",()=>{
   //debugger
   ManageMidle.Manage("JoinList");
+
 } )
 
 //3
@@ -28,6 +52,37 @@ Home._NAV?._Home?._classname?.addEventListener("click",()=>{
 } );
 
 
+//whene create new list item for game
+//_MidleJoinList Create button
+Home._MidleJoinList?._CreateButton?.addEventListener("click", async ()=>{
+  debugger
+  console.log("click... \n");
+  const Players = document.querySelector("#JoinListHeroDivProfilPlayers");
+  const LiveOnOff = document.querySelector("#LiveOnOff");
+  const JoinTheme = document.querySelector("#JoinTheme");
+  const JoinListHeroDivGameMode = document.querySelector("#JoinListHeroDivGameMode");
+  console.log(Players.value);
+  const objCreate = {
+    max_players:Players.value,
+    live:LiveOnOff.value,
+    theme:JoinTheme.value,
+    gamemode:JoinListHeroDivGameMode.value,
+    
+  };
+
+  //send back-end
+  const url = "api/v1/createroom/" + User._Id;
+  await FetchRequest("POST", url, objCreate);
+
+  //redirect
+  ManageMidle.Manage("JoinList");
+// api/v1/createroom/:id
+  Players.value = "";
+  LiveOnOff.value = "";
+  JoinTheme.value = "";
+  JoinListHeroDivGameMode.value = "";
+  // LiveOnOff
+})
 
 //sign in
 Home._NavSigninSignout?._NavSignin?.addEventListener("click", ()=> {
@@ -49,17 +104,6 @@ Home._NavSigninSignout?._NavSignUp1.addEventListener("click", ()=> {
   Register.DisplayBlock();
 })
 
-
-//RegisterPage click confirm email
-Register?._RegisterPageContinue?.addEventListener("click",  async () => {
-//debugger
-    let value = await Register.RegistersWithEmail();
-    if (value)
-    {
-      Register.RegisterPageDisplayNone();
-      Confirm.setDisplayBlock(Home);
-    }
-});
 
 
 
@@ -83,6 +127,11 @@ Home._HomeLeft?._ExploreMessag?.addEventListener("click",  ()=>{
 //-------------------------------------------------------------------- left User
 // IconExit
 Home._HomeLeft._LongOut.addEventListener("click", async () => {
+
+  myStorages.longOut();
+  await ManageAllPage.Manage("Home");
+})
+Home._HomeLeft._NavLoginOut.addEventListener("click", async () => {
 
   myStorages.longOut();
   await ManageAllPage.Manage("Home");
@@ -227,3 +276,16 @@ SignUp.SignupPageContinue.addEventListener("click", async () => {
    }
   }
 })
+
+//RegisterPage click confirm email
+Register?._RegisterPageContinue?.addEventListener("click",  async () => {
+  //debugger
+      let value = await Register.RegistersWithEmail();
+      if (value)
+      {
+        Register.RegisterPageDisplayNone();
+        Confirm.setDisplayBlock(Home);
+      }
+  });
+  
+  

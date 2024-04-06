@@ -31,6 +31,11 @@ if (mainElement) {
 } else {
     console.log("Main element not found");
 }
+
+
+
+
+"dev": "npx http-server . -p 3000"
 */
 
 

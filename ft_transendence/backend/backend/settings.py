@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'core',
     'chat',
     'game',
+    'user_api',
     'friends_api',
     'channels', #channels for websockets async communication
     'friendship',

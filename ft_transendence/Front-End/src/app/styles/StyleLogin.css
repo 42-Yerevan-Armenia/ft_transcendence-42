@@ -158,7 +158,7 @@
 
 @media only screen and (max-width: 430px){
     .LoginPage{
-        width: 270px;
+        width: 100%;
     }
     .LoginPageConteiner{
         width: 80%;
