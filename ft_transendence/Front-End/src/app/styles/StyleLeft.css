@@ -154,6 +154,31 @@
 }
 
 
+#NAVSIGNINSIGNOUTNavLoginOut
+{
+    display: none;
+    width: 75px;
+    height: 25px;
+    text-align: center;
+    margin: auto 4% auto;
+}
+
+#NavLoginOut{
+    
+    width: 70px;
+    height: 20px;
+    border: 2px solid rgb(101 94 105);
+    margin: auto auto;
+}
+
+#NavLoginOut:hover{
+    cursor: pointer;
+    background-color: lightsteelblue;
+    opacity: 0.5;
+}
+#NavLoginOut:active{
+    transform: translate(2px,2px);
+}
 
 /*-----------------end-------------*/
 
@@ -203,7 +228,6 @@
    .dragonPong{
     display: none;
     }
-
 }
 
 

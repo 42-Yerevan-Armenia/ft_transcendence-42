@@ -1,7 +1,7 @@
 "use strict"
 // const HostPort="http://localhost:5001"
-// const HostPort="http://10.12.11.1:8000"
-const HostPort="http://10.12.11.2:8000"
+const HostPort="http://10.12.11.1:8000"
+// const HostPort="http://10.12.11.2:8000"
 
 
 
@@ -179,7 +179,6 @@ async function FetchRequest(Tomethod, Torequest, ToObj) {
 }
 
 
-
 //fetch universal  GET request
 async function getFetchRequest(ToRequest) {
   // debugger
@@ -210,6 +209,44 @@ async function getFetchRequest(ToRequest) {
     }
     console.log("ControllerPessPassword  Succsse++++++++++++++++++++");
 
+    return { state: true, message: data };
+  } catch (error) {
+    console.error("Error:", error);
+    return { state: false, message: error.message };
+  }
+}
+
+
+
+//fetch universal POST request
+async function putRequest(Tomethod, Torequest, ToObj) {
+  // debugger
+  console.log("1----------------------------------------")
+  console.log( "method : " + Tomethod);
+  console.log( "request : " + Torequest);
+  console.log( ToObj);
+  const token =  await User.getAccessTocken().access;
+  console.log("2----------------------------------------")
+  try {
+    const response = await fetch(`${HostPort}/${Torequest}/`, {
+      method: Tomethod,
+      body: JSON.stringify(ToObj),
+      headers: {
+        "Content-Type": "application/json",
+        'Authorization': 'Bearer ' + token
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to ${response.message} Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+
+    if (!data || typeof data !== 'object') {
+      throw new Error("Invalid response data");
+    }
+    console.log("ControllerPessPassword  Succsse++++++++++++++++++++");
     return { state: true, message: data };
   } catch (error) {
     console.error("Error:", error);

@@ -329,19 +329,27 @@
                                             </svg>
                                             <p class="navLinkP">Settings</p>
                                         </div>
+                                        <div id="NAVSIGNINSIGNOUTNavLoginOut">
+                                            <div id="NavLoginOut">
+                                                Long Out
+                                            </div>
+                                        </div>
 
                                     </div>
                                     <!-- href="#" -->
-                                    <div class="NAVSIGNINSIGNOUT">
-                                        <div class="NavSignin">
-                                            <a href="/signin" data-link>SignIn</a> 
-                                        </div>
-                                        <div class="NavSignUp">
-                                            <a href="/signup"  data-link>
-                                                SignUp
-                                            </a>
+                                    <div id="NavSigninNavSignUp">
+                                        <div class="NAVSIGNINSIGNOUT">
+                                            <div class="NavSignin">
+                                                <a href="/signin" data-link>SignIn</a> 
+                                            </div>
+                                            <div class="NavSignUp">
+                                                <a href="/signup"  data-link>
+                                                    SignUp
+                                                </a>
+                                            </div>
                                         </div>
                                     </div>
+
                                     <div class="User">
                                         <div class="Onlain">
                                             <img  width="50" height="50" alt="User" class="Image" id="UserImage"/>
@@ -498,11 +506,12 @@
                     <div class="MidleSettings">
                         <div class="MidleSettingsProfil">
                             <p class="MidleSettingsH">Profile Settings</p>
-                                <div class="MidleSettingsHero">
-                                    <Image src="./public/User.png" width="50" height="50" alt='User'
-                                            class="MidleSettingImage"></Image>
-                                    <p>Zakariya Sidki</p>
-                                </div>
+                            <div class="MidleSettingsHero">
+                                <img src="./public/User.png" width="50" height="50" alt='User'
+                                        class="MidleSettingImage"></img>
+                                <p class="MidleSettingsHeroName">Zakariya Sidki</p>
+                            </div>
+                                <!-- Change Settings -->
                             <div class="MidleSettingsEdit">
                                 <div class="MidleSettingsEditConteiner">
                                     <div class="MidleSettingsBlocks">
@@ -511,7 +520,7 @@
                                                 <path d="M18.6577 18.9084L12.4767 25H27.9292V18.9084H18.6577ZM14.1147 5.49159L0.114746 19.2891V25H5.90942L19.9093 11.2025L14.1147 5.49159ZM15.7712 3.86665L19.6945 0L25.4846 5.70785L21.5628 9.57298L15.7712 3.86665Z" fill="white"/>
                                             </svg>
                                         </div>
-                                        <p class="MidleSettingsBlocksP">Edit Profile Name.</p>
+                                        <input class="MidleSettingsBlocksP" id="MidleSettingsBlocksPName" placeholder="Edit Profile Name."></input>
                                     </div>
                                     <div class="MidleSettingsBlocks">
                                         <div class="MidleSettingsBlocksImage">
@@ -519,16 +528,8 @@
                                                 <path d="M21.4762 6.57895V10.5132C21.4762 10.5132 18.8194 10.5263 18.806 10.5132V6.57895H14.8008C14.8008 6.57895 14.8141 3.96053 14.8008 3.94737H18.806V0H21.4762V3.94737H25.4815V6.57895H21.4762ZM17.4709 11.8421V7.89474H13.4657V3.94737H2.78493C1.31633 3.94737 0.114746 5.13158 0.114746 6.57895V22.3684C0.114746 23.8158 1.31633 25 2.78493 25H18.806C20.2746 25 21.4762 23.8158 21.4762 22.3684V11.8421H17.4709ZM2.78493 22.3684L6.79021 17.1053L9.46039 21.0526L13.4657 15.7895L18.806 22.3684H2.78493Z" fill="white"/>
                                             </svg>
                                         </div>
-                                        <p class="MidleSettingsBlocksP">Edit Profile Photo.</p>
-                                    </div>
-                                    <div class="MidleSettingsBlocks">
-                                        <div class="MidleSettingsBlocksImage">
-                                            <svg  width="25" height="25" viewBox="0 0 26 25" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M2.53667 3.75C2.53667 3.0625 3.10743 2.5 3.80501 2.5H10.1467C10.8443 2.5 11.415 1.9375 11.415 1.25C11.415 0.5625 10.8443 0 10.1467 0H2.53667C1.1415 0 0 1.125 0 2.5V10C0 10.6875 0.570752 11.25 1.26834 11.25C1.96592 11.25 2.53667 10.6875 2.53667 10V3.75ZM9.65205 14.3625L5.89777 18.9875C5.568 19.4 5.85972 20 6.39242 20H19.0251C19.1428 20 19.2583 19.9677 19.3585 19.9067C19.4586 19.8456 19.5396 19.7583 19.5923 19.6545C19.645 19.5507 19.6672 19.4345 19.6567 19.3189C19.6461 19.2033 19.6031 19.0929 19.5324 19L16.9957 15.6625C16.7421 15.325 16.2347 15.325 15.9811 15.6625L13.9137 18.3875L10.6414 14.3625C10.5819 14.2895 10.5066 14.2306 10.421 14.1901C10.3354 14.1496 10.2417 14.1286 10.1467 14.1286C10.0517 14.1286 9.958 14.1496 9.87238 14.1901C9.78677 14.2306 9.71147 14.2895 9.65205 14.3625ZM19.0251 8.125C19.0251 7.0875 18.1753 6.25 17.1226 6.25C16.0698 6.25 15.22 7.0875 15.22 8.125C15.22 9.1625 16.0698 10 17.1226 10C18.1753 10 19.0251 9.1625 19.0251 8.125ZM22.8301 0H15.22C14.5225 0 13.9517 0.5625 13.9517 1.25C13.9517 1.9375 14.5225 2.5 15.22 2.5H21.5617C22.2593 2.5 22.8301 3.0625 22.8301 3.75V10C22.8301 10.6875 23.4008 11.25 24.0984 11.25C24.796 11.25 25.3667 10.6875 25.3667 10V2.5C25.3667 1.125 24.2252 0 22.8301 0ZM22.8301 21.25C22.8301 21.9375 22.2593 22.5 21.5617 22.5H15.22C14.5225 22.5 13.9517 23.0625 13.9517 23.75C13.9517 24.4375 14.5225 25 15.22 25H22.8301C24.2252 25 25.3667 23.875 25.3667 22.5V15C25.3667 14.3125 24.796 13.75 24.0984 13.75C23.4008 13.75 22.8301 14.3125 22.8301 15V21.25ZM1.26834 13.75C0.570752 13.75 0 14.3125 0 15V22.5C0 23.875 1.1415 25 2.53667 25H10.1467C10.8443 25 11.415 24.4375 11.415 23.75C11.415 23.0625 10.8443 22.5 10.1467 22.5H3.80501C3.10743 22.5 2.53667 21.9375 2.53667 21.25V15C2.53667 14.3125 1.96592 13.75 1.26834 13.75Z" fill="white"/>
-                                            </svg>
-
-                                        </div>
-                                        <p class="MidleSettingsBlocksP">Change Wallpaper.</p>
+                                        <!-- <p class="MidleSettingsBlocksP">Edit Profile Photo.</p> -->
+                                        <input type="file" accept="image/png, image/jpeg" placeholder="Edit Profile Photo." class="MidleSettingsBlocksP" id="ImageFileAccess"/>
                                     </div>
                                     <div class="MidleSettingsBlocks">
                                         <div class="MidleSettingsBlocksImage">
@@ -542,13 +543,68 @@
                                                 </g>
                                             </svg>
                                         </div>
-                                        <p class="MidleSettingsBlocksP">Game Mode.</p>
+                                        <!-- <input class="MidleSettingsBlocksP" placeholder="Game Mode."></input> -->
+                                        <select class="MidleSettingsBlocksP" id="MidleSettingsBlocksPGameMode">
+                                            <option value="" disabled selected hidden>Game Mode.</option>
+                                            <option value="Easy">Easy</option>
+                                            <option value="Classic">Classic</option>
+                                            <option value="Hard">Hard</option>
+                                        </select>
                                     </div>
+
+                                    <div class="MidleSettingsBlocks">
+                                        <div class="MidleSettingsBlocksImage">
+                                            <svg width="25" height="25" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <g opacity="0.9">
+                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M15 10.3125C12.4112 10.3125 10.3125 12.4112 10.3125 15C10.3125 17.5888 12.4112 19.6875 15 19.6875C17.5888 19.6875 19.6875 17.5888 19.6875 15C19.6875 12.4112 17.5888 10.3125 15 10.3125ZM8.4375 15C8.4375 11.3756 11.3756 8.4375 15 8.4375C18.6244 8.4375 21.5625 11.3756 21.5625 15C21.5625 18.6244 18.6244 21.5625 15 21.5625C11.3756 21.5625 8.4375 18.6244 8.4375 15Z" fill="white"/>
+                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M10.9856 2.49455C11.243 2.41144 11.5239 2.44361 11.7559 2.58282L14.4963 4.22707C14.8322 4.21206 15.1686 4.21207 15.5045 4.2271L18.2336 2.59398C18.4637 2.45629 18.7417 2.42371 18.9974 2.50449C20.7883 3.0703 22.4348 4.01856 23.823 5.28364C24.022 5.46499 24.1334 5.72315 24.1289 5.99235L24.0753 9.17778C24.2603 9.46196 24.4301 9.75578 24.584 10.058L27.3619 11.6025C27.5958 11.7326 27.763 11.9564 27.8213 12.2176C28.2301 14.0482 28.2344 15.9459 27.834 17.7783C27.7764 18.0417 27.6082 18.2676 27.3723 18.3982L24.5836 19.9428C24.4298 20.2447 24.2602 20.5383 24.0753 20.8222L24.1289 24.0077C24.1334 24.2769 24.022 24.535 23.823 24.7164C22.4377 25.9787 20.7982 26.9297 19.0147 27.5055C18.7572 27.5886 18.4764 27.5564 18.2443 27.4172L15.5039 25.7729C15.168 25.7879 14.8316 25.7879 14.4957 25.7729L11.7667 27.406C11.5366 27.5437 11.2585 27.5763 11.0029 27.4955C9.21196 26.9297 7.56542 25.9814 6.17724 24.7164C5.97823 24.535 5.86681 24.2768 5.87135 24.0076L5.92504 20.8294C5.74107 20.5423 5.57145 20.2462 5.41678 19.9423L2.63832 18.3975C2.4044 18.2674 2.23722 18.0436 2.1789 17.7824C1.77019 15.9519 1.76588 14.0542 2.16627 12.2218C2.22383 11.9583 2.39204 11.7324 2.62794 11.6018L5.41667 10.0572C5.5704 9.75528 5.74008 9.46172 5.92498 9.17778L5.87135 5.99235C5.86682 5.72313 5.97825 5.46497 6.17727 5.28362C7.56252 4.0213 9.20205 3.07029 10.9856 2.49455ZM7.75339 6.39454L7.80468 9.44125C7.808 9.63864 7.74893 9.83203 7.63589 9.99387C7.38443 10.3539 7.16428 10.7348 6.97786 11.1324C6.89405 11.3111 6.75595 11.4588 6.58325 11.5545L3.91669 13.0314C3.68345 14.3336 3.68669 15.6672 3.92626 16.9683L6.58459 18.4463C6.75598 18.5415 6.89318 18.6882 6.97687 18.8655C7.16739 19.2693 7.3896 19.6572 7.64142 20.0259C7.75091 20.1861 7.80796 20.3764 7.80468 20.5705L7.75342 23.6054C8.76674 24.4614 9.92552 25.1286 11.1746 25.5753L13.7804 24.0159C13.9455 23.9171 14.1369 23.8715 14.3287 23.8852C14.7758 23.9172 15.2245 23.9172 15.6715 23.8852C15.8637 23.8715 16.0555 23.9173 16.2207 24.0164L18.835 25.585C20.08 25.1312 21.235 24.4611 22.2469 23.6055L22.1956 20.5588C22.1922 20.3614 22.2513 20.168 22.3644 20.0061C22.6158 19.6461 22.836 19.2652 23.0224 18.8676C23.1062 18.6889 23.2443 18.5412 23.417 18.4455L26.0836 16.9686C26.3168 15.6664 26.3136 14.3328 26.074 13.0317L23.4157 11.5538C23.2436 11.4581 23.106 11.3106 23.0224 11.1324C22.836 10.7348 22.6158 10.3539 22.3644 9.99387C22.2513 9.83203 22.1922 9.63864 22.1956 9.44125L22.2469 6.39466C21.2335 5.53863 20.0747 4.87139 18.8257 4.42473L16.2198 5.98415C16.0548 6.08291 15.8634 6.12852 15.6715 6.1148C15.2245 6.08283 14.7758 6.08283 14.3287 6.1148C14.1365 6.12855 13.9447 6.08273 13.7795 5.98359L11.1652 4.41503C9.92027 4.86877 8.7652 5.53892 7.75339 6.39454Z" fill="white"/>
+                                                </g>
+                                            </svg>
+                                        </div>
+                                        <!-- <input class="MidleSettingsBlocksP" placeholder="2FA Authenticator"></input> -->
+                                        <select  class="MidleSettingsBlocksP" name="2FAAuthenticator" id="MidleSettingsBlocksP2FAAuthenticator">
+                                            <option value="" disabled selected hidden>2FA Authenticator</option>
+                                            <option value="on">on</option>
+                                            <option value="off">off</option>
+                                        </select>
+                                          
+                                    </div>
+
+                                    <div class="MidleSettingsBlocks">
+                                        <div class="MidleSettingsBlocksImage">
+                                            <svg width="25" height="25" viewBox="0 0 28 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M18.6577 18.9084L12.4767 25H27.9292V18.9084H18.6577ZM14.1147 5.49159L0.114746 19.2891V25H5.90942L19.9093 11.2025L14.1147 5.49159ZM15.7712 3.86665L19.6945 0L25.4846 5.70785L21.5628 9.57298L15.7712 3.86665Z" fill="white"/>
+                                            </svg>
+                                        </div>
+                                        <input class="MidleSettingsBlocksP" id="MidleSettingsBlocksPEditProfileUsername" placeholder="Edit Profile Username."></input>
+                                    </div>
+
+
+                                    <div class="MidleSettingsBlocks">
+                                        <div class="MidleSettingsBlocksImage">
+                                            <svg width="25" height="25" viewBox="0 0 28 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M18.6577 18.9084L12.4767 25H27.9292V18.9084H18.6577ZM14.1147 5.49159L0.114746 19.2891V25H5.90942L19.9093 11.2025L14.1147 5.49159ZM15.7712 3.86665L19.6945 0L25.4846 5.70785L21.5628 9.57298L15.7712 3.86665Z" fill="white"/>
+                                            </svg>
+                                        </div>
+                                        <input class="MidleSettingsBlocksP" id="MidleSettingsBlocksPEmail" placeholder="Edit Profile Email."></input>
+                                    </div>
+                                    <div class="MidleSettingsBlocks">
+                                        <div class="MidleSettingsBlocksImage">
+                                            <svg width="25" height="25" viewBox="0 0 28 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M18.6577 18.9084L12.4767 25H27.9292V18.9084H18.6577ZM14.1147 5.49159L0.114746 19.2891V25H5.90942L19.9093 11.2025L14.1147 5.49159ZM15.7712 3.86665L19.6945 0L25.4846 5.70785L21.5628 9.57298L15.7712 3.86665Z" fill="white"/>
+                                            </svg>
+                                        </div>
+                                        <input class="MidleSettingsBlocksP" placeholder="Change Password." id="MidleSettingsBlocksPPassword"></input>
+                                    </div>
+
+                                </div>
+                                <div id="DeleteAccountSave">
+                                    <button id="DeleteAccountSaveAccount">Delete account</button><button id="DeleteAccountSaveSave">Save</button>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <!--------------------------------------------  MidleCub-------------------------------------------->
+                    <!--------------------------------------------  Leaderboard or MidleCub-------------------------------------------->
                     <div class="MidleCub">
                         <div class="MidleCubProfil">
                             <div class="MidleCubHeroAll">
@@ -678,7 +734,7 @@
                         </div>
                     </div>
 
-                    <!-- -------------------------------------- midleJoinList -------------------------------------------------- -->
+                    <!-- -------------------------------------- Game or midleJoinList -------------------------------------------------- -->
 
 
 
@@ -691,14 +747,14 @@
                                         <div class="JoinListHeroDivButton">
                                             <div class="JoinListHeroDivButtonBack">
                                                 <div class="JoinListHeroDivButton">
-                                                    <button class="JoinListHeroDivButtonB">
+                                                    <button class="JoinListHeroDivButtonB" id="JoinListHeroDivButtonBCreate">
                                                         <svg width="17" height="19" viewBox="0 0 17 19" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                             <path d="M14.7597 6.9335C16.6885 8.10093 16.6885 10.8991 14.7597 12.0665L4.55341 18.244C2.55406 19.4541 1.2448e-07 18.0145 2.21925e-07 15.6775L7.37073e-07 3.32251C8.34518e-07 0.985451 2.55406 -0.454125 4.55341 0.756011L14.7597 6.9335Z" fill="url(#paint0_linear_1083_2231)"/>
                                                             <defs>
-                                                            <linearGradient id="paint0_linear_1083_2231" x1="2.32222" y1="9.5" x2="36.2847" y2="9.5" gradientUnits="userSpaceOnUse">
-                                                            <stop stop-color="#D501F8"/>
-                                                            <stop offset="1" stop-color="#624DE3"/>
-                                                            </linearGradient>
+                                                                <linearGradient id="paint0_linear_1083_2231" x1="2.32222" y1="9.5" x2="36.2847" y2="9.5" gradientUnits="userSpaceOnUse">
+                                                                    <stop stop-color="#D501F8"/>
+                                                                    <stop offset="1" stop-color="#624DE3"/>
+                                                                </linearGradient>
                                                             </defs>
                                                         </svg>
                                                         <p>Create</p>
@@ -706,7 +762,7 @@
                                                 </div>
 
                                                 <div class="JoinListHeroDivButton">
-                                                    <button class="JoinListHeroDivButtonB">
+                                                    <button class="JoinListHeroDivButtonB" id="JoinListHeroDivButtonBInvite">
                                                         <p>Invite</p>                                                
                                                     </button>
                                                 </div>
@@ -720,7 +776,13 @@
                                                         <path fill-rule="evenodd" clip-rule="evenodd" d="M28.5957 8.56415C28.8848 8.73189 29.0627 9.04081 29.0627 9.375V20.625C29.0627 20.9592 28.8848 21.2681 28.5957 21.4359C28.3067 21.6036 27.9502 21.6048 27.66 21.439L21.0975 17.689C20.648 17.4321 20.4918 16.8594 20.7487 16.4099C21.0056 15.9603 21.5782 15.8041 22.0278 16.061L27.1877 19.0095V10.9905L22.0278 13.939C21.5782 14.1959 21.0056 14.0397 20.7487 13.5901C20.4918 13.1406 20.648 12.5679 21.0975 12.311L27.66 8.56102C27.9502 8.39522 28.3067 8.39641 28.5957 8.56415Z" fill="white"/>
                                                     </svg>
                                                 </div>
-                                                <p>Player/Players</p>
+                                                <!-- <label for="Players">Player/Players</label> -->
+                                                <select name="Players" id="JoinListHeroDivProfilPlayers">
+                                                    <option value="" disabled selected hidden>Player/Players</option>
+                                                    <option value="1/2">1/2</option>
+                                                    <option value="1/4">1/4</option>
+                                                    <option value="1/6">1/6</option>
+                                                </select>
                                             </div>
                                             <div  class="JoinListHeroDivProfilLive">
                                                 <div>
@@ -729,7 +791,11 @@
                                                         <path fill-rule="evenodd" clip-rule="evenodd" d="M28.5957 8.56415C28.8848 8.73189 29.0627 9.04081 29.0627 9.375V20.625C29.0627 20.9592 28.8848 21.2681 28.5957 21.4359C28.3067 21.6036 27.9502 21.6048 27.66 21.439L21.0975 17.689C20.648 17.4321 20.4918 16.8594 20.7487 16.4099C21.0056 15.9603 21.5782 15.8041 22.0278 16.061L27.1877 19.0095V10.9905L22.0278 13.939C21.5782 14.1959 21.0056 14.0397 20.7487 13.5901C20.4918 13.1406 20.648 12.5679 21.0975 12.311L27.66 8.56102C27.9502 8.39522 28.3067 8.39641 28.5957 8.56415Z" fill="white"/>
                                                     </svg>
                                                 </div>
-                                                <p>Live on/off</p>
+                                                <select name="LiveOnOff" id="LiveOnOff">
+                                                    <option value="on" disabled selected hidden>Live on/off</option>
+                                                    <option value="on">on</option>
+                                                    <option value="off">off</option>
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="JoinListHeroDivTeme">
@@ -739,7 +805,12 @@
                                                         <path d="M2.6 3.75C2.6 3.0625 3.185 2.5 3.9 2.5H10.4C11.115 2.5 11.7 1.9375 11.7 1.25C11.7 0.5625 11.115 0 10.4 0H2.6C1.17 0 0 1.125 0 2.5V10C0 10.6875 0.585 11.25 1.3 11.25C2.015 11.25 2.6 10.6875 2.6 10V3.75ZM9.893 14.3625L6.045 18.9875C5.707 19.4 6.006 20 6.552 20H19.5C19.6207 20 19.739 19.9677 19.8417 19.9067C19.9444 19.8456 20.0274 19.7583 20.0814 19.6545C20.1354 19.5507 20.1582 19.4345 20.1474 19.3189C20.1365 19.2033 20.0924 19.0929 20.02 19L17.42 15.6625C17.16 15.325 16.64 15.325 16.38 15.6625L14.261 18.3875L10.907 14.3625C10.8461 14.2895 10.7689 14.2306 10.6812 14.1901C10.5934 14.1496 10.4973 14.1286 10.4 14.1286C10.3027 14.1286 10.2066 14.1496 10.1188 14.1901C10.0311 14.2306 9.95391 14.2895 9.893 14.3625ZM19.5 8.125C19.5 7.0875 18.629 6.25 17.55 6.25C16.471 6.25 15.6 7.0875 15.6 8.125C15.6 9.1625 16.471 10 17.55 10C18.629 10 19.5 9.1625 19.5 8.125ZM23.4 0H15.6C14.885 0 14.3 0.5625 14.3 1.25C14.3 1.9375 14.885 2.5 15.6 2.5H22.1C22.815 2.5 23.4 3.0625 23.4 3.75V10C23.4 10.6875 23.985 11.25 24.7 11.25C25.415 11.25 26 10.6875 26 10V2.5C26 1.125 24.83 0 23.4 0ZM23.4 21.25C23.4 21.9375 22.815 22.5 22.1 22.5H15.6C14.885 22.5 14.3 23.0625 14.3 23.75C14.3 24.4375 14.885 25 15.6 25H23.4C24.83 25 26 23.875 26 22.5V15C26 14.3125 25.415 13.75 24.7 13.75C23.985 13.75 23.4 14.3125 23.4 15V21.25ZM1.3 13.75C0.585 13.75 0 14.3125 0 15V22.5C0 23.875 1.17 25 2.6 25H10.4C11.115 25 11.7 24.4375 11.7 23.75C11.7 23.0625 11.115 22.5 10.4 22.5H3.9C3.185 22.5 2.6 21.9375 2.6 21.25V15C2.6 14.3125 2.015 13.75 1.3 13.75Z" fill="white"/>
                                                     </svg>
                                                 </div>
-                                                <p>Theme</p>
+                                                <select name="JoinTheme" id="JoinTheme">
+                                                    <option value="" disabled selected hidden>Theme</option>
+                                                    <option value="red">red</option>
+                                                    <option value="blue">blue</option>
+                                                    <option value="green">green</option>
+                                                </select>
                                             </div>
                                             <div class="JoinListHeroDivTemeGameMode">
                                                 <div>
@@ -753,7 +824,12 @@
                                                         </g>
                                                         </svg>
                                                 </div>
-                                               <p> Game Mode.</p>
+                                               <select name="JoinListHeroDivGameMode" id="JoinListHeroDivGameMode">
+                                                <option value="" disabled selected hidden>Game Mode</option>
+                                                <option value="Classic">Classic</option>
+                                                <option value="Hard">Hard</option>
+                                                <option value="Easy">Easy</option>
+                                            </select>
                                             </div>
                                         </div>
                                     </div>
@@ -773,23 +849,23 @@
                                     </div>
                                     <div class="JoinListConteinerTableALL">
                                     <!-- JoinListItem -->
-<div class="JoinListTableBody">
-    <div class="JoinListTableBodyNAme"><p class="JoinListTableBodyNAmeP1">1</p></div>
-    <div class="JoinListTd">
-        <img src="./public/User2.png" width="40" height="40"
-                    alt="Users" class=".JoinListTableImageBody"></img>
-    </div>
-    <div class="JoinListTableBodyNAme"><p class="JoinListTableBodyNAmeP">Classic /Hard /Tornament Easy</p></div>
-    <div class="JoinListTableBodyNAme">
-        <img src="./public/Grup2.png" class="JoinListTableBodyNAmeImg"/>
-        <button class="JoinListTableBodyNAmeMembers">Members</button>
-    </div>
-    <div class="JoinListTableBodyNAme"><p>1/2</p></div>
-    <div class="JoinListTableBodyNAme">
-        <button id="JoinListTableID" class="JoinListTableClassJoin">Join</button>
-        <button id="JoinListTableID" class="JoinListTableClassView">View</button>
-    </div>
-</div>
+                                                <div class="JoinListTableBody">
+                                                    <div class="JoinListTableBodyNAme"><p class="JoinListTableBodyNAmeP1">1</p></div>
+                                                    <div class="JoinListTd">
+                                                        <img src="./public/User2.png" width="40" height="40"
+                                                                    alt="Users" class=".JoinListTableImageBody"></img>
+                                                    </div>
+                                                    <div class="JoinListTableBodyNAme"><p class="JoinListTableBodyNAmeP">Classic /Hard /Tornament Easy</p></div>
+                                                    <div class="JoinListTableBodyNAme">
+                                                        <img src="./public/Grup2.png" class="JoinListTableBodyNAmeImg"/>
+                                                        <button class="JoinListTableBodyNAmeMembers">Members</button>
+                                                    </div>
+                                                    <div class="JoinListTableBodyNAme"><p>1/2</p></div>
+                                                    <div class="JoinListTableBodyNAme">
+                                                        <button id="JoinListTableID" class="JoinListTableClassJoin">Join</button>
+                                                        <button id="JoinListTableID" class="JoinListTableClassView">View</button>
+                                                    </div>
+                                                </div>
                                     </div>
                                     <!-- JoinListItem -->
                                 </div>
@@ -825,7 +901,12 @@
                     </div>
 
 
-
+                    <!-------------------------------------------------- ProfileMidle ---------------------------------------------------->
+                    <div class="ProfileMidle">
+                        <div>
+                            ProfileMidle
+                        </div>
+                    </div>
 
 
 
@@ -1020,6 +1101,7 @@
         <script src="./src/app/models/Home/Middle.js"></script>
         <script src="./src/app/models/Home/MidleCup.js"></script>
         <script src="./src/app/models/Home/JoinList.js"></script>
+        <script src="./src/app/models/Home/Profile.js"></script>
         <script src="./src/app/models/Home/MidleSettings.js"></script>
         
         <script src="./src/app/models/User.js"></script>
