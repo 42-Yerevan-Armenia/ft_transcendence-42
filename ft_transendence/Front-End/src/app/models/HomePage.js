@@ -14,6 +14,7 @@ class HomePage extends HtmlElement {
     _HomeRight = new HomeRight();
     _HomeMessage = new MessagePage(".Message");
     _HomeRight = new HomeRight();
+    _HomeMidleProfile = new MidleProfile();
 
     _NAV = {
       _Home : new HtmlElement(".LEFTHOME"),

@@ -1,4 +1,15 @@
 var ItemJoinList = 1;
+const undefinedUser = {
+  id :178891989,
+  src:{
+    url: "./public/User2.png",
+    urlClient:"./public/undefinedUser.png"
+  },
+  GameLevele:"hard",
+  type : "User",
+  isJoin : true
+}
+
 const UserJoinList = [
   {
     id :178891989,
@@ -23,6 +34,7 @@ class JoinList extends HtmlElement {
       super(".JoinList")
       this._style.display = "none";
     }
+    _CreateButton = document.querySelector(".JoinListHeroDivButtonB");
     // 2<div class="JoinListTd">
     // <img src="./public/User2.png" width="40" height="40"
     //             alt="Users" class=".JoinListTableImageBody"></img>
@@ -127,7 +139,7 @@ class JoinList extends HtmlElement {
         <button id="JoinListTableID" class="JoinListTableClassView">View</button>
     </div>
 </div> */
-    JoinListItem(i, User){
+    JoinListItem (User){
       debugger
       const divJoin = document.createElement("div");
       divJoin.setAttribute("class", "JoinListTableBody");
@@ -157,11 +169,23 @@ class JoinList extends HtmlElement {
       table.appendChild(divJoin);
     }
 
-    Drow(){
+    async getJoinListItemAll(){
+      console.log("++++++++++++" + User._Id + "\n");
+      return await getFetchRequest("api/v1/joinlist/" + User._Id);
+    }
+
+    async Drow(){
       debugger
-      document.querySelector(".JoinListConteinerTableALL").innerHTML = "";
-      this.JoinListItem(ItemJoinList, UserJoinList[0]);
-      this.JoinListItem(ItemJoinList, UserJoinList[1]);
+      const JoinList = await this.getJoinListItemAll();
+      if (JoinList && JoinList.state)
+      {
+        JoinList.message.forEach(e => {
+          this.JoinListItem(e);
+          
+        });
+        console.log("11111JoinList.message.forEach(element ");
+      }
+      console.log("22222JoinList.message.forEach(element ");
     }
   
   }

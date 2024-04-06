@@ -42,7 +42,6 @@
 }
 
 .MidleSettingsEdit{
-  
     width: 100%;
     margin-top: 30px;
 }
@@ -50,12 +49,18 @@
 .MidleSettingsEditConteiner{
     width: 40%;
     margin-left: 5%;
+    display: grid;
+    grid-template-columns: auto auto;
+    column-gap: 50px;
+    row-gap: 15px;
+
+
 }
 
 .MidleSettingsBlocks{
     display: flex;
     color: white;
-    gap:10px;
+    gap:15px;
 }
 
 .MidleSettingsBlocksImage{

@@ -13,6 +13,8 @@ class USER {
       this._getAccess = localStorage.getItem("access");
       this._geRefresh = localStorage.getItem("refresh");
       this._Id = localStorage.getItem("id");
+      this._Gamemode = "Easy";
+      this._Twofactor = false;
     }
   
     checkSignIn() {
@@ -36,6 +38,8 @@ class USER {
       this._Email = "";
       this._Image = "";
       this._ConfirmEmail = false;
+      this._Gamemode =  "";
+      this._Twofactor =  false;
     }
   
     getAccessTocken(){
@@ -53,7 +57,7 @@ class USER {
       const dataUser = await getFetchRequest("users");
 
       //get data from dataUser
-      const {id, name, nickname, email, image} = dataUser;
+      const {id, name, nickname, email, image, gamemode, twofactor} = dataUser;
       if (!id || !name || !nickname || !email || !image)
         return false;
 
@@ -63,9 +67,18 @@ class USER {
       this._ConfirmEmail = true;
       this._SignIn = true;
       this._Image = image;
+      this._Gamemode = gamemode || "Easy";
+      this._Twofactor = twofactor || false;
 
     }
-
+    setData(data){
+      this._Name = data.name;
+      this._Nickname = data.nickname;
+      this._Email = data.email;
+      this._Image = data.image;
+      this._Gamemode = data.gamemode;
+      this._Twofactor = data.twofactor;
+    }
     //when refresh_token is not expired call for update access
     accessRefresh = async () => {
       this._geRefresh = localStorage.getItem("refresh");

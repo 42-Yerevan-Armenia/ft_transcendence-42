@@ -14,7 +14,7 @@ var SignUp = new SignupPage();
 var ManageAllPage = {
     Manage: async function(pageName) {
         //debugger
-        ManageAllPage.pages.forEach(async (element) => {
+      await  ManageAllPage.pages.forEach(async (element) => {
             const [key, obj] = Object.entries(element)[0]; // Get the key-value pair of the element
 
             if (key === pageName) {
@@ -32,7 +32,7 @@ var ManageAllPage = {
         {"Home": Home},
         {"Password": Password},
         {"SignUp": SignUp},
-        {"ResetPage": Reset}
+        {"ResetPage": Reset},
     ]
 };
 
@@ -40,13 +40,13 @@ var ManageAllPage = {
 //manage Home Page in middle sections
 //give name section name what we need show in middle Home->Midl section
 var ManageMidle = {
-    Manage: function(midleName) {
+    Manage: async function(midleName) {
          //debugger
-        ManageMidle.pages.forEach((element) => {
+       await ManageMidle.pages.forEach(async (element) => {
             const [key, obj] = Object.entries(element)[0]; // Get the key-value pair of the element
             if (key === midleName) {
                 obj.DisplayBlock();
-                obj.Drow();
+                await obj.Drow();
             } else {
                 obj.DisplayNone();
             }
@@ -56,7 +56,8 @@ var ManageMidle = {
         {"MidleCub": Home._MidleCub},
         {"MidleSettings": Home._MiddleSettings},
         {"midle": Home._Midle},
-        {"JoinList": Home._MidleJoinList}
+        {"JoinList": Home._MidleJoinList},
+        {"ProfileMidle":Home._HomeMidleProfile}
         // {"Password": Password},
         // {"SignUp": SignUp}
     ]
@@ -64,14 +65,14 @@ var ManageMidle = {
 
 
 var ManageRight = {
-    Manage: function(name) {
+    Manage: async function(name) {
         //debugger
-        ManageRight.pages.forEach((element) => {
+        await ManageRight.pages.forEach(async (element) => {
             const [key, obj] = Object.entries(element)[0]; // Get the key-value pair of the element
 
             if (key === name) {
                 obj.DisplayBlock();
-                obj.Drow();
+                await obj.Drow();
             } else {
                 obj.DisplayNone();
             }
