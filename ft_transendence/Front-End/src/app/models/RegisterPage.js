@@ -44,7 +44,7 @@ class RegisterPage extends HtmlElement {
       return false;
       }
     }
-    Drow(){
+    draw(){
       
     }
   };

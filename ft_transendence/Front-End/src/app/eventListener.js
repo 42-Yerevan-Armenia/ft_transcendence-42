@@ -18,6 +18,7 @@ Home._MiddleSettings?._Save?.addEventListener("click",async ()=>{
   await Home._MiddleSettings.changeData();
 })
 
+
 Home._MiddleSettings?._DeleteAccount.addEventListener("click",async ()=>{
   console.log("_DeleteAccount")
 
@@ -31,6 +32,27 @@ Home._NAV?._Profile?._classname?.addEventListener("click", async ()=>{
   console.log("Home._NAV?._Profile?._classname?.addEventListener");
   ManageMidle.Manage("ProfileMidle");
 })
+
+// ProfileMidleHeaderToInvit
+Home?._HomeMidleProfile?._ProfileMidleHeaderToInvit1?.addEventListener("click",async ()=>{
+  console.log("_ProfileMidleHeaderToInvit call1");
+
+
+
+  ManageMidle.Manage("MidleHistoryGame");
+
+  
+})
+Home?._HomeMidleProfile?._ProfileMidleHeaderToInvit2?.addEventListener("click",async ()=>{
+  console.log("_ProfileMidleHeaderToInvit call2");
+
+
+  ManageMidle.Manage("MidleHistoryGame");
+
+
+})
+
+
 
 // 1
 Home._NAV?._LEADERBOARD?._classname?.addEventListener("click",()=>{

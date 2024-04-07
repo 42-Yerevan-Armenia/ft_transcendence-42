@@ -3,7 +3,7 @@ class HomeLeft extends HtmlElement {
     constructor(){
       super(".User")
       this._style.display = "none";
-      this.Drow();
+      this.draw();
     }
     _NavSigninNavSignUp = document.querySelector("#NavSigninNavSignUp");
     _NAVSIGNINSIGNOUTNavLoginOut = document.querySelector("#NAVSIGNINSIGNOUTNavLoginOut");
@@ -13,7 +13,7 @@ class HomeLeft extends HtmlElement {
     _Image = document.querySelector("#UserImage");
     _ExploreMessag = document.querySelector(".Explore");
     _NavLoginOut = document.querySelector("#NavLoginOut");
-    Drow() {
+    draw() {
       // debugger
       console.warn("++++++++++++++++++1")
       if (User.checkSignIn())

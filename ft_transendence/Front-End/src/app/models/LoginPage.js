@@ -68,7 +68,7 @@ class LoginPage extends HtmlElement {
       }
     }
 
-    Drow() {
+    draw() {
       
     }
     
