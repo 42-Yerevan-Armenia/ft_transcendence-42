@@ -105,6 +105,6 @@ class ConfirmPage extends HtmlElement {
       }
       return null;
     }
-    Drow(){
+    draw(){
     }
   }

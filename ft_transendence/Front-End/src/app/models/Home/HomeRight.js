@@ -5,6 +5,6 @@ class HomeRight extends HtmlElement{
     };
     
 
-    Drow(){
+    draw(){
     }
 }

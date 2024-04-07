@@ -1,0 +1,132 @@
+.MidleHistoryGame {
+    width: 100%;
+    height: 100%;
+}
+
+.FullHistoryEdit {
+    width: 100%;
+    margin-top: 30px;
+}
+
+.FullHistory {
+    width: 100%;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--background-color, radial-gradient(66.54% 118.23% at 37.47% 107.32%, #D9CBFD 10%, #7758D1 100%));
+}
+
+.FullHistoryProfil {
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+.FullHistoryContainerTable {
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.FullHistoryTableBody div {
+    margin: auto 0px;
+}
+
+.FullHistoryPlayerList {
+    display: flex;
+    justify-content: space-around;
+}
+
+.FullHistoryTable {
+    display: grid;
+    grid-template-columns: 2fr 2fr 2fr 2fr 2fr 1fr;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid white;
+    color: white;
+    text-align: center;
+}
+
+.FullHistoryTableBody {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    color: white;
+    text-align: center;
+    justify-content: center;
+}
+
+.FullHistoryEdit, p {
+    font-size: clamp(12px, 2.5vw, 20px);
+}
+
+#FullHistoryTableBodyMore img {
+    height: 100%;
+    width: 100%;
+    display: block;
+}
+
+.imgInsideDiv img {
+    height: 100%;
+    width: 100%;
+    display: block;
+}
+
+.FullHistoryTableBodyMembers {
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border: none;
+    background-color: transparent;
+}
+
+#FullHistoryTableBodyMoreDiv {
+    display: flex;
+    justify-content: center;
+    border-radius: 10px;
+    color: white;
+}
+
+@media only screen and (max-width: 400px) {
+    .FullHistoryProfil {
+        width: 95%;
+    }
+}
+
+@media only screen and (max-width: 339px) {
+    .FullHistoryContainerTable {
+        overflow: hidden;
+        width: 250px;
+    }
+
+    .FullHistoryEdit {
+        overflow: scroll;
+        width: 169px;
+    }
+}
+
+.FullHistoryTableBodyContainerPlayedGames {
+    display: block;
+    padding: 0px 10%;
+}
+
+.FullHistoryTablePlayedGames {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    color: white;
+    text-align: center;
+}
+
+.FullHistoryTableBodyPlayedGamesContent {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    color: white;
+    justify-content: center;
+    text-align: center;
+}

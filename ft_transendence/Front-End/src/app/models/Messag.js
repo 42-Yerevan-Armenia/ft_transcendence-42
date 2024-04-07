@@ -248,7 +248,7 @@ var MessagePage = function(name) {
         if (!Groups.state)
             return null;
 
-        document.getElementById("addChildGrup").style.display = "none";       // for start new message drow
+        document.getElementById("addChildGrup").style.display = "none";       // for start new message draw
         Groups.message.forEach(element => {
              this.createBlock(element, "Grup")
             });
@@ -263,7 +263,7 @@ var MessagePage = function(name) {
         if (!Persons.state)
         return null;
 
-        document.getElementById("addChildPersonal").style.display = "none";       // for start new message drow
+        document.getElementById("addChildPersonal").style.display = "none";       // for start new message draw
         Persons.message.forEach(element => {
          this.createBlock(element, "Personal")
         });
@@ -282,7 +282,7 @@ var MessagePage = function(name) {
     };
 
 
-    this.Drow = async () => {
+    this.draw = async () => {
         //debugger
         if (!await User.menegAccsess())
             return null;

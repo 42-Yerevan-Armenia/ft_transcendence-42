@@ -4,7 +4,7 @@ class MiddleSECTION extends HtmlElement {
       super(".MIDLESECTION")
       this._style.display = "flex";
     }
-    Drow()
+    draw()
     {
 
     }
