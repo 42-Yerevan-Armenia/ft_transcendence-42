@@ -1,7 +1,7 @@
 "use strict"
 // const HostPort="http://localhost:5001"
-const HostPort="http://10.12.11.1:8000"
-// const HostPort="http://10.12.11.2:8000"
+// const HostPort="http://10.12.11.1:8000"
+const HostPort="http://10.12.11.2:8000"
 
 
 
@@ -181,20 +181,21 @@ async function FetchRequest(Tomethod, Torequest, ToObj) {
 
 //fetch universal  GET request
 async function getFetchRequest(ToRequest) {
-  // debugger
+  debugger
 
 
   //get access tocken and id
   const ToObj = User.getAccessTocken();
 
-  if (!ToObj || ToObj.access)
+  if (!ToObj || !ToObj.access)
     return null;
   try {
     const response = await fetch(`${HostPort}/${ToRequest}/`, {
       method: "GET",
-      body: JSON.stringify(ToObj),
+      // body: JSON.stringify(ToObj),
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        'Authorization': 'Bearer ' + ToObj
       }
     });
 

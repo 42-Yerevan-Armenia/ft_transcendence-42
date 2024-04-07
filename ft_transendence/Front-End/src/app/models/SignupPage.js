@@ -80,7 +80,7 @@ class SignupPage extends HtmlElement {
       return await ControllerSignUp(Hash_code + "" + User._Password + "" + Hash_code, User);
     }
     
-    Drow(){
+    draw(){
       
     }
   }

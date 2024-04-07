@@ -15,7 +15,7 @@ class HomePage extends HtmlElement {
     _HomeMessage = new MessagePage(".Message");
     _HomeRight = new HomeRight();
     _HomeMidleProfile = new MidleProfile();
-
+    _MidleHistoryGame = new MidleHistoryGame();
     _NAV = {
       _Home : new HtmlElement(".LEFTHOME"),
       _Profile : new HtmlElement(".PROFIL"),
@@ -56,12 +56,12 @@ class HomePage extends HtmlElement {
       this._style.display = "none";
     }
 
-    async Drow() {
+    async draw() {
       ManageMidle.Manage("midle")
       // ManageMidle.Manage("JoinList");
       await this.usersDro();
   
-      this._HomeLeft.Drow();      //left botton User section
+      this._HomeLeft.draw();      //left botton User section
     }
   }
   

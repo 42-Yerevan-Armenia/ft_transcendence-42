@@ -174,7 +174,7 @@ class JoinList extends HtmlElement {
       return await getFetchRequest("api/v1/joinlist/" + User._Id);
     }
 
-    async Drow(){
+    async draw(){
       debugger
       const JoinList = await this.getJoinListItemAll();
       if (JoinList && JoinList.state)
