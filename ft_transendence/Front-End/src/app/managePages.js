@@ -19,7 +19,7 @@ var ManageAllPage = {
 
             if (key === pageName) {
                 obj.DisplayBlock();
-                await obj.Drow();
+                await obj.draw();
             } else {
                 await obj.DisplayNone();
             }
@@ -46,7 +46,7 @@ var ManageMidle = {
             const [key, obj] = Object.entries(element)[0]; // Get the key-value pair of the element
             if (key === midleName) {
                 obj.DisplayBlock();
-                await obj.Drow();
+                await obj.draw();
             } else {
                 obj.DisplayNone();
             }
@@ -57,7 +57,8 @@ var ManageMidle = {
         {"MidleSettings": Home._MiddleSettings},
         {"midle": Home._Midle},
         {"JoinList": Home._MidleJoinList},
-        {"ProfileMidle":Home._HomeMidleProfile}
+        {"ProfileMidle":Home._HomeMidleProfile},
+        {"MidleHistoryGame": Home._MidleHistoryGame}
         // {"Password": Password},
         // {"SignUp": SignUp}
     ]
@@ -72,7 +73,7 @@ var ManageRight = {
 
             if (key === name) {
                 obj.DisplayBlock();
-                await obj.Drow();
+                await obj.draw();
             } else {
                 obj.DisplayNone();
             }

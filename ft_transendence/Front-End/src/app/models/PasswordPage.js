@@ -59,7 +59,7 @@ class PasswordPage extends HtmlElement {
       return await ControllerPessPassword(Hash_code + "" + User._Password + "" + Hash_code, User);
     }
 
-    Drow(){
+    draw(){
       this.errorSetNull();
     }
   }

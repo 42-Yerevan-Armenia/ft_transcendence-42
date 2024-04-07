@@ -29,11 +29,14 @@
     <!-- MidleCup -->
     <link rel="stylesheet" href="./src/app/styles/StyleMidleCup.css">
 
+    <link rel="stylesheet" href="./src/app/styles/StyleMidleProfil.css">
     <!-- JoinList -->
     <link rel="stylesheet" href="./src/app/styles/StyleJoinList.css">
     <!-- Messag -->
     <link rel="stylesheet" href="./src/app/styles/StyleMessage.css">
     
+    <!-- Middle -->
+    <link rel="stylesheet" href="./src/app/styles/StyleFullHistory.css">
     
     <!-- SignUp -->
     <link rel="stylesheet" href="./src/app/styles/Signup.css">
@@ -903,9 +906,46 @@
 
                     <!-------------------------------------------------- ProfileMidle ---------------------------------------------------->
                     <div class="ProfileMidle">
-                        <div>
-                            ProfileMidle
+                        <div class="ProfileMidleContenier">
+                            <div class="ProfileMidleHeader">
+                                <div class="ProfileMidleHeaderImage">
+                                    <!-- <img src="./public/conva.png" alt="Conva"/> -->
+                                </div>
+                                <div class="ProfileMidleHeaderDiv">
+                                    <div class="ProfileMidleHeaderMain">
+                                        <p class="ProfileMidleHeaderMainWinCount" id="ProfileMidleHeaderToInvit1" >Win Count:   23</p>
+                                    </div>
+                                    <div class="ProfileMidleHeaderMain">
+                                        <div class="ProfileMidleHeaderMainAvatar">
+                                            <img src="./public/avatar.png" alt="Avatar">
+                                        </div>
+                                        <div class="ProfileMidleHeaderMainData">
+                                            <h5 class="ProfileMidleHeaderMainDataName">Zaak Sidki</h5>
+                                            <p class="ProfileMidleHeaderMainDataNickName">@zsidki</p>
+                                        </div>
+                                    </div>
+                                    <div class="ProfileMidleHeaderMain">
+                                        <div class="ProfileMidleHeaderMainLossCount">
+                                            <p class="ProfileMidleHeaderMainLossCountLossCount" id="ProfileMidleHeaderToInvit2">Loss Count:   15</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ProfileMidleFooter">
+                                <p class="ProfileMidleFooterFriends">Friends</p>
+                                <div class="ProfileMidleFooterDiv">
+                                    <div class="ProfileMidleFooterUser">
+                                        <img src="./public/Grup2.png" alt="Friends" class="ProfileMidleFooterUserImage">
+                                        <p class="ProfileMidleFooterUserName">User1</p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
+                    </div>
+
+                    <!-- --------------------------------------------------   HistoryGame --------------------------------------------------  -->
+
+                    <div class="MidleHistoryGame">
                     </div>
 
 
@@ -1085,7 +1125,7 @@
 
                 </div>
                 <footer>
-                    &copy; 2023 all rights reserved
+                    &copy; 2024 all rights reserved
                 </footer>
             </div>
 
@@ -1101,6 +1141,7 @@
         <script src="./src/app/models/Home/Middle.js"></script>
         <script src="./src/app/models/Home/MidleCup.js"></script>
         <script src="./src/app/models/Home/JoinList.js"></script>
+        <script src="./src/app/models/Home/MidleHistoryGame.js"></script>
         <script src="./src/app/models/Home/Profile.js"></script>
         <script src="./src/app/models/Home/MidleSettings.js"></script>
         

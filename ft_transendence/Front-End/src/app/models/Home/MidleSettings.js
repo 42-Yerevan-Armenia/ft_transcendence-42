@@ -42,7 +42,7 @@ class MiddleSettings extends HtmlElement {
       }
       ManageAllPage.Manage("Home");
     }
-    async Drow(){
+    async draw(){
       await this.changeUser();
     }
   

@@ -49,7 +49,7 @@ class ResetPageA extends HtmlElement {
     }
     return true;
   }
-  Drow(){
+  draw(){
       
   }
 }

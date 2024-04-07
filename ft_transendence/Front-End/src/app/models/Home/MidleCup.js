@@ -3,7 +3,7 @@ class MidleCub extends HtmlElement {
       super(".MidleCub")
       this._style.display = "none";
     }
-    Drow(){
+    draw(){
     }
   
   }
