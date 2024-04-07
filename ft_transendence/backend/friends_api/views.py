@@ -1,8 +1,9 @@
+from django.http import JsonResponse
 from django.shortcuts import render
 from django.utils import timezone
 from friendship.models import Friend, FriendshipRequest, Block
 from core.serializers import FriendSerializer
-from core.models import Person
+from core.models import User, Person
 from rest_framework import generics, status, viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -143,3 +144,14 @@ class UnblockRequest(APIView):
                 return Response({"success": "false", "error": "Receiver are not blocked"}, status=status.HTTP_400_BAD_REQUEST)
         except Person.DoesNotExist:
             return Response({"success": "false", "error": "Receiver user not found"}, status=status.HTTP_404_NOT_FOUND)
+
+class Friendlist(APIView):
+    permission_classes = [IsAuthenticated]
+    def get(self, request, pk):
+        try:
+            user = User.objects.get(id=pk)
+            friends = Friend.objects.friends(user)
+            friend_ids = [friend.id for friend in friends]
+            return JsonResponse({"success": True, "friend_ids": friend_ids}, status=status.HTTP_200_OK)
+        except User.DoesNotExist:
+            return JsonResponse({"success": False, "error": "User not found"}, status=status.HTTP_404_NOT_FOUND)

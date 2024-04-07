@@ -1,3 +1,4 @@
+from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.contrib.auth.models import User
 from core.models import Person
@@ -7,7 +8,11 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 import os
+import json
+import base64
+import requests
 
 INTRA_LOGIN_URL = f"{os.environ.get('INTRA_API_URL')}/oauth/authorize?client_id={os.environ.get('INTRA_API_UID')}&redirect_uri={os.environ.get('INTRA_REDIRECT_URI')}&response_type=code"
 
@@ -16,7 +21,7 @@ class Login42(APIView):
         return redirect(INTRA_LOGIN_URL)
     
     def post(self, request):
-        if (request.user.is_authenticated()):
+        if (request.user.is_authenticated):
             return Response({"success": "false", "error": "looged in"}, status=200)
         code = request.data.get('code')
         if (code == None):
@@ -28,34 +33,43 @@ class Login42(APIView):
         if (access_token == None):
             return Response({"success": "false", "error": "access token not provided"}, status=400)
         # Check if user is exists
-        user = Person.objects.filter(login=login).first()
-        if (user == None):
+        user = User.objects.filter(username=login).first()
+        person = Person.objects.filter(nickname=login).first()
+        if (user == None and person == None):
             user_info = self.get_user_info(login, access_token['access_token'])
             if (user_info == None or user_info == {}):
                 return Response({"success": "false", "error": "invalid login"}, status=401)
-            user = get_user_model().objects.create(
-                first_name=user_info['first_name'],
-                username=user_info['login'],
-            )
-            data = Person.objects.create(
-                user=user,
-                name = user_info['first_name'],
-                nickname=user_info['login']
-            )
-            refresh = RefreshToken.for_user(data)
-            access = str(refresh.access_token)
-            refresh = str(refresh)
-            response_data = {
-                "success": "true",
-                "access": access,
-                "refresh": refresh,
-                "user": {
-                    "id": user.id,
-                    "name": user.name,
-                    "nickname": user.nickname,
-                    "image": user.image,
+            # Assuming you have received the image information dictionary
+            image_info = user_info['image']
+            
+            # Extract the desired image URL from the dictionary
+            image_url = image_info['link']
+            
+            # Fetch the image from the URL
+            image_response = requests.get(image_url)
+            if image_response.status_code == 200:
+                image_content_base64 = base64.b64encode(image_response.content).decode('utf-8')
+                user = User.objects.create(
+                    first_name=user_info['first_name'],
+                    username=user_info['login'],
+                )
+                data = Person.objects.create(
+                    user=user,
+                    name = user_info['first_name'],
+                    nickname=user_info['login'],
+                    image=image_content_base64
+                )
+                response_data = {
+                    "success": "true",
+                    "access": access_token,
+                    "user": {
+                        "name": data.name,
+                        "nickname": data.nickname,
+                        "image": data.image,
+                    }
                 }
-            }
+            else:
+                return Response({"success": "false", "error": "unable to fetch image"}, status=400)
             return JsonResponse({"success": "true", "data": response_data})
         else:
             return JsonResponse({"success": "false", "error": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)

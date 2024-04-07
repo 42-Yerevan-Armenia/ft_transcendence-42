@@ -144,7 +144,6 @@ class Register(APIView):
             )
             data.save_base64_image(image_path=os.path.join(os.path.dirname(__file__), 'default.jpg'))
             data.save_base64_background(background_path=os.path.join(os.path.dirname(__file__), 'background.jpg'))
-            # model_to_dict(data)
             data_to_send = {'email': email, 'nickname': request.data['nickname'], 'name': request.data['name']}
         except ValidationError as e:
             user.delete()
@@ -226,24 +225,25 @@ class Login(APIView):
         email = request.data['email']
         password = request.data['password'][10:-10]
         try:
-            user = Person.objects.get(email=email)
-        except Person.DoesNotExist:
+            user = User.objects.get(email=email)
+            person = Person.objects.get(email=email)
+        except User.DoesNotExist:
             return JsonResponse({"success": "false", "error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
-        if check_password(password, user.password):
-            refresh = RefreshToken()
-            refresh['email'] = user.email
-            access = str(refresh.access_token)
-            refresh = str(refresh)
+        if check_password(password, person.password):
+            token_serializer = TokenObtainPairSerializer()
+            token = token_serializer.get_token(user)
+            refresh = RefreshToken.for_user(user)
+
             response_data = {
                 "success": "true",
-                "access": access,
-                "refresh": refresh,
+                "access": str(token.access_token),
+                "refresh": str(refresh),
                 "user": {
-                    "id": user.id,
-                    "name": user.name,
-                    "nickname": user.nickname,
-                    "email": user.email,
-                    "image": user.image,
+                    "id": person.id,
+                    "name": person.name,
+                    "nickname": person.nickname,
+                    "email": person.email,
+                    "image": person.image,
                 }
             }
             return JsonResponse({"success": "true", "data": response_data})
@@ -288,9 +288,9 @@ class SettingsById(APIView):
         try:
             user = Person.objects.get(id=pk)
             serializer = SettingsSerializer(user)
+            return JsonResponse({"success": "true", "profile": serializer.data}, safe=False)
         except Person.DoesNotExist:
             return JsonResponse({"success": "false", "error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
-        return JsonResponse({"success": "true", "profile": serializer.data}, safe=False)
 
     def put(self, request, pk):
         try:
@@ -298,16 +298,34 @@ class SettingsById(APIView):
         except Person.DoesNotExist:
             return JsonResponse({"success": "false", "error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
         data = json.loads(request.body)
-        user.name = data.get('name', user.name)
-        user.nickname = data.get('nickname', user.nickname)
-        user.email = data.get('email', user.email)
-        user.image = data.get('image', user.image)
-        user.password = data.get('password', user.password)
-        user.gamemode = data.get('gamemode', user.gamemode)
-        user.twofactor = data.get('twofactor', user.twofactor)
+        if 'name' in data and data['name']:
+            user.name = data['name']
+        if 'nickname' in data and data['nickname']:
+            user.nickname = data['nickname']
+        if 'email' in data and data['email']:
+            user.email = data['email']
+        print("❌", data['image'])
+        image_file = request.FILES.get('image')
+        print("❎", image_file)
+        if 'image' in data and data['image']:
+            image_path = data['image']
+            # Read the image file
+            with open(image_path, "rb") as img_file:
+                # Encode the image to base64
+                base64_image = base64.b64encode(img_file.read()).decode('utf-8')
+            user.image = base64_image
+        print("✅", user.image)
+        new_password = data.get('password')
+        if new_password:
+            hashed_password = make_password(new_password)
+            user.password = hashed_password
+        if 'gamemode' in data and data['gamemode']:
+            user.gamemode = data['gamemode']
+        if 'twofactor' in data and data['twofactor']:
+            user.twofactor = bool(data['twofactor'])
         user.save()
         return JsonResponse({"success": "true", "profile": model_to_dict(user)})
-        
+
     def delete(self, request, pk):
         try:
             user = Person.objects.get(pk=pk)
@@ -370,7 +388,6 @@ def save_base64_image(image_path):
 class JoinList(APIView):
     # authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
-
     def get(self, request, pk):
         try:
             # Retrieve all persons with their associated game rooms
@@ -422,7 +439,7 @@ class JoinList(APIView):
                     # Add the game room data to the result
                     result["game_rooms"].append(room_data)
             return JsonResponse(result)
-        except Person.DoesNotExist:
+        except User.DoesNotExist:
             return JsonResponse({"success": False, "error": "No game rooms found"})
 
     def post(self, request, pk):
@@ -457,7 +474,7 @@ class JoinList(APIView):
 
 class CreateRoom(APIView):
     # authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
     def post(self, request, pk):
         try:
             max_players = int(request.data.get('number'))
@@ -467,6 +484,7 @@ class CreateRoom(APIView):
             creator_id = request.user.id  # Get the numeric ID of the authenticated user
             is_tournament = max_players > 2
 
+            print("❌ CROOM", max_players)
             game_room_data = {
                 'max_players': max_players,
                 'live': live,
@@ -514,6 +532,7 @@ class GameRoom(APIView):
             return JsonResponse({"success": "false", "error": "Invalid response"}, status=status.HTTP_400_BAD_REQUEST)
 
 class HistoryView(APIView):
+    # permission_classes = [IsAuthenticated]
     def get(self, request, pk):
         try:
             user = Person.objects.get(id=pk)
