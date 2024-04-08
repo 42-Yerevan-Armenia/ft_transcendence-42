@@ -285,7 +285,16 @@
 
 .MessagPrivateSubjectMessagPerson p, .MessagPrivateSubjectMessagSender p {
     margin: 0px;
+    font-size: 12px;
 }
+.MessagPrivateSubjectMessagPerson>p, .MessagPrivateSubjectMessagPerson>p{
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+}
+
+
+
+
 .MessagPrivateSubjectMessagSenderMessag, .MessagPrivateSubjectMessagPersonChat{
     line-height: 12px;
     padding: 10px;

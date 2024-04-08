@@ -204,25 +204,25 @@ class MidleHistoryGame extends HtmlElement{
     }
     appandDiv(user){
         debugger
-        const FullHistoryTableBodyUser = createFullHistoryTableBodyUser(1);
-        const FullHistoryTableBodyUser1 = createFullHistoryTableBodyUser(2);
+        const FullHistoryTableBodyUser = this.createFullHistoryTableBodyUser(1);
+        const FullHistoryTableBodyUser1 = this.createFullHistoryTableBodyUser(2);
         // FullHistory.appendChild(FullHistoryTableBodyUser);
-        FullHistory.children[0].appendChild(FullHistoryTableBodyUser);
-        FullHistory.children[0].appendChild(FullHistoryTableBodyUser1);
-        FullHistoryTableBodyUser1.appendChild(createFullHistoryTableBodyContainerPlayedGames("0", "2", "3", "4"));
-        FullHistoryTableBodyUser1.appendChild(createFullHistoryTableBodyContainerPlayedGames("0", "2", "3", "4"));
+        this.FullHistory.children[0].appendChild(FullHistoryTableBodyUser);
+        this.FullHistory.children[0].appendChild(FullHistoryTableBodyUser1);
+        FullHistoryTableBodyUser1.appendChild(this.createFullHistoryTableBodyContainerPlayedGames("0", "2", "3", "4"));
+        FullHistoryTableBodyUser1.appendChild(this.createFullHistoryTableBodyContainerPlayedGames("0", "2", "3", "4"));
         // document.getElementsByClassName("FullHistoryProfil").appendChild(FullHistoryTableBodyUser);
-        FullHistoryTableBodyUser.appendChild(createFullHistoryTableBodyContainerPlayedGames("0", "2", "3", "4"));
-        document.body.appendChild(FullHistory);
+        FullHistoryTableBodyUser.appendChild(this.createFullHistoryTableBodyContainerPlayedGames("0", "2", "3", "4"));
+        document.body.appendChild(this.FullHistory);
     }
     async listUsers(){
         debugger
         const history = await getFetchRequest("api/v1/joinlist/" + User._Id);
         debugger
-        if (history && history.state)
+        if (history && history.state && history.message.game_rooms)
         {
             //history.message
-            history.message.forEach(e => {
+            history?.message?.game_rooms?.forEach(e => {
                 this.appandDiv(e);
             });
         }

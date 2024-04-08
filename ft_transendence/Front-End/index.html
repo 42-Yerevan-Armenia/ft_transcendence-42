@@ -40,7 +40,9 @@
     
     <!-- SignUp -->
     <link rel="stylesheet" href="./src/app/styles/Signup.css">
-    
+
+    <!-- JoinListInvite -->
+    <link rel="stylesheet" href="./src/app/styles/JoinListInvite.css">
     <meta name="description" content="">
     <title name="Home">Home</title>
 </head>
@@ -296,7 +298,7 @@
                                             </svg>
 
 
-                                            <p class="navLinkP">Game</p>
+                                            <p class="navLinkP">Join List</p>
                                         </div>
                                         <!-- href="#" -->
                                         <div  class="link  LEADERBOARD">
@@ -532,7 +534,7 @@
                                             </svg>
                                         </div>
                                         <!-- <p class="MidleSettingsBlocksP">Edit Profile Photo.</p> -->
-                                        <input type="file" accept="image/png, image/jpeg" placeholder="Edit Profile Photo." class="MidleSettingsBlocksP" id="ImageFileAccess"/>
+                                        <input type="file" accept="image/png, image/jpeg, image/jpg" placeholder="Edit Profile Photo." class="MidleSettingsBlocksP" id="ImageFileAccess"/>
                                     </div>
                                     <div class="MidleSettingsBlocks">
                                         <div class="MidleSettingsBlocksImage">
@@ -609,6 +611,7 @@
                     </div>
                     <!--------------------------------------------  Leaderboard or MidleCub-------------------------------------------->
                     <div class="MidleCub">
+
                         <div class="MidleCubProfil">
                             <div class="MidleCubHeroAll">
 
@@ -616,8 +619,8 @@
                                     <Image src="./public/User.png" width="50" height="50" alt='User'
                                         class="MidleCubImage"></Image>
                                     <div>
-                                        <p class="MidleCubHeroP">Zakariya Sidki</p>
-                                        <p class="MidleCubHeroP">#21</p>
+                                        <p class="MidleCubHeroP" id="MidleCubHeroName">Zakariya Sidki</p>
+                                        <p class="MidleCubHeroP" id="MidleCubHeroId">#21</p>
                                     </div>
                                 </div>
                             </div>
@@ -633,82 +636,88 @@
                                         <div class="MidleCubTableName">Matches</div>
                                     </div>
                                     <!-- MidleCubItem -->
-                                    <div class="MidleCubTableBody">
-                                        <div class="MidleCubTableBodyNAme">125</div>
-                                        <div class="MidleCubTd">
-                                            <Image src="./public/User2.png" width="40" height="40"
-                                            alt="Users" class=".MidleCubTableImageBody"></Image>
-                                            <div class=".MidleCubTableBodyNAme">User2</div>
-                                        </div>
-                                        <div class="MidleCubTableBodyNAme">125</div>
-                                        <div class="MidleCubTableBodyNAme">14</div>
-                                        <div class="MidleCubTableBodyNAme">150</div>
-                                    </div> 
-                                    <!-- MidleCubItem -->
-                                    <div class="MidleCubTableBody">
-                                        <div class="MidleCubTableBodyNAme">125</div>
-                                        <div class="MidleCubTd">
-                                            <Image src="./public/User2.png" width="40" height="40"
-                                            alt="Users" class=".MidleCubTableImageBody"></Image>
-                                            <div class=".MidleCubTableBodyNAme">User2</div>
-                                        </div>
-                                        <div class="MidleCubTableBodyNAme">125</div>
-                                        <div class="MidleCubTableBodyNAme">14</div>
-                                        <div class="MidleCubTableBodyNAme">150</div>
-                                    </div> 
-                                    <!-- MidleCubItem -->
-                                    <div class="MidleCubTableBody">
-                                        <div class="MidleCubTableBodyNAme">125</div>
-                                        <div class="MidleCubTd">
-                                            <Image src="./public/User2.png" width="40" height="40"
-                                            alt="Users" class=".MidleCubTableImageBody"></Image>
-                                            <div class=".MidleCubTableBodyNAme">User2</div>
-                                        </div>
-                                        <div class="MidleCubTableBodyNAme">125</div>
-                                        <div class="MidleCubTableBodyNAme">14</div>
-                                        <div class="MidleCubTableBodyNAme">150</div>
-                                    </div> 
-                                    <!-- MidleCubItem -->
-                                    <div class="MidleCubTableBody">
-                                        <div class="MidleCubTableBodyNAme">125</div>
-                                        <div class="MidleCubTd">
-                                            <Image src="./public/User2.png" width="40" height="40"
-                                            alt="Users" class=".MidleCubTableImageBody"></Image>
-                                            <div class=".MidleCubTableBodyNAme">User2</div>
-                                        </div>
-                                        <div class="MidleCubTableBodyNAme">125</div>
-                                        <div class="MidleCubTableBodyNAme">14</div>
-                                        <div class="MidleCubTableBodyNAme">150</div>
-                                    </div> 
-                                    <!-- MidleCubItem -->
-                                    <div class="MidleCubTableBody">
-                                        <div class="MidleCubTableBodyNAme">125</div>
-                                        <div class="MidleCubTd">
-                                            <Image src="./public/User2.png" width="40" height="40"
-                                            alt="Users" class=".MidleCubTableImageBody"></Image>
-                                            <div class=".MidleCubTableBodyNAme">User2</div>
-                                        </div>
-                                        <div class="MidleCubTableBodyNAme">125</div>
-                                        <div class="MidleCubTableBodyNAme">14</div>
-                                        <div class="MidleCubTableBodyNAme">150</div>
-                                    </div> 
-                                    <!-- MidleCubItem -->
-                                    <div class="MidleCubTableBody">
-                                        <div class="MidleCubTableBodyNAme">125</div>
-                                        <div class="MidleCubTd">
-                                            <Image src="./public/User2.png" width="40" height="40"
-                                            alt="Users" class=".MidleCubTableImageBody"></Image>
-                                            <div class=".MidleCubTableBodyNAme">User2</div>
-                                        </div>
-                                        <div class="MidleCubTableBodyNAme">125</div>
-                                        <div class="MidleCubTableBodyNAme">14</div>
-                                        <div class="MidleCubTableBodyNAme">150</div>
-                                    </div> 
-                                    <!-- MidleCubItem -->
+                                    <div class="MidleCubEditSection">
+                                        <!-- <div class="MidleCubTableBody">
+                                            <div class="MidleCubTableBodyNAme">125</div>
+                                            <div class="MidleCubTd">
+                                                <Image src="./public/User2.png" width="40" height="40"
+                                                alt="Users" class=".MidleCubTableImageBody"></Image>
+                                                <div class=".MidleCubTableBodyNAme">User2</div>
+                                            </div>
+                                            <div class="MidleCubTableBodyNAme">125</div>
+                                            <div class="MidleCubTableBodyNAme">14</div>
+                                            <div class="MidleCubTableBodyNAme">150</div>
+                                        </div> -->
+                                        
+                                        <!-- MidleCubItem -->
+                                        <!-- <div class="MidleCubTableBody">
+                                            <div class="MidleCubTableBodyNAme">125</div>
+                                            <div class="MidleCubTd">
+                                                <Image src="./public/User2.png" width="40" height="40"
+                                                alt="Users" class=".MidleCubTableImageBody"></Image>
+                                                <div class=".MidleCubTableBodyNAme">User2</div>
+                                            </div>
+                                            <div class="MidleCubTableBodyNAme">125</div>
+                                            <div class="MidleCubTableBodyNAme">14</div>
+                                            <div class="MidleCubTableBodyNAme">150</div>
+                                        </div>  -->
+                                        <!-- MidleCubItem -->
+                                        <!-- <div class="MidleCubTableBody">
+                                            <div class="MidleCubTableBodyNAme">125</div>
+                                            <div class="MidleCubTd">
+                                                <Image src="./public/User2.png" width="40" height="40"
+                                                alt="Users" class=".MidleCubTableImageBody"></Image>
+                                                <div class=".MidleCubTableBodyNAme">User2</div>
+                                            </div>
+                                            <div class="MidleCubTableBodyNAme">125</div>
+                                            <div class="MidleCubTableBodyNAme">14</div>
+                                            <div class="MidleCubTableBodyNAme">150</div>
+                                        </div>  -->
+                                        <!-- MidleCubItem -->
+                                        <!-- <div class="MidleCubTableBody">
+                                            <div class="MidleCubTableBodyNAme">125</div>
+                                            <div class="MidleCubTd">
+                                                <Image src="./public/User2.png" width="40" height="40"
+                                                alt="Users" class=".MidleCubTableImageBody"></Image>
+                                                <div class=".MidleCubTableBodyNAme">User2</div>
+                                            </div>
+                                            <div class="MidleCubTableBodyNAme">125</div>
+                                            <div class="MidleCubTableBodyNAme">14</div>
+                                            <div class="MidleCubTableBodyNAme">150</div>
+                                        </div>  -->
+                                        <!-- MidleCubItem -->
+                                        <!-- <div class="MidleCubTableBody">
+                                            <div class="MidleCubTableBodyNAme">125</div>
+                                            <div class="MidleCubTd">
+                                                <Image src="./public/User2.png" width="40" height="40"
+                                                alt="Users" class=".MidleCubTableImageBody"></Image>
+                                                <div class=".MidleCubTableBodyNAme">User2</div>
+                                            </div>
+                                            <div class="MidleCubTableBodyNAme">125</div>
+                                            <div class="MidleCubTableBodyNAme">14</div>
+                                            <div class="MidleCubTableBodyNAme">150</div>
+                                        </div>  -->
+                                        <!-- MidleCubItem -->
+                                        <!-- <div class="MidleCubTableBody">
+                                            <div class="MidleCubTableBodyNAme">125</div>
+                                            <div class="MidleCubTd">
+                                                <Image src="./public/User2.png" width="40" height="40"
+                                                alt="Users" class=".MidleCubTableImageBody"></Image>
+                                                <div class=".MidleCubTableBodyNAme">User2</div>
+                                            </div>
+                                            <div class="MidleCubTableBodyNAme">125</div>
+                                            <div class="MidleCubTableBodyNAme">14</div>
+                                            <div class="MidleCubTableBodyNAme">150</div>
+                                        </div>  -->
+                                        <!-- MidleCubItem -->
+                                        
+
+                                    </div>
+
                                 </div>
                             </div>
 
-                            <div class="MidleCubList">
+                            <!-- <div class="MidleCubList">
                                 <div class="Back">
                                     <div>
                                         <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -733,13 +742,13 @@
                                             </svg>
                                         </div>
                                     </div>
-                            </div>
+                            </div> -->
                         </div>
+
+
                     </div>
 
                     <!-- -------------------------------------- Game or midleJoinList -------------------------------------------------- -->
-
-
 
                     <div class="JoinList">
                         <div class="JoinListProfil">
@@ -766,7 +775,7 @@
 
                                                 <div class="JoinListHeroDivButton">
                                                     <button class="JoinListHeroDivButtonB" id="JoinListHeroDivButtonBInvite">
-                                                        <p>Invite</p>                                                
+                                                        Invite                             
                                                     </button>
                                                 </div>
                                             </div>
@@ -782,9 +791,9 @@
                                                 <!-- <label for="Players">Player/Players</label> -->
                                                 <select name="Players" id="JoinListHeroDivProfilPlayers">
                                                     <option value="" disabled selected hidden>Player/Players</option>
-                                                    <option value="1/2">1/2</option>
-                                                    <option value="1/4">1/4</option>
-                                                    <option value="1/6">1/6</option>
+                                                    <option value="2">1/2</option>
+                                                    <option value="4">1/4</option>
+                                                    <option value="6">1/6</option>
                                                 </select>
                                             </div>
                                             <div  class="JoinListHeroDivProfilLive">
@@ -874,7 +883,7 @@
                                 </div>
                             </div>
 
-                            <div class="JoinListList">
+                            <!-- <div class="JoinListList">
                                 <div class="Back">
                                     <div>
                                         <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -899,11 +908,33 @@
                                             </svg>
                                         </div>
                                     </div>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
+                    
 
-
+                    <div class="JoinListInvite">
+                        <table class="JoinListInvitetable">
+                            <thead class="JoinListInvitetablethead">
+                              <tr class="JoinListInvitetabletheadTr">
+                                <th scope="col" colspan="3"  class="JoinListInvitetabletheadTh">Online list</th>
+                                <th scope="col" colspan="1"  class="JoinListInvitetabletheadTh">Preference</th>
+                                <th scope="col" colspan="1"  class="JoinListInvitetabletheadTh">Points</th>
+                                <th scope="col" colspan="1"  class="JoinListInvitetabletheadTh">Play</th>
+                              </tr>
+                            </thead>
+                            <tbody class="JoinListInvitetbody">
+                              <tr class="JoinListInvitetbodyTr">
+                                <td class="JoinListInvitetbodyTd">1</td>
+                                <td class="JoinListInvitetbodyTd"><img src="./public/men.png" width="30px" height="30px" alt="User" class="JoinListInviteimg"></td>
+                                <td class="JoinListInvitetbodyTd">User1</td>
+                                <td class="JoinListInvitetbodyTd">Classic</td>
+                                <td class="JoinListInvitetbodyTd">123456</td>
+                                <td class="JoinListInvitetbodyTd"><button class="JoinListInviteClass" id="JoinListInviteid">Invite</button></td>
+                              </tr>
+                            </tbody>
+                        </table>
+                    </div>
                     <!-------------------------------------------------- ProfileMidle ---------------------------------------------------->
                     <div class="ProfileMidle">
                         <div class="ProfileMidleContenier">
@@ -917,7 +948,7 @@
                                     </div>
                                     <div class="ProfileMidleHeaderMain">
                                         <div class="ProfileMidleHeaderMainAvatar">
-                                            <img src="./public/avatar.png" alt="Avatar">
+                                            <img src="./public/avatar.png" alt="Avatar" id="ProfileMidleHeaderMainAvatarImage">
                                         </div>
                                         <div class="ProfileMidleHeaderMainData">
                                             <h5 class="ProfileMidleHeaderMainDataName">Zaak Sidki</h5>
@@ -949,11 +980,11 @@
                     </div>
 
 
+                   
 
 
 
-
-
+                 
                         <!-- RIGHT    Start -->
                                 <section class="right" id="RiteSection">
 
@@ -1059,27 +1090,27 @@
 
                                                         <!-- person -->
                                                         <!-- <div class="MessagPrivateSubjectMessagPerson">
-                                                            <div class="MessagPrivateSubjectMessagDivPerson">
-                                                                <p class="MessagPrivateSubjectMessagPersonChat">
-                                                                    Hi there, How are you?
-                                                                </p>
-                                                            </div>
-                                                            <p>
-                                                                9.20 AM
-                                                            </p>
-                                                        </div> -->
+                                                                    <div class="MessagPrivateSubjectMessagDivPerson">
+                                                                        <p class="MessagPrivateSubjectMessagPersonChat">
+                                                                            Hi there, How are you?
+                                                                        </p>
+                                                                    </div>
+                                                                    <p>
+                                                                        9.20 AM
+                                                                    </p>
+                                                            </div> -->
 
                                                         <!-- Sender -->
                                                         <!-- <div class="MessagPrivateSubjectMessagSender">
-                                                            <div class="MessagPrivateSubjectMessagSenderDivMessag">
-                                                                <p class="MessagPrivateSubjectMessagSenderMessag">
-                                                                    I am great, Thanks!
-                                                                </p>
-                                                            </div>
-                                                            <p class="MessagPrivateSubjectMessagSenderDaye">
-                                                                9.23 AM
-                                                            <p>
-                                                        </div> -->
+                                                                <div class="MessagPrivateSubjectMessagSenderDivMessag">
+                                                                    <p class="MessagPrivateSubjectMessagSenderMessag">
+                                                                        I am great, Thanks!
+                                                                    </p>
+                                                                </div>
+                                                                <p class="MessagPrivateSubjectMessagSenderDaye">
+                                                                    9.23 AM
+                                                                <p>
+                                                            </div> -->
 
                                                         <!-- person -->
                                                         <!-- <div class="MessagPrivateSubjectMessagPerson">
@@ -1143,6 +1174,7 @@
         <script src="./src/app/models/Home/JoinList.js"></script>
         <script src="./src/app/models/Home/MidleHistoryGame.js"></script>
         <script src="./src/app/models/Home/Profile.js"></script>
+        <script src="./src/app/models/Home/JoinListInvit.js"></script>
         <script src="./src/app/models/Home/MidleSettings.js"></script>
         
         <script src="./src/app/models/User.js"></script>

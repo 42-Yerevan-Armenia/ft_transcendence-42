@@ -1,0 +1,25 @@
+.JoinListInvite{
+    width: 100%;
+}
+
+.JoinListInvitetablethead{
+    width: 100%;
+}
+
+.JoinListInvitetbody{
+    width: 100%;
+    height: 100%;
+}
+.JoinListInvitetbodyTr{
+    text-align: center;
+}
+.JoinListInvitetable{
+    width: 100%;
+    text-align: center;
+    color: white;
+}
+.JoinListInviteClass{
+    background-color: #D823D7;
+    width: 59%;
+    height: 100%;
+}

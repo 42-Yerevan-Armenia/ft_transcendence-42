@@ -21,9 +21,15 @@
     background-color: #816DC0;
     color:white;
 }
+
 #JoinListHeroDivGameMode{
     background-color: #816DC0;
     color:white;
+}
+.JoinListTableBodyNAmeImg, .JoinListTableImageBody{
+    width: 30px;
+    height: 30px;
+    border-radius: 10px;
 }
 
 #DeleteAccountSaveAccount{
@@ -130,6 +136,7 @@
 .JoinListTableClassJoin{
     display: block;
     background-color: #00A3FF;
+    width: 100%;
     color: white;
 }
 #JoinListTableID{

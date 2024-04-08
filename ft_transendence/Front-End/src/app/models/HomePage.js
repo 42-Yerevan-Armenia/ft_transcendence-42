@@ -4,18 +4,18 @@ class HomePage extends HtmlElement {
     constructor(){
       super(".homeSection");
       this._style.display = "block";
+      this._Midle = new MiddleSECTION();
+      this._MiddleSettings = new MiddleSettings();
+      this._MidleCub = new MidleCub();
+      this._MidleJoinList = new JoinList();
+      this._HomeLeft = new HomeLeft();
+      this._HomeRight = new HomeRight();
+      this._HomeMessage = new MessagePage(".Message");
+      this._HomeRight = new HomeRight();
+      this._HomeMidleProfile = new MidleProfile();
+      this._MidleHistoryGame = new MidleHistoryGame();
     };
   
-    _Midle = new MiddleSECTION();
-    _MiddleSettings = new MiddleSettings();
-    _MidleCub = new MidleCub();
-    _MidleJoinList = new JoinList();
-    _HomeLeft = new HomeLeft();
-    _HomeRight = new HomeRight();
-    _HomeMessage = new MessagePage(".Message");
-    _HomeRight = new HomeRight();
-    _HomeMidleProfile = new MidleProfile();
-    _MidleHistoryGame = new MidleHistoryGame();
     _NAV = {
       _Home : new HtmlElement(".LEFTHOME"),
       _Profile : new HtmlElement(".PROFIL"),
