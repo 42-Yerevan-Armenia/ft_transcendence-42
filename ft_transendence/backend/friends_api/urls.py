@@ -6,7 +6,8 @@ from friends_api.views import (
     RejectFriendRequest,
     DeleteFriend,
     BlockRequest,
-    UnblockRequest
+    UnblockRequest,
+    Friendlist
 )
 
 urlpatterns = [
@@ -16,4 +17,5 @@ urlpatterns = [
     path('api/v1/delete/<int:pk>/', DeleteFriend.as_view()),
     path('api/v1/block/<int:pk>/', BlockRequest.as_view()),
     path('api/v1/unblock/<int:pk>/', UnblockRequest.as_view()),
+    path('api/v1/friendlist/<int:pk>/', Friendlist.as_view()),
 ]
