@@ -2,7 +2,7 @@ from django.http import JsonResponse
 from django.shortcuts import render
 from django.utils import timezone
 from friendship.models import Friend, FriendshipRequest, Block
-from core.serializers import FriendSerializer
+from core.serializers import FriendSerializer, ProfileSerializer, FriendListSerializer
 from core.models import User, Person
 from rest_framework import generics, status, viewsets
 from rest_framework.views import APIView
@@ -150,8 +150,9 @@ class Friendlist(APIView):
     def get(self, request, pk):
         try:
             user = User.objects.get(id=pk)
-            friends = Friend.objects.friends(user)
-            friend_ids = [friend.id for friend in friends]
-            return JsonResponse({"success": True, "friend_ids": friend_ids}, status=status.HTTP_200_OK)
-        except User.DoesNotExist:
+            friend_ids = Friend.objects.filter(from_user=user).values_list('to_user_id', flat=True)
+            friends = Person.objects.filter(id__in=friend_ids)
+            friend_data = FriendListSerializer(friends, many=True).data
+            return JsonResponse({"success": True, "friends": friend_data}, status=status.HTTP_200_OK)
+        except Person.DoesNotExist:
             return JsonResponse({"success": False, "error": "User not found"}, status=status.HTTP_404_NOT_FOUND)

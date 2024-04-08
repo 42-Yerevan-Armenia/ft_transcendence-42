@@ -15,7 +15,7 @@ class HomeSerializer(serializers.ModelSerializer):
         model = Person
         fields = ('id', 'nickname', 'image', 'points', 'live')
 
-class LederboardSerializer(serializers.ModelSerializer):
+class LeaderboardSerializer(serializers.ModelSerializer):
     class Meta:
         model = Person
         fields = ('id', 'nickname', 'image', 'wins', 'loses', 'matches', 'points')
@@ -73,11 +73,15 @@ class UsersSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id', 'username')
 
+class FriendListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Person
+        fields = ('id', 'nickname', 'image')
+
 class FriendSerializer(serializers.ModelSerializer):
-    user = UsersSerializer(source='user')
     class Meta:
         model = Friend
-        fields = ('id', 'friend_user')
+        fields = ('id', 'to_user_id')
 
 class ProfileSerializer(serializers.ModelSerializer):
     friends = serializers.SerializerMethodField()

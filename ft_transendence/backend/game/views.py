@@ -92,8 +92,17 @@ class MatchmakingSystem():
             self.remove_player_from_pool(player_2['id'])
 
     def start_match(self, player1_id, player2_id):
-        print("✅", player1_id, player2_id)
-        return player1_id
+        try:
+            response_data = {
+                "success": True,
+                "players": [
+                    {"id": player1_id},
+                    {"id": player2_id}
+                ]
+            }
+            return JsonResponse(response_data, status=status.HTTP_200_OK)
+        except Exception as e:
+            return JsonResponse({"success": False, "error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class PlayTournament(APIView):
     @csrf_exempt

@@ -14,7 +14,7 @@ from core.views import (
     WaitingRoom,
     HistoryView,
     FullHistoryView,
-    Lederboard,
+    Leaderboard,
     CreateRoom,
     GameRoom,
     SettingsById
@@ -31,7 +31,7 @@ urlpatterns = [
 
     path('api/v1/home/<int:pk>/', Home.as_view()),
     path('api/v1/profile/<int:pk>/', Profile.as_view()),
-    path('api/v1/lederboard/<int:pk>/', Lederboard.as_view()),
+    path('api/v1/leaderboard/<int:pk>/', Leaderboard.as_view()),
     path('api/v1/joinlist/<int:pk>/', JoinList.as_view()),
     path('api/v1/waitingroom/<int:pk>/', WaitingRoom.as_view()),
     path('api/v1/history/<int:pk>/', HistoryView.as_view()),

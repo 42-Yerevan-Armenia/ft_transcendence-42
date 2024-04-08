@@ -2,6 +2,11 @@ import base64
 from django.db import models
 from django.contrib.auth.models import User
 
+class Confirm(models.Model):
+    email = models.EmailField()
+    code = models.CharField(max_length=100)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
 class Person(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100)
