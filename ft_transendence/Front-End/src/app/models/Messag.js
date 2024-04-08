@@ -163,7 +163,7 @@ ElementData.prototype.createBlock = function(Group, nameElement) {
     document.getElementById(`addChild${nameElement}`).appendChild(node);
 }
 
-{/* 
+/* 
 <div class="MessagPrivateSubjectMessagPerson">
     <div class="MessagPrivateSubjectMessagDivPerson">
         <p class="MessagPrivateSubjectMessagPersonChat">
@@ -174,7 +174,7 @@ ElementData.prototype.createBlock = function(Group, nameElement) {
         9.20 AM
     </p>
 </div>
-*/}
+*/
 
 ElementData.prototype.MessagPrivateSubjectMessagPerson = function(Person) {
     //debugger

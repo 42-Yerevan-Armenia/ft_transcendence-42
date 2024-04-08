@@ -89,7 +89,7 @@ async function ControllerSignUp(password, User) {
   try {
     const response = await fetch(`${HostPort}/register/`, {
       method: 'POST',
-      body: JSON.stringify({ name: User._Name, password: password, nickname: User._Nickname}),
+      body: JSON.stringify({ name: User._Name, password: password, nickname: User._Nickname,email: User._Email}),
       headers: {
         "Content-Type": "application/json"
       }
@@ -189,13 +189,14 @@ async function getFetchRequest(ToRequest) {
 
   if (!ToObj || !ToObj.access)
     return null;
+  const ToUser = ToObj.access;
   try {
     const response = await fetch(`${HostPort}/${ToRequest}/`, {
       method: "GET",
       // body: JSON.stringify(ToObj),
       headers: {
         "Content-Type": "application/json",
-        'Authorization': 'Bearer ' + ToObj
+        'Authorization': 'Bearer ' + ToUser
       }
     });
 
@@ -226,7 +227,7 @@ async function putRequest(Tomethod, Torequest, ToObj) {
   console.log( "method : " + Tomethod);
   console.log( "request : " + Torequest);
   console.log( ToObj);
-  const token =  await User.getAccessTocken().access;
+  const token =  await User.getAccessTocken();
   console.log("2----------------------------------------")
   try {
     const response = await fetch(`${HostPort}/${Torequest}/`, {
@@ -234,7 +235,7 @@ async function putRequest(Tomethod, Torequest, ToObj) {
       body: JSON.stringify(ToObj),
       headers: {
         "Content-Type": "application/json",
-        'Authorization': 'Bearer ' + token
+        'Authorization': 'Bearer ' + token.access
       }
     });
 
