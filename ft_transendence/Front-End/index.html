@@ -41,6 +41,7 @@
     <!-- SignUp -->
     <link rel="stylesheet" href="./src/app/styles/Signup.css">
 
+    <link rel="stylesheet" href="./src/app/styles/game.css">
     <!-- JoinListInvite -->
     <link rel="stylesheet" href="./src/app/styles/JoinListInvite.css">
     <meta name="description" content="">
@@ -78,6 +79,8 @@
                     &copy; 2023 all rights reserved
                 </footer>
             </div>
+
+
 
 
 
@@ -748,6 +751,17 @@
 
                     </div>
 
+
+
+                    <!-- --------------------------------------------------Game-------------------------------------------------- -->
+
+                <div class="GameBoard" id="GameBoard">
+
+
+
+
+
+                </div>
                     <!-- -------------------------------------- Game or midleJoinList -------------------------------------------------- -->
 
                     <div class="JoinList">
@@ -1061,12 +1075,12 @@
                                                 <!-- Benny -->
                                                 <div class="MessagePrivateUser">
                                                     <div class="MessagePrivateUserImag">
-                                                        <img src="./public/User.png">
+                                                        <img src="" class="MessagePrivateUserImg"  alt="Sender"/>
                                                         <div class="MessagePrivateUserImagOnlain">
                                                         </div>
                                                     </div>
-                                                    <h4>
-                                                        Benny
+                                                    <h4 class="MessagePrivateUserH4">
+                                                        <!-- Benny -->
                                                     </h4>
                                                 </div>
 
@@ -1077,7 +1091,7 @@
                                                     <div class="MessagPrivateSubjectMessag" id="containerScroll">
                                                         <div class="MessagPrivateSubjectMessagDaye">
                                                             <div>
-                                                                <p>
+                                                                <p class="MessagPrivateSubjectMessagDayeP">
                                                                     Today
                                                                 </p>
                                                             </div>
@@ -1175,6 +1189,10 @@
         <script src="./src/app/models/Home/MidleHistoryGame.js"></script>
         <script src="./src/app/models/Home/Profile.js"></script>
         <script src="./src/app/models/Home/JoinListInvit.js"></script>
+        <script src="./src/app/models/Home/GameBoard.js"></script>
+        
+        <script  class="ScriptData"></script>
+
         <script src="./src/app/models/Home/MidleSettings.js"></script>
         
         <script src="./src/app/models/User.js"></script>

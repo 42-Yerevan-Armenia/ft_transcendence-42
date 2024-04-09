@@ -38,7 +38,10 @@
 //     type: "Tournament"
 //   }
 // ]
-
+var GameRom = {
+  creator_id :0,
+  game_room_id : 0
+}
 
 class JoinList extends HtmlElement {
     constructor(){
@@ -202,11 +205,26 @@ class JoinList extends HtmlElement {
                 console.log("creator_id = " + creator_id + "  game_room_id " + game_room_id + " ");
 
                 const data = await FetchRequest("POST", "api/v1/joinlist/"+User._Id, {
-                  "creator_id": idLeft,
-                  'game_room_id': idRight
+                  "creator_id": idRight,
+                  'game_room_id': idLeft
                 });
-                // Your code here
-                console.log(JSON.stringify(e.target.id));
+
+
+                if (data && data.state)
+                {
+                  console.log(data.message.game.game_room_id);
+                  GameRom.creator_id = data.message.game.game_room_id;
+                  GameRom.game_room_id = 0;
+                  const select = document.querySelector(".ScriptData");
+                  // game/"+GameRom.game_room_id
+                  window.location.href = "http://10.12.11.2:8000/game";
+                  // location.assign();
+                  // location.replace();
+
+
+                  select.setAttribute("src","./src/app/models/Home/game/game.js")
+
+                }
                 console.log("buttonsJoin!");
             })
       })

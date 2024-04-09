@@ -163,18 +163,18 @@ const urlLocationHandlerForNavigateBackForward = async () => {
 	let item = navigationHistory.length;
 
 	//check when Home Page
-	if (item < 2 || (navigationHistory[item - 1].title == route.title))
+	if (item < 2)// || (navigationHistory[item - 1].title == route.title))
 		return;
 	let index = await isInNavigationStack(window.location.pathname);
 	if (navigationHistory[item - 1].page > navigationHistory[index].page)
 	{
-		history.back();
+		// history.back();
 		await changStack(item, index)
 		// window.location.pathname = route.url;
 	}
 	else
 	{
-		history.forward();
+		// history.forward();
 		await changStack(item, index);
 		// window.location.pathname = route.url;
 	}
