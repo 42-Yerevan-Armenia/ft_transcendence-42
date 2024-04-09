@@ -106,10 +106,12 @@ class MatchmakingSystem():
 
 class PlayTournament(APIView):
     @csrf_exempt
-    def post(self, request):
+    def post(self, request, creator_id=None, game_room_id=None):
         try:
-            creator_id = request.data.get('creator_id')
-            game_room_id = request.data.get('game_room_id')
+            if creator_id is None:
+                creator_id = request.data.get('creator_id')
+            if game_room_id is None:
+                game_room_id = request.data.get('game_room_id')
             creator = Person.objects.get(id=creator_id)
             game_room = creator.game_room
             game_room.ongoing = True
@@ -123,6 +125,8 @@ class PlayTournament(APIView):
             game_room.save()
             Person.objects.filter(game_room_id=game_room_id).update(game_room_id=None)
             return JsonResponse({"success": "true", "winner": winner}, status=status.HTTP_200_OK)
+        except Person.DoesNotExist:
+            return JsonResponse({"success": "false", "error": "Invalid creator ID."}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             return JsonResponse({"success": "false", "error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
