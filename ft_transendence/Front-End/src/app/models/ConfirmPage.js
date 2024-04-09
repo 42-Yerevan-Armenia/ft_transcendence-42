@@ -56,7 +56,7 @@ class ConfirmPage extends HtmlElement {
     }
     //when respons have error
     ErrorHandling(message){
-      this.err.style.color = "red";
+      this.err.style.color = "";
       this.err.innerHTML = message;
       this.ValuesAllEmpty();
     }
@@ -72,7 +72,7 @@ class ConfirmPage extends HtmlElement {
       //each input must not be empty
       if (!this.v0.value || !this.v1.value || !this.v2.value || !this.v3.value || !this.v4.value)
       {
-        this.err.style.color = "red";
+        this.err.style.color = "";
         this.err.innerHTML = "all items must be recorded";
       }
       else {

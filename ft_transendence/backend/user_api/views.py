@@ -94,8 +94,11 @@ class Login42(APIView):
         return response.json()
 
 class IntraMe(APIView):
+    # authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
     def get(self, request):
         user = request.user
+        print("❌", user)
         if (user == None):
             return JsonResponse({"success": "false", "error": "User not logged in"}, status=401)
         return Response({
