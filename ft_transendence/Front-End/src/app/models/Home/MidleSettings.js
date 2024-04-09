@@ -12,7 +12,8 @@ class MiddleSettings extends HtmlElement {
     
     changeUser(){
       this._MidleSettingsHeroName.innerHTML = User._Name;
-      this._MidleSettingImage.src =  `data:image/png;base64,${User._Image}`;;
+      this._MidleSettingImage.src =  `data:image/png;base64,${User._Image}`;
+      
     }
 
     async changeData(){

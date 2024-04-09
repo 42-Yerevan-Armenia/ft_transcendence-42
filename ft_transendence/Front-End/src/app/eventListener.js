@@ -54,6 +54,20 @@ Home?._HomeMidleProfile?._ProfileMidleHeaderToInvit2?.addEventListener("click",a
 
 
 
+//JoinList Invite Button
+// #JoinListHeroDivButtonBInvite
+Home?._MidleJoinList?._InviteButton?.addEventListener("click",async ()=>{             //  --------------------
+  console.log("_ProfileMidleHeaderToInvit call2");
+
+
+  await ManageMidle.Manage("JoinListInvite");
+
+
+})
+
+
+
+
 // 1
 Home._NAV?._LEADERBOARD?._classname?.addEventListener("click",()=>{
   //debugger

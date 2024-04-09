@@ -23,7 +23,7 @@ class HomeLeft extends HtmlElement {
         this._Nickname.innerHTML = User._Nickname;
         // Get the Base64-encoded string
         this._Image.src = `data:image/png;base64,${User._Image}`;
-
+                      
         this._NavSigninNavSignUp.style.display = "none";
         this._NAVSIGNINSIGNOUTNavLoginOut.style.display = "block";
       }
