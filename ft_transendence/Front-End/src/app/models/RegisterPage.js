@@ -1,6 +1,6 @@
 //Register Page
 class RegisterPage extends HtmlElement {
-  debugger
+  //debugger
     constructor(){
       super(".RegisterPage")
       this._style.display = "none";
@@ -15,7 +15,7 @@ class RegisterPage extends HtmlElement {
     }
   
     async RegistersWithEmail() {
-      debugger
+      //debugger
       let err = document.querySelector(".RegisterErrorHandling");
       let _RegisterPageinput = document.querySelector(".RegisterPageinput");
       let value = _RegisterPageinput.value;
@@ -24,16 +24,14 @@ class RegisterPage extends HtmlElement {
   
       //check your email address is correct
       if (ContextValidation[0] !== 'V') {
-        console.log("Email must by correct");
         err.style.color = "red";
         err.innerHTML = ContextValidation;
         return false;
       }
       else {
         const result  = await ControllerCheckEmail(value)
-        console.log(JSON.stringify(result, undefined, 2));
+        
         if (result.state){
-          console.log("Email is correct must be");
           err.style.color = "blue";
           err.innerHTML = ContextValidation;
           err.innerHTML = "";
@@ -46,7 +44,7 @@ class RegisterPage extends HtmlElement {
       return false;
       }
     }
-    Drow(){
+    draw(){
       
     }
   };

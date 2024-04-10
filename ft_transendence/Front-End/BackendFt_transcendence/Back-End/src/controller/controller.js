@@ -64,7 +64,6 @@ router.post("/confirm", async (req, res) => {
 router.post("/password", async (req, res) => {
     const {code, email} = req.body;
     let newCode = code;
-    console.log("1code == " + code + " length == " + code?.length);
     if (!code)
     {
         return res.status(401).json("Error: empty password doesn't allow access");

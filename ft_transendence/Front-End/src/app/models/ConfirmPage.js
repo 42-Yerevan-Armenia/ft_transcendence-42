@@ -1,7 +1,7 @@
 
 //confirm Page
 class ConfirmPage extends HtmlElement {
-  debugger
+  // debugger
     constructor() {
       super(".ConfirmPage")
       this._style.display = "none";
@@ -56,7 +56,6 @@ class ConfirmPage extends HtmlElement {
     }
     //when respons have error
     ErrorHandling(message){
-      console.log("  message " + message)
       this.err.style.color = "red";
       this.err.innerHTML = message;
       this.ValuesAllEmpty();
@@ -101,13 +100,11 @@ class ConfirmPage extends HtmlElement {
             this.ErrorHandling(message + "");
           }
   
-          console.log("  data   =  [" + data + "]" + JSON.stringify(data));
           return data;
         }
       }
       return null;
     }
-    Drow(){
-      console.log("class ConfirmPage extends HtmlElement")
+    draw(){
     }
   }

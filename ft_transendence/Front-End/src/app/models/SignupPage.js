@@ -1,6 +1,6 @@
 //Signup Page
 class SignupPage extends HtmlElement {
-  debugger
+  //debugger
     constructor(){
       super(".SignupPage")
       this._style.display = "none";
@@ -76,11 +76,11 @@ class SignupPage extends HtmlElement {
   
     async PasswordConfirmWithServer() {
       let Hash_code = HashCodeGeneration();
-      debugger
+      //debugger
       return await ControllerSignUp(Hash_code + "" + User._Password + "" + Hash_code, User);
     }
     
-    Drow(){
+    draw(){
       
     }
   }

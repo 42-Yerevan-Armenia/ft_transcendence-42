@@ -8,17 +8,20 @@ var Password = new PasswordPage();
 var SignUp = new SignupPage();
 
 
+
+
+
 var ManageAllPage = {
-    Manage: function(pageName) {
-        debugger
-        ManageAllPage.pages.forEach((element) => {
+    Manage: async function(pageName) {
+        //debugger
+      await  ManageAllPage.pages.forEach(async (element) => {
             const [key, obj] = Object.entries(element)[0]; // Get the key-value pair of the element
 
             if (key === pageName) {
                 obj.DisplayBlock();
-                obj.Drow();
+                await obj.draw();
             } else {
-                obj.DisplayNone();
+                await obj.DisplayNone();
             }
         });
     },
@@ -29,7 +32,7 @@ var ManageAllPage = {
         {"Home": Home},
         {"Password": Password},
         {"SignUp": SignUp},
-        {"ResetPage": Reset}
+        {"ResetPage": Reset},
     ]
 };
 
@@ -37,15 +40,13 @@ var ManageAllPage = {
 //manage Home Page in middle sections
 //give name section name what we need show in middle Home->Midl section
 var ManageMidle = {
-    Manage: function(midleName) {
-         debugger
-        console.log("midleName = [" + midleName + "]")
-        ManageMidle.pages.forEach((element) => {
+    Manage: async function(midleName) {
+         //debugger
+       await ManageMidle.pages.forEach(async (element) => {
             const [key, obj] = Object.entries(element)[0]; // Get the key-value pair of the element
-            console.log("key = [" + key  +  "obj " + obj + "]")
             if (key === midleName) {
                 obj.DisplayBlock();
-                obj.Drow();
+                await obj.draw();
             } else {
                 obj.DisplayNone();
             }
@@ -55,22 +56,25 @@ var ManageMidle = {
         {"MidleCub": Home._MidleCub},
         {"MidleSettings": Home._MiddleSettings},
         {"midle": Home._Midle},
-        {"JoinList": Home._MidleJoinList}
-        // {"Password": Password},
+        {"JoinList": Home._MidleJoinList},
+        {"ProfileMidle":Home._HomeMidleProfile},
+        {"MidleHistoryGame": Home._MidleHistoryGame},
+        {"JoinListInvite": Home._MidleJoinList._JoinListInvit}
+        // {"JoinListInvite": Home._HomeJoinListInvit}
         // {"SignUp": SignUp}
     ]
 };
 
 
 var ManageRight = {
-    Manage: function(name) {
-        debugger
-        ManageRight.pages.forEach((element) => {
+    Manage: async function(name) {
+        //debugger
+        await ManageRight.pages.forEach(async (element) => {
             const [key, obj] = Object.entries(element)[0]; // Get the key-value pair of the element
 
             if (key === name) {
                 obj.DisplayBlock();
-                obj.Drow();
+                await obj.draw();
             } else {
                 obj.DisplayNone();
             }

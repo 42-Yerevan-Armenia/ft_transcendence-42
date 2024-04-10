@@ -23,7 +23,7 @@ admin:
 	docker-compose run --rm backend sh -c "python manage.py createsuperuser"
 
 # app:
-# 	docker-compose run --rm backend sh -c "python manage.py startapp appname"
+# 	docker-compose run --rm backend sh -c "python manage.py startapp user_api"
 
 start:
 	docker-compose start

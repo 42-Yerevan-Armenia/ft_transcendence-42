@@ -87,12 +87,10 @@ function ElementData(name) {
     this._style = this._classname ? this._classname.style : null;
 }
 ElementData.prototype.Classname = function(){
-    console.log(" this._classname   ======= " + this._classname)
     return this._classname;
 }
 
 ElementData.prototype.Style = function(){
-    console.log(" this._style    =======    " + this._style)
     return this._style;
 }
 
@@ -165,7 +163,7 @@ ElementData.prototype.createBlock = function(Group, nameElement) {
     document.getElementById(`addChild${nameElement}`).appendChild(node);
 }
 
-{/* 
+/* 
 <div class="MessagPrivateSubjectMessagPerson">
     <div class="MessagPrivateSubjectMessagDivPerson">
         <p class="MessagPrivateSubjectMessagPersonChat">
@@ -176,10 +174,10 @@ ElementData.prototype.createBlock = function(Group, nameElement) {
         9.20 AM
     </p>
 </div>
-*/}
+*/
 
 ElementData.prototype.MessagPrivateSubjectMessagPerson = function(Person) {
-    debugger
+    //debugger
     const node = document.createElement("div")
     node.setAttribute("class", "MessagPrivateSubjectMessagPerson");
       const PersonDiv = document.createElement("div")
@@ -214,7 +212,7 @@ ElementData.prototype.MessagPrivateSubjectMessagPerson = function(Person) {
 */}
 
 ElementData.prototype.MessagPrivateSubjectMessagSender = function(Person) {
-    debugger
+    //debugger
     const node = document.createElement("div");
     node.setAttribute("class", "MessagPrivateSubjectMessagSender");
     const nodeDiv = document.createElement("div")
@@ -250,11 +248,10 @@ var MessagePage = function(name) {
         if (!Groups.state)
             return null;
 
-        document.getElementById("addChildGrup").style.display = "none";       // for start new message drow
+        document.getElementById("addChildGrup").style.display = "none";       // for start new message draw
         Groups.message.forEach(element => {
              this.createBlock(element, "Grup")
             });
-        console.log("Groups " + this.name);
     };
 
 
@@ -266,17 +263,15 @@ var MessagePage = function(name) {
         if (!Persons.state)
         return null;
 
-        document.getElementById("addChildPersonal").style.display = "none";       // for start new message drow
+        document.getElementById("addChildPersonal").style.display = "none";       // for start new message draw
         Persons.message.forEach(element => {
          this.createBlock(element, "Personal")
         });
-        console.log("PersonalAnnons " + this.name);
     };
 
     // for chat private
     this.chat = (chatPersonal) => {
-        debugger
-        console.log("chat " + this.name);
+        //debugger
 
         chatPersonal.forEach((Person)=>{
             if(Person.id == User._Id)
@@ -287,8 +282,8 @@ var MessagePage = function(name) {
     };
 
 
-    this.Drow = async () => {
-        debugger
+    this.draw = async () => {
+        //debugger
         if (!await User.menegAccsess())
             return null;
         

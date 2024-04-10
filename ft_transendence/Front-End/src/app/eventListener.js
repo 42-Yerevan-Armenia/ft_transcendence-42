@@ -2,68 +2,148 @@
 //Event Listeners  Home Page
 
 //2
-Home._NAV._SETTINGS._classname.addEventListener("click",()=>{
-  debugger
+Home._NAV._SETTINGS._classname?.addEventListener("click",()=>{
+  //debugger
   ManageMidle.Manage("MidleSettings")
 })
 
 
+Home._MiddleSettings?._Save?.addEventListener("click",async ()=>{
+  console.log("SAVE")
+
+
+
+
+
+  await Home._MiddleSettings.changeData();
+})
+
+
+Home._MiddleSettings?._DeleteAccount.addEventListener("click",async ()=>{
+  console.log("_DeleteAccount")
+
+  const deleteUser = await FetchRequest("DELETE", `api/v1/settings/${User._Id}`,{});
+  
+  myStorages.longOut();
+})
+
+
+Home._NAV?._Profile?._classname?.addEventListener("click", async ()=>{
+  console.log("Home._NAV?._Profile?._classname?.addEventListener");
+  ManageMidle.Manage("ProfileMidle");
+})
+
+// ProfileMidleHeaderToInvit
+Home?._HomeMidleProfile?._ProfileMidleHeaderToInvit1?.addEventListener("click",async ()=>{
+  console.log("_ProfileMidleHeaderToInvit call1");
+
+
+
+  ManageMidle.Manage("MidleHistoryGame");
+
+  
+})
+Home?._HomeMidleProfile?._ProfileMidleHeaderToInvit2?.addEventListener("click",async ()=>{
+  console.log("_ProfileMidleHeaderToInvit call2");
+
+
+  ManageMidle.Manage("MidleHistoryGame");
+
+
+})
+
+
+
+//JoinList Invite Button
+// #JoinListHeroDivButtonBInvite
+Home?._MidleJoinList?._InviteButton?.addEventListener("click",async ()=>{             //  --------------------
+  console.log("_ProfileMidleHeaderToInvit call2");
+
+
+  await ManageMidle.Manage("JoinListInvite");
+
+
+})
+
+
+
 
 // 1
-Home._NAV._LEADERBOARD._classname.addEventListener("click",()=>{
-  debugger
+Home._NAV?._LEADERBOARD?._classname?.addEventListener("click",()=>{
+  //debugger
   ManageMidle.Manage("MidleCub");
 } )
 
 //4
-Home._NAV._JoinListGame._classname.addEventListener("click",()=>{
-  debugger
+Home._NAV?._JoinListGame?._classname?.addEventListener("click",()=>{
+  //debugger
   ManageMidle.Manage("JoinList");
+
 } )
 
 //3
-Home._NAV._Home._classname.addEventListener("click",()=>{
-  debugger
+Home._NAV?._Home?._classname?.addEventListener("click",()=>{
+  //debugger
   ManageMidle.Manage("midle");
 } );
 
 
+//whene create new list item for game
+//_MidleJoinList Create button
+Home._MidleJoinList?._CreateButton?.addEventListener("click", async ()=>{
+  debugger
+  console.log("click... \n");
+  const Players = document.querySelector("#JoinListHeroDivProfilPlayers");
+  const LiveOnOff = document.querySelector("#LiveOnOff");
+  const JoinTheme = document.querySelector("#JoinTheme");
+  const JoinListHeroDivGameMode = document.querySelector("#JoinListHeroDivGameMode");
+  console.log(Players.value);
+  const objCreate = {
+    max_players:Players.value,
+    live:LiveOnOff.value,
+    theme:JoinTheme.value,
+    gamemode:JoinListHeroDivGameMode.value,
+    
+  };
+
+  //send back-end
+  const url = "api/v1/createroom/" + User._Id;
+  await FetchRequest("POST", url, objCreate);
+
+  //redirect
+  ManageMidle.Manage("JoinList");
+// api/v1/createroom/:id
+  Players.value = "";
+  LiveOnOff.value = "";
+  JoinTheme.value = "";
+  JoinListHeroDivGameMode.value = "";
+  // LiveOnOff
+})
 
 //sign in
-Home._NavSigninSignout._NavSignin.addEventListener("click", ()=> {
+Home._NavSigninSignout?._NavSignin?.addEventListener("click", ()=> {
   Home.ButtonSignIn();
   Login.DisplayBlock();
 })
-Home._NavSigninSignout._NavSignin1.addEventListener("click", ()=> {
+Home._NavSigninSignout?._NavSignin1?.addEventListener("click", ()=> {
   Home.ButtonSignIn();
   Login.DisplayBlock();
 })
 
 //sign up
-Home._NavSigninSignout._NavSignUp.addEventListener("click", ()=> {
+Home._NavSigninSignout?._NavSignUp.addEventListener("click", async ()=> {
+  Home.ButtonSignUp();
+  await Register.DisplayBlock();
+})
+Home._NavSigninSignout?._NavSignUp1.addEventListener("click", ()=> {
   Home.ButtonSignUp();
   Register.DisplayBlock();
 })
-Home._NavSigninSignout._NavSignUp1.addEventListener("click", ()=> {
-  Home.ButtonSignUp();
-  Register.DisplayBlock();
-})
-
-
-//RegisterPage click confirm email
-Register._RegisterPageContinue.addEventListener("click",  async () => {
-debugger
-    let value = await Register.RegistersWithEmail();
-    if (value)
-    {
-      Register.RegisterPageDisplayNone();
-      Confirm.setDisplayBlock(Home);
-    }
-});
 
 
 
-Home._HomeLeft._ExploreMessag.addEventListener("click",  ()=>{
+
+Home._HomeLeft?._ExploreMessag?.addEventListener("click",  ()=>{
   if (!User.checkSignIn())
     return;
 
@@ -82,17 +162,22 @@ Home._HomeLeft._ExploreMessag.addEventListener("click",  ()=>{
 
 //-------------------------------------------------------------------- left User
 // IconExit
-Home._HomeLeft._LongOut.addEventListener("click", () => {
+Home._HomeLeft._LongOut.addEventListener("click", async () => {
 
   myStorages.longOut();
-  ManageAllPage.Manage("Home");
+  await ManageAllPage.Manage("Home");
+})
+Home._HomeLeft._NavLoginOut.addEventListener("click", async () => {
+
+  myStorages.longOut();
+  await ManageAllPage.Manage("Home");
 })
 
 //---------------------------------------------------------------------   Login
 
 //when want to login you press button login
-Login._LoginPageContinue.addEventListener("click", async () => {
-  debugger
+Login?._LoginPageContinue?.addEventListener("click", async () => {
+  //debugger
   //check is correct email and password
   if (Login.ButtonSignIn())
   {
@@ -124,12 +209,11 @@ Login._LoginPageContinue.addEventListener("click", async () => {
   }
 })
 
-//when forgot password
-Login._LoginPageForgot.addEventListener("click", () => {
-  debugger
+// when forgot password
+Login?._LoginPageForgot?.addEventListener("click", () => {
+  //debugger
   ManageAllPage.Manage("ResetPage");
   ManageMidle.Manage("");
-  console.log("Clicked!");
 })
 
 
@@ -138,8 +222,8 @@ Login._LoginPageForgot.addEventListener("click", () => {
 let isReset = false;
 
 
-Reset._ConfirmReset.addEventListener('click', async () => {
-  debugger
+Reset?._ConfirmReset?.addEventListener('click', async () => {
+  //debugger
   const isValid = Reset.checkValidEmail();
   if (!isValid)
     return ;
@@ -157,7 +241,7 @@ Reset._ConfirmReset.addEventListener('click', async () => {
 //-------------------------------------------------------------------  Confirm  ---------
 
 Confirm.ConfirmYourEmail.addEventListener('click', async () => {
-  debugger
+  //debugger
   const data = await Confirm.ConfirmPageContinue(isReset);
   Confirm.ValuesAllEmpty();
 
@@ -177,13 +261,12 @@ Confirm.ConfirmYourEmail.addEventListener('click', async () => {
 
   //when came this page Welcome to ft_transcendence
   if (!data) {
-    console.log(" data empty()  ");
     User._ConfirmEmail = false;
   }
   else if (data.state) {
     User._ConfirmEmail = true;
     Confirm.DisplayNone();
-    SignUp.DisplayBlock();
+    await SignUp.DisplayBlock();
   }
   else if (data.message.substr(-3) == "408") {
     User._ConfirmEmail = false;
@@ -197,7 +280,7 @@ Confirm.ConfirmYourEmail.addEventListener('click', async () => {
 //-------------------------------------------------------------------  Password
 
 Password.PasswordConfirm.addEventListener("click", async () => {
-  debugger
+  //debugger
   const isCorrectPassword = Password.PasswordConfirmButton();
   if (isCorrectPassword)
   {
@@ -216,7 +299,7 @@ Password.PasswordConfirm.addEventListener("click", async () => {
 //-------------------------------------------------------------------  SignUp
 
 SignUp.SignupPageContinue.addEventListener("click", async () => {
-  debugger
+  //debugger
   const isCorrectPassword = SignUp.PasswordConfirmButton();
   const ischeckNameNickname = SignUp.checkNameNickname();
   if (isCorrectPassword && ischeckNameNickname)
@@ -229,3 +312,16 @@ SignUp.SignupPageContinue.addEventListener("click", async () => {
    }
   }
 })
+
+//RegisterPage click confirm email
+Register?._RegisterPageContinue?.addEventListener("click",  async () => {
+  //debugger
+      let value = await Register.RegistersWithEmail();
+      if (value)
+      {
+        Register.RegisterPageDisplayNone();
+        Confirm.setDisplayBlock(Home);
+      }
+  });
+  
+  

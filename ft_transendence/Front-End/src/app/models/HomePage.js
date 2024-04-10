@@ -1,20 +1,21 @@
 // Home Page
 class HomePage extends HtmlElement {
-  debugger
+  // debugger
     constructor(){
       super(".homeSection");
       this._style.display = "block";
+      this._Midle = new MiddleSECTION();
+      this._MiddleSettings = new MiddleSettings();
+      this._MidleCub = new MidleCub();
+      this._MidleJoinList = new JoinList();
+      this._HomeLeft = new HomeLeft();
+      this._HomeRight = new HomeRight();
+      this._HomeMessage = new MessagePage(".Message");
+      this._HomeRight = new HomeRight();
+      this._HomeMidleProfile = new MidleProfile();
+      this._MidleHistoryGame = new MidleHistoryGame();
     };
   
-    _Midle = new MiddleSECTION();
-    _MiddleSettings = new MiddleSettings();
-    _MidleCub = new MidleCub();
-    _MidleJoinList = new JoinList();
-    _HomeLeft = new HomeLeft();
-    _HomeRight = new HomeRight();
-    _HomeMessage = new MessagePage(".Message");
-    _HomeRight = new HomeRight();
-
     _NAV = {
       _Home : new HtmlElement(".LEFTHOME"),
       _Profile : new HtmlElement(".PROFIL"),
@@ -55,12 +56,12 @@ class HomePage extends HtmlElement {
       this._style.display = "none";
     }
 
-    async Drow() {
+    async draw() {
       ManageMidle.Manage("midle")
       // ManageMidle.Manage("JoinList");
       await this.usersDro();
   
-      this._HomeLeft.Drow();      //left botton User section
+      this._HomeLeft.draw();      //left botton User section
     }
   }
   

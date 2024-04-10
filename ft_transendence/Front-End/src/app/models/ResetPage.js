@@ -1,6 +1,6 @@
 //Reset Page
 class ResetPageA extends HtmlElement {
-  debugger
+  // debugger
   constructor() {
     super(".ResetPage");
     this._style.display = "none";
@@ -12,7 +12,6 @@ class ResetPageA extends HtmlElement {
   checkValidEmail() {
     this._ErrorEmail.innerHTML = "";
     this._ErrorEmail.style.color = "red";
-    console.log("length" + this._Email.value.length);
     if (!this._Email || !this._Email.value)
     {
       this._ErrorEmail.innerHTML = "Email cannot be empty";
@@ -25,8 +24,7 @@ class ResetPageA extends HtmlElement {
       return false
     }
     User._Email = this._Email.value;
-    console.log("this._Email.value;  " + this._Email.value)
-    console.log("User._Email  " + User._Email)
+
 
     return true;
   }
@@ -35,7 +33,6 @@ class ResetPageA extends HtmlElement {
     this._ErrorEmail.innerHTML = "";
     this._ErrorEmail.style.color = "red";
 
-    console.log("Request = " + this._Email.value)
   
     if (!this._Email || !this._Email.value)
     {
@@ -52,7 +49,7 @@ class ResetPageA extends HtmlElement {
     }
     return true;
   }
-  Drow(){
+  draw(){
       
   }
 }
