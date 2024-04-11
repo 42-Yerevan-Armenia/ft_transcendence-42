@@ -1,4 +1,4 @@
-version: '3.9'
+version: '3.3'
 
 services:
   frontend:
@@ -52,19 +52,16 @@ services:
       - "8080:80"
     restart: always
 
-  # nginx:
-  #   container_name: nginx
-  #   build:
-  #     context: .
-  #     dockerfile: nginx/Dockerfile
-  #   env_file:
-  #     - .dbenv
-  #   ports:
-  #     - 80:80
-  #     - 443:443
-  #   volumes:
-  #     - ${PWD}/backend:/backend
-  #   restart: unless-stopped
-  #   depends_on:
-  #     - backend
-  #     # - frontend
+  nginx:
+    container_name: nginx
+    image: nginx:latest
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./nginx/tools:/etc/nginx/ssl/
+      - ./nginx/conf/nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - backend
+      - frontend
+
