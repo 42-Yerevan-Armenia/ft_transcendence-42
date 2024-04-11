@@ -4,7 +4,7 @@ ENV PYTHONUNBUFFERED 1
 
 COPY ./requirements.txt /requirements.txt
 COPY ./backend /backend
-COPY ../scripts /scripts
+COPY ./scripts /scripts
 COPY ./backend/manage.py  /backend/manage.py 
 
 
