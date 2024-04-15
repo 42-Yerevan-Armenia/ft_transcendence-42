@@ -73,7 +73,7 @@ class LoginPage extends HtmlElement {
       
       let INTRA_API_URL="https://api.intra.42.fr/"
       let INTRA_API_UID="u-s4t2ud-a8b1e1bed11219a764077062889e83b7362fd30dac161bd55a69e592aa5b7fa0"
-      let INTRA_REDIRECT_URI="http%3A%2F%2F10.12.11.1%3A3000"
+      let INTRA_REDIRECT_URI="http%3A%2F%2F10.12.11.2%3A3000"
 
       window.location.href = `${INTRA_API_URL}/oauth/authorize?client_id=${INTRA_API_UID}&redirect_uri=${INTRA_REDIRECT_URI}&response_type=code`
       console.log("User.42")
