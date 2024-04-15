@@ -99,21 +99,34 @@ class USER {
         return false;
       }
     }
-  
-   async menegAccsess() {
-      if (!this.checkSignIn())
-        return false;
-      if(new Date().getMinutes() - this.date.getMinutes() > 13)
-      {
-        if (await this.accessRefresh())
-         true
-        else{
-          false;
-        } 
-      }
-      else {
-        return true;
-      }
+  async setDataFromBeckendTackIntra42(DataItem){
+    this._Name = DataItem.user.name;
+    this._Nickname = DataItem.user.nickname
+    this._ConfirmEmail = DataItem.success;
+    this._SignIn = true;
+    this._Image = DataItem.user.image;
+    this.date = new Date();
+    this._getAccess = localStorage.getItem("access");
+    this._Id = localStorage.getItem("id");
+    this._Gamemode = "Easy";
+    this._Twofactor = false;
+  }
+
+
+  async menegAccsess() {
+    if (!this.checkSignIn())
+      return false;
+    if(new Date().getMinutes() - this.date.getMinutes() > 13)
+    {
+      if (await this.accessRefresh())
+        true
+      else{
+        false;
+      } 
     }
+    else {
+      return true;
+    }
+  }
 }
   

@@ -39,14 +39,23 @@ const myStorages = {
       localStorage.setItem("access", access + "")
       localStorage.setItem("refresh", refresh + "")
     },
-  
+
+    setAccsessTocken(data){
+      localStorage.setItem("access", data.access.access_token + "")
+      localStorage.setItem("refresh", data.access.access_token + "")
+      localStorage.setItem("id",  data.user.id + "")
+    },
+    
     longOut() {
       //debugger
       localStorage.removeItem("id");
       localStorage.removeItem("access");
       localStorage.removeItem("refresh");
+
       User.Destruc();
+      window.location.search = ""
     },
+    
     checkSignIn() {
       this._getAccess = localStorage.getItem("access");
       this._geRefresh = localStorage.getItem("refresh");
@@ -57,6 +66,7 @@ const myStorages = {
       else
         this._SignIn = false;
       return this._SignIn;
+
     }
   }
   

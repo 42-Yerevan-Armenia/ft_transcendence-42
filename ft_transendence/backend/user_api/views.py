@@ -31,6 +31,7 @@ class Login42(APIView):
         if (access_token == None):
             return Response({"success": "false", "error": "access token not provided"}, status=400)
         # login = request.data.get('login')
+
         login = 'healeksa'
         if (login == None or login == ""):
             return Response({"success": "false", "error": "login not provided"}, status=400)
@@ -63,6 +64,7 @@ class Login42(APIView):
                     "success": "true",
                     "access": access_token,
                     "user": {
+                        "id": user_info['id'],
                         "name": data.name,
                         "nickname": data.nickname,
                         "image": data.image,
@@ -72,7 +74,24 @@ class Login42(APIView):
                 return Response({"success": "false", "error": "unable to fetch image"}, status=400)
             return JsonResponse({"success": "true", "data": response_data})
         else:
-            return JsonResponse({"success": "false", "error": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
+            user_info = self.get_user_info(login, access_token['access_token'])
+            image_info = user_info['image']
+            # Extract the desired image URL from the dictionary
+            image_url = image_info['link']
+            # Fetch the image from the URL
+            image_response = requests.get(image_url)
+            image_content_base64 = base64.b64encode(image_response.content).decode('utf-8')
+            response_data = {
+                "success": "true",
+                "access": access_token,
+                "user": {
+                    "id": user_info['id'],
+                    "name": user_info['first_name'],
+                    "nickname": user_info['login'],
+                    "image": image_content_base64,
+                }
+            }
+            return JsonResponse({"success": "true", "data": response_data})
 
     def get_user_info(self, login, access_token):
         headers = {'Authorization': 'Bearer ' + access_token}
@@ -91,7 +110,7 @@ class Login42(APIView):
         response = requests.post('https://api.intra.42.fr/oauth/token', data=data)
         if response.status_code != 200:
             return None
-        print("✅", response)
+        print("✅", response.json())
         return response.json()
 
 class IntraMe(APIView):

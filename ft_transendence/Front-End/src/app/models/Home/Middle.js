@@ -118,6 +118,7 @@ class MiddleSECTION extends HtmlElement {
     constructor(){
       super(".MIDLESECTION")
       this._style.display = "flex";
+      this.dataUser12List = 0;
     }
     // <div class="item">
     //     <Image src="./public/User.png" width="60" height="60"
@@ -167,7 +168,9 @@ class MiddleSECTION extends HtmlElement {
       liveItem.setAttribute("class", "liveitem");
 
       const img = document.createElement("img");
-      img.setAttribute("src", item.src);
+      // img.setAttribute("src", item.src);
+      // `data:image/png;base64,${User._Image}`
+      img.setAttribute("src", `data:image/png;base64,${item.src}`);
       img.setAttribute("width", "60");
       img.setAttribute("height", "60");
       img.setAttribute("alt", "user");
@@ -193,9 +196,34 @@ class MiddleSECTION extends HtmlElement {
       row.appendChild(liveItem);
     }
 
+    async loadBackEnd(){
+
+        const Items = await getFetchRequest("api/v1/leaderboard");
+        //bodySection
+        if (!Items || !Items.state)
+          return;
+        console.debug()
+        console.log("111+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+        Items.message.leaderboard.sort((e, e2)=>{
+          return e.points < e2.points
+        }).forEach(Item => {
+          this.midleCubItem(i++, Item)
+        });
+        console.log("222+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+    }
+    
     
     async drawList(){
+      document.querySelector(".players").innerHTML = "";
+      document.querySelector("#row1").innerHTML = "";
+      document.querySelector("#row2").innerHTML = "";
+      this.dataUser12List = 0;
+      this.dataUser12List = await this.loadBackEnd();
+      if (!this.dataUser12List)
+      return ;
+
       const TopPlayerList = dataUser12List.sort((e,e1)=>e.pointer>e1)?.slice(0, 6);
+
       if (TopPlayerList)
       {
         TopPlayerList.forEach(async (e, i) => {
