@@ -33,8 +33,8 @@ class Login42(APIView):
         # login = request.data.get('login')
 
         login = 'healeksa'
-        if (login == None or login == ""):
-            return Response({"success": "false", "error": "login not provided"}, status=400)
+        # if (login == None or login == ""):
+        #     return Response({"success": "false", "error": "login not provided"}, status=400)
         # Check if user is exists
         user = User.objects.filter(username=login).first()
         person = Person.objects.filter(nickname=login).first()
@@ -70,8 +70,20 @@ class Login42(APIView):
                         "image": data.image,
                     }
                 }
-            else:
-                return Response({"success": "false", "error": "unable to fetch image"}, status=400)
+            
+        user = User.objects.filter(username=response_data.user.nickname).first()
+        person = Person.objects.filter(nickname=response_data.user.nickname).first()
+        if (user == None and person == None):
+            user = User.objects.create(
+                first_name=user_info['first_name'],
+                username=user_info['login'],
+            )
+            data = Person.objects.create(
+                user=user,
+                name = user_info['first_name'],
+                nickname=user_info['login'],
+                image=image_content_base64
+            )
             return JsonResponse({"success": "true", "data": response_data})
         else:
             user_info = self.get_user_info(login, access_token['access_token'])
