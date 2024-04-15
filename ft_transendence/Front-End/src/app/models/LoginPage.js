@@ -87,7 +87,14 @@ class LoginPage extends HtmlElement {
         "code": User.url42schools
       }))
 
-      console.log("respons == " + JSON.stringify(res));
+      if (res.state)
+      {
+        console.log("respons == " + JSON.stringify(res, undefined, 2));
+
+
+        
+
+      }
     }
 
     draw() {
