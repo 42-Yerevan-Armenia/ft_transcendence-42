@@ -31,48 +31,56 @@ class Login42(APIView):
         if (access_token == None):
             return Response({"success": "false", "error": "access token not provided"}, status=400)
         # login = request.data.get('login')
+
         login = 'healeksa'
-        if (login == None or login == ""):
-            return Response({"success": "false", "error": "login not provided"}, status=400)
+        # if (login == None or login == ""):
+        #     return Response({"success": "false", "error": "login not provided"}, status=400)
         # Check if user is exists
-        user = User.objects.filter(username=login).first()
-        person = Person.objects.filter(nickname=login).first()
-        if (user == None and person == None):
-            user_info = self.get_user_info(login, access_token['access_token'])
-            if (user_info == None or user_info == {}):
-                return Response({"success": "false", "error": "invalid login"}, status=401)
-            # Assuming you have received the image information dictionary
-            image_info = user_info['image']
-            # Extract the desired image URL from the dictionary
-            image_url = image_info['link']
-            # Fetch the image from the URL
-            image_response = requests.get(image_url)
-            if image_response.status_code == 200:
-                image_content_base64 = base64.b64encode(image_response.content).decode('utf-8')
-                user = User.objects.create(
-                    first_name=user_info['first_name'],
-                    username=user_info['login'],
-                )
-                data = Person.objects.create(
-                    user=user,
-                    name = user_info['first_name'],
-                    nickname=user_info['login'],
-                    image=image_content_base64
-                )
-                response_data = {
-                    "success": "true",
-                    "access": access_token,
-                    "user": {
-                        "name": data.name,
-                        "nickname": data.nickname,
-                        "image": data.image,
-                    }
+
+        user_info = self.get_user_info(login, access_token['access_token'])
+        if (user_info == None or user_info == {}):
+            return Response({"success": "false", "error": "invalid login"}, status=401)
+        # Assuming you have received the image information dictionary
+        image_info = user_info['image']
+        # Extract the desired image URL from the dictionary
+        image_url = image_info['link']
+        # Fetch the image from the URL
+        image_response = requests.get(image_url)
+        if image_response.status_code == 200:
+            image_content_base64 = base64.b64encode(image_response.content).decode('utf-8')
+        else:
+            return Response({"success": "false", "error": "unable to fetch image"}, status=400)
+            response_data = {
+                "success": "true",
+                "access": access_token,
+                "user": {
+                    "id": user_info['id'],
+                    "name": data.name,
+                    "nickname": data.nickname,
+                    "image": data.image,
                 }
-            else:
-                return Response({"success": "false", "error": "unable to fetch image"}, status=400)
+            }
+        user = User.objects.filter(username=response_data.user.nickname).first()
+        person = Person.objects.filter(nickname=response_data.user.nickname).first()
+        if (user == None and person == None):
+            user = User.objects.create(
+                first_name=user_info['first_name'],
+                username=user_info['login'],
+            )
+            data = Person.objects.create(
+                user=user,
+                name = user_info['first_name'],
+                nickname=user_info['login'],
+                image=image_content_base64
+            )
             return JsonResponse({"success": "true", "data": response_data})
         else:
-            return JsonResponse({"success": "false", "error": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
+            refresh = RefreshToken.for_user(user)
+            return Response({
+                'refresh': str(refresh),
+                'access': str(refresh.access_token),
+                'expires': str(refresh.access_token.lifetime)
+                }, status=200)
 
     def get_user_info(self, login, access_token):
         headers = {'Authorization': 'Bearer ' + access_token}
