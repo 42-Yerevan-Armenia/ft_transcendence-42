@@ -15,6 +15,7 @@ class USER {
       this._Id = localStorage.getItem("id");
       this._Gamemode = "Easy";
       this._Twofactor = false;
+      this.url42schools ="";
     }
   
     checkSignIn() {
