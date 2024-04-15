@@ -322,6 +322,11 @@ Register?._RegisterPageContinue?.addEventListener("click",  async () => {
         Register.RegisterPageDisplayNone();
         Confirm.setDisplayBlock(Home);
       }
-  });
+});
   
-  
+
+Login._ContinueWith42Intra.addEventListener("click", async () => {
+  const respons =  await Login.Get42Connect();
+})
+
+
