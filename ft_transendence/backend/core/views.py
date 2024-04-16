@@ -71,18 +71,20 @@ class UsersAPIView(APIView):
     def get(self, request):
         user_id = request.data.get('user_id')
         if user_id:
+            print("1")
             try:
                 user = Person.objects.get(id=user_id)
-                serializer = UserSerializer(user)
+                serializer = UserSerializer(user, many=True)
                 return JsonResponse(serializer.data)
             except Person.DoesNotExist:
                 return JsonResponse({'error': 'User not found'}, status=404)
         else:
+            print("2")
             queryset = Person.objects.all()
             if not queryset:
                 return JsonResponse({'error': 'No users found'}, status=404)
             serializer = UserSerializer(queryset, many=True)
-            return JsonResponse(serializer.data, safe=True)
+            return JsonResponse(serializer.data, safe=False)
 
 class EmailValidation(APIView):
     def post(self, request):

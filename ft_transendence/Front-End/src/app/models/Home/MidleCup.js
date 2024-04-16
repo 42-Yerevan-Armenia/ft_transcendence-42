@@ -77,7 +77,7 @@ class MidleCub extends HtmlElement {
       this.MidleCubHeroName.innerHTML = User._Name;
       this.MidleCubHeroId.innerHTML = User._Id;
       this.MidleCubImage.src =`data:image/png;base64,${User._Image}`
-      const Items = await getFetchRequest("api/v1/leaderboard/" + User._Id);
+      const Items = await getFetchRequest("api/v1/users");
       //bodySection
       if (!Items || !Items.state)
         return;

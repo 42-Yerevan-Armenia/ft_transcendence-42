@@ -128,11 +128,10 @@ class USER {
         true
       else{
         false;
-      } 
+      }
     }
     else {
       return true;
     }
   }
 }
-  

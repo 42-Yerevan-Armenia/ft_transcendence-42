@@ -212,6 +212,7 @@ class MiddleSECTION extends HtmlElement {
     
     
     async drawList(){
+      debugger
       this.dataUser12List = 0;
       this.dataUser12List = await this.loadBackEndX();
   
@@ -245,10 +246,10 @@ class MiddleSECTION extends HtmlElement {
     }
 
 
-    async draw()
-    {
-      //debugger
-      await this.drawList();
-    }
+  async draw()
+  {
+    //debugger
+    await this.drawList();
   }
+}
   
