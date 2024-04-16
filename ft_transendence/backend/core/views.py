@@ -243,9 +243,9 @@ class Login(APIView):
             return JsonResponse({"success": "false", "error": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
 
 class Logout(APIView):
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
     def post(self, request, pk):
-        user = Person.objects.get(id=pk)
+        person = Person.objects.get(id=pk)
         person.is_online = False
         person.save()
         return Response({"success": "true", "message": "Logged out successfully"}, status=status.HTTP_200_OK)
