@@ -71,6 +71,8 @@ class MidleCub extends HtmlElement {
     //Section Cup Drow DOM
     async setHero(){
       let i = 1;
+      const domDat = document.querySelector(".MidleCubEditSection")
+      domDat.innerHTML = "";
       //headerSection
       this.MidleCubHeroName.innerHTML = User._Name;
       this.MidleCubHeroId.innerHTML = User._Id;
@@ -86,7 +88,7 @@ class MidleCub extends HtmlElement {
       });
     }
     async draw(){
-      debugger
+      //debugger
       await this.setHero();
     }
   

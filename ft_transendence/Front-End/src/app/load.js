@@ -44,23 +44,30 @@ if (mainElement) {
 
 document.addEventListener("DOMContentLoaded", async () => {
 
-    // debugger
+
     if(User.checkSignIn())
     {
-
         //once expiration a new refresh token is generated
         const res = await User.accessRefresh();
-
+        
         //set data from backend
         if (res && await User.setDataFromBackEnd())
-        {
-
             console.log("true")
-        }
         else
             myStorages.longOut();
     }
-   
+    else
+    {
+
+        //debugger
+        const code = window.location.search?.slice(6);
+
+        if (code)
+        {
+            User.url42schools = code;
+            await Login.Post42ConnectBackend();
+        }
+    }
     await ManageAllPage.Manage("Home");
 });
 

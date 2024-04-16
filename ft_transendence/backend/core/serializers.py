@@ -8,7 +8,7 @@ from friendship.models import Friend
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = Person
-        fields = ('id', 'name', 'nickname', 'email', 'phone', 'image', 'background', 'wins', 'loses', 'matches', 'points', 'gamemode', 'live')
+        fields = ('id', 'name', 'nickname', 'email', 'phone', 'image', 'background', 'wins', 'loses', 'matches', 'points', 'gamemode', 'live', 'is_online')
 
 class HomeSerializer(serializers.ModelSerializer):
     class Meta:

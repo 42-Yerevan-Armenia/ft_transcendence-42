@@ -1,6 +1,6 @@
 //login Page 
 class LoginPage extends HtmlElement {
-  // debugger
+  // //debugger
     constructor(){
       super(".LoginPage")
       // this._style.display = "none";
@@ -10,6 +10,7 @@ class LoginPage extends HtmlElement {
     _LoginEmail = document.querySelector(".LoginPageinput");
     _LoginPageForgot = document.querySelector(".LoginPageForgot");
     _LoginPageContinue = document.querySelector(".LoginPageContinue");
+    _ContinueWith42Intra = document.querySelector(".LoginPageContinueWith42");
     DisplayBlock() {
       this._style.display = "block";
     }
@@ -65,6 +66,26 @@ class LoginPage extends HtmlElement {
       if (email.length > 0)
       {
         LoginPageinput.value = email;
+      }
+    }
+    Get42Connect = async () => {
+      //debugger
+      window.location.href = `${INTRA_API_URL}/oauth/authorize?client_id=${INTRA_API_UID}&redirect_uri=${INTRA_REDIRECT_URI}&response_type=code`
+      console.log("User.42")
+    }
+
+    Post42ConnectBackend = async () => {
+      //debugger
+      console.log("url42schools == " + User.url42schools);
+      const res = await FetchRequest("POST","api/v1/login", JSON.stringify({
+        "code": User.url42schools
+      }))
+
+      if (res.state)
+      {
+        console.log("respons == " + JSON.stringify(res, undefined, 2));
+        myStorages.setAccsessTocken(res.message?.data);
+        User.setDataFromBeckendTackIntra42(res.message?.data)
       }
     }
 

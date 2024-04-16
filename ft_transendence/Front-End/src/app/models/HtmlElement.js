@@ -1,6 +1,6 @@
 //parent class
 class HtmlElement {
-  // debugger
+  // //debugger
     constructor(name) {
       this._classname = document.querySelector(name);
       this._style = this._classname ? this._classname.style : null;

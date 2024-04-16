@@ -26,6 +26,7 @@ class Person(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='person')
     game_room = models.ForeignKey('GameRoom', on_delete=models.SET_NULL, null=True, blank=True, related_name='participants')
     ongoing = models.BooleanField(default=False)
+    is_online = models.BooleanField(default=False)
 
     def __str__(self):
         return self.nickname

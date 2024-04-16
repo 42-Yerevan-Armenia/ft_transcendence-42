@@ -15,7 +15,7 @@ class JoinListInvit extends HtmlElement{
     6 <td class="JoinListInvitetbodyTd"><button class="JoinListInviteClass" id="JoinListInviteid">Invite</button></td>
 </tr> */
     JoinListInvitetbodyTr(Item){
-        debugger
+        //debugger
         const tr = document.createElement("tr");
         tr.setAttribute("class", "JoinListInvitetbodyTr");
         const td1 = document.createElement("td");
@@ -65,7 +65,7 @@ class JoinListInvit extends HtmlElement{
     }
     async setTableInvit(){
         document.querySelector(".JoinListInvitetbody").innerHTML = "";
-        debugger
+        //debugger
        const data = await getFetchRequest("api/v1/waitingroom/" + User._Id);
        if (!data.state)
         return ;
@@ -77,9 +77,9 @@ class JoinListInvit extends HtmlElement{
 
         //    Iterate over each button and attach an event listener
         buttons.forEach(button => {
-        debugger
+        //debugger
         button.addEventListener("click", async function(e) {
-                debugger
+                //debugger
                 // Your code here
                 console.log(JSON.stringify(e.target.id));
                 console.log("Button clicked!");
