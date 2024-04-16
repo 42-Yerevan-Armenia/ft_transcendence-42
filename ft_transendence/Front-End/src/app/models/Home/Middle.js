@@ -197,12 +197,13 @@ class MiddleSECTION extends HtmlElement {
     }
 
     async loadBackEndX(){
-        const Items =  await getFetchRequest("api/v1/leaderboard/" + 1);
+      debugger
+        const Items =  await getPureFetchRequest("users");
 
         if (!Items || !Items.state)
           return;
 
-        const dataAllItem = Items.message.leaderboard.sort((e, e2)=>{
+        const dataAllItem = Items.message.sort((e, e2)=>{
           return e.points < e2.points
         })
         console.log("dataAllItem  =  ")
@@ -215,15 +216,15 @@ class MiddleSECTION extends HtmlElement {
       this.dataUser12List = 0;
       this.dataUser12List = await this.loadBackEndX();
   
+      
+      if (!this.dataUser12List)
+      return ;
+      
+      const TopPlayerList = this.dataUser12List?.slice(0, 6);
+      
       document.querySelector("#row1").innerHTML = "";
       document.querySelector("#row2").innerHTML = "";
       document.querySelector("#playersIdTopMidle").innerHTML = "";
-  
-      if (!this.dataUser12List)
-        return ;
-
-      const TopPlayerList = this.dataUser12List?.slice(0, 6);
-
 
       if (TopPlayerList)
       {
