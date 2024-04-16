@@ -176,9 +176,9 @@
     margin-top: 5px;
 }
 
-.MessagePrivateContent {
+#MessagePrivateContent {
     width: 90%;
-    height: 90%;
+    height: 80%;
 }
 
 .MessagePrivateUser {
@@ -335,8 +335,8 @@
 
 .MessagPrivateSubjectPrivate{
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: end;
 }
 .MessagPrivateSubjectPrivate>input{
     height: 40px;

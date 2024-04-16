@@ -13,7 +13,7 @@ var SignUp = new SignupPage();
 
 var ManageAllPage = {
     Manage: async function(pageName) {
-        //debugger
+        ////debugger
       await  ManageAllPage.pages.forEach(async (element) => {
             const [key, obj] = Object.entries(element)[0]; // Get the key-value pair of the element
 
@@ -41,7 +41,7 @@ var ManageAllPage = {
 //give name section name what we need show in middle Home->Midl section
 var ManageMidle = {
     Manage: async function(midleName) {
-         //debugger
+         ////debugger
        await ManageMidle.pages.forEach(async (element) => {
             const [key, obj] = Object.entries(element)[0]; // Get the key-value pair of the element
             if (key === midleName) {
@@ -59,8 +59,8 @@ var ManageMidle = {
         {"JoinList": Home._MidleJoinList},
         {"ProfileMidle":Home._HomeMidleProfile},
         {"MidleHistoryGame": Home._MidleHistoryGame},
-        {"JoinListInvite": Home._MidleJoinList._JoinListInvit}
-        // {"JoinListInvite": Home._HomeJoinListInvit}
+        {"JoinListInvite": Home._MidleJoinList._JoinListInvit},
+        {"GameBoard": Home._GameBoard}
         // {"SignUp": SignUp}
     ]
 };
@@ -68,7 +68,7 @@ var ManageMidle = {
 
 var ManageRight = {
     Manage: async function(name) {
-        //debugger
+        ////debugger
         await ManageRight.pages.forEach(async (element) => {
             const [key, obj] = Object.entries(element)[0]; // Get the key-value pair of the element
 

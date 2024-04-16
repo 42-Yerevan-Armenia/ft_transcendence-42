@@ -105,8 +105,8 @@
 }
 
 .AllItem{
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-rows: 2;
     height: 130px;
 }
 

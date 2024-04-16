@@ -17,7 +17,7 @@ class MiddleSettings extends HtmlElement {
     }
 
     async changeData(){
-      debugger
+      //debugger
       const profilName = document.querySelector("#MidleSettingsBlocksPName")                    //"Edit Profile Name
       const gameMode = document.querySelector("#MidleSettingsBlocksPGameMode")                  //Game Mode
       const userName = document.querySelector("#MidleSettingsBlocksPEditProfileUsername")       //Edit Profile Username
