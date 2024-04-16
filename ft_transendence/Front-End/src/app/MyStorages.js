@@ -44,10 +44,10 @@ const myStorages = {
     async longOut() {
       //debugger
       // api/v1/logout/
-      const dbUser = {
-        "pk": User._Id
+      const dataUrs={
+        "pk":User._Id
       }
-      const res = await FetchRequest("POST", "api/v1/logout", dbUser);
+      const res = await FetchRequest("POST", "api/v1/logout/" +User._Id, dataUrs);
   
       localStorage.removeItem("id");
       localStorage.removeItem("access");

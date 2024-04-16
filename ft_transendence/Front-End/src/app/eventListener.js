@@ -177,7 +177,7 @@ Home._HomeLeft._NavLoginOut.addEventListener("click", async () => {
 
 //when want to login you press button login
 Login?._LoginPageContinue?.addEventListener("click", async () => {
-  ////debugger
+  debugger
   //check is correct email and password
   if (Login.ButtonSignIn())
   {

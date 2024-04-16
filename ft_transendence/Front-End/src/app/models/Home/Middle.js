@@ -198,7 +198,7 @@ class MiddleSECTION extends HtmlElement {
 
     async loadBackEndX(){
       debugger
-        const Items =  await getPureFetchRequest("api/v1/users/"+1);
+        const Items =  await getPureFetchRequest("users");
 
         if (!Items || !Items.state)
           return;
@@ -234,7 +234,7 @@ class MiddleSECTION extends HtmlElement {
             await this.topPlayers(e);
         })
       }
-      const LiveNowList = this.dataUser12List?.filter(e => e.live)?.slice(0, 6);
+      const LiveNowList = this.dataUser12List?.filter(e => e.is_online)?.slice(0, 6);
       if (LiveNowList)
       {
         LiveNowList.forEach(async (e, i) => {
