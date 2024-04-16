@@ -268,10 +268,7 @@ async function getPureFetchRequest(Torequest) {
   console.log( "request : " + Torequest);
   console.log("2----------------------------------------")
   try {
-    const response = await fetch(`${HostPort}/${Torequest}/`, {
-      method: "GET",
-      "Content-Type": "application/json"
-    })
+    const response = await fetch(`${HostPort}/${Torequest}/`)
 
     if (!response.ok) {
       throw new Error(`Failed to ${response.message} Status: ${response.status}`);
