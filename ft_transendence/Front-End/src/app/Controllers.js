@@ -9,9 +9,7 @@ let INTRA_REDIRECT_URI="http%3A%2F%2F10.12.11.1%3A3000";
 
 // hovhannes_vardanyan1@mail.ru
 
-
-
-//#################################################################################   Controller.js
+//#################################################################################   Controllers.js
 
 //queshon too backend Email exist or not and 
 //if create 
@@ -268,10 +266,7 @@ async function getPureFetchRequest(Torequest) {
   console.log( "request : " + Torequest);
   console.log("2----------------------------------------")
   try {
-    const response = await fetch(`${HostPort}/${Torequest}/`, {
-      method: "GET",
-      "Content-Type": "application/json"
-    })
+    const response = await fetch(`${HostPort}/${Torequest}/`)
 
     if (!response.ok) {
       throw new Error(`Failed to ${response.message} Status: ${response.status}`);

@@ -1,4 +1,5 @@
 //parent class
+let GameRoomNewClientID = "";
 class HtmlElement {
   // //debugger
     constructor(name) {

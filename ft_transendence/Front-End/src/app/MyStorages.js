@@ -41,11 +41,18 @@ const myStorages = {
       localStorage.setItem("id",  data.user.id + "")
     },
     
-    longOut() {
+    async longOut() {
       //debugger
+      // api/v1/logout/
+      const dbUser = {
+        "pk": User._Id
+      }
+      const res = await FetchRequest("POST", "api/v1/logout", dbUser);
+  
       localStorage.removeItem("id");
       localStorage.removeItem("access");
       localStorage.removeItem("refresh");
+      
 
       User.Destruc();
       window.location.search = ""

@@ -78,6 +78,7 @@ class UsersAPIView(APIView):
             except Person.DoesNotExist:
                 return JsonResponse({'error': 'User not found'}, status=404)
         else:
+            print("2")
             queryset = Person.objects.all()
             if not queryset:
                 return JsonResponse({'error': 'No users found'}, status=404)
