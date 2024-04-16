@@ -45,16 +45,21 @@ if (mainElement) {
 document.addEventListener("DOMContentLoaded", async () => {
 
 
+    
+debugger
     if(User.checkSignIn())
     {
         //once expiration a new refresh token is generated
-        const res = await User.accessRefresh();
-        
         //set data from backend
-        if (res && await User.setDataFromBackEnd())
-            console.log("true")
+        if (await User.menegAccsess())
+        {
+            if (await User.setDataFromBackEnd())
+                console.log("true")
+            else
+                await myStorages.longOut();
+        }
         else
-            myStorages.longOut();
+            await myStorages.longOut();
     }
     else
     {
