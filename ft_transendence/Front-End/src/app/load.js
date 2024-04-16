@@ -58,7 +58,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
     else
     {
-        debugger
+
+        //debugger
         const code = window.location.search?.slice(6);
 
         if (code)

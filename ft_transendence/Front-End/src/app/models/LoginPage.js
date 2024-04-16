@@ -1,6 +1,6 @@
 //login Page 
 class LoginPage extends HtmlElement {
-  // debugger
+  // //debugger
     constructor(){
       super(".LoginPage")
       // this._style.display = "none";
@@ -69,19 +69,13 @@ class LoginPage extends HtmlElement {
       }
     }
     Get42Connect = async () => {
-      debugger
-      
-      let INTRA_API_URL="https://api.intra.42.fr/"
-      let INTRA_API_UID="u-s4t2ud-a8b1e1bed11219a764077062889e83b7362fd30dac161bd55a69e592aa5b7fa0"
-      let INTRA_REDIRECT_URI="http%3A%2F%2F10.12.11.2%3A3000"
-
+      //debugger
       window.location.href = `${INTRA_API_URL}/oauth/authorize?client_id=${INTRA_API_UID}&redirect_uri=${INTRA_REDIRECT_URI}&response_type=code`
       console.log("User.42")
-   
     }
 
     Post42ConnectBackend = async () => {
-      debugger
+      //debugger
       console.log("url42schools == " + User.url42schools);
       const res = await FetchRequest("POST","api/v1/login", JSON.stringify({
         "code": User.url42schools
@@ -90,10 +84,8 @@ class LoginPage extends HtmlElement {
       if (res.state)
       {
         console.log("respons == " + JSON.stringify(res, undefined, 2));
-
-
-        
-
+        myStorages.setAccsessTocken(res.message?.data);
+        User.setDataFromBeckendTackIntra42(res.message?.data)
       }
     }
 

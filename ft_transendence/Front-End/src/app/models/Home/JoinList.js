@@ -155,7 +155,6 @@ class JoinList extends HtmlElement {
     </div>
 </div> */
     JoinListItem (Item){
-      debugger
       const divJoin = document.createElement("div");
       divJoin.setAttribute("class", "JoinListTableBody");
       //1
@@ -193,9 +192,7 @@ class JoinList extends HtmlElement {
 
       //    Iterate over each button and attach an event listener
       buttonsJoin.forEach(button => {
-        debugger
         button.addEventListener("click", async function(e) {
-                debugger
                 // Item.id + ":JoinListTableID:" + Item.creator_id
                 // api/v1/joinlist/<int:pk>/' POST
                 const idLeft = e.target.id.slice(0, e.target.id.indexOf(':'));
@@ -230,9 +227,9 @@ class JoinList extends HtmlElement {
       })
       //    Iterate over each button and attach an event listener
       buttonsView.forEach(button => {
-        debugger
+
         button.addEventListener("click", async function(e) {
-                debugger
+
                 // Your code here
                 console.log(JSON.stringify(e.target.id));
                 console.log("buttonsView");
@@ -240,9 +237,7 @@ class JoinList extends HtmlElement {
         })
       //    Iterate over each button and attach an event listener
       buttonsMembers.forEach(button => {
-        debugger
         button.addEventListener("click", async function(e) {
-                debugger
                 // Your code here
                 console.log(JSON.stringify(e.target.id));
                 console.log("buttonsMembers!");
@@ -265,7 +260,6 @@ class JoinList extends HtmlElement {
     }
 
     async draw(){
-      debugger
      await this.getJoinListItemAll();
     }
   

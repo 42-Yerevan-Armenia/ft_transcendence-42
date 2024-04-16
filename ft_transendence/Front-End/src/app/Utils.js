@@ -1,5 +1,5 @@
 function ValidateEmail(input) {
-  //debugger
+  ////debugger
   if (!input)
   {
     return "Invalid email address!";
@@ -16,7 +16,7 @@ function ValidateEmail(input) {
 }
 
 function checkName(str) {
-  //debugger
+  ////debugger
   // Regular expression to match strings with only characters
   // and starting with an uppercase letter
   const regex = /^[A-Z][a-z]*$/;
@@ -28,7 +28,7 @@ function checkName(str) {
 
 //check if the password is correct
 function PasswordisCorrect(obj, error){
-  //debugger
+  ////debugger
   if (obj.value.length < 8 || obj.value.length > 16)
   {
     error.innerHTML = "password must be 8 to 16 character";
@@ -41,7 +41,7 @@ function PasswordisCorrect(obj, error){
     // Test if the password matches the regular expression
   if (!passwordRegex.test(obj.value))
   {
-    //debugger
+    ////debugger
     error.innerHTML = "At least one lowercase letter , one uppercase letter, At least one digit";
     error.style.color = "red";
     return false;
@@ -51,7 +51,7 @@ function PasswordisCorrect(obj, error){
 
 
 function HashCodeGeneration(){
-  //debugger
+  ////debugger
   let hashCode = Array.from({length:10}, (i) =>Math.floor(Math.random() * 10)) + "";
   const sliceDelete = /,/g;
   const str = hashCode.replace(sliceDelete, '');
