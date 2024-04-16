@@ -41,6 +41,7 @@
     <!-- SignUp -->
     <link rel="stylesheet" href="./src/app/styles/Signup.css">
 
+    <link rel="stylesheet" href="./src/app/styles/game.css">
     <!-- JoinListInvite -->
     <link rel="stylesheet" href="./src/app/styles/JoinListInvite.css">
     <meta name="description" content="">
@@ -78,6 +79,8 @@
                     &copy; 2023 all rights reserved
                 </footer>
             </div>
+
+
 
 
 
@@ -216,9 +219,10 @@
                                 <div class="Registerline"></div>OR<div class="Registerline"></div>
                             </div>
                             
-                            <button class="RegisterPageContinueWith42" type="button">
+                            <div  class="RegisterPageContinueWith42" type="button">
                                 Continue with 42intra
-                            </button>
+                            </div>
+
                         </div>
                     </div>        
                 </div>
@@ -390,8 +394,14 @@
                             <div class="midleplayers">
                                 <div class="topplayers">
                                     <h3 class="top">TOP PLAYERS</h3>
-                                    <div class="players">
-                                        <div class="item">
+                                    <div class="players" id="playersIdTopMidle">
+                                        <!-- <div class="item">
+                                            <Image src="./public/User.png" width="60" height="60"
+                                                alt="user" class="imag"></Image>
+                                            <h6 class="itemName">User.png</h6>
+                                            <p class="itemP">123456 points</p>
+                                        </div> -->
+                                        <!-- <div class="item">
                                             <Image src="./public/User.png" width="60" height="60"
                                                 alt="user" class="imag"></Image>
                                             <h6 class="itemName">User.png</h6>
@@ -414,13 +424,7 @@
                                                 alt="user" class="imag"></Image>
                                             <h6 class="itemName">User.png</h6>
                                             <p class="itemP">123456 points</p>
-                                        </div>
-                                        <div class="item">
-                                            <Image src="./public/User.png" width="60" height="60"
-                                                alt="user" class="imag"></Image>
-                                            <h6 class="itemName">User.png</h6>
-                                            <p class="itemP">123456 points</p>
-                                        </div>
+                                        </div> -->
             
                                     </div>
                                 </div>
@@ -436,15 +440,15 @@
                                 <div class="liveNow">
                                     <h6 class="liveNowH6">LIVE NOW</h6>
                                     <div class="AllItem">
-                                        <div class="row">
-                                            <div class="liveitem">
+                                        <div class="row" id="row1">
+                                            <!-- <div class="liveitem">
                                                 <Image src="./public/User.png" width="60" height="60"
                                                     alt="user" class="imag"></Image>
                                                 <div class="PlayIcon">
                                                     <PlayIcon/>
                                                 </div>
-                                            </div>
-                                            <div class="liveitem">
+                                            </div> -->
+                                            <!-- <div class="liveitem">
                                                 <Image src="./public/User.png" width="60" height="60"
                                                     alt="user" class="imag"></Image>
                                                 <div class="PlayIcon">
@@ -458,11 +462,11 @@
                                                 <div class="PlayIcon">
                                                     <PlayIcon/>
                                                 </div>
-                                            </div>
+                                            </div> -->
             
                                         </div>
-                                        <div class="row">
-                                            <div class="liveitem">
+                                        <div class="row"  id="row2">
+                                            <!-- <div class="liveitem">
                                                 <Image src="./public/User.png" width="60" height="60"
                                                     alt="user" class="imag"></Image>
                                                 <div class="PlayIcon">
@@ -482,7 +486,7 @@
                                                 <div class="PlayIcon">
                                                     <PlayIcon/>
                                                 </div>
-                                            </div>
+                                            </div> -->
                                         </div>
             
                                     </div>
@@ -748,6 +752,17 @@
 
                     </div>
 
+
+
+                    <!-- --------------------------------------------------Game-------------------------------------------------- -->
+
+                <div class="GameBoard" id="GameBoard">
+
+
+
+
+
+                </div>
                     <!-- -------------------------------------- Game or midleJoinList -------------------------------------------------- -->
 
                     <div class="JoinList">
@@ -804,9 +819,9 @@
                                                     </svg>
                                                 </div>
                                                 <select name="LiveOnOff" id="LiveOnOff">
-                                                    <option value="on" disabled selected hidden>Live on/off</option>
-                                                    <option value="on">on</option>
-                                                    <option value="off">off</option>
+                                                    <option value="" disabled selected hidden>Live on/off</option>
+                                                    <option value="true">on</option>
+                                                    <option value="false">off</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -819,9 +834,9 @@
                                                 </div>
                                                 <select name="JoinTheme" id="JoinTheme">
                                                     <option value="" disabled selected hidden>Theme</option>
-                                                    <option value="red">red</option>
-                                                    <option value="blue">blue</option>
-                                                    <option value="green">green</option>
+                                                    <option value="light">light</option>
+                                                    <option value="dark">dark</option>
+                                                    <option value="other">other</option>
                                                 </select>
                                             </div>
                                             <div class="JoinListHeroDivTemeGameMode">
@@ -839,8 +854,8 @@
                                                <select name="JoinListHeroDivGameMode" id="JoinListHeroDivGameMode">
                                                 <option value="" disabled selected hidden>Game Mode</option>
                                                 <option value="Classic">Classic</option>
-                                                <option value="Hard">Hard</option>
                                                 <option value="Easy">Easy</option>
+                                                <option value="Hard">Hard</option>
                                             </select>
                                             </div>
                                         </div>
@@ -1061,12 +1076,12 @@
                                                 <!-- Benny -->
                                                 <div class="MessagePrivateUser">
                                                     <div class="MessagePrivateUserImag">
-                                                        <img src="./public/User.png">
+                                                        <img src="" class="MessagePrivateUserImg"  alt="Sender"/>
                                                         <div class="MessagePrivateUserImagOnlain">
                                                         </div>
                                                     </div>
-                                                    <h4>
-                                                        Benny
+                                                    <h4 class="MessagePrivateUserH4">
+                                                        <!-- Benny -->
                                                     </h4>
                                                 </div>
 
@@ -1077,7 +1092,7 @@
                                                     <div class="MessagPrivateSubjectMessag" id="containerScroll">
                                                         <div class="MessagPrivateSubjectMessagDaye">
                                                             <div>
-                                                                <p>
+                                                                <p class="MessagPrivateSubjectMessagDayeP">
                                                                     Today
                                                                 </p>
                                                             </div>
@@ -1161,7 +1176,7 @@
             </div>
 
         </main>
-
+        <script  src="./public/playIcon.js"></script>
         <script  src="./src/app/models/HtmlElement.js"></script>
         <script  src="./src/app/Utils.js"></script>
         <script  src="./src/app/MyStorages.js"></script>
@@ -1175,6 +1190,10 @@
         <script src="./src/app/models/Home/MidleHistoryGame.js"></script>
         <script src="./src/app/models/Home/Profile.js"></script>
         <script src="./src/app/models/Home/JoinListInvit.js"></script>
+        <script src="./src/app/models/Home/GameBoard.js"></script>
+        
+        <script  class="ScriptData"></script>
+
         <script src="./src/app/models/Home/MidleSettings.js"></script>
         
         <script src="./src/app/models/User.js"></script>

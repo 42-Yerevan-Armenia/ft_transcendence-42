@@ -273,23 +273,37 @@ var MessagePage = function(name) {
     this.chat = (chatPersonal) => {
         //debugger
 
+        
         chatPersonal.forEach((Person)=>{
-            if(Person.id == User._Id)
+            if(Person.username === User._Nickname)
                 this.MessagPrivateSubjectMessagPerson(Person)
             else
                 this.MessagPrivateSubjectMessagSender(Person)
         })
+        const Person = chatPersonal.find((Person)=>Person.username !== User._Nickname)
+        
+        const MessagePrivateUserH4 = document.querySelector(".MessagePrivateUserH4")
+        MessagePrivateUserH4.innerHTML = Person?.username || "Sender";
+        const MessagePrivateUserImg = document.querySelector(".MessagePrivateUserImg");
+        // MessagePrivateUserImg.src = `data:image/png;base64,${Person.src}`;
+        MessagePrivateUserImg.src = Person?.src || "Sender";
+        const MessagePrivateUserImagOnlain = document.querySelector(".MessagePrivateUserImagOnlain");
+        
+        !Person.isOnlain ? MessagePrivateUserImagOnlain.style.backgroundColor = "grey":MessagePrivateUserImagOnlain.style.backgroundColor = "green";
     };
 
 
-    this.draw = async () => {
+    this.draw = async (data) => {
+
         //debugger
         if (!await User.menegAccsess())
             return null;
-        
-        this.Groups(Groups);
-        this.Personal(Groups);
-        this.chat(Privat);
+        if (data?.send == "Privat")
+            this.chat([data]);
+        else if(data?.send == "Personal") 
+            this.Personal([data]);
+        else if(data?.send == "Groups")
+            this.Groups([data]);
     }
 }
 

@@ -38,7 +38,10 @@
 //     type: "Tournament"
 //   }
 // ]
-
+var GameRom = {
+  creator_id :0,
+  game_room_id : 0
+}
 
 class JoinList extends HtmlElement {
     constructor(){
@@ -152,7 +155,6 @@ class JoinList extends HtmlElement {
     </div>
 </div> */
     JoinListItem (Item){
-      debugger
       const divJoin = document.createElement("div");
       divJoin.setAttribute("class", "JoinListTableBody");
       //1
@@ -190,9 +192,7 @@ class JoinList extends HtmlElement {
 
       //    Iterate over each button and attach an event listener
       buttonsJoin.forEach(button => {
-        debugger
         button.addEventListener("click", async function(e) {
-                debugger
                 // Item.id + ":JoinListTableID:" + Item.creator_id
                 // api/v1/joinlist/<int:pk>/' POST
                 const idLeft = e.target.id.slice(0, e.target.id.indexOf(':'));
@@ -202,19 +202,34 @@ class JoinList extends HtmlElement {
                 console.log("creator_id = " + creator_id + "  game_room_id " + game_room_id + " ");
 
                 const data = await FetchRequest("POST", "api/v1/joinlist/"+User._Id, {
-                  "creator_id": idLeft,
-                  'game_room_id': idRight
+                  "creator_id": idRight,
+                  'game_room_id': idLeft
                 });
-                // Your code here
-                console.log(JSON.stringify(e.target.id));
+
+
+                if (data && data.state)
+                {
+                  console.log(data.message.game.game_room_id);
+                  GameRom.creator_id = data.message.game.game_room_id;
+                  GameRom.game_room_id = 0;
+                  const select = document.querySelector(".ScriptData");
+                  // game/"+GameRom.game_room_id
+                  window.location.href = "http://10.12.11.2:8000/game";
+                  // location.assign();
+                  // location.replace();
+
+
+                  select.setAttribute("src","./src/app/models/Home/game/game.js")
+
+                }
                 console.log("buttonsJoin!");
             })
       })
       //    Iterate over each button and attach an event listener
       buttonsView.forEach(button => {
-        debugger
+
         button.addEventListener("click", async function(e) {
-                debugger
+
                 // Your code here
                 console.log(JSON.stringify(e.target.id));
                 console.log("buttonsView");
@@ -222,9 +237,7 @@ class JoinList extends HtmlElement {
         })
       //    Iterate over each button and attach an event listener
       buttonsMembers.forEach(button => {
-        debugger
         button.addEventListener("click", async function(e) {
-                debugger
                 // Your code here
                 console.log(JSON.stringify(e.target.id));
                 console.log("buttonsMembers!");
@@ -247,7 +260,6 @@ class JoinList extends HtmlElement {
     }
 
     async draw(){
-      debugger
      await this.getJoinListItemAll();
     }
   

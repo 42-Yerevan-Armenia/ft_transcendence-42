@@ -1,6 +1,6 @@
 // Home Page
 class HomePage extends HtmlElement {
-  // debugger
+  // //debugger
     constructor(){
       super(".homeSection");
       this._style.display = "block";
@@ -14,6 +14,7 @@ class HomePage extends HtmlElement {
       this._HomeRight = new HomeRight();
       this._HomeMidleProfile = new MidleProfile();
       this._MidleHistoryGame = new MidleHistoryGame();
+      this._GameBoard = new GameBoard();
     };
   
     _NAV = {

@@ -115,22 +115,29 @@ chatSocket.onmessage = function (e) {
         document.querySelector("#id_message_send_input").value = "";
         return
     }
-    if (data.username === User._Nickname)
-    {
-        MessagePage.draw()
-        person({
+    // if (data.username === User._Nickname)
+    // {
+        Home._HomeMessage.draw({
+            "send": "Privat",
             "message":data.message,
             "time": new Date().getTime(),
-            "name" : data.username
-        });
-    }
-    else{
-        sender({
-            "message":data.message,
-            "time": new Date().getTime(),
-            "name" : data.username
-        });
-    }
+            "username" : "Kara",//data.username,
+            "src" : "/public/avatar.png",
+            "isOnlain": true
+        })
+    //     person({
+    //         "message":data.message,
+    //         "time": new Date().getTime(),
+    //         "name" : data.username
+    //     });
+    // }
+    // else{
+    //     sender({
+    //         "message":data.message,
+    //         "time": new Date().getTime(),
+    //         "name" : data.username
+    //     });
+    // }
     
     // div.innerHTML = data.username + " : " + data.message;
 
