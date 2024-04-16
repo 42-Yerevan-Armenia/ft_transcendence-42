@@ -17,6 +17,7 @@ let isStarted = false;
 function isOpen(ws) { return ws.readyState === ws.OPEN }
 
 //HTML elements
+let User_Id = undefined;
 let clientId = User_Id;
 if (!clientId)
     clientId = uuid();
@@ -24,6 +25,7 @@ let gameId = null;
 let playerColor = null;
 
 let ws = new WebSocket("ws://" + window.location.host + "/ws/game/")
+console.log("ws://" + window.location.host + "/ws/game/");
 console.log("ws = ", window.location.host);
 const btnCreate = document.getElementById("btnCreate");
 const btnJoin = document.getElementById("btnJoin");
