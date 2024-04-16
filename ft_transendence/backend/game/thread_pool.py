@@ -10,8 +10,10 @@ class ThreadPool:
 
     @classmethod
     def add_game(cls, game_name, consumer_instance):
+        thread_event = threading.Event()
         cls.threads[game_name] = {
-            "thread": threading.Thread(target=consumer_instance.propagate_state),
+            "stop_event": thread_event,
+            "thread": threading.Thread(target=consumer_instance.propagate_state, args=(thread_event,)),
             "paddle1": False,
             "paddle2": False,
             "active": False,
