@@ -78,11 +78,7 @@ class UsersAPIView(APIView):
             except Person.DoesNotExist:
                 return JsonResponse({'error': 'User not found'}, status=404)
         else:
-            queryset = Person.objects.all()
-            if not queryset:
-                return JsonResponse({'error': 'No users found'}, status=404)
-            serializer = UserSerializer(queryset, many=True)
-            return JsonResponse(serializer.data, safe=False)
+            return JsonResponse({'error': 'User ID not provided'}, status=400)
 
 class EmailValidation(APIView):
     def post(self, request):
@@ -247,6 +243,7 @@ class Login(APIView):
             return JsonResponse({"success": "false", "error": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
 
 class Logout(APIView):
+    permission_classes = [IsAuthenticated]
     def post(self, request, pk):
         user = Person.objects.get(id=pk)
         person.is_online = False

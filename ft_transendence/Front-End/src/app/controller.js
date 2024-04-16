@@ -1,11 +1,11 @@
 "use strict"
 // const HostPort="http://localhost:5001"
-const HostPort="http://10.12.11.1:8000"
-// const HostPort="http://10.12.11.2:8000"
+// const HostPort="http://10.12.11.1:8000"
+const HostPort="http://10.12.11.2:8000"
 
 let INTRA_API_URL="https://api.intra.42.fr/";
-let INTRA_API_UID="u-s4t2ud-a8b1e1bed11219a764077062889e83b7362fd30dac161bd55a69e592aa5b7fa0";
-let INTRA_REDIRECT_URI="http%3A%2F%2F10.12.11.1%3A3000";
+let INTRA_API_UID="u-s4t2ud-8c8a43d63fe269a7b39126edcb94196a6fa343c2c83ce9e2b922ce7dbf7d2029";
+let INTRA_REDIRECT_URI="http%3A%2F%2F10.12.11.2%3A3000%2F";
 
 // hovhannes_vardanyan1@mail.ru
 
