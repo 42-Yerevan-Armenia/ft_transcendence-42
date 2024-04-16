@@ -29,6 +29,7 @@ urlpatterns = [
     path('password/', Password.as_view()),
     path('login/', Login.as_view()),
 
+    path('api/v1/logout/<int:pk>/', Login.as_view()),
     path('api/v1/home/<int:pk>/', Home.as_view()),
     path('api/v1/profile/<int:pk>/', Profile.as_view()),
     path('api/v1/leaderboard/<int:pk>/', Leaderboard.as_view()),

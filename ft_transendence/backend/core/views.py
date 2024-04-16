@@ -68,11 +68,11 @@ class UserAPIView(APIView):
         return Response(data)
 
 class UsersAPIView(APIView):
-    def get(self, request):
-        user_id = request.data.get('user_id')
-        if user_id:
+    permission_classes = [IsAuthenticated]
+    def get(self, request, pk):
+        user = Person.objects.get(id=pk)
+        if user:
             try:
-                user = Person.objects.get(id=user_id)
                 serializer = UserSerializer(user)
                 return JsonResponse(serializer.data)
             except Person.DoesNotExist:
@@ -82,7 +82,7 @@ class UsersAPIView(APIView):
             if not queryset:
                 return JsonResponse({'error': 'No users found'}, status=404)
             serializer = UserSerializer(queryset, many=True)
-            return JsonResponse(serializer.data, safe=True)
+            return JsonResponse(serializer.data, safe=False)
 
 class EmailValidation(APIView):
     def post(self, request):
@@ -215,7 +215,6 @@ class Password(APIView):
             return JsonResponse({"success": "false", "error": e.message}, status=status.HTTP_400_BAD_REQUEST)
 
 class Login(APIView):
-
     def post(self, request):
         email = request.data['email']
         password = request.data['password'][10:-10]
@@ -225,6 +224,8 @@ class Login(APIView):
         except User.DoesNotExist:
             return JsonResponse({"success": "false", "error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
         if check_password(password, person.password):
+            person.is_online = True
+            person.save()
             token_serializer = TokenObtainPairSerializer()
             token = token_serializer.get_token(user)
             refresh = RefreshToken.for_user(user)
@@ -244,6 +245,13 @@ class Login(APIView):
             return JsonResponse({"success": "true", "data": response_data})
         else:
             return JsonResponse({"success": "false", "error": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
+
+class Logout(APIView):
+    def post(self, request, pk):
+        user = Person.objects.get(id=pk)
+        person.is_online = False
+        person.save()
+        return Response({"success": "true", "message": "Logged out successfully"}, status=status.HTTP_200_OK)
 
 class Profile(APIView):
     # authentication_classes = [TokenAuthentication]
