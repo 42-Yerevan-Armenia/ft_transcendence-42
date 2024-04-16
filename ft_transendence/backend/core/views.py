@@ -9,6 +9,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from .models import Confirm, Person, GameRoom, History
+from game.views import PlayTournament
 from .serializers import (
     UserSerializer,
     SettingsSerializer,
@@ -68,7 +69,7 @@ class UserAPIView(APIView):
 
 class UsersAPIView(APIView):
     def get(self, request):
-        user_id = request.body('user_id')
+        user_id = request.data.get('user_id')
         if user_id:
             try:
                 user = Person.objects.get(id=user_id)
@@ -77,7 +78,11 @@ class UsersAPIView(APIView):
             except Person.DoesNotExist:
                 return JsonResponse({'error': 'User not found'}, status=404)
         else:
-            return JsonResponse({'error': 'User ID not provided'}, status=400)
+            queryset = Person.objects.all()
+            if not queryset:
+                return JsonResponse({'error': 'No users found'}, status=404)
+            serializer = UserSerializer(queryset, many=True)
+            return JsonResponse(serializer.data, safe=True)
 
 class EmailValidation(APIView):
     def post(self, request):
@@ -361,7 +366,6 @@ def save_base64_image(image_path):
     with open(image_path, "rb") as img_file:
         return base64.b64encode(img_file.read()).decode('utf-8')
 
-from game.views import PlayTournament
 class JoinList(APIView):
     # permission_classes = [IsAuthenticated]
     def get(self, request, pk):
