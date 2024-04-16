@@ -198,7 +198,7 @@ class MiddleSECTION extends HtmlElement {
 
     async loadBackEndX(){
       debugger
-        const Items =  await getPureFetchRequest("users");
+        const Items =  await getPureFetchRequest("api/v1/users/"+1);
 
         if (!Items || !Items.state)
           return;

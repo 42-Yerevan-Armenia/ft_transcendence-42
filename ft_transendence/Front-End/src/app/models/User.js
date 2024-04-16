@@ -55,7 +55,7 @@ class USER {
         return false
 
       //get for backend data
-      const dataUser = await getFetchRequest("users/" + this._Id);
+      const dataUser = await getFetchRequest("api/v1/users/" + this._Id);
 
       //get data from dataUser
       const {id, name, nickname, email, image, gamemode, twofactor} = dataUser;
@@ -90,9 +90,9 @@ class USER {
       this._geRefresh = localStorage.getItem("refresh");
 
       const res = await FetchRequest("POST", "api/v1/token/refresh", {"refresh" : this._geRefresh});    //call for update access
-      
+
       this.date = new Date();
-  
+
       if (res?.state)
       {
         myStorages.setAccsessTockenLoading(res?.message?.data)

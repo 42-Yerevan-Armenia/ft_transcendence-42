@@ -9,9 +9,7 @@ let INTRA_REDIRECT_URI="http%3A%2F%2F10.12.11.1%3A3000";
 
 // hovhannes_vardanyan1@mail.ru
 
-
-
-//#################################################################################   Controller.js
+//#################################################################################   Controllers.js
 
 //queshon too backend Email exist or not and 
 //if create 
