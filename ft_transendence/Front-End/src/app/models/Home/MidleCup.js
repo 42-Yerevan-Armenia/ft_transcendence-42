@@ -88,7 +88,7 @@ class MidleCub extends HtmlElement {
       });
     }
     async draw(){
-      debugger
+      //debugger
       await this.setHero();
     }
   

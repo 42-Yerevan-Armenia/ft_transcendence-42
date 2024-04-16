@@ -16,7 +16,7 @@ let INTRA_REDIRECT_URI="http%3A%2F%2F10.12.11.1%3A3000";
 //queshon too backend Email exist or not and 
 //if create 
 async function ControllerCheckEmail(email) {
-  // debugger
+  // //debugger
   try {
     // const response = await fetch(`${HostPort}/registerpage?email=${email}`,{
     const response = await fetch(`${HostPort}/email_validation/`,{
@@ -55,7 +55,7 @@ async function ControllerCheckEmail(email) {
 // });
 
 async function ControllerCheckReplayCode(code) {
-  // debugger
+  // //debugger
   try {
       const response = await fetch(`${HostPort}/confirm/`, {
           method: 'POST',
@@ -86,7 +86,7 @@ async function ControllerCheckReplayCode(code) {
 }
 
 async function ControllerSignUp(password, User) {
-  // debugger
+  // //debugger
 
   try {
     const response = await fetch(`${HostPort}/register/`, {
@@ -115,7 +115,7 @@ async function ControllerSignUp(password, User) {
 }
 
 async function ControllerPessPassword(password, User) {
-  // debugger
+  // //debugger
 
 
   try {
@@ -148,7 +148,7 @@ async function ControllerPessPassword(password, User) {
 
 //fetch universal POST request
 async function FetchRequest(Tomethod, Torequest, ToObj) {
-  // debugger
+  // //debugger
   console.log("1----------------------------------------")
   console.log( "method : " + Tomethod);
   console.log( "request : " + Torequest);
@@ -183,8 +183,10 @@ async function FetchRequest(Tomethod, Torequest, ToObj) {
 
 //fetch universal  GET request
 async function getFetchRequest(ToRequest) {
-  debugger
-
+  //debugger
+  console.log("1----------------------------------------")
+  console.log( "request : " + ToRequest);
+  console.log("2----------------------------------------")
 
   //get access tocken and id
   const ToObj = User.getAccessTocken();
@@ -195,7 +197,6 @@ async function getFetchRequest(ToRequest) {
   try {
     const response = await fetch(`${HostPort}/${ToRequest}/`, {
       method: "GET",
-      // body: JSON.stringify(ToObj),
       headers: {
         "Content-Type": "application/json",
         'Authorization': 'Bearer ' + ToUser
@@ -224,7 +225,7 @@ async function getFetchRequest(ToRequest) {
 
 //fetch universal POST request
 async function putRequest(Tomethod, Torequest, ToObj) {
-  // debugger
+  // //debugger
   console.log("1----------------------------------------")
   console.log( "method : " + Tomethod);
   console.log( "request : " + Torequest);
@@ -262,12 +263,15 @@ async function putRequest(Tomethod, Torequest, ToObj) {
 
 //fetch universal Get request prune
 async function getPureFetchRequest(Torequest) {
-  // debugger
+  // //debugger
   console.log("1----------------------------------------")
   console.log( "request : " + Torequest);
   console.log("2----------------------------------------")
   try {
-    const response = await fetch(`${HostPort}/${Torequest}/`);
+    const response = await fetch(`${HostPort}/${Torequest}/`, {
+      method: "GET",
+      "Content-Type": "application/json"
+    })
 
     if (!response.ok) {
       throw new Error(`Failed to ${response.message} Status: ${response.status}`);

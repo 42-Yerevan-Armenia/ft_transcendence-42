@@ -3,7 +3,7 @@
 
 //2
 Home._NAV._SETTINGS._classname?.addEventListener("click",()=>{
-  //debugger
+  ////debugger
   ManageMidle.Manage("MidleSettings")
 })
 
@@ -70,20 +70,20 @@ Home?._MidleJoinList?._InviteButton?.addEventListener("click",async ()=>{       
 
 // 1
 Home._NAV?._LEADERBOARD?._classname?.addEventListener("click",()=>{
-  //debugger
+  ////debugger
   ManageMidle.Manage("MidleCub");
 } )
 
 //4
 Home._NAV?._JoinListGame?._classname?.addEventListener("click",()=>{
-  //debugger
+  ////debugger
   ManageMidle.Manage("JoinList");
 
 } )
 
 //3
 Home._NAV?._Home?._classname?.addEventListener("click",()=>{
-  //debugger
+  ////debugger
   ManageMidle.Manage("midle");
 } );
 
@@ -91,7 +91,7 @@ Home._NAV?._Home?._classname?.addEventListener("click",()=>{
 //whene create new list item for game
 //_MidleJoinList Create button
 Home._MidleJoinList?._CreateButton?.addEventListener("click", async ()=>{
-  debugger
+  //debugger
   console.log("click... \n");
   const Players = document.querySelector("#JoinListHeroDivProfilPlayers");
   const LiveOnOff = document.querySelector("#LiveOnOff");
@@ -177,7 +177,7 @@ Home._HomeLeft._NavLoginOut.addEventListener("click", async () => {
 
 //when want to login you press button login
 Login?._LoginPageContinue?.addEventListener("click", async () => {
-  //debugger
+  ////debugger
   //check is correct email and password
   if (Login.ButtonSignIn())
   {
@@ -211,7 +211,7 @@ Login?._LoginPageContinue?.addEventListener("click", async () => {
 
 // when forgot password
 Login?._LoginPageForgot?.addEventListener("click", () => {
-  //debugger
+  ////debugger
   ManageAllPage.Manage("ResetPage");
   ManageMidle.Manage("");
 })
@@ -223,7 +223,7 @@ let isReset = false;
 
 
 Reset?._ConfirmReset?.addEventListener('click', async () => {
-  //debugger
+  ////debugger
   const isValid = Reset.checkValidEmail();
   if (!isValid)
     return ;
@@ -241,7 +241,7 @@ Reset?._ConfirmReset?.addEventListener('click', async () => {
 //-------------------------------------------------------------------  Confirm  ---------
 
 Confirm.ConfirmYourEmail.addEventListener('click', async () => {
-  //debugger
+  ////debugger
   const data = await Confirm.ConfirmPageContinue(isReset);
   Confirm.ValuesAllEmpty();
 
@@ -280,7 +280,7 @@ Confirm.ConfirmYourEmail.addEventListener('click', async () => {
 //-------------------------------------------------------------------  Password
 
 Password.PasswordConfirm.addEventListener("click", async () => {
-  //debugger
+  ////debugger
   const isCorrectPassword = Password.PasswordConfirmButton();
   if (isCorrectPassword)
   {
@@ -299,7 +299,7 @@ Password.PasswordConfirm.addEventListener("click", async () => {
 //-------------------------------------------------------------------  SignUp
 
 SignUp.SignupPageContinue.addEventListener("click", async () => {
-  //debugger
+  ////debugger
   const isCorrectPassword = SignUp.PasswordConfirmButton();
   const ischeckNameNickname = SignUp.checkNameNickname();
   if (isCorrectPassword && ischeckNameNickname)
@@ -315,7 +315,7 @@ SignUp.SignupPageContinue.addEventListener("click", async () => {
 
 //RegisterPage click confirm email
 Register?._RegisterPageContinue?.addEventListener("click",  async () => {
-  //debugger
+  ////debugger
       let value = await Register.RegistersWithEmail();
       if (value)
       {

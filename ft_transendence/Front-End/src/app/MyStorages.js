@@ -5,10 +5,9 @@
 //manag browser storage
 const myStorages = {
     setStorageLogin(tockens) {
-      //debugger
+      ////debugger
       console.log("tockens     --------   " + tockens)
       console.log(tockens);
-      const {user} = tockens;
       const {refresh, success, access} = tockens;
   
       if (!success || !access || !refresh || !tockens.user)
@@ -20,24 +19,20 @@ const myStorages = {
       User._ID = tockens.user.id;
       User._Email = tockens.user.email;
       User._Image = tockens.user.image;
-  
+      User._ConfirmEmail = true;
+      User._SignIn = true;
+      User._Gamemode = tockens.user.gamemode || "Easy";
+      User._Twofactor = tockens.user.twofactor || false;
+
       localStorage.setItem("id", User._ID + "")
       localStorage.setItem("access", access + "")
       localStorage.setItem("refresh", refresh + "")
       return true;
     },
 
-    //set access and refresh token in to localStorage
-    setAccessRefreshToStorage(tockens){
-      const {user} = tockens;
-      console.log(user)
-  
-      const {refresh, success, access} = tockens;
-      if (!success || !access || !refresh || !tockens.user)
-      return false;
-  
-      localStorage.setItem("access", access + "")
-      localStorage.setItem("refresh", refresh + "")
+    setAccsessTockenLoading(data){
+      localStorage.setItem("access", data.access + "")
+      localStorage.setItem("refresh", data.refresh + "")
     },
 
     setAccsessTocken(data){

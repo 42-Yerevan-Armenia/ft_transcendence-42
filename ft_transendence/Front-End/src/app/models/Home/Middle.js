@@ -1,117 +1,117 @@
-const dataUser12List =[
-  {
-    src : "./public/User.png",
-    nickname :"User.png",
-    innerHtml: "123456 points",
-    pointer :5646,
-    live : true
-  },
-  {
-  src : "./public/User.png",
-  nickname :"User.png",
-  innerHtml: "123456 points",
-  pointer :45646,
-  live : false
-  },
-  {
-    src : "./public/User.png",
-    nickname :"User.png",
-    innerHtml: "123456 points",
-    pointer :345646,
-    live : true
-  },
-  {
-  src : "./public/User.png",
-  nickname :"User.png",
-  innerHtml: "123456 points",
-  pointer :12345,
-  live : false
-  },
-  {
-    src : "./public/User.png",
-    nickname :"User.png",
-    innerHtml: "123456 points",
-    pointer :145,
-    live : true
-  },
-  {
-  src : "./public/User.png",
-  nickname :"User.png",
-  innerHtml: "123456 points",
-  pointer :4564646,
-  live : false
-  },
-  {
-    src : "./public/User.png",
-    nickname :"User.png",
-    innerHtml: "123456 points",
-    pointer :45646,
-    live : true
-  },
-  {
-  src : "./public/User.png",
-  nickname :"User.png",
-  innerHtml: "123456 points",
-  pointer :4564646,
-  live : false
-  },
-  {
-    src : "./public/User.png",
-    nickname :"User.png",
-    innerHtml: "123456 points",
-    pointer :145,
-    live : true
-  },
-  {
-  src : "./public/User.png",
-  nickname :"User.png",
-  innerHtml: "123456 points",
-  pointer :4564646,
-  live : false
-  },
-  {
-    src : "./public/User.png",
-    nickname :"User.png",
-    innerHtml: "123456 points",
-    pointer :45646,
-    live : true
-  },
-  {
-  src : "./public/User.png",
-  nickname :"User.png",
-  innerHtml: "123456 points",
-  pointer :4564646,
-  live : false
-  },
-  {
-    src : "./public/User.png",
-    nickname :"User.png",
-    innerHtml: "123456 points",
-    pointer :145,
-    live : true
-  },
-  {
-  src : "./public/User.png",
-  nickname :"User.png",
-  innerHtml: "123456 points",
-  pointer :4564646,
-  live : false
-  },
-  {
-    src : "./public/User.png",
-    nickname :"User.png",
-    innerHtml: "123456 points",
-    pointer :45646,
-    live : true
-  },
-  {
-  src : "./public/User.png",
-  nickname :"User.png",
-  innerHtml: "123456 points",
-  pointer :4564646,
-  live : false
-  }
-]
+// const dataUser12List =[
+//   {
+//     src : "./public/User.png",
+//     nickname :"User.png",
+//     innerHtml: "123456 points",
+//     pointer :5646,
+//     live : true
+//   },
+//   {
+//   src : "./public/User.png",
+//   nickname :"User.png",
+//   innerHtml: "123456 points",
+//   pointer :45646,
+//   live : false
+//   },
+//   {
+//     src : "./public/User.png",
+//     nickname :"User.png",
+//     innerHtml: "123456 points",
+//     pointer :345646,
+//     live : true
+//   },
+//   {
+//   src : "./public/User.png",
+//   nickname :"User.png",
+//   innerHtml: "123456 points",
+//   pointer :12345,
+//   live : false
+//   },
+//   {
+//     src : "./public/User.png",
+//     nickname :"User.png",
+//     innerHtml: "123456 points",
+//     pointer :145,
+//     live : true
+//   },
+//   {
+//   src : "./public/User.png",
+//   nickname :"User.png",
+//   innerHtml: "123456 points",
+//   pointer :4564646,
+//   live : false
+//   },
+//   {
+//     src : "./public/User.png",
+//     nickname :"User.png",
+//     innerHtml: "123456 points",
+//     pointer :45646,
+//     live : true
+//   },
+//   {
+//   src : "./public/User.png",
+//   nickname :"User.png",
+//   innerHtml: "123456 points",
+//   pointer :4564646,
+//   live : false
+//   },
+//   {
+//     src : "./public/User.png",
+//     nickname :"User.png",
+//     innerHtml: "123456 points",
+//     pointer :145,
+//     live : true
+//   },
+//   {
+//   src : "./public/User.png",
+//   nickname :"User.png",
+//   innerHtml: "123456 points",
+//   pointer :4564646,
+//   live : false
+//   },
+//   {
+//     src : "./public/User.png",
+//     nickname :"User.png",
+//     innerHtml: "123456 points",
+//     pointer :45646,
+//     live : true
+//   },
+//   {
+//   src : "./public/User.png",
+//   nickname :"User.png",
+//   innerHtml: "123456 points",
+//   pointer :4564646,
+//   live : false
+//   },
+//   {
+//     src : "./public/User.png",
+//     nickname :"User.png",
+//     innerHtml: "123456 points",
+//     pointer :145,
+//     live : true
+//   },
+//   {
+//   src : "./public/User.png",
+//   nickname :"User.png",
+//   innerHtml: "123456 points",
+//   pointer :4564646,
+//   live : false
+//   },
+//   {
+//     src : "./public/User.png",
+//     nickname :"User.png",
+//     innerHtml: "123456 points",
+//     pointer :45646,
+//     live : true
+//   },
+//   {
+//   src : "./public/User.png",
+//   nickname :"User.png",
+//   innerHtml: "123456 points",
+//   pointer :4564646,
+//   live : false
+//   }
+// ]
 
 //Middle Sections inside for Home Page
 class MiddleSECTION extends HtmlElement {
@@ -127,36 +127,36 @@ class MiddleSECTION extends HtmlElement {
     //     <p class="itemP">123456 points</p>
     // </div>
 
-    async topPlayers(User){
+    async topPlayers(Item){
       const item = document.createElement("div");
       item.setAttribute("class", "item");
-      
+      item.setAttribute("id", "item [" + Item.id + "]");
       const img = document.createElement("img");
       img.setAttribute("class", "imag");
       img.setAttribute("alt", "user");
       img.setAttribute("width", "60");
       img.setAttribute("height", "60");
-      img.setAttribute("src", User.src);
+      img.setAttribute("src", `data:image/png;base64,${Item.image}`);
 
       const h6 = document.createElement("h6");
       h6.setAttribute("class", "itemName");
-      h6.innerHTML = User.nickname;
+      h6.innerHTML = Item.nickname;
 
       const p = document.createElement("p");
       p.setAttribute("class", "itemP");
-      p.innerHTML = User.innerHtml
+      p.innerHTML = Item.points + " points"
 
 
       item.appendChild(img);
       item.appendChild(h6);
       item.appendChild(p);
-      document.querySelector(".players").appendChild(item);
+      document.querySelector("#playersIdTopMidle").appendChild(item);
     }
 
     // <div class="liveitem">
     //   <Image src="./public/User.png" width="60" height="60"
     //       alt="user" class="imag"></Image>
-    //   <div class="PlayIcon">
+    //   <div class="PlayIcon" id=idIcon${item.id}>
     //       <PlayIcon/>
     //    </div>
     // </div>
@@ -166,11 +166,11 @@ class MiddleSECTION extends HtmlElement {
 
       const liveItem = document.createElement("div");
       liveItem.setAttribute("class", "liveitem");
-
+      liveItem.setAttribute("id", "liveitem" + item.id);
       const img = document.createElement("img");
       // img.setAttribute("src", item.src);
       // `data:image/png;base64,${User._Image}`
-      img.setAttribute("src", `data:image/png;base64,${item.src}`);
+      img.setAttribute("src", `data:image/png;base64,${item.image}`);
       img.setAttribute("width", "60");
       img.setAttribute("height", "60");
       img.setAttribute("alt", "user");
@@ -183,7 +183,7 @@ class MiddleSECTION extends HtmlElement {
       icon.innerHTML = PlayIconFront;
 
       //i change iii  = 123
-      divPlayIcon.setAttribute("id", `id=idIcon${i}`)
+      divPlayIcon.setAttribute("id", `id=idIcon${item.id}`)
       divPlayIcon.appendChild(icon);
 
       liveItem.appendChild(img)
@@ -196,33 +196,34 @@ class MiddleSECTION extends HtmlElement {
       row.appendChild(liveItem);
     }
 
-    async loadBackEnd(){
+    async loadBackEndX(){
+        const Items =  await getFetchRequest("api/v1/leaderboard/" + 1);
 
-        const Items = await getFetchRequest("api/v1/leaderboard");
-        //bodySection
         if (!Items || !Items.state)
           return;
-        console.debug()
-        console.log("111+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
-        Items.message.leaderboard.sort((e, e2)=>{
+
+        const dataAllItem = Items.message.leaderboard.sort((e, e2)=>{
           return e.points < e2.points
-        }).forEach(Item => {
-          this.midleCubItem(i++, Item)
-        });
-        console.log("222+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+        })
+        console.log("dataAllItem  =  ")
+        console.log(dataAllItem);
+        return dataAllItem;
     }
     
     
     async drawList(){
-      document.querySelector(".players").innerHTML = "";
+      this.dataUser12List = 0;
+      this.dataUser12List = await this.loadBackEndX();
+  
       document.querySelector("#row1").innerHTML = "";
       document.querySelector("#row2").innerHTML = "";
-      this.dataUser12List = 0;
-      this.dataUser12List = await this.loadBackEnd();
+      document.querySelector("#playersIdTopMidle").innerHTML = "";
+  
       if (!this.dataUser12List)
-      return ;
+        return ;
 
-      const TopPlayerList = dataUser12List.sort((e,e1)=>e.pointer>e1)?.slice(0, 6);
+      const TopPlayerList = this.dataUser12List?.slice(0, 6);
+
 
       if (TopPlayerList)
       {
@@ -231,19 +232,22 @@ class MiddleSECTION extends HtmlElement {
             await this.topPlayers(e);
         })
       }
-      const LiveNowList = dataUser12List?.filter(e => e.live)?.slice(0, 6);
+      const LiveNowList = this.dataUser12List?.filter(e => e.live)?.slice(0, 6);
       if (LiveNowList)
       {
         LiveNowList.forEach(async (e, i) => {
-          console.log("i ==  " + i);
+          console.log("eeeeee  {" + i +"} ")
+          console.log(e);
           await this.liveNow(e, i);
         })
       }
+
     }
 
 
     async draw()
     {
+      //debugger
       await this.drawList();
     }
   }

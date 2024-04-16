@@ -60,16 +60,16 @@ class Login42(APIView):
                     nickname=user_info['login'],
                     image=image_content_base64
                 )
-                response_data = {
-                    "success": "true",
-                    "access": access_token,
-                    "user": {
-                        "id": user_info['id'],
-                        "name": data.name,
-                        "nickname": data.nickname,
-                        "image": data.image,
-                    }
-                }
+        response_data = {
+            "success": "true",
+            "access": access_token,
+            "user": {
+                "id": user_info['id'],
+                "name": data.name,
+                "nickname": data.nickname,
+                "image": data.image,
+            }
+        }
             
         user = User.objects.filter(username=response_data.user.nickname).first()
         person = Person.objects.filter(nickname=response_data.user.nickname).first()
