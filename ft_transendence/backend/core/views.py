@@ -88,6 +88,11 @@ class EmailValidation(APIView):
             code = send_confirmation_email(email)
         except ValidationError as e:
             return JsonResponse({"success": "false","error": e.message}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            existing_confirmation_data = Confirm.objects.get(email=email)
+            existing_confirmation_data.delete()  # Delete existing confirmation data
+        except ObjectDoesNotExist:
+            pass
         confirmation_data = Confirm.objects.create(email=email, code=code)
         return JsonResponse({"success": "true", "email": "model_to_dict(data)"})
 
@@ -99,7 +104,7 @@ class Confirmation(APIView):
         email = request.data['email']
         try:
             confirmation_data = Confirm.objects.filter(email=email).latest('timestamp')
-            expiration_time = confirmation_data.timestamp + timezone.timedelta(seconds=30)
+            expiration_time = confirmation_data.timestamp + timezone.timedelta(seconds=35)
             if timezone.now() > expiration_time:
                 confirmation_data.delete()
                 return JsonResponse({"success": "false","error": "Confirmation code expired"}, status=status.HTTP_408_REQUEST_TIMEOUT)
@@ -113,9 +118,8 @@ class Register(APIView):
     def post(self, request):
         email = request.data['email']
         try:
-            # Retrieve confirmation data from the database
             confirmation_data = Confirm.objects.get(email=email)
-            confirmation_data.delete()  # Clean up confirmation data after use
+            confirmation_data.delete()
             register_validation(request.data)
             password = request.data['password'][10:-10]
             hashed_password = make_password(password)
@@ -243,7 +247,6 @@ class Login(APIView):
             return JsonResponse({"success": "false", "error": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
 
 class Logout(APIView):
-    # permission_classes = [IsAuthenticated]
     def post(self, request, pk):
         person = Person.objects.get(id=pk)
         person.is_online = False
