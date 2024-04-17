@@ -28,10 +28,6 @@ Home._MiddleSettings?._DeleteAccount.addEventListener("click",async ()=>{
 })
 
 
-Home._NAV?._Profile?._classname?.addEventListener("click", async ()=>{
-  console.log("Home._NAV?._Profile?._classname?.addEventListener");
-  ManageMidle.Manage("ProfileMidle");
-})
 
 // ProfileMidleHeaderToInvit
 Home?._HomeMidleProfile?._ProfileMidleHeaderToInvit1?.addEventListener("click",async ()=>{
@@ -67,12 +63,16 @@ Home?._MidleJoinList?._InviteButton?.addEventListener("click",async ()=>{       
 
 
 
-
-// 1
-Home._NAV?._LEADERBOARD?._classname?.addEventListener("click",()=>{
+//3
+Home._NAV?._Home?._classname?.addEventListener("click",()=>{
   ////debugger
-  ManageMidle.Manage("MidleCub");
-} )
+  ManageMidle.Manage("midle");
+} );
+
+Home._NAV?._Profile?._classname?.addEventListener("click", async ()=>{
+  console.log("Home._NAV?._Profile?._classname?.addEventListener");
+  ManageMidle.Manage("ProfileMidle");
+})
 
 //4
 Home._NAV?._JoinListGame?._classname?.addEventListener("click",()=>{
@@ -81,11 +81,19 @@ Home._NAV?._JoinListGame?._classname?.addEventListener("click",()=>{
 
 } )
 
-//3
-Home._NAV?._Home?._classname?.addEventListener("click",()=>{
+// 1
+Home._NAV?._LEADERBOARD?._classname?.addEventListener("click",()=>{
   ////debugger
-  ManageMidle.Manage("midle");
-} );
+  ManageMidle.Manage("MidleCub");
+} )
+
+// 
+Home._NAV?._Community?._classname?.addEventListener("click",()=>{
+  ////debugger
+  ManageMidle.Manage("MidleCommunity");
+} )
+
+
 
 
 //whene create new list item for game
@@ -299,7 +307,7 @@ Password.PasswordConfirm.addEventListener("click", async () => {
 //-------------------------------------------------------------------  SignUp
 
 SignUp.SignupPageContinue.addEventListener("click", async () => {
-  ////debugger
+  debugger
   const isCorrectPassword = SignUp.PasswordConfirmButton();
   const ischeckNameNickname = SignUp.checkNameNickname();
   if (isCorrectPassword && ischeckNameNickname)

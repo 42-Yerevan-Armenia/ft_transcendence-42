@@ -7,6 +7,7 @@ class HomePage extends HtmlElement {
       this._Midle = new MiddleSECTION();
       this._MiddleSettings = new MiddleSettings();
       this._MidleCub = new MidleCub();
+      this._MidleCommunity = new MidleCommunity();
       this._MidleJoinList = new JoinList();
       this._HomeLeft = new HomeLeft();
       this._HomeRight = new HomeRight();
@@ -14,7 +15,6 @@ class HomePage extends HtmlElement {
       this._HomeRight = new HomeRight();
       this._HomeMidleProfile = new MidleProfile();
       this._MidleHistoryGame = new MidleHistoryGame();
-      this._GameBoard = new GameBoard();
     };
   
     _NAV = {
@@ -22,7 +22,7 @@ class HomePage extends HtmlElement {
       _Profile : new HtmlElement(".PROFIL"),
       _JoinListGame : new HtmlElement(".GAME"),
       _LEADERBOARD : new HtmlElement(".LEADERBOARD"),
-      _LIVE : new HtmlElement(".LIVE"),
+      _Community : new HtmlElement(".LIVE"),
       _SETTINGS : new HtmlElement(".SETTINGS"),
     };
     _NavSigninSignout = {

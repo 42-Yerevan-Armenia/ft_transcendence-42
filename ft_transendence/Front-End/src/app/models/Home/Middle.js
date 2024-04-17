@@ -243,7 +243,6 @@ class MiddleSECTION extends HtmlElement {
           await this.liveNow(e, i);
         })
       }
-
     }
 
 
