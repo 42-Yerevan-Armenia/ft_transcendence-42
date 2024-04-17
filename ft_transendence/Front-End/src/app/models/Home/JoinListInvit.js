@@ -76,7 +76,7 @@ class JoinListInvit extends HtmlElement{
        const buttons =  document.querySelectorAll(".JoinListInviteClass");;
 
         //    Iterate over each button and attach an event listener
-        buttons.forEach(button => {
+    buttons.forEach(button => {
         //debugger
         button.addEventListener("click", async function(e) {
                 //debugger

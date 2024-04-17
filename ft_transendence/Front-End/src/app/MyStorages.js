@@ -54,6 +54,9 @@ const myStorages = {
       localStorage.removeItem("refresh");
       
 
+
+      
+
       User.Destruc();
       window.location.search = ""
     },
