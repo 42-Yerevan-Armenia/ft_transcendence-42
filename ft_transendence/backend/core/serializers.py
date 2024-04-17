@@ -6,9 +6,15 @@ from .models import User, Person, GameRoom, History
 from friendship.models import Friend
 
 class UserSerializer(serializers.ModelSerializer):
+    friends = serializers.SerializerMethodField()
+
     class Meta:
         model = Person
-        fields = ('id', 'name', 'nickname', 'email', 'phone', 'image', 'background', 'wins', 'loses', 'matches', 'points', 'gamemode', 'live', 'is_online')
+        fields = ('id', 'name', 'nickname', 'email', 'phone', 'image', 'background', 'wins', 'loses', 'matches', 'points', 'gamemode', 'live', 'is_online', 'friends')
+
+    def get_friends(self, obj):
+        friends = Friend.objects.friends(obj.user)
+        return FriendSerializer(friends, many=True).data if friends else []
 
 class HomeSerializer(serializers.ModelSerializer):
     class Meta:

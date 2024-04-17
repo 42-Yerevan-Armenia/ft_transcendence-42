@@ -52,12 +52,14 @@ class Login42(APIView):
                     id=user_info['id'],
                     first_name=user_info['first_name'],
                     username=user_info['login'],
+                    email=user_info['email'],
                 )
                 data = Person.objects.create(
                     user=user,
                     id=user_info['id'],
                     name = user_info['first_name'],
                     nickname=user_info['login'],
+                    email=user_info['email'],
                     image=image_content_base64,
                     is_online=True
                 )
