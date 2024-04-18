@@ -37,46 +37,62 @@ class BallController:
         self.time = time.time()
 
     def reset_ball(self):
-        self.vel_x = 3
+        self.vel_x = constants.MAX_VEL
         self.vel_y = 0
         self.item["x"] = constants.SCREEN_CENTER[0]
         self.item["y"] = constants.SCREEN_CENTER[1]
 
     def move(self):
-        if time.time() - self.time > 0.007:
+        if (
+            self.item["y"] > constants.MAX_BALL_Y
+            or self.item["y"] < constants.BALL_HEIGHT
+        ):
+            self.vel_y = -self.vel_y
+
+        if 0 < self.item["x"] <= constants.PADDLE_WIDTH:
             if (
-                self.item["y"] > constants.MAX_BALL_Y
-                or self.item["y"] < constants.BALL_HEIGHT
+                self.paddle1["y"]
+                < self.item["y"]
+                < (self.paddle1["y"] + constants.PADDLE_HEIGHT)
             ):
-                self.vel_y = -self.vel_y
+                # middle_y = left_paddle.y + left_paddle.height / 2
+                # difference_in_y = middle_y - ball.y
+                # reduction_factor = (left_paddle.height / 2) / MAX_VEL
+                # y_vel = difference_in_y / reduction_factor
+                # ball.y_vel = -1 * y_vel
 
-            if 0 < self.item["x"] <= constants.PADDLE_WIDTH:
-                if (
-                    self.paddle1["y"]
-                    < self.item["y"]
-                    < (self.paddle1["y"] + constants.PADDLE_HEIGHT)
-                ):
-                    self.vel_x = -self.vel_x
-                    self.item["x"] += 7
+                middle_y = self.paddle1["y"] + constants.PADDLE_HEIGHT / 2
+                difference_in_y = middle_y - self.item["y"]
+                reduction_factor = (constants.PADDLE_HEIGHT / 2) / constants.MAX_VEL
+                y_vel = difference_in_y / reduction_factor
 
-            elif self.item["x"] < 0:
-                self.paddle2["score"] += 1
-                self.reset_ball()
+                self.vel_x = -self.vel_x
+                self.vel_y = -1 * y_vel
+                self.item["x"] += 7
 
-            elif constants.SCREEN_WIDTH > self.item["x"] >= constants.MAX_BALL_X:
-                if (
-                    self.paddle2["y"]
-                    < self.item["y"]
-                    < (self.paddle2["y"] + constants.PADDLE_HEIGHT)
-                ):
-                    self.vel_x = -self.vel_x
-                    self.item["x"] -= 7
+        elif self.item["x"] < 0:
+            self.paddle2["score"] += 1
+            self.reset_ball()
 
-            elif self.item["x"] >= constants.SCREEN_WIDTH:
-                self.paddle1["score"] += 1
-                self.reset_ball()
+        elif constants.SCREEN_WIDTH > self.item["x"] >= constants.MAX_BALL_X:
+            if (
+                self.paddle2["y"]
+                < self.item["y"]
+                < (self.paddle2["y"] + constants.PADDLE_HEIGHT)
+            ):
 
-            self.item["x"] += self.vel_x
-            self.item["y"] += self.vel_y
+                middle_y = self.paddle2["y"] + constants.PADDLE_HEIGHT / 2
+                difference_in_y = middle_y - self.item["y"]
+                reduction_factor = (constants.PADDLE_HEIGHT / 2) / constants.MAX_VEL
+                y_vel = difference_in_y / reduction_factor
 
-            self.time = time.time()
+                self.vel_x = -self.vel_x
+                self.vel_y = -1 * y_vel
+                self.item["x"] -= 7
+
+        elif self.item["x"] >= constants.SCREEN_WIDTH:
+            self.paddle1["score"] += 1
+            self.reset_ball()
+
+        self.item["x"] += self.vel_x
+        self.item["y"] += self.vel_y
