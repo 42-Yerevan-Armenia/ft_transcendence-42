@@ -78,9 +78,10 @@
     color: white;
     text-align: center;
 }
+
 .MidleCubTd{
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
 }
 
 .MidleCubTableImageBody{

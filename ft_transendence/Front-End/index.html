@@ -43,10 +43,13 @@
     
     <!-- Community -->
     <link rel="stylesheet" href="./src/app/styles/StyleCommunityPage.css">
+    
+    <link rel="stylesheet" href="./src/app/styles/StyleMidleAccount.css">
 
     <link rel="stylesheet" href="./src/app/styles/game.css">
     <!-- JoinListInvite -->
     <link rel="stylesheet" href="./src/app/styles/JoinListInvite.css">
+    
     <meta name="description" content="">
     <title name="Home">Home</title>
 </head>
@@ -980,6 +983,33 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="ProfileMidleBody">
+                                <div class="ProfileMidleBodyItems">
+
+
+                                    <div class="ProfileMidleBodyItem">
+                                        <div class="ProfileMidleBodyItemConteiner">
+                                            <div class="ProfileMidleBodyImage">
+                                                <img src="./public/conva.png" class="ProfileMidleBodyUserImage"
+                                                width="30" height="30" alt="Invite"  />
+                                            </div>
+                                            <p class="ProfileMidleBodyUser">
+                                                User1
+                                            </p>
+                                            <div class="AcceptReject">
+                                                <div class="AcceptRejectAccept">
+                                                    Accept
+                                                </div>
+                                                <div class="AcceptRejectReject">
+                                                    Reject
+                                                </div>
+                                            </div>                                            
+                                        </div>
+                                    </div>
+                               
+                               
+                                </div>
+                            </div>
                             <div class="ProfileMidleFooter">
                                 <p class="ProfileMidleFooterFriends">Friends</p>
                                 <div class="ProfileMidleFooterDiv">
@@ -991,6 +1021,47 @@
                             </div>
                         </div>
                     </div>
+
+                    
+                    <!---------------------------------------------------- Account User ---------------------------------------------------->
+                    <div class="AccountMidle">
+                        <div class="AccountMidleContenier">
+                            <div class="AccountMidleHeader">
+                                <div class="AccountMidleHeaderImage">
+                                    <!-- <img src="./public/conva.png" alt="Conva"/> -->
+                                </div>
+                                <div class="AccountMidleHeaderDiv">
+                                    <div class="AccountMidleHeaderMain">
+                                        <p class="AccountMidleHeaderMainWinCount" id="AccountMidleHeaderToInvit1" >Win Count:   23</p>
+                                    </div>
+                                    <div class="AccountMidleHeaderMain">
+                                        <div class="AccountMidleHeaderMainAvatar">
+                                            <img src="./public/avatar.png" alt="Avatar" id="AccountMidleHeaderMainAvatarImage">
+                                        </div>
+                                        <div class="AccountMidleHeaderMainData">
+                                            <h5 class="AccountMidleHeaderMainDataName">Zaak Sidki</h5>
+                                            <p class="AccountMidleHeaderMainDataNickName">@zsidki</p>
+                                        </div>
+                                    </div>
+                                    <div class="AccountMidleHeaderMain">
+                                        <div class="AccountMidleHeaderMainLossCount">
+                                            <p class="AccountMidleHeaderMainLossCountLossCount" id="AccountMidleHeaderToInvit2">Loss Count:   15</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="AccountMidleFooter">
+                                <p class="AccountMidleFooterFriends">Friends</p>
+                                <div class="AccountMidleFooterDiv">
+                                    <div class="AccountMidleFooterUser">
+                                        <img src="./public/Grup2.png" alt="Friends" class="AccountMidleFooterUserImage">
+                                        <p class="AccountMidleFooterUserName">User1</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
 
                     <!-- --------------------------------------------------   HistoryGame --------------------------------------------------  -->
 
@@ -1186,6 +1257,7 @@
         <script  src="./src/app/Controllers.js"></script>
         
         <script src="./src/app/models/Home/HomeLeft.js"></script>
+        <script src="./src/app/models/Home/AccountUser.js"></script>
         <script  src="./src/app/models/Home/HomeRight.js"></script>
         <script src="./src/app/models/Home/Middle.js"></script>
         <script src="./src/app/models/Home/MidleCup.js"></script>

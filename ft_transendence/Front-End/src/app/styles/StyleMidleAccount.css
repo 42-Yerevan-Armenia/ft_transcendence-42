@@ -1,4 +1,4 @@
-.ProfileMidle {
+.AccountMidle {
     width: 100%;
     height: auto;
     display: flex;
@@ -7,7 +7,7 @@
     background: var(--background-color, radial-gradient(66.54% 118.23% at 37.47% 107.32%, #D9CBFD 10%, #7758D1 100%));
 }
 
-.ProfileMidleContenier {
+.AccountMidleContenier {
     width: 100%;
     height: 100%;
     display: flex;
@@ -15,7 +15,7 @@
     justify-content: space-between;
 }
 
-.ProfileMidleHeaderDiv {
+.AccountMidleHeaderDiv {
     width: 100%;
     height: 40%;
     display: flex;
@@ -27,14 +27,14 @@
 
 
 
-.ProfileMidleBody{
+.AccountMidleBody{
     width: 100%;
     height: 25%;
     display: flex;
     background-color: rgb(83, 75, 123);
     justify-content: space-around;
 }
-.ProfileMidleBodyItems{
+.AccountMidleBodyItems{
     width: 90%;
     height: 90%;
     display: flex;
@@ -42,18 +42,18 @@
     margin: auto;
 }
 
-.ProfileMidleBodyItem{
+.AccountMidleBodyItem{
     height: 90%;
     width: 135px;
 }
 
-.ProfileMidleBodyUserImage{
+.AccountMidleBodyUserImage{
     width: 100%;
     height: 100%;
    
 }
 
-.ProfileMidleBodyImage{
+.AccountMidleBodyImage{
     width: 96px;
     height: 88px;
     border-radius: 20px;
@@ -62,7 +62,7 @@
     overflow: hidden;
 }
 
-.ProfileMidleBodyItemConteiner{
+.AccountMidleBodyItemConteiner{
     width: 100%;
     height: 100%;
     text-align: center;
@@ -112,7 +112,7 @@
 
 
 
-.ProfileMidleHeaderImage {
+.AccountMidleHeaderImage {
     width: 100%;
     height: 50%;
     background-image: url("../../../public/conva.png");
@@ -121,7 +121,7 @@
     background-size: cover;
 }
 
-.ProfileMidleHeaderMain {
+.AccountMidleHeaderMain {
     width: 30%;
     text-align: center;
     color: white;
@@ -129,16 +129,16 @@
     padding-top: 28px;
 }
 
-.ProfileMidleHeader {
+.AccountMidleHeader {
     height: 43%;
     position: relative;
 }
 
-.ProfileMidleHeaderMainAvatar {
+.AccountMidleHeaderMainAvatar {
     position: relative;
 }
 
-.ProfileMidleHeaderMainAvatar > img {
+.AccountMidleHeaderMainAvatar > img {
     width: 9em;
     height: 6em;
     border-radius: 6em;
@@ -147,22 +147,22 @@
     left: 35%;
 }
 
-.ProfileMidleHeaderMainData {
+.AccountMidleHeaderMainData {
     height: 1em;
     width: 100%;
     margin: 4em auto;
     text-align: center;
 }
 
-.ProfileMidleHeaderMainData > h5, .ProfileMidleHeaderMainData > p {
+.AccountMidleHeaderMainData > h5, .AccountMidleHeaderMainData > p {
     margin: 0px;
 }
 
-.ProfileMidleHeaderMainWinCount,.ProfileMidleHeaderMainLossCountLossCount{
+.AccountMidleHeaderMainWinCount,.AccountMidleHeaderMainLossCountLossCount{
     width: 7em;
     margin: auto;
 }
-.ProfileMidleHeaderMainWinCount:hover, .ProfileMidleHeaderMainLossCountLossCount:hover{
+.AccountMidleHeaderMainWinCount:hover, .AccountMidleHeaderMainLossCountLossCount:hover{
     cursor: pointer;
     color: #7758D1;
 }
@@ -170,12 +170,12 @@
 
 
 /* footer */
-.ProfileMidleFooter {
+.AccountMidleFooter {
     width: 100%;
     height: 30%;
     background-color: #534B7B;
 }
-.ProfileMidleFooterFriends{
+.AccountMidleFooterFriends{
     width: 100%;
     height: 11%;
     background-color: #534B7B;
@@ -183,23 +183,23 @@
     color: white;
 }
 
-.ProfileMidleFooterDiv{
+.AccountMidleFooterDiv{
     display: flex;
     width: 100%;
     height: 76%;
     justify-content: space-around;
 }
-.ProfileMidleFooterUser{
+.AccountMidleFooterUser{
     display: flex;
     width: 20%;
     height: 20%;
 }
-.ProfileMidleFooterUserImage{
+.AccountMidleFooterUserImage{
     width: 50px;
     height: 50px;
     border-radius: 50px;
 }
-.ProfileMidleFooterUserName{
+.AccountMidleFooterUserName{
     font-size: 1em;
     margin: 4px;
     text-align: center;
@@ -207,7 +207,7 @@
 
 @media only screen and (max-width:1200px)
 {
-    .ProfileMidleHeaderMainAvatar>img{
+    .AccountMidleHeaderMainAvatar>img{
         left: 2em;
     }
 }
@@ -215,27 +215,27 @@
 
 @media only screen and (max-width:706px)
 {
-    .ProfileMidleHeaderMainAvatar>img{
+    .AccountMidleHeaderMainAvatar>img{
         left: 2em;
     }
     
 }
 @media only screen and (max-width:580px)
 {
-    .ProfileMidleHeaderMainAvatar>img{
+    .AccountMidleHeaderMainAvatar>img{
         left: -0.5em;
     }
-    .ProfileMidleHeaderMainLossCountLossCount,.ProfileMidleHeaderMainWinCount{
+    .AccountMidleHeaderMainLossCountLossCount,.AccountMidleHeaderMainWinCount{
         width: 7em;
         margin: 46px auto;
     }
 }
 @media only screen and (max-width:400px)
 {
-    .ProfileMidleHeaderMain{
+    .AccountMidleHeaderMain{
         font-size: 8px;
     }
-    .ProfileMidleHeaderMainLossCountLossCount,.ProfileMidleHeaderMainWinCount{
+    .AccountMidleHeaderMainLossCountLossCount,.AccountMidleHeaderMainWinCount{
         width: 4em;
         margin: 34px auto;
     }
