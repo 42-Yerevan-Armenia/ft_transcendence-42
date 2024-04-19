@@ -21,14 +21,24 @@ class UserSerializer(serializers.ModelSerializer):
             serialized_friend = {
                 'id': friend_person.id,
                 'name': friend_person.name,
-                'nickname': friend_person.nickname
+                'nickname': friend_person.nickname,
+                'image': friend_person.image,
             }
             serialized_friends.append(serialized_friend)
         return serialized_friends
 
     def get_friendship_requests(self, obj):
         receiver_requests = FriendshipRequest.objects.filter(to_user_id=obj.user.id)
-        return [{"id": request.from_user_id} for request in receiver_requests]
+        serialized_friendships = []
+        for friendships in receiver_requests:
+            serialized_friendship = {
+                'id': friendships.from_user_id,
+                'name': friendships.from_user.person.name,
+                'nickname': friendships.from_user.person.nickname,
+                'image': friendships.from_user.person.image,
+            }
+            serialized_friendships.append(serialized_friendship)
+        return serialized_friendships
 
 class HomeSerializer(serializers.ModelSerializer):
     class Meta:
