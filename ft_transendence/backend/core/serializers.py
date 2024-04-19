@@ -11,7 +11,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Person
-        fields = ('id', 'name', 'nickname', 'email', 'phone', 'image', 'background', 'wins', 'loses', 'matches', 'points', 'gamemode', 'live', 'is_online', 'friends', 'friendship_requests')
+        fields = ('id', 'name', 'nickname', 'email', 'phone', 'wins', 'loses', 'matches', 'points', 'gamemode', 'live', 'is_online', 'friends', 'friendship_requests')
 
     def get_friends(self, obj):
         friends = Friend.objects.filter(from_user=obj.user)
@@ -36,6 +36,7 @@ class UserSerializer(serializers.ModelSerializer):
                 'name': friendships.from_user.person.name,
                 'nickname': friendships.from_user.person.nickname,
                 'image': friendships.from_user.person.image,
+                'rejected': friendships.rejected,
             }
             serialized_friendships.append(serialized_friendship)
         return serialized_friendships
