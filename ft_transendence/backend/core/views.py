@@ -288,15 +288,16 @@ class SettingsById(APIView):
             user.nickname = data['nickname']
         if 'email' in data and data['email']:
             user.email = data['email']
-        image_file = request.FILES.get('image')
-        print("❎", image_file)
+        # image_file = request.FILES.get('image')
+        # print("❎", image_file)
         if 'image' in data and data['image']:
-            image_path = data['image']
+            # image_path = data['image']
             # Read the image file
-            with open(image_path, "rb") as img_file:
+            # with open(image_path, "rb") as img_file:
                 # Encode the image to base64
-                base64_image = base64.b64encode(img_file.read()).decode('utf-8')
-            user.image = base64_image
+                # base64_image = base64.b64encode(img_file.read()).decode('utf-8')
+            # user.image = base64_image
+            user.image = data['image']
         print("✅", user.image)
         new_password = data.get('password')
         if new_password:
