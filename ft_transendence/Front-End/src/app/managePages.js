@@ -60,7 +60,8 @@ var ManageMidle = {
         {"ProfileMidle":Home._HomeMidleProfile},
         {"MidleHistoryGame": Home._MidleHistoryGame},
         {"JoinListInvite": Home._MidleJoinList._JoinListInvit},
-        {"MidleCommunity": Home._MidleCommunity}
+        {"MidleCommunity": Home._MidleCommunity},
+        {"AccountUser": Home._AccountUser}
     ]
 };
 

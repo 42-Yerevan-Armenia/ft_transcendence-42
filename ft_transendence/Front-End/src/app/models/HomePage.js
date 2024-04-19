@@ -15,6 +15,7 @@ class HomePage extends HtmlElement {
       this._HomeRight = new HomeRight();
       this._HomeMidleProfile = new MidleProfile();
       this._MidleHistoryGame = new MidleHistoryGame();
+      this._AccountUser = new AccountUser();
     };
   
     _NAV = {
