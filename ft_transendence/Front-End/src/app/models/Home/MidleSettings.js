@@ -1,11 +1,12 @@
-
 class MiddleSettings extends HtmlElement {
     constructor(){
       super(".MidleSettings")
       this._style.display = "none";
     }
+    
     _Save = document.querySelector("#DeleteAccountSaveSave");
     _DeleteAccount = document.querySelector("#DeleteAccountSaveAccount");
+    _ImageFileAccess = document.querySelector("#ImageFileAccess")                        //Edit Profile Photo.
 
     _MidleSettingsHeroName = document.querySelector(".MidleSettingsHeroName");
     _MidleSettingImage = document.querySelector(".MidleSettingImage");
@@ -22,14 +23,19 @@ class MiddleSettings extends HtmlElement {
       const gameMode = document.querySelector("#MidleSettingsBlocksPGameMode")                  //Game Mode
       const userName = document.querySelector("#MidleSettingsBlocksPEditProfileUsername")       //Edit Profile Username
       const P2FAAuthenticator = document.querySelector("#MidleSettingsBlocksP2FAAuthenticator")//2FAAuthenticator
-      const ImageFileAccess = document.querySelector("#ImageFileAccess")                        //Edit Profile Photo.
       const email = document.querySelector("#MidleSettingsBlocksPEmail")                         //Edit Profile Email.
       const changePassword = document.querySelector("#MidleSettingsBlocksPPassword")             //MidleSettingsBlocksPPassword
+
+
+
+
+
+      debugger
       const newUser = {
         "name":profilName.value,
         "nickname": userName.value,
         "email":email.value,
-        "image": ImageFileAccess.value,
+        "image": base64EncodedImage,
         "password":changePassword.value,
         "gamemode":gameMode.value,
         "twofactor":P2FAAuthenticator.value

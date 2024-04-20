@@ -8,28 +8,63 @@ class MidleCommunity extends HtmlElement {
         this.MidleCubImage = document.querySelector(".MidleCommunityImage");
         this.Items = "";
       }
+      
+
+      async eventsListenerAddAccount(){
+        const accounts = document.querySelectorAll(".CommunitySeeUser")
+
+        accounts.forEach((e) => {
+          e.addEventListener("click", async (item) => {
+            debugger
+            let id = item.target.id.slice(item.target.id.lastIndexOf(':') + 1);
+            console.log("++++++++++++++++++++++++[" + id + "]");
+
+            const userAccount =  this.Items.message.find((e)=>e.id == id);
+            
+            if (!userAccount)
+              return;
+
+            const state = await getFetchRequest("users");
+            Home._AccountUser.State = {
+              _Id:userAccount.id,
+              _Image:userAccount.image,
+              _Name:userAccount.name,
+              _Nickname:userAccount.nickname,
+            }
+
+            ManageMidle.Manage("AccountUser")
+            
+          })
+        })
+      }
+
 
       isfriends(Item){
-    
-        return false;
+        if(!Item.friends)
+          return ;
+        return Item.friends.find((e)=>e.id == User._Id); //|| Item.friendsShit.find((e)=>e.id == User._Id)
       }
+
       eventsListenerAddFriends(){
-        debugger
+       
         const notFriends = document.querySelectorAll(".CommunityAddFriends");
         //[{0:CommunityAddFriends},{1:CommunityAddFriends} , {2:CommunityAddFriends} ]
         notFriends.forEach((e)=>{
             //{0:CommunityAddFriends}.addEventListener
           e.addEventListener("click", async (item)=>{
-            //<button id="1">
-            console.log(JSON.stringify(item.target.id));
+            //<button id=""CommunityAddFriends:1">
+            debugger
+            let id = item.target.id.slice(item.target.id.lastIndexOf(':')+ 1);
 
-            // if (item.target.display === true)
-            // {
-            //   console.log("if (e.target.style.display === true)111111111")
-            // }
-            // else{
-            //   console.log("if (e.target.style.display === true)2222222222")
-            // }
+            const sendFrend = {
+                      receiver_id: id
+                  }
+
+            const friendAdd = await putRequest("POST", "api/v1/send/" + User._Id, sendFrend)
+            if (!friendAdd.state)
+              return
+            item.target.style.backgroundColor = "red";
+            item.target.setAttribute("disabled","true");
           })
         })
       }
@@ -136,11 +171,12 @@ class MidleCommunity extends HtmlElement {
       this.Items.message.sort((e, e2)=>{
         return e.points < e2.points
       }).forEach(Item => {
-        if (Item.id !== User._Id)
+        if (Item.id != User._Id)
           this.MidleCommunityTableBodyI(i++, Item)
       });
 
       this.eventsListenerAddFriends();
+      this.eventsListenerAddAccount();
     }
 
     async draw(){
