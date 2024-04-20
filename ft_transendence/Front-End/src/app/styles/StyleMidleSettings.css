@@ -42,6 +42,9 @@
     border-radius: 10px;
 
 }
+
+
+
 #DeleteAccountSave{
     
     display: flex;
@@ -93,6 +96,35 @@
 .MidleSettingsBlocksP{
     font-size: clamp(12px, 1.5vw, 19px);
     text-align: start;
+}
+
+.MidleSettingsBlocksPMidleSettingsBlocksPPassword{
+    position: relative;
+    width: 100%;
+}
+
+.MidleSettingsBlocksPMidleSettingsBlocksPEmail{
+    position: relative;
+    width: 100%;
+}
+
+
+#MidleSettingsBlocksPEmailErrorhandling{
+    position: absolute;
+    font-size: 0.875em;
+    left: 0;
+    top: 23px;
+    box-sizing: border-box;
+    
+}
+
+#MidleSettingsBlocksPChangePassword{
+    position: absolute;
+    font-size: 0.875em;
+    left: 0;
+    top: 25px;
+    box-sizing: border-box;
+    line-break: anywhere;
 }
 
 

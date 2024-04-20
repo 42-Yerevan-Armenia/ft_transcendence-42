@@ -115,6 +115,13 @@ chatSocket.onmessage = function (e) {
         document.querySelector("#id_message_send_input").value = "";
         return
     }
+    // if (data.message == )
+
+
+
+console.log("+++++++++++++++++" +data)
+console.log(data);
+
     // if (data.username === User._Nickname)
     // {
         Home._HomeMessage.draw({
