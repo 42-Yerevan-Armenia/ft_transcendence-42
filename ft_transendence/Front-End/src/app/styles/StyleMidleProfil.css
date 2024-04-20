@@ -35,11 +35,14 @@
     justify-content: space-around;
 }
 .ProfileMidleBodyItems{
-    width: 90%;
+    width: 70em;
     height: 90%;
     display: flex;
     align-items: center;
     margin: auto;
+    gap: 10px;
+    overflow-x: scroll;
+    overflow-y: hidden;
 }
 
 .ProfileMidleBodyItem{
@@ -188,16 +191,20 @@
     width: 100%;
     height: 76%;
     justify-content: space-around;
+    color: white;
 }
 .ProfileMidleFooterUser{
     display: flex;
     width: 20%;
-    height: 20%;
+    height: 57%;
+    flex-direction: column;
+    text-align: center;
 }
 .ProfileMidleFooterUserImage{
     width: 50px;
     height: 50px;
     border-radius: 50px;
+    margin: auto;
 }
 .ProfileMidleFooterUserName{
     font-size: 1em;
@@ -205,10 +212,22 @@
     text-align: center;
 }
 
+@media only screen and (max-width: 1700px)
+{
+    .ProfileMidleBodyItems{
+        width:50em;
+    }
+} 
+
+
+
 @media only screen and (max-width:1200px)
 {
     .ProfileMidleHeaderMainAvatar>img{
         left: 2em;
+    }
+    .ProfileMidleBodyItems{
+        width:30em;
     }
 }
 
@@ -217,6 +236,9 @@
 {
     .ProfileMidleHeaderMainAvatar>img{
         left: 2em;
+    }
+    .ProfileMidleBodyItems{
+        width:20em;
     }
     
 }
@@ -240,3 +262,14 @@
         margin: 34px auto;
     }
 }
+
+
+
+
+
+
+
+
+
+
+

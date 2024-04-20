@@ -29,8 +29,45 @@ Home._MiddleSettings?._DeleteAccount.addEventListener("click",async ()=>{
 
 
 
+// data:image/png;base64,
+Home._MiddleSettings?._ImageFileAccess?.addEventListener("change", (event)=>{
+  const file = event.target.files[0]; // Get the file
+  const reader = new FileReader(); // Create a FileReader object
+  
+  // Closure to capture the file information.
+  reader.onload = function(event) {
+    //white Base64
+    console.log(event.target.result);
+
+    base64EncodedImage = event.target.result + ""
+
+
+    // Get the base64 encoded image data
+    // <<data:image/png;base64,>> .length === 22
+    base64EncodedImage  = base64EncodedImage.slice(22);
+
+    // You can now send the base64EncodedImage to the server via AJAX or any other method.
+    console.log(base64EncodedImage);
+    
+  };
+
+  // Read in the image file as a data URL.
+  reader.readAsDataURL(file);
+})
+
+    
+
+
+
+
+
+
+
+
+
+
 // ProfileMidleHeaderToInvit
-Home?._HomeMidleProfile?._ProfileMidleHeaderToInvit1?.addEventListener("click",async ()=>{
+Home?._HomeMidleProfile?._ProfileMidleHeaderToInvit1?.addEventListener("click", async ()=>{
   console.log("_ProfileMidleHeaderToInvit call1");
 
 
@@ -39,6 +76,8 @@ Home?._HomeMidleProfile?._ProfileMidleHeaderToInvit1?.addEventListener("click",a
 
   
 })
+
+
 Home?._HomeMidleProfile?._ProfileMidleHeaderToInvit2?.addEventListener("click",async ()=>{
   console.log("_ProfileMidleHeaderToInvit call2");
 

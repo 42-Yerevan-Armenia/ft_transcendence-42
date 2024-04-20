@@ -32,27 +32,6 @@
     border-radius: 10px;
 }
 
-#DeleteAccountSaveAccount{
-    width: 9em;
-    height: 3em;
-    margin-right: 1em;
-    background-color: #D823D7;
-    border-radius: 10px;
-
-}
-#DeleteAccountSave{
-    
-    display: flex;
-    margin-top: 10em;
-    justify-content: end;
-    padding-right: 5em;
-}
-#DeleteAccountSaveSave{
-    background-color: #00A3FF;
-    width: 9em;
-    height: 3em;
-    border-radius: 10px;
-}
 
 
 .JoinListProfil {
@@ -291,4 +270,8 @@
     }
 }
 
-
+@media only screen and (max-width: 650px){
+    .JoinListHeroDivButtonBack{
+        width: 100px;
+    }
+}

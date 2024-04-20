@@ -8,6 +8,7 @@ class MidleCommunity extends HtmlElement {
         this.MidleCubImage = document.querySelector(".MidleCommunityImage");
         this.Items = "";
       }
+      
 
       async eventsListenerAddAccount(){
         const accounts = document.querySelectorAll(".CommunitySeeUser")
