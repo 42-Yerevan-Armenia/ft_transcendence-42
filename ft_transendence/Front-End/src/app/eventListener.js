@@ -8,27 +8,46 @@ Home._NAV._SETTINGS._classname?.addEventListener("click",()=>{
 })
 
 
-Home._MiddleSettings?._Save?.addEventListener("click",async ()=>{
+
+//Home Page Settings Middle Button Save
+//Validate Settings
+Home._MiddleSettings?._Save?.addEventListener("click", async ()=>{
   console.log("SAVE")
 
+debugger
 
 
+  if(!Home._MiddleSettings.isArgumentsEmpty())
+    return
+  if(!Home._MiddleSettings.isArgumentsEmpty())
+    return
+  if (!Home._MiddleSettings.checkPassword())
+    return;
 
+  if (!Home._MiddleSettings.checkValidEmail())
+    return;
 
   await Home._MiddleSettings.changeData();
 })
 
 
+
+
+
+
+
+
+
 Home._MiddleSettings?._DeleteAccount.addEventListener("click",async ()=>{
   console.log("_DeleteAccount")
-
+debugger
   const deleteUser = await FetchRequest("DELETE", `api/v1/settings/${User._Id}`,{});
   
   myStorages.longOut();
 })
 
 
-
+//Home page Settings middle choose file for load image
 // data:image/png;base64,
 Home._MiddleSettings?._ImageFileAccess?.addEventListener("change", (event)=>{
   const file = event.target.files[0]; // Get the file
@@ -103,31 +122,31 @@ Home?._MidleJoinList?._InviteButton?.addEventListener("click",async ()=>{       
 
 
 //3
-Home._NAV?._Home?._classname?.addEventListener("click",()=>{
+Home?._NAV?._Home?._classname?.addEventListener("click",()=>{
   ////debugger
   ManageMidle.Manage("midle");
 } );
 
-Home._NAV?._Profile?._classname?.addEventListener("click", async ()=>{
+Home?._NAV?._Profile?._classname?.addEventListener("click", async ()=>{
   console.log("Home._NAV?._Profile?._classname?.addEventListener");
   ManageMidle.Manage("ProfileMidle");
 })
 
 //4
-Home._NAV?._JoinListGame?._classname?.addEventListener("click",()=>{
+Home?._NAV?._JoinListGame?._classname?.addEventListener("click",()=>{
   ////debugger
   ManageMidle.Manage("JoinList");
 
 } )
 
 // 1
-Home._NAV?._LEADERBOARD?._classname?.addEventListener("click",()=>{
+Home?._NAV?._LEADERBOARD?._classname?.addEventListener("click",()=>{
   ////debugger
   ManageMidle.Manage("MidleCub");
 } )
 
 // 
-Home._NAV?._Community?._classname?.addEventListener("click",()=>{
+Home?._NAV?._Community?._classname?.addEventListener("click",()=>{
   ////debugger
   ManageMidle.Manage("MidleCommunity");
 } )
@@ -138,7 +157,7 @@ Home._NAV?._Community?._classname?.addEventListener("click",()=>{
 //whene create new list item for game
 //_MidleJoinList Create button
 Home._MidleJoinList?._CreateButton?.addEventListener("click", async ()=>{
-  //debugger
+  //debugge
   console.log("click... \n");
   const Players = document.querySelector("#JoinListHeroDivProfilPlayers");
   const LiveOnOff = document.querySelector("#LiveOnOff");

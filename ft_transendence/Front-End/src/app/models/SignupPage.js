@@ -50,6 +50,7 @@ class SignupPage extends HtmlElement {
       {
         RepeatPasswordError.innerHTML = "must be Uppercase lowercase symbol digit";
         User._Password = "";
+        RepeatPasswordError.style.color = "red";
         return false;
       }
       if (!this._RepeatPassword.value)
