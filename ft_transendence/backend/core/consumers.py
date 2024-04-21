@@ -9,10 +9,8 @@ from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
 import time
 
-from core.views import CreateRoom, JoinList
 
-
-class PongConsumer(WebsocketConsumer):
+class JoinListConsumer(WebsocketConsumer):
     def __init__(self, *args, **kwargs):
         self.ball_controller = BallController()
         self.thread = None
@@ -24,6 +22,7 @@ class PongConsumer(WebsocketConsumer):
         # print("open_code", open_code)
         self.game = self.scope["path"].strip("/").replace(" ", "_")
         self.game = "barev"
+        print("stex\n")
         if self.game not in ThreadPool.threads:
             ThreadPool.add_game(self.game, self)
 
@@ -87,52 +86,3 @@ class PongConsumer(WebsocketConsumer):
             "state": state
         }
         self.send(text_data=json.dumps(payload))
-
-class joinListConsumer(WebsocketConsumer):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-    def connect(self):
-        # print("open_code", open_code)
-        self.joinList = self.scope["path"].strip("/").replace(" ", "_")
-        self.joinList = "barev"
-        self.id = 123
-
-        async_to_sync(self.channel_layer.group_add)(self.joinList, self.channel_name)
-
-        self.accept()
-
-    def disconnect(self, close_code):
-        print("close_code = ", close_code)
-        print("self.channel_name = ", self.channel_name)
-
-        async_to_sync(self.channel_layer.group_discard)(self.joinList, self.channel_name)
-
-    def receive(self, text_data):
-        print("elf, text_data):")
-        request = json.loads(text_data)
-        print("elf, text_data):")
-        if request["method"] == "create":
-            response = CreateRoom.post(request, self.id, self)
-            response["game_rooms"] = JoinList.get(request, self.id, self)
-            response["method"] = "create"
-            async_to_sync(self.channel_layer.group_send)(
-                self.joinList,
-                {"type": "stream", "response": response,},
-            )
-        print("❌", request)
-        print("❌", self.id)
-        print("❌", self)
-        if request["method"] == "join":
-            response["method"] = "join"        
-            response = JoinList.post(request, self.id, self)
-            async_to_sync(self.channel_layer.group_send)(
-                self.joinList,
-                {"type": "stream", "response": response,},
-            )
-
-
-    def stream(self, event):
-        response = event["response"]
-        print("response= ", response)
-        self.send(text_data=response)
