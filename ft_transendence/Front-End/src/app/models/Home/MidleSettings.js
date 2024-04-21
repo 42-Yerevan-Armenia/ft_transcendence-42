@@ -14,8 +14,9 @@ class MiddleSettings extends HtmlElement {
     changeUser(){
       this._MidleSettingsHeroName.innerHTML = User._Name;
       this._MidleSettingImage.src =  `data:image/png;base64,${User._Image}`;
-      
     }
+
+    //For medium settings, you need to check that all arguments are empty, and when they are, do nothing
     isArgumentsEmpty(){
       const MidleSettingsBlocksPName = document.querySelector("#MidleSettingsBlocksPName");
       const MidleSettingsBlocksPGameMode = document.querySelector("#MidleSettingsBlocksPGameMode");
@@ -30,6 +31,7 @@ class MiddleSettings extends HtmlElement {
 
     }
 
+    //for settings middle need to check the password
     checkPassword(){
       const NewPasswordError = document.querySelector("#MidleSettingsBlocksPChangePassword");
       const  RepeatPassword = document.querySelector("#MidleSettingsBlocksPPassword");
@@ -48,6 +50,7 @@ class MiddleSettings extends HtmlElement {
 
       return true;
     }
+    //for settings middle need to check the email
     checkValidEmail(){
       // MidleSettingsBlocksPEmail
       const Email = document.querySelector("#MidleSettingsBlocksPEmail");
@@ -66,8 +69,9 @@ class MiddleSettings extends HtmlElement {
         return false;
       }
       return true;
-    }
-
+    } 
+    //for the middle section the backend needs to be changed, 
+    //for that I need to load all the data and send white fetch
     async changeData(){
       //debugger
       const profilName = document.querySelector("#MidleSettingsBlocksPName")                    //"Edit Profile Name
@@ -76,10 +80,6 @@ class MiddleSettings extends HtmlElement {
       const P2FAAuthenticator = document.querySelector("#MidleSettingsBlocksP2FAAuthenticator") //2FAAuthenticator
       const email = document.querySelector("#MidleSettingsBlocksPEmail")                         //Edit Profile Email.
       const NewPassword = document.querySelector("#MidleSettingsBlocksPPassword")             //MidleSettingsBlocksPPassword
-
-
-
-
 
       debugger
       const newUser = {
@@ -98,13 +98,12 @@ class MiddleSettings extends HtmlElement {
         console.log(data.message);
         User.setData(data.message)
       }
-      profilName.value = ""             //"Edit Profile Name
-      gameMode.value = ""               //Game Mode
-      userName.value = ""               //Edit Profile Username
-      P2FAAuthenticator.value = ""      //2FAAuthenticator
-      email.value = ""                  //Edit Profile Email.
-      NewPassword.value = ""         //MidleSettingsBlocksPPassword
-
+      profilName.value = "";             //"Edit Profile Name
+      gameMode.value = "";               //Game Mode
+      userName.value = "";               //Edit Profile Username
+      P2FAAuthenticator.value = "";      //2FAAuthenticator
+      email.value = "";                  //Edit Profile Email.
+      NewPassword.value = "";            //MidleSettingsBlocksPPassword
       ManageAllPage.Manage("Home");
     }
     async draw(){

@@ -43,12 +43,24 @@ var GameRom = {
   game_room_id : 0
 }
 
+// const chatSocket = new WebSocket("ws://" + HostPort.slice(7) + "/");
+// const ws = new WebSocket("ws://" + window.location.host + "/ws/joinlist/")
+const Join_Ws = new WebSocket("ws://" + HostPort.slice(7) + "/ws/joinlist/")
+
+
+// console.log("window.location.host  = " + window.location.host);
+
+// console.log("["+ HostPort.slice(7) + "]");
+
+
+
 class JoinList extends HtmlElement {
     constructor(){
       super(".JoinList")
       this._style.display = "none";
       this._JoinListInvit = new JoinListInvit();
     }
+    _game_rooms = "";
     _CreateButton = document.querySelector(".JoinListHeroDivButtonB");
     _InviteButton = document.querySelector("#JoinListHeroDivButtonBInvite");
     // 2<div class="JoinListTd">
@@ -249,24 +261,24 @@ class JoinList extends HtmlElement {
     }
 
 
-    async getJoinListItemAll(JoinList) {
-      if (!JoinList || !JoinList.state)
-        return;
+    // async getJoinListItemAll(JoinList) {
+    //   if (!JoinList || !JoinList.state)
+    //     return;
 
-      document.querySelector(".JoinListConteinerTableALL").innerHTML = "";
-      JoinList.message.game_rooms.sort((e,e1)=>e.id < e1.id).forEach(e => {
-        this.JoinListItem(e);
-      });
-      this.setEventAllButton();
-    }
+    //   document.querySelector(".JoinListConteinerTableALL").innerHTML = "";
+    //   JoinList.message.game_rooms.sort((e,e1)=>e.id < e1.id).forEach(e => {
+    //     this.JoinListItem(e);
+    //   });
+    //   this.setEventAllButton();
+    // }
 
   async draw() {
-    
-    const JoinList = await getFetchRequest("api/v1/joinlist/" + User._Id);
-
-    if (!JoinList || !JoinList.state)
-      return;
-
-     await this.getJoinListItemAll(JoinList);
+    document.querySelector(".JoinListConteinerTableALL").innerHTML = "";
+    if (this._game_rooms) {
+        this._game_rooms.sort((e,e1)=>e.id < e1.id).forEach(e => {
+            this.JoinListItem(e);
+        });
+    }
+    this.setEventAllButton();
   }
 }
