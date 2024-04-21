@@ -51,6 +51,8 @@ import time
 import base64
 import os
 
+from django.shortcuts import render
+
 #TODO: activate all Tokens
 
 class UserAPIView(APIView):
@@ -448,6 +450,7 @@ class JoinList(APIView):
 
     def post(self, request, pk):
         try:
+            print("✅ join = ", pk)
             user = Person.objects.get(id=pk)
             creator_id = request.data.get('creator_id')
             game_room_id = request.data.get('game_room_id')
@@ -477,9 +480,9 @@ class JoinList(APIView):
                         'creator_id': creator_id,
                         'game_room_id': game_room_id
                     }
-                    return JsonResponse({"success": "true", "game": game, "message": "Successfully joined the game room. Game will start soon."}, status=status.HTTP_200_OK)
+                    return JsonResponse({"success": "true", "method": "start_game", "game": game, "message": "Successfully joined the game room. Game will start soon."}, status=status.HTTP_200_OK)
                 else:
-                    return JsonResponse({"success": "true", "message": "Successfully joined the game room"}, status=status.HTTP_200_OK)
+                    return JsonResponse({"success": "true", "method": "update_room", "message": "Successfully joined the game room"}, status=status.HTTP_200_OK)
         except Exception as e:
             return JsonResponse({"success": "false", "error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
@@ -487,6 +490,7 @@ class CreateRoom(APIView):
     authentication_classes = [TokenAuthentication]
     # permission_classes = [IsAuthenticated]
     def post(self, request, pk):
+        print("✅ create = ", pk)
         try:
             creator = Person.objects.get(id=pk)
             if creator.game_room:
