@@ -278,37 +278,56 @@ class SettingsById(APIView):
     def put(self, request, pk):
         print("asdadasdasdasdasdasdasdasdasdasdadsasdasdasdasdasdasdasd    ",request)
         try:
-            user = Person.objects.get(pk=pk)
+            person = Person.objects.get(pk=pk)
+            user = User.objects.get(pk=pk)
         except Person.DoesNotExist:
+            return JsonResponse({"success": "false", "error": "Peron not found"}, status=status.HTTP_404_NOT_FOUND)
+        except User.DoesNotExist:
             return JsonResponse({"success": "false", "error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
         data = json.loads(request.body)
         if 'name' in data and data['name']:
-            user.name = data['name']
+            person.name = data['name']
+            user.first_name = data['name']
         if 'nickname' in data and data['nickname']:
-            user.nickname = data['nickname']
+            person.nickname = data['nickname']
+            user.username = data['nickname']
         if 'email' in data and data['email']:
+            try:
+                email_validation(data['email'])
+            except ValidationError as e:
+                return JsonResponse({"success": "false","error": e.message}, status=status.HTTP_400_BAD_REQUEST)
+            person.email = data['email']
             user.email = data['email']
         if 'image' in data and data['image']:
-            user.image = data['image']
+            person.image = data['image']
         new_password = data.get('password')
         if new_password:
+            try:
+                new_password = password_validation(data.get('password'))
+            except ValidationError as e:
+                error_message = e.messages[0] if hasattr(e, 'messages') else str(e)
+                return JsonResponse({"success": "false", "error": error_message}, status=status.HTTP_400_BAD_REQUEST)
             hashed_password = make_password(new_password)
+            person.password = hashed_password
             user.password = hashed_password
         if 'gamemode' in data and data['gamemode']:
-            user.gamemode = data['gamemode']
+            person.gamemode = data['gamemode']
         if 'twofactor' in data and data['twofactor']:
-            user.twofactor = bool(data['twofactor'])
+            person.twofactor = bool(data['twofactor'])
+        person.save()
         user.save()
         return JsonResponse({"success": "true", "profile": model_to_dict(user)})
 
     def delete(self, request, pk):
        
         try:
-            user = Person.objects.get(pk=pk)
+            user = User.objects.get(pk=pk)
+            person = Person.objects.get(pk=pk)
         except Person.DoesNotExist:
-            return JsonResponse({"success": "false", "error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+            return JsonResponse({"success": "false", "error": "person not found"}, status=status.HTTP_404_NOT_FOUND)
         user.delete()
-        return JsonResponse({"success": "true", "message": "Person deleted successfully"})
+        person.delete()
+        return JsonResponse({"success": "true", "message": "User deleted successfully"})
 
 class Leaderboard(APIView):
     permission_classes = [IsAuthenticated]
