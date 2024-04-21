@@ -1,0 +1,28 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="{% static 'game.css' %}">
+</head>
+<body>
+    <!-- <h1>Ball Game</h1> -->
+    <button id = 'btnCreate'>New Game</button>
+    <button id = 'btnJoin'>Join Game</button>
+    <input type = 'text' id = 'txtGameId'>
+    <button id = 'btnStart'>start Game</button>
+    <div id="board">
+        <!-- <div id="paddle1" class="paddle"></div>
+        <div id="paddle2" class="paddle"></div>
+        <div class="ball"></div>
+       <div class="scoreDiv"></div> -->
+        <!-- <span id="score1" class="score">0</span> -->
+        <!-- <span id="score2" class="score">0</span> -->
+    </div>
+    <script src="{% static 'joinlist.js' %}"></script>
+</body>
+</html>
+

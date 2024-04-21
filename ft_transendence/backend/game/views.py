@@ -5,6 +5,10 @@ def index(request):
     # app.game()
     return render(request, 'index.html')
 
+def joinlist(request):
+    # app.game()
+    return render(request, 'joinlist.html')
+
 from rest_framework import generics, status, viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response

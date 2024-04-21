@@ -13,6 +13,7 @@ from . import consumers
 
 websocket_urlpatterns = [
     path('ws/game/', consumers.PongConsumer.as_asgi()),
+    path("ws/joinlist/", consumers.joinListConsumer.as_asgi()),
 ]
 
 application = ProtocolTypeRouter({

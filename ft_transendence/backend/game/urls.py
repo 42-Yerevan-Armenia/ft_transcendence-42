@@ -5,6 +5,7 @@ from game.views import PlayRandom, PlayTournament
 
 urlpatterns = [
     path('game/', game_views.index, name='index'),
+    path('joinlist/', game_views.joinlist, name='joinlist'),
     path('tournament/', PlayTournament.as_view()),
     path('api/v1/random/<int:pk>/', PlayRandom.as_view()),
 ]
