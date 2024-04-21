@@ -108,14 +108,12 @@
     width: 100%;
 }
 
-
 #MidleSettingsBlocksPEmailErrorhandling{
     position: absolute;
-    font-size: 0.875em;
+    font-size: 0.875em; /* clamp (minSize middleSize maxSize)*/
     left: 0;
     top: 23px;
     box-sizing: border-box;
-    
 }
 
 #MidleSettingsBlocksPChangePassword{
@@ -153,7 +151,6 @@
         column-gap: 50px;
         row-gap: 15px;
     }
-
     .MidleSettingsBlocksP{
         width: 80%;
     }

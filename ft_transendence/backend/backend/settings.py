@@ -90,8 +90,6 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 ASGI_APPLICATION = 'backend.asgi.application'
 
-# ASGI_APPLICATION = 'game.routing.application'
-
 CHANNEL_LAYERS = {
 	"default": {
 		"BACKEND": "channels.layers.InMemoryChannelLayer"

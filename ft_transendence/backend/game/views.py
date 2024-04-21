@@ -99,6 +99,7 @@ class MatchmakingSystem():
         try:
             response_data = {
                 "success": True,
+                "method": "start_match",
                 "players": [
                     {"id": player1_id},
                     {"id": player2_id}
