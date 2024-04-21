@@ -42,6 +42,9 @@
     border-radius: 10px;
 
 }
+
+
+
 #DeleteAccountSave{
     
     display: flex;
@@ -95,6 +98,33 @@
     text-align: start;
 }
 
+.MidleSettingsBlocksPMidleSettingsBlocksPPassword{
+    position: relative;
+    width: 100%;
+}
+
+.MidleSettingsBlocksPMidleSettingsBlocksPEmail{
+    position: relative;
+    width: 100%;
+}
+
+#MidleSettingsBlocksPEmailErrorhandling{
+    position: absolute;
+    font-size: 0.875em; /* clamp (minSize middleSize maxSize)*/
+    left: 0;
+    top: 23px;
+    box-sizing: border-box;
+}
+
+#MidleSettingsBlocksPChangePassword{
+    position: absolute;
+    font-size: 0.875em;
+    left: 0;
+    top: 25px;
+    box-sizing: border-box;
+    line-break: anywhere;
+}
+
 
 @media only screen and (max-width : 690px){
     .MidleSettingsEditConteiner{
@@ -121,7 +151,6 @@
         column-gap: 50px;
         row-gap: 15px;
     }
-
     .MidleSettingsBlocksP{
         width: 80%;
     }
