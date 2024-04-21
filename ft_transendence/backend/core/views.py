@@ -319,11 +319,13 @@ class SettingsById(APIView):
 
     def delete(self, request, pk):
         try:
-            user = Person.objects.get(pk=pk)
+            user = User.objects.get(pk=pk)
+            person = Person.objects.get(pk=pk)
         except Person.DoesNotExist:
-            return JsonResponse({"success": "false", "error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+            return JsonResponse({"success": "false", "error": "person not found"}, status=status.HTTP_404_NOT_FOUND)
         user.delete()
-        return JsonResponse({"success": "true", "message": "Person deleted successfully"})
+        person.delete()
+        return JsonResponse({"success": "true", "message": "User deleted successfully"})
 
 class Leaderboard(APIView):
     permission_classes = [IsAuthenticated]
