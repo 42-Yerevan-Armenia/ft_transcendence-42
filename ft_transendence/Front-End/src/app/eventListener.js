@@ -16,14 +16,10 @@ Home._MiddleSettings?._Save?.addEventListener("click", async ()=>{
 
 debugger
 
-
-  if(!Home._MiddleSettings.isArgumentsEmpty())
-    return
   if(!Home._MiddleSettings.isArgumentsEmpty())
     return
   if (!Home._MiddleSettings.checkPassword())
     return;
-
   if (!Home._MiddleSettings.checkValidEmail())
     return;
 
@@ -41,7 +37,7 @@ debugger
 Home._MiddleSettings?._DeleteAccount.addEventListener("click",async ()=>{
   console.log("_DeleteAccount")
 debugger
-  const deleteUser = await FetchRequest("DELETE", `api/v1/settings/${User._Id}`,{});
+  const deleteUser = await putRequest("DELETE", `api/v1/settings/${User._Id}`,{});
   
   myStorages.longOut();
 })
@@ -157,7 +153,7 @@ Home?._NAV?._Community?._classname?.addEventListener("click",()=>{
 //whene create new list item for game
 //_MidleJoinList Create button
 Home._MidleJoinList?._CreateButton?.addEventListener("click", async ()=>{
-  //debugge
+    debugger
   console.log("click... \n");
   const Players = document.querySelector("#JoinListHeroDivProfilPlayers");
   const LiveOnOff = document.querySelector("#LiveOnOff");
@@ -174,10 +170,17 @@ Home._MidleJoinList?._CreateButton?.addEventListener("click", async ()=>{
 
   //send back-end
   const url = "api/v1/createroom/" + User._Id;
-  await FetchRequest("POST", url, objCreate);
-
+  const paload = {
+    "method": "create",
+    "pk":User._Id,
+    ...objCreate,
+  }
+  const str = JSON.stringify(paload)
+  
+  Join_Ws.send(str);
+//   await FetchRequest("POST", url, objCreate);
   //redirect
-  ManageMidle.Manage("JoinList");
+ 
 // api/v1/createroom/:id
   Players.value = "";
   LiveOnOff.value = "";
@@ -185,6 +188,21 @@ Home._MidleJoinList?._CreateButton?.addEventListener("click", async ()=>{
   JoinListHeroDivGameMode.value = "";
   // LiveOnOff
 })
+
+
+Join_Ws.onmessage = message => {
+    debugger;
+    if (!message.data) {
+        return;
+    }
+    let response = JSON.parse(message.data);
+    debugger;
+    if (response.method === "update_room") {
+        Home._MidleJoinList._game_rooms = response.game_rooms;
+        ManageMidle.Manage("JoinList");
+    }
+}
+
 
 //sign in
 Home._NavSigninSignout?._NavSignin?.addEventListener("click", ()=> {
