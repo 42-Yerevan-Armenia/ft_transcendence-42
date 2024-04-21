@@ -193,6 +193,7 @@ class JoinList extends HtmlElement {
       //    Iterate over each button and attach an event listener
       buttonsJoin.forEach(button => {
         button.addEventListener("click", async function(e) {
+          debugger
                 // Item.id + ":JoinListTableID:" + Item.creator_id
                 // api/v1/joinlist/<int:pk>/' POST
                 const idLeft = e.target.id.slice(0, e.target.id.indexOf(':'));
@@ -202,16 +203,18 @@ class JoinList extends HtmlElement {
                 console.log("creator_id = " + creator_id + "  game_room_id " + game_room_id + " ");
 
                 const data = await FetchRequest("POST", "api/v1/joinlist/"+User._Id, {
-                  "creator_id": idRight,
-                  'game_room_id': idLeft
-                });
+                                    "creator_id": idRight,
+                                    'game_room_id': idLeft
+                                  });
 
 
                 if (data && data.state)
                 {
                   console.log(data.message.game.game_room_id);
+                  console.log(data.message.game.creator_id);
                   GameRom.creator_id = data.message.game.game_room_id;
-                  GameRom.game_room_id = 0;
+
+                  GameRom.game_room_id = data.message.game_room_id;
                   const select = document.querySelector(".ScriptData");
                   // game/"+GameRom.game_room_id
                   window.location.href = "http://10.12.11.2:8000/game";
@@ -246,21 +249,24 @@ class JoinList extends HtmlElement {
     }
 
 
-    async getJoinListItemAll(){
-      const JoinList = await getFetchRequest("api/v1/joinlist/" + User._Id);
+    async getJoinListItemAll(JoinList) {
+      if (!JoinList || !JoinList.state)
+        return;
 
-      if (JoinList && JoinList.state)
-      {
-        document.querySelector(".JoinListConteinerTableALL").innerHTML = "";
-        JoinList.message.game_rooms.sort((e,e1)=>e.id < e1.id).forEach(e => {
-          this.JoinListItem(e);
-        });
-      }
+      document.querySelector(".JoinListConteinerTableALL").innerHTML = "";
+      JoinList.message.game_rooms.sort((e,e1)=>e.id < e1.id).forEach(e => {
+        this.JoinListItem(e);
+      });
       this.setEventAllButton();
     }
 
-    async draw(){
-     await this.getJoinListItemAll();
-    }
-  
+  async draw() {
+    
+    const JoinList = await getFetchRequest("api/v1/joinlist/" + User._Id);
+
+    if (!JoinList || !JoinList.state)
+      return;
+
+     await this.getJoinListItemAll(JoinList);
   }
+}

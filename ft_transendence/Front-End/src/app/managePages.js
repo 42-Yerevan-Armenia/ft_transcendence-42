@@ -32,7 +32,7 @@ var ManageAllPage = {
         {"Home": Home},
         {"Password": Password},
         {"SignUp": SignUp},
-        {"ResetPage": Reset},
+        {"ResetPage": Reset}
     ]
 };
 
@@ -60,8 +60,8 @@ var ManageMidle = {
         {"ProfileMidle":Home._HomeMidleProfile},
         {"MidleHistoryGame": Home._MidleHistoryGame},
         {"JoinListInvite": Home._MidleJoinList._JoinListInvit},
-        {"GameBoard": Home._GameBoard}
-        // {"SignUp": SignUp}
+        {"MidleCommunity": Home._MidleCommunity},
+        {"AccountUser": Home._AccountUser}
     ]
 };
 

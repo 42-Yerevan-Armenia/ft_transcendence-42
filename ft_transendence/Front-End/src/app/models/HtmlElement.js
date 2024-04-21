@@ -1,4 +1,8 @@
 //parent class
+let GameRoomNewClientID = "";
+let reader;
+let base64EncodedImage;
+
 class HtmlElement {
   // //debugger
     constructor(name) {

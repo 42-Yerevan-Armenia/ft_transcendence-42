@@ -1,6 +1,6 @@
 import express, { json } from "express";
 import cors from 'cors';
-import useController from "./src/controller/controller.js"
+import useController from "./src/Controllers/Controllers.js"
 import session from "express-session";
 import passport from "passport"
 const fs = require('fs');

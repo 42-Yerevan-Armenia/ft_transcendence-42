@@ -25,10 +25,10 @@ class HomeLeft extends HtmlElement {
         this._Image.src = `data:image/png;base64,${User._Image}`;
                       
         this._NavSigninNavSignUp.style.display = "none";
-        this._NAVSIGNINSIGNOUTNavLoginOut.style.display = "block";
+        this._NAVSIGNINSIGNOUTNavLoginOut.style.display = "flex";
       }
       else{
-        this._NavSigninNavSignUp.style.display = "block";
+        this._NavSigninNavSignUp.style.display = "flex";
         this._NAVSIGNINSIGNOUTNavLoginOut.style.display = "none";
       }
     }

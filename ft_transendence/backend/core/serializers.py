@@ -3,12 +3,43 @@ from django import forms
 from django.contrib.auth import get_user_model, authenticate
 from django.core.exceptions import ValidationError
 from .models import User, Person, GameRoom, History
-from friendship.models import Friend
+from friendship.models import Friend, FriendshipRequest
 
 class UserSerializer(serializers.ModelSerializer):
+    friends = serializers.SerializerMethodField()
+    friendship_requests = serializers.SerializerMethodField()
+
     class Meta:
         model = Person
-        fields = ('id', 'name', 'nickname', 'email', 'phone', 'image', 'background', 'wins', 'loses', 'matches', 'points', 'gamemode', 'live', 'is_online')
+        fields = ('id', 'name', 'nickname', 'email', 'image', 'phone', 'wins', 'loses', 'matches', 'points', 'gamemode', 'live', 'is_online', 'friends', 'friendship_requests')
+
+    def get_friends(self, obj):
+        friends = Friend.objects.filter(from_user=obj.user)
+        serialized_friends = []
+        for friend in friends:
+            friend_person = friend.to_user.person
+            serialized_friend = {
+                'id': friend_person.id,
+                'name': friend_person.name,
+                'nickname': friend_person.nickname,
+                'image': friend_person.image,
+            }
+            serialized_friends.append(serialized_friend)
+        return serialized_friends
+
+    def get_friendship_requests(self, obj):
+        receiver_requests = FriendshipRequest.objects.filter(to_user_id=obj.user.id)
+        serialized_friendships = []
+        for friendships in receiver_requests:
+            serialized_friendship = {
+                'id': friendships.from_user_id,
+                'name': friendships.from_user.person.name,
+                'nickname': friendships.from_user.person.nickname,
+                'image': friendships.from_user.person.image,
+                'rejected': friendships.rejected,
+            }
+            serialized_friendships.append(serialized_friendship)
+        return serialized_friendships
 
 class HomeSerializer(serializers.ModelSerializer):
     class Meta:

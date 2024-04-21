@@ -78,11 +78,7 @@ class UsersAPIView(APIView):
             except Person.DoesNotExist:
                 return JsonResponse({'error': 'User not found'}, status=404)
         else:
-            queryset = Person.objects.all()
-            if not queryset:
-                return JsonResponse({'error': 'No users found'}, status=404)
-            serializer = UserSerializer(queryset, many=True)
-            return JsonResponse(serializer.data, safe=False)
+            return JsonResponse({'error': 'User ID not provided'}, status=400)
 
 class EmailValidation(APIView):
     def post(self, request):
@@ -92,6 +88,11 @@ class EmailValidation(APIView):
             code = send_confirmation_email(email)
         except ValidationError as e:
             return JsonResponse({"success": "false","error": e.message}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            existing_confirmation_data = Confirm.objects.get(email=email)
+            existing_confirmation_data.delete()  # Delete existing confirmation data
+        except ObjectDoesNotExist:
+            pass
         confirmation_data = Confirm.objects.create(email=email, code=code)
         return JsonResponse({"success": "true", "email": "model_to_dict(data)"})
 
@@ -103,7 +104,7 @@ class Confirmation(APIView):
         email = request.data['email']
         try:
             confirmation_data = Confirm.objects.filter(email=email).latest('timestamp')
-            expiration_time = confirmation_data.timestamp + timezone.timedelta(seconds=30)
+            expiration_time = confirmation_data.timestamp + timezone.timedelta(seconds=35)
             if timezone.now() > expiration_time:
                 confirmation_data.delete()
                 return JsonResponse({"success": "false","error": "Confirmation code expired"}, status=status.HTTP_408_REQUEST_TIMEOUT)
@@ -117,9 +118,8 @@ class Register(APIView):
     def post(self, request):
         email = request.data['email']
         try:
-            # Retrieve confirmation data from the database
             confirmation_data = Confirm.objects.get(email=email)
-            confirmation_data.delete()  # Clean up confirmation data after use
+            confirmation_data.delete()
             register_validation(request.data)
             password = request.data['password'][10:-10]
             hashed_password = make_password(password)
@@ -248,7 +248,7 @@ class Login(APIView):
 
 class Logout(APIView):
     def post(self, request, pk):
-        user = Person.objects.get(id=pk)
+        person = Person.objects.get(id=pk)
         person.is_online = False
         person.save()
         return Response({"success": "true", "message": "Logged out successfully"}, status=status.HTTP_200_OK)
@@ -281,23 +281,14 @@ class SettingsById(APIView):
         except Person.DoesNotExist:
             return JsonResponse({"success": "false", "error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
         data = json.loads(request.body)
-        print("❌", data)
         if 'name' in data and data['name']:
             user.name = data['name']
         if 'nickname' in data and data['nickname']:
             user.nickname = data['nickname']
         if 'email' in data and data['email']:
             user.email = data['email']
-        image_file = request.FILES.get('image')
-        print("❎", image_file)
         if 'image' in data and data['image']:
-            image_path = data['image']
-            # Read the image file
-            with open(image_path, "rb") as img_file:
-                # Encode the image to base64
-                base64_image = base64.b64encode(img_file.read()).decode('utf-8')
-            user.image = base64_image
-        print("✅", user.image)
+            user.image = data['image']
         new_password = data.get('password')
         if new_password:
             hashed_password = make_password(new_password)

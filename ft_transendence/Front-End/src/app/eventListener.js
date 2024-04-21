@@ -8,33 +8,85 @@ Home._NAV._SETTINGS._classname?.addEventListener("click",()=>{
 })
 
 
-Home._MiddleSettings?._Save?.addEventListener("click",async ()=>{
+
+//Home Page Settings Middle Button Save
+//Validate Settings
+Home._MiddleSettings?._Save?.addEventListener("click", async ()=>{
   console.log("SAVE")
 
+debugger
 
 
+  if(!Home._MiddleSettings.isArgumentsEmpty())
+    return
+  if(!Home._MiddleSettings.isArgumentsEmpty())
+    return
+  if (!Home._MiddleSettings.checkPassword())
+    return;
 
+  if (!Home._MiddleSettings.checkValidEmail())
+    return;
 
   await Home._MiddleSettings.changeData();
 })
 
 
+
+
+
+
+
+
+
 Home._MiddleSettings?._DeleteAccount.addEventListener("click",async ()=>{
   console.log("_DeleteAccount")
-
+debugger
   const deleteUser = await FetchRequest("DELETE", `api/v1/settings/${User._Id}`,{});
   
   myStorages.longOut();
 })
 
 
-Home._NAV?._Profile?._classname?.addEventListener("click", async ()=>{
-  console.log("Home._NAV?._Profile?._classname?.addEventListener");
-  ManageMidle.Manage("ProfileMidle");
+//Home page Settings middle choose file for load image
+// data:image/png;base64,
+Home._MiddleSettings?._ImageFileAccess?.addEventListener("change", (event)=>{
+  const file = event.target.files[0]; // Get the file
+  const reader = new FileReader(); // Create a FileReader object
+  
+  // Closure to capture the file information.
+  reader.onload = function(event) {
+    //white Base64
+    console.log(event.target.result);
+
+    base64EncodedImage = event.target.result + ""
+
+
+    // Get the base64 encoded image data
+    // <<data:image/png;base64,>> .length === 22
+    base64EncodedImage  = base64EncodedImage.slice(22);
+
+    // You can now send the base64EncodedImage to the server via AJAX or any other method.
+    console.log(base64EncodedImage);
+    
+  };
+
+  // Read in the image file as a data URL.
+  reader.readAsDataURL(file);
 })
 
+    
+
+
+
+
+
+
+
+
+
+
 // ProfileMidleHeaderToInvit
-Home?._HomeMidleProfile?._ProfileMidleHeaderToInvit1?.addEventListener("click",async ()=>{
+Home?._HomeMidleProfile?._ProfileMidleHeaderToInvit1?.addEventListener("click", async ()=>{
   console.log("_ProfileMidleHeaderToInvit call1");
 
 
@@ -43,6 +95,8 @@ Home?._HomeMidleProfile?._ProfileMidleHeaderToInvit1?.addEventListener("click",a
 
   
 })
+
+
 Home?._HomeMidleProfile?._ProfileMidleHeaderToInvit2?.addEventListener("click",async ()=>{
   console.log("_ProfileMidleHeaderToInvit call2");
 
@@ -67,31 +121,43 @@ Home?._MidleJoinList?._InviteButton?.addEventListener("click",async ()=>{       
 
 
 
-
-// 1
-Home._NAV?._LEADERBOARD?._classname?.addEventListener("click",()=>{
+//3
+Home?._NAV?._Home?._classname?.addEventListener("click",()=>{
   ////debugger
-  ManageMidle.Manage("MidleCub");
-} )
+  ManageMidle.Manage("midle");
+} );
+
+Home?._NAV?._Profile?._classname?.addEventListener("click", async ()=>{
+  console.log("Home._NAV?._Profile?._classname?.addEventListener");
+  ManageMidle.Manage("ProfileMidle");
+})
 
 //4
-Home._NAV?._JoinListGame?._classname?.addEventListener("click",()=>{
+Home?._NAV?._JoinListGame?._classname?.addEventListener("click",()=>{
   ////debugger
   ManageMidle.Manage("JoinList");
 
 } )
 
-//3
-Home._NAV?._Home?._classname?.addEventListener("click",()=>{
+// 1
+Home?._NAV?._LEADERBOARD?._classname?.addEventListener("click",()=>{
   ////debugger
-  ManageMidle.Manage("midle");
-} );
+  ManageMidle.Manage("MidleCub");
+} )
+
+// 
+Home?._NAV?._Community?._classname?.addEventListener("click",()=>{
+  ////debugger
+  ManageMidle.Manage("MidleCommunity");
+} )
+
+
 
 
 //whene create new list item for game
 //_MidleJoinList Create button
 Home._MidleJoinList?._CreateButton?.addEventListener("click", async ()=>{
-  //debugger
+  //debugge
   console.log("click... \n");
   const Players = document.querySelector("#JoinListHeroDivProfilPlayers");
   const LiveOnOff = document.querySelector("#LiveOnOff");
@@ -177,7 +243,7 @@ Home._HomeLeft._NavLoginOut.addEventListener("click", async () => {
 
 //when want to login you press button login
 Login?._LoginPageContinue?.addEventListener("click", async () => {
-  ////debugger
+  debugger
   //check is correct email and password
   if (Login.ButtonSignIn())
   {
@@ -299,7 +365,7 @@ Password.PasswordConfirm.addEventListener("click", async () => {
 //-------------------------------------------------------------------  SignUp
 
 SignUp.SignupPageContinue.addEventListener("click", async () => {
-  ////debugger
+  debugger
   const isCorrectPassword = SignUp.PasswordConfirmButton();
   const ischeckNameNickname = SignUp.checkNameNickname();
   if (isCorrectPassword && ischeckNameNickname)

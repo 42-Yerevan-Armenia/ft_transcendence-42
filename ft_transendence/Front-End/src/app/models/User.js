@@ -55,10 +55,10 @@ class USER {
         return false
 
       //get for backend data
-      const dataUser = await getFetchRequest("users/" + this._Id);
+      const dataUser = await getFetchRequest("api/v1/persons/" + this._Id);
 
       //get data from dataUser
-      const {id, name, nickname, email, image, gamemode, twofactor} = dataUser;
+      const {id, name, nickname, email, image, gamemode, twofactor} = dataUser.message;
       if (!id || !name || !nickname || !email || !image)
         return false;
 
@@ -71,6 +71,7 @@ class USER {
       this._Image = image;
       this._Gamemode = gamemode || "Easy";
       this._Twofactor = twofactor || false;
+      return true
     }
 
 
@@ -87,12 +88,13 @@ class USER {
     //when refresh_token is not expired call for update access
     accessRefresh = async () => {
       debugger
-      this._geRefresh = localStorage.getItem("refresh");
+      
+      // this._geRefresh = localStorage.getItem("refresh");
 
       const res = await FetchRequest("POST", "api/v1/token/refresh", {"refresh" : this._geRefresh});    //call for update access
-      
+
       this.date = new Date();
-  
+
       if (res?.state)
       {
         myStorages.setAccsessTockenLoading(res?.message?.data)
@@ -128,11 +130,10 @@ class USER {
         true
       else{
         false;
-      } 
+      }
     }
     else {
       return true;
     }
   }
 }
-  
