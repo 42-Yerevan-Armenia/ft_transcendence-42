@@ -16,14 +16,10 @@ Home._MiddleSettings?._Save?.addEventListener("click", async ()=>{
 
 debugger
 
-
-  if(!Home._MiddleSettings.isArgumentsEmpty())
-    return
   if(!Home._MiddleSettings.isArgumentsEmpty())
     return
   if (!Home._MiddleSettings.checkPassword())
     return;
-
   if (!Home._MiddleSettings.checkValidEmail())
     return;
 
@@ -41,7 +37,7 @@ debugger
 Home._MiddleSettings?._DeleteAccount.addEventListener("click",async ()=>{
   console.log("_DeleteAccount")
 debugger
-  const deleteUser = await FetchRequest("DELETE", `api/v1/settings/${User._Id}`,{});
+  const deleteUser = await putRequest("DELETE", `api/v1/settings/${User._Id}`,{});
   
   myStorages.longOut();
 })

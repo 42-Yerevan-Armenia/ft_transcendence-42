@@ -276,6 +276,7 @@ class SettingsById(APIView):
             return JsonResponse({"success": "false", "error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
 
     def put(self, request, pk):
+        print("asdadasdasdasdasdasdasdasdasdasdadsasdasdasdasdasdasdasd    ",request)
         try:
             user = Person.objects.get(pk=pk)
         except Person.DoesNotExist:
@@ -301,6 +302,7 @@ class SettingsById(APIView):
         return JsonResponse({"success": "true", "profile": model_to_dict(user)})
 
     def delete(self, request, pk):
+       
         try:
             user = Person.objects.get(pk=pk)
         except Person.DoesNotExist:
