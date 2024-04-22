@@ -196,8 +196,9 @@ Join_Ws.onmessage = message => {
         return;
     }
     let response = JSON.parse(message.data);
+    console.log(JSON.stringify(response))
     debugger;
-    if (response.method === "update_room") {
+    if (response.method === "update_room" && User._getAccess) {
         Home._MidleJoinList._game_rooms = response.game_rooms;
         ManageMidle.Manage("JoinList");
     }
