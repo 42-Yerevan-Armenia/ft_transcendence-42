@@ -109,7 +109,7 @@ async function ControllerSignUp(password, User) {
     return { state: true, message: data };
   } catch (error) {
     console.error("Error:", error);
-    return { state: false, message: error.message };
+    return { state: false, message: error.message, status: error.status };
   }
 }
 

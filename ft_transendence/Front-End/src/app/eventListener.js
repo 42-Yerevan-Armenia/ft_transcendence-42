@@ -387,6 +387,9 @@ SignUp.SignupPageContinue.addEventListener("click", async () => {
   debugger
   const isCorrectPassword = SignUp.PasswordConfirmButton();
   const ischeckNameNickname = SignUp.checkNameNickname();
+  const errorNickname = document.querySelector(".SignupPageinputDivErrorNickname");
+  errorNickname.innerHTML = "";
+  
   if (isCorrectPassword && ischeckNameNickname)
   {
    const codeSesion = await SignUp.PasswordConfirmWithServer();
@@ -396,6 +399,10 @@ SignUp.SignupPageContinue.addEventListener("click", async () => {
    {
       SignUp.DisplayNone();
       Login.DisplayBlock();
+   }
+   else if (codeSesion.status == "409") {
+    errorNickname.innerHTML = codeSesion.message;
+    errorNickname.style.color = "red";
    }
   }
 })
