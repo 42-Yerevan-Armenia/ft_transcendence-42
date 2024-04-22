@@ -51,6 +51,8 @@ import time
 import base64
 import os
 
+from django.shortcuts import render
+
 #TODO: activate all Tokens
 
 class UserAPIView(APIView):
@@ -104,6 +106,8 @@ class Confirmation(APIView):
         email = request.data['email']
         try:
             confirmation_data = Confirm.objects.filter(email=email).latest('timestamp')
+            if not confirmation_data:
+                return JsonResponse({"success": "false", "error": "Confirmation data not found"}, status=status.HTTP_400_BAD_REQUEST)
             expiration_time = confirmation_data.timestamp + timezone.timedelta(seconds=35)
             if timezone.now() > expiration_time:
                 confirmation_data.delete()
@@ -117,23 +121,30 @@ class Confirmation(APIView):
 class Register(APIView):
     def post(self, request):
         email = request.data['email']
+        nickname = request.data['nickname']
         try:
             confirmation_data = Confirm.objects.get(email=email)
             confirmation_data.delete()
             register_validation(request.data)
             password = request.data['password'][10:-10]
             hashed_password = make_password(password)
+            nickname_exists = (
+                Person.objects.filter(nickname=nickname).exists() or
+                get_user_model().objects.filter(username=nickname).exists()
+            )
+            if nickname_exists:
+                return JsonResponse({"success": False, "error": "Nickname already exists"}, status=409)
             user = get_user_model().objects.create(
                 email=email,
                 first_name=request.data['name'],
-                username=request.data['nickname'],
+                username=nickname,
                 password=hashed_password,
             )
             data = Person.objects.create(
                 user=user,
                 email=email,
                 name=request.data['name'],
-                nickname=request.data['nickname'],
+                nickname=nickname,
                 password=hashed_password,
             )
             data.save_base64_image(image_path=os.path.join(os.path.dirname(__file__), 'default.jpg'))
@@ -147,7 +158,6 @@ class Register(APIView):
 
 class PasswordReset(APIView):
     def post(self, request):
-        
         email = request.data['email'].strip()
         try:
             if not email:
@@ -164,7 +174,7 @@ class PasswordReset(APIView):
             'code': code,
             'timestamp': timezone.now().isoformat(),
         }
-        shared_data['confirm_data'] = confirm_data
+        confirmation_data = Confirm.objects.create(email=email, code=code)
         return JsonResponse({"success": "true", "email": "model_to_dict(data)"})
 
 class ForgetConfirmation(APIView):
@@ -172,28 +182,29 @@ class ForgetConfirmation(APIView):
         confirm_front = request.data['code']
         if not confirm_front:
             return JsonResponse({"success": "false", "error": "Confirmation code not found"}, status=status.HTTP_400_BAD_REQUEST)
-        confirmation_data = shared_data.get('confirm_data')
-        if not confirmation_data:
-            return JsonResponse({"success": "false", "error": "Confirmation data not found"}, status=status.HTTP_400_BAD_REQUEST)
-        confirm_back = confirmation_data['code']
-        timer_str = confirmation_data['timestamp']
-        timer = timezone.datetime.fromisoformat(timer_str)
-        expiration_time = timer + timezone.timedelta(seconds=30)
-        if timezone.now() > expiration_time:
-            shared_data.pop('confirm_data', None)
-            return JsonResponse({"success": "false", "error": "Confirmation code expired"}, status=status.HTTP_408_REQUEST_TIMEOUT)
-        if confirm_front != confirm_back:
-            return JsonResponse({"success": "false", "error": "Invalid confirmation code"}, status=status.HTTP_404_NOT_FOUND)
+        email = request.data['email']
+        try:
+            confirmation_data = Confirm.objects.filter(email=email).latest('timestamp')       
+            if not confirmation_data:
+                return JsonResponse({"success": "false", "error": "Confirmation data not found"}, status=status.HTTP_400_BAD_REQUEST)
+            expiration_time = confirmation_data.timestamp + timezone.timedelta(seconds=35)
+            if timezone.now() > expiration_time:
+                confirmation_data.delete()
+                return JsonResponse({"success": "false", "error": "Confirmation code expired"}, status=status.HTTP_408_REQUEST_TIMEOUT)
+            if confirm_front != confirmation_data.code:
+                return JsonResponse({"success": "false", "error": "Invalid confirmation code"}, status=status.HTTP_404_NOT_FOUND)
+        except Confirm.DoesNotExist:
+            return JsonResponse({"success": "false","error": "Confirmation data not found"}, status=status.HTTP_400_BAD_REQUEST)
         return JsonResponse({"success": "true", "message": "Email is validated"})
 
 class Password(APIView):
     def post(self, request):
-        confirmation_data = shared_data.get('confirm_data', {})
+        email = request.data['email']
+        confirmation_data = Confirm.objects.get(email=email)
         if not confirmation_data:
             return JsonResponse({"success": "false", "error": "Confirmation data not found"}, status=status.HTTP_400_BAD_REQUEST)
-        shared_data.pop('confirm_data', None)
-        email = request.data['email'].strip()
-        data_email = confirmation_data.get('email')
+        data_email = confirmation_data.email
+        confirmation_data.delete()
         if email != data_email:
             return JsonResponse({"success": "false", "error": "Email is not validated"}, status=status.HTTP_400_BAD_REQUEST)
         password = request.data['password'][10:-10]
@@ -278,37 +289,56 @@ class SettingsById(APIView):
     def put(self, request, pk):
         print("asdadasdasdasdasdasdasdasdasdasdadsasdasdasdasdasdasdasd    ",request)
         try:
-            user = Person.objects.get(pk=pk)
+            person = Person.objects.get(pk=pk)
+            user = User.objects.get(pk=pk)
         except Person.DoesNotExist:
+            return JsonResponse({"success": "false", "error": "Peron not found"}, status=status.HTTP_404_NOT_FOUND)
+        except User.DoesNotExist:
             return JsonResponse({"success": "false", "error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
         data = json.loads(request.body)
         if 'name' in data and data['name']:
-            user.name = data['name']
+            person.name = data['name']
+            user.first_name = data['name']
         if 'nickname' in data and data['nickname']:
-            user.nickname = data['nickname']
+            person.nickname = data['nickname']
+            user.username = data['nickname']
         if 'email' in data and data['email']:
+            try:
+                email_validation(data['email'])
+            except ValidationError as e:
+                return JsonResponse({"success": "false","error": e.message}, status=status.HTTP_400_BAD_REQUEST)
+            person.email = data['email']
             user.email = data['email']
         if 'image' in data and data['image']:
-            user.image = data['image']
+            person.image = data['image']
         new_password = data.get('password')
         if new_password:
+            try:
+                new_password = password_validation(data.get('password'))
+            except ValidationError as e:
+                error_message = e.messages[0] if hasattr(e, 'messages') else str(e)
+                return JsonResponse({"success": "false", "error": error_message}, status=status.HTTP_400_BAD_REQUEST)
             hashed_password = make_password(new_password)
+            person.password = hashed_password
             user.password = hashed_password
         if 'gamemode' in data and data['gamemode']:
-            user.gamemode = data['gamemode']
+            person.gamemode = data['gamemode']
         if 'twofactor' in data and data['twofactor']:
-            user.twofactor = bool(data['twofactor'])
+            person.twofactor = bool(data['twofactor'])
+        person.save()
         user.save()
         return JsonResponse({"success": "true", "profile": model_to_dict(user)})
 
     def delete(self, request, pk):
        
         try:
-            user = Person.objects.get(pk=pk)
+            user = User.objects.get(pk=pk)
+            person = Person.objects.get(pk=pk)
         except Person.DoesNotExist:
-            return JsonResponse({"success": "false", "error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+            return JsonResponse({"success": "false", "error": "person not found"}, status=status.HTTP_404_NOT_FOUND)
         user.delete()
-        return JsonResponse({"success": "true", "message": "Person deleted successfully"})
+        person.delete()
+        return JsonResponse({"success": "true", "message": "User deleted successfully"})
 
 class Leaderboard(APIView):
     permission_classes = [IsAuthenticated]
@@ -377,7 +407,7 @@ class JoinList(APIView):
             for person in persons:
                 game_room_data[person.game_room_id].append(person)
             # Construct JSON response
-            result = {"success": True, "game_rooms": []}
+            result = {"success": True, "method": "update_room", "game_rooms": []}
             for game_room_id, persons_in_room in game_room_data.items():
                 # Ensure there are at least two persons in the room
                 if len(persons_in_room) >= 1:
@@ -458,9 +488,9 @@ class JoinList(APIView):
                         'creator_id': creator_id,
                         'game_room_id': game_room_id
                     }
-                    return JsonResponse({"success": "true", "game": game, "message": "Successfully joined the game room. Game will start soon."}, status=status.HTTP_200_OK)
+                    return JsonResponse({"success": "true", "method": "start_game", "game": game, "message": "Successfully joined the game room. Game will start soon."}, status=status.HTTP_200_OK)
                 else:
-                    return JsonResponse({"success": "true", "message": "Successfully joined the game room"}, status=status.HTTP_200_OK)
+                    return JsonResponse({"success": "true", "method": "update_room", "message": "Successfully joined the game room"}, status=status.HTTP_200_OK)
         except Exception as e:
             return JsonResponse({"success": "false", "error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
@@ -472,18 +502,18 @@ class CreateRoom(APIView):
             creator = Person.objects.get(id=pk)
             if creator.game_room:
                 return JsonResponse({"success": "false", "error": "User already has a game room"}, status=status.HTTP_400_BAD_REQUEST)
-            max_players = request.data.get('max_players', 2)
+            max_players = request.get('max_players', 2)
             if max_players == '':
                 max_players = 2
             else:
                 max_players = int(max_players)
-            live = request.data.get('live', "false")
+            live = request.get('live', "false")
             if live == '':
                 live = "false"
-            theme = request.data.get('theme', "dark").lower()
+            theme = request.get('theme', "dark").lower()
             if theme == '':
                 theme = "dark"
-            gamemode = request.data.get('gamemode', "classic").lower()
+            gamemode = request.get('gamemode', "classic").lower()
             if gamemode == '':
                 gamemode = "classic"
             game_room_data = {

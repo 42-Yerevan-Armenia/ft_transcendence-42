@@ -5,6 +5,10 @@ def index(request):
     # app.game()
     return render(request, 'index.html')
 
+def joinlist(request):
+    # app.game()
+    return render(request, 'joinlist.html')
+
 from rest_framework import generics, status, viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -95,6 +99,7 @@ class MatchmakingSystem():
         try:
             response_data = {
                 "success": True,
+                "method": "start_match",
                 "players": [
                     {"id": player1_id},
                     {"id": player2_id}

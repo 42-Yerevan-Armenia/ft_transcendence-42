@@ -16,7 +16,7 @@ def email_validation(email):
     except ValidationError:
         raise ValidationError('Invalid email format')
     if UserModel.objects.filter(email=email).exists():
-        raise ValidationError('Email already exists')
+        raise ValidationError('Email already exists') 
 
 def generate_numeric_token(length):
     return ''.join(str(secrets.randbelow(10)) for _ in range(length))
