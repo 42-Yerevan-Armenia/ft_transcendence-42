@@ -389,6 +389,8 @@ SignUp.SignupPageContinue.addEventListener("click", async () => {
   if (isCorrectPassword && ischeckNameNickname)
   {
    const codeSesion = await SignUp.PasswordConfirmWithServer();
+   console.log("ERROR +++++++++++++++++++++++")
+   console.log(codeSesion);
    if (codeSesion.state)
    {
       SignUp.DisplayNone();
