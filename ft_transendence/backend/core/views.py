@@ -124,16 +124,9 @@ class Register(APIView):
         nickname = request.data['nickname']
         try:
             confirmation_data = Confirm.objects.get(email=email)
-            confirmation_data.delete()
             register_validation(request.data)
             password = request.data['password'][10:-10]
             hashed_password = make_password(password)
-            nickname_exists = (
-                Person.objects.filter(nickname=nickname).exists() or
-                get_user_model().objects.filter(username=nickname).exists()
-            )
-            if nickname_exists:
-                return JsonResponse({"success": False, "error": "Nickname already exists"}, status=409)
             user = get_user_model().objects.create(
                 email=email,
                 first_name=request.data['name'],
@@ -150,11 +143,15 @@ class Register(APIView):
             data.save_base64_image(image_path=os.path.join(os.path.dirname(__file__), 'default.jpg'))
             data.save_base64_background(background_path=os.path.join(os.path.dirname(__file__), 'background.jpg'))
             data_to_send = {'email': email, 'nickname': request.data['nickname'], 'name': request.data['name']}
+            confirmation_data.delete()
             return JsonResponse({"success": "true", "reg": data_to_send})
         except Confirm.DoesNotExist:
             return JsonResponse({"success": "false","error": "Email is not validated"}, status=status.HTTP_400_BAD_REQUEST)
         except ValidationError as e:
-            return JsonResponse({"success": "false","error": e.message}, status=status.HTTP_400_BAD_REQUEST)
+            if e.code == 'nickname_exists':
+                return Response({"error": "Nickname already exists"}, status=status.HTTP_409_CONFLICT)
+            else:
+                return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 class PasswordReset(APIView):
     def post(self, request):
