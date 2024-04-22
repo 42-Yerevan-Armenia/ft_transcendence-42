@@ -1,7 +1,7 @@
 "use strict"
 // const HostPort="http://localhost:5001"
-// const HostPort="http://10.12.11.1:8000"
-const HostPort="http://10.12.11.2:8000"
+const HostPort="http://10.12.11.1:8000"
+// const HostPort="http://10.12.11.2:8000"
 
 
 let INTRA_API_URL="https://api.intra.42.fr/";
@@ -109,7 +109,7 @@ async function ControllerSignUp(password, User) {
     return { state: true, message: data };
   } catch (error) {
     console.error("Error:", error);
-    return { state: false, message: error.message, status: error.status };
+    return { state: false, message: error.message };
   }
 }
 

@@ -389,7 +389,7 @@ SignUp.SignupPageContinue.addEventListener("click", async () => {
   const ischeckNameNickname = SignUp.checkNameNickname();
   const errorNickname = document.querySelector(".SignupPageinputDivErrorNickname");
   errorNickname.innerHTML = "";
-  
+
   if (isCorrectPassword && ischeckNameNickname)
   {
    const codeSesion = await SignUp.PasswordConfirmWithServer();
@@ -400,10 +400,13 @@ SignUp.SignupPageContinue.addEventListener("click", async () => {
       SignUp.DisplayNone();
       Login.DisplayBlock();
    }
-   else if (codeSesion.status == "409") {
-    errorNickname.innerHTML = codeSesion.message;
-    errorNickname.style.color = "red";
-   }
+   else{
+      const status = codeSesion.message.slice(codeSesion.message.length - 3)
+      if (status == "409") {
+      errorNickname.innerHTML = "nickname already used";
+      errorNickname.style.color = "red";
+    }
+    }
   }
 })
 
