@@ -85,7 +85,6 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
     async def chat_message(self, event):
         message = event['message']
         sender = event['sender']
-
         # Отправка сообщения обратно на WebSocket
         await self.send(text_data=json.dumps({
             'message': message,
