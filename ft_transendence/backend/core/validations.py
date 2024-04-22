@@ -45,7 +45,7 @@ def register_validation(data):
     if not nickname:
         raise ValidationError('Waiting for a nickname')
     if UserModel.objects.filter(username=nickname).exists():
-        raise ValidationError('Nickname already exists')
+        raise ValidationError('Nickname already exists', code='nickname_exists')
     if not name:
         raise ValidationError('Waiting for a name')
     try:
