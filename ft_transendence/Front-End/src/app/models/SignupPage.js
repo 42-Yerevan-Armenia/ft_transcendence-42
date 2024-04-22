@@ -30,7 +30,7 @@ class SignupPage extends HtmlElement {
         return false;
       }
       User._Name = name.value;
-      User._Nickname = name.value;
+      User._Nickname = nickname.value;
       return true;
     }
   

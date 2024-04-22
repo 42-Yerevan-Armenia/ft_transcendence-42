@@ -196,8 +196,9 @@ Join_Ws.onmessage = message => {
         return;
     }
     let response = JSON.parse(message.data);
+    console.log(JSON.stringify(response))
     debugger;
-    if (response.method === "update_room") {
+    if (response.method === "update_room" && User._getAccess) {
         Home._MidleJoinList._game_rooms = response.game_rooms;
         ManageMidle.Manage("JoinList");
     }
@@ -386,14 +387,26 @@ SignUp.SignupPageContinue.addEventListener("click", async () => {
   debugger
   const isCorrectPassword = SignUp.PasswordConfirmButton();
   const ischeckNameNickname = SignUp.checkNameNickname();
+  const errorNickname = document.querySelector(".SignupPageinputDivErrorNickname");
+  errorNickname.innerHTML = "";
+
   if (isCorrectPassword && ischeckNameNickname)
   {
    const codeSesion = await SignUp.PasswordConfirmWithServer();
+   console.log("ERROR +++++++++++++++++++++++")
+   console.log(codeSesion);
    if (codeSesion.state)
    {
       SignUp.DisplayNone();
       Login.DisplayBlock();
    }
+   else{
+      const status = codeSesion.message.slice(codeSesion.message.length - 3)
+      if (status == "409") {
+      errorNickname.innerHTML = "nickname already used";
+      errorNickname.style.color = "red";
+    }
+    }
   }
 })
 
