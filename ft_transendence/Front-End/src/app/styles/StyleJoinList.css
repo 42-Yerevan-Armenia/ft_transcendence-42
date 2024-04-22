@@ -263,14 +263,36 @@
         width: 169px;
         overflow-y: hidden;
     }
+}
 
+
+@media only screen and (max-width:390px){
+
+    .JoinListHeroDiv{
+        display: grid ;
+        grid-template-columns: 1fr 2fr;
+
+    }
+    .JoinListHeroDivButton{
+        grid-row: 1/span 2;
+        width: 63px;
+    }
+    .JoinListHeroDiv>div{
+        margin-left: 10px;
+        width: 60%;
+    }
 }
 
 @media only screen and (max-width: 650px){
     .JoinListHeroDivButtonBack{
-        width: 100px;
+        width: 100%;
     }
-
+    .JoinListProfil{
+        width: 95%;
+    }
+    .JoinListHeroDiv svg{
+        width: 10px;
+    }
 }
 
 @media only screen and (max-width:730px){
@@ -286,36 +308,15 @@
         height: 38px;
     }
     .JoinListHeroDiv svg{
-        min-width: 24px;
+        min-width: 8px;
     }
     .JoinListHeroDivTemeTheme>div, .JoinListHeroDivTemeGameMode>div{
         width: 28px;
     }
     #JoinListHeroDivGameMode, #JoinListHeroDivProfilPlayers, #LiveOnOff,#JoinTheme{
-        font-size: clamp(3px, 5px, 10px)
+        font-size: clamp(6px, 8px, 10px)
     }
 
     
 }
-
-
-@media only screen and (max-width: 420px){
-    .JoinListProfil{
-        width: 95%;
-    }
-    .JoinListHeroDiv svg{
-        width: 10px;
-    }
-
-}
-
-
-/* JoinListHeroDivProfil>div>select{
-  width: 50px; 
-} */
-/* //
-.JoinListHeroDivButtonBInvite{
-    width: 87px;
-    height: 38px;
-} */
 
