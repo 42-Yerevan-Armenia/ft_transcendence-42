@@ -2,31 +2,207 @@
 //Event Listeners  Home Page
 
 //2
-Home._NAV._SETTINGS._classname.addEventListener("click",()=>{
-  //debugger
+Home._NAV._SETTINGS._classname?.addEventListener("click",()=>{
+  ////debugger
   ManageMidle.Manage("MidleSettings")
 })
 
 
 
-// 1
-Home._NAV?._LEADERBOARD?._classname?.addEventListener("click",()=>{
-  //debugger
-  ManageMidle.Manage("MidleCub");
-} )
+//Home Page Settings Middle Button Save
+//Validate Settings
+Home._MiddleSettings?._Save?.addEventListener("click", async ()=>{
+  console.log("SAVE")
 
-//4
-Home._NAV?._JoinListGame?._classname?.addEventListener("click",()=>{
-  //debugger
-  ManageMidle.Manage("JoinList");
-} )
+debugger
+
+  if(!Home._MiddleSettings.isArgumentsEmpty())
+    return
+  if (!Home._MiddleSettings.checkPassword())
+    return;
+  if (!Home._MiddleSettings.checkValidEmail())
+    return;
+
+  await Home._MiddleSettings.changeData();
+})
+
+
+
+
+
+
+
+
+
+Home._MiddleSettings?._DeleteAccount.addEventListener("click",async ()=>{
+  console.log("_DeleteAccount")
+debugger
+  const deleteUser = await putRequest("DELETE", `api/v1/settings/${User._Id}`,{});
+  
+  myStorages.longOut();
+})
+
+
+//Home page Settings middle choose file for load image
+// data:image/png;base64,
+Home._MiddleSettings?._ImageFileAccess?.addEventListener("change", (event)=>{
+  const file = event.target.files[0]; // Get the file
+  const reader = new FileReader(); // Create a FileReader object
+  
+  // Closure to capture the file information.
+  reader.onload = function(event) {
+    //white Base64
+    console.log(event.target.result);
+
+    base64EncodedImage = event.target.result + ""
+
+
+    // Get the base64 encoded image data
+    // <<data:image/png;base64,>> .length === 22
+    base64EncodedImage  = base64EncodedImage.slice(22);
+
+    // You can now send the base64EncodedImage to the server via AJAX or any other method.
+    console.log(base64EncodedImage);
+    
+  };
+
+  // Read in the image file as a data URL.
+  reader.readAsDataURL(file);
+})
+
+    
+
+
+
+
+
+
+
+
+
+
+// ProfileMidleHeaderToInvit
+Home?._HomeMidleProfile?._ProfileMidleHeaderToInvit1?.addEventListener("click", async ()=>{
+  console.log("_ProfileMidleHeaderToInvit call1");
+
+
+
+  ManageMidle.Manage("MidleHistoryGame");
+
+  
+})
+
+
+Home?._HomeMidleProfile?._ProfileMidleHeaderToInvit2?.addEventListener("click",async ()=>{
+  console.log("_ProfileMidleHeaderToInvit call2");
+
+
+  ManageMidle.Manage("MidleHistoryGame");
+
+
+})
+
+
+
+//JoinList Invite Button
+// #JoinListHeroDivButtonBInvite
+Home?._MidleJoinList?._InviteButton?.addEventListener("click",async ()=>{             //  --------------------
+  console.log("_ProfileMidleHeaderToInvit call2");
+
+
+  await ManageMidle.Manage("JoinListInvite");
+
+
+})
+
+
 
 //3
-Home._NAV?._Home?._classname?.addEventListener("click",()=>{
-  //debugger
+Home?._NAV?._Home?._classname?.addEventListener("click",()=>{
+  ////debugger
   ManageMidle.Manage("midle");
 } );
 
+Home?._NAV?._Profile?._classname?.addEventListener("click", async ()=>{
+  console.log("Home._NAV?._Profile?._classname?.addEventListener");
+  ManageMidle.Manage("ProfileMidle");
+})
+
+//4
+Home?._NAV?._JoinListGame?._classname?.addEventListener("click",()=>{
+  ////debugger
+  ManageMidle.Manage("JoinList");
+
+} )
+
+// 1
+Home?._NAV?._LEADERBOARD?._classname?.addEventListener("click",()=>{
+  ////debugger
+  ManageMidle.Manage("MidleCub");
+} )
+
+// 
+Home?._NAV?._Community?._classname?.addEventListener("click",()=>{
+  ////debugger
+  ManageMidle.Manage("MidleCommunity");
+} )
+
+
+
+
+//whene create new list item for game
+//_MidleJoinList Create button
+Home._MidleJoinList?._CreateButton?.addEventListener("click", async ()=>{
+    debugger
+  console.log("click... \n");
+  const Players = document.querySelector("#JoinListHeroDivProfilPlayers");
+  const LiveOnOff = document.querySelector("#LiveOnOff");
+  const JoinTheme = document.querySelector("#JoinTheme");
+  const JoinListHeroDivGameMode = document.querySelector("#JoinListHeroDivGameMode");
+  console.log(Players.value);
+  const objCreate = {
+    max_players:Players.value,
+    live:LiveOnOff.value,
+    theme:JoinTheme.value,
+    gamemode:JoinListHeroDivGameMode.value,
+    
+  };
+
+  //send back-end
+  const url = "api/v1/createroom/" + User._Id;
+  const paload = {
+    "method": "create",
+    "pk":User._Id,
+    ...objCreate,
+  }
+  const str = JSON.stringify(paload)
+  
+  Join_Ws.send(str);
+//   await FetchRequest("POST", url, objCreate);
+  //redirect
+ 
+// api/v1/createroom/:id
+  Players.value = "";
+  LiveOnOff.value = "";
+  JoinTheme.value = "";
+  JoinListHeroDivGameMode.value = "";
+  // LiveOnOff
+})
+
+
+Join_Ws.onmessage = message => {
+    debugger;
+    if (!message.data) {
+        return;
+    }
+    let response = JSON.parse(message.data);
+    console.log(JSON.stringify(response))
+    debugger;
+    if (response.method === "update_room" && User._getAccess) {
+        Home._MidleJoinList._game_rooms = response.game_rooms;
+        ManageMidle.Manage("JoinList");
+    }
+}
 
 
 //sign in
@@ -49,17 +225,6 @@ Home._NavSigninSignout?._NavSignUp1.addEventListener("click", ()=> {
   Register.DisplayBlock();
 })
 
-
-//RegisterPage click confirm email
-Register?._RegisterPageContinue?.addEventListener("click",  async () => {
-//debugger
-    let value = await Register.RegistersWithEmail();
-    if (value)
-    {
-      Register.RegisterPageDisplayNone();
-      Confirm.setDisplayBlock(Home);
-    }
-});
 
 
 
@@ -87,12 +252,17 @@ Home._HomeLeft._LongOut.addEventListener("click", async () => {
   myStorages.longOut();
   await ManageAllPage.Manage("Home");
 })
+Home._HomeLeft._NavLoginOut.addEventListener("click", async () => {
+
+  myStorages.longOut();
+  await ManageAllPage.Manage("Home");
+})
 
 //---------------------------------------------------------------------   Login
 
 //when want to login you press button login
 Login?._LoginPageContinue?.addEventListener("click", async () => {
-  //debugger
+  debugger
   //check is correct email and password
   if (Login.ButtonSignIn())
   {
@@ -126,7 +296,7 @@ Login?._LoginPageContinue?.addEventListener("click", async () => {
 
 // when forgot password
 Login?._LoginPageForgot?.addEventListener("click", () => {
-  //debugger
+  ////debugger
   ManageAllPage.Manage("ResetPage");
   ManageMidle.Manage("");
 })
@@ -138,7 +308,7 @@ let isReset = false;
 
 
 Reset?._ConfirmReset?.addEventListener('click', async () => {
-  //debugger
+  ////debugger
   const isValid = Reset.checkValidEmail();
   if (!isValid)
     return ;
@@ -156,7 +326,7 @@ Reset?._ConfirmReset?.addEventListener('click', async () => {
 //-------------------------------------------------------------------  Confirm  ---------
 
 Confirm.ConfirmYourEmail.addEventListener('click', async () => {
-  //debugger
+  ////debugger
   const data = await Confirm.ConfirmPageContinue(isReset);
   Confirm.ValuesAllEmpty();
 
@@ -195,7 +365,7 @@ Confirm.ConfirmYourEmail.addEventListener('click', async () => {
 //-------------------------------------------------------------------  Password
 
 Password.PasswordConfirm.addEventListener("click", async () => {
-  //debugger
+  ////debugger
   const isCorrectPassword = Password.PasswordConfirmButton();
   if (isCorrectPassword)
   {
@@ -214,16 +384,46 @@ Password.PasswordConfirm.addEventListener("click", async () => {
 //-------------------------------------------------------------------  SignUp
 
 SignUp.SignupPageContinue.addEventListener("click", async () => {
-  //debugger
+  debugger
   const isCorrectPassword = SignUp.PasswordConfirmButton();
   const ischeckNameNickname = SignUp.checkNameNickname();
+  const errorNickname = document.querySelector(".SignupPageinputDivErrorNickname");
+  errorNickname.innerHTML = "";
+
   if (isCorrectPassword && ischeckNameNickname)
   {
    const codeSesion = await SignUp.PasswordConfirmWithServer();
+   console.log("ERROR +++++++++++++++++++++++")
+   console.log(codeSesion);
    if (codeSesion.state)
    {
       SignUp.DisplayNone();
       Login.DisplayBlock();
    }
+   else{
+      const status = codeSesion.message.slice(codeSesion.message.length - 3)
+      if (status == "409") {
+      errorNickname.innerHTML = "nickname already used";
+      errorNickname.style.color = "red";
+    }
+    }
   }
 })
+
+//RegisterPage click confirm email
+Register?._RegisterPageContinue?.addEventListener("click",  async () => {
+  ////debugger
+      let value = await Register.RegistersWithEmail();
+      if (value)
+      {
+        Register.RegisterPageDisplayNone();
+        Confirm.setDisplayBlock(Home);
+      }
+});
+  
+
+Login._ContinueWith42Intra.addEventListener("click", async () => {
+  const respons =  await Login.Get42Connect();
+})
+
+

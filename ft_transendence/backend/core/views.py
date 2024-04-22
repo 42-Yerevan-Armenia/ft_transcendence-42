@@ -8,13 +8,13 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
-from .models import Person, GameRoom
-from .shared_data import shared_data
+from .models import Confirm, Person, GameRoom, History
+from game.views import PlayTournament
 from .serializers import (
     UserSerializer,
     SettingsSerializer,
     HomeSerializer,
-    LederboardSerializer,
+    LeaderboardSerializer,
     ProfileSerializer,
     JoinListSerializer,
     WaitingRoomSerializer,
@@ -51,6 +51,8 @@ import time
 import base64
 import os
 
+from django.shortcuts import render
+
 #TODO: activate all Tokens
 
 class UserAPIView(APIView):
@@ -68,11 +70,11 @@ class UserAPIView(APIView):
         return Response(data)
 
 class UsersAPIView(APIView):
-    def get(self, request):
-        user_id = request.body('user_id')
-        if user_id:
+    permission_classes = [IsAuthenticated]
+    def get(self, request, pk):
+        user = Person.objects.get(id=pk)
+        if user:
             try:
-                user = Person.objects.get(id=user_id)
                 serializer = UserSerializer(user)
                 return JsonResponse(serializer.data)
             except Person.DoesNotExist:
@@ -88,12 +90,12 @@ class EmailValidation(APIView):
             code = send_confirmation_email(email)
         except ValidationError as e:
             return JsonResponse({"success": "false","error": e.message}, status=status.HTTP_400_BAD_REQUEST)
-        confirmation_data = {
-            'email': email,
-            'code': code,
-            'timestamp': timezone.now().isoformat(),
-        }
-        shared_data['confirmation_data'] = confirmation_data
+        try:
+            existing_confirmation_data = Confirm.objects.get(email=email)
+            existing_confirmation_data.delete()  # Delete existing confirmation data
+        except ObjectDoesNotExist:
+            pass
+        confirmation_data = Confirm.objects.create(email=email, code=code)
         return JsonResponse({"success": "true", "email": "model_to_dict(data)"})
 
 class Confirmation(APIView):
@@ -101,59 +103,58 @@ class Confirmation(APIView):
         confirm_front = request.data['code']
         if not confirm_front:
             return JsonResponse({"success": "false", "error": "Confirmation code not found"}, status=status.HTTP_400_BAD_REQUEST)
-        confirmation_data = shared_data.get('confirmation_data')
-        if not confirmation_data:
-            return JsonResponse({"success": "false", "error": "Confirmation data not found"}, status=status.HTTP_400_BAD_REQUEST)
-        confirm_back = confirmation_data['code']
-        timer_str = confirmation_data['timestamp']
-        timer = timezone.datetime.fromisoformat(timer_str)
-        expiration_time = timer + timezone.timedelta(seconds=30)
-        if timezone.now() > expiration_time:
-            shared_data.pop('confirmation_data', None)
-            return JsonResponse({"success": "false","error": "Confirmation code expired"}, status=status.HTTP_408_REQUEST_TIMEOUT)
-        if confirm_front != confirm_back:
-            return JsonResponse({"success": "false","error": "Invalid confirmation code"}, status=status.HTTP_404_NOT_FOUND)
+        email = request.data['email']
+        try:
+            confirmation_data = Confirm.objects.filter(email=email).latest('timestamp')
+            if not confirmation_data:
+                return JsonResponse({"success": "false", "error": "Confirmation data not found"}, status=status.HTTP_400_BAD_REQUEST)
+            expiration_time = confirmation_data.timestamp + timezone.timedelta(seconds=35)
+            if timezone.now() > expiration_time:
+                confirmation_data.delete()
+                return JsonResponse({"success": "false","error": "Confirmation code expired"}, status=status.HTTP_408_REQUEST_TIMEOUT)
+            if confirm_front != confirmation_data.code:
+                return JsonResponse({"success": "false","error": "Invalid confirmation code"}, status=status.HTTP_404_NOT_FOUND)
+        except Confirm.DoesNotExist:
+            return JsonResponse({"success": "false","error": "Confirmation data not found"}, status=status.HTTP_400_BAD_REQUEST)
         return JsonResponse({"success": "true", "message": "Email is validated"})
 
 class Register(APIView):
     def post(self, request):
-        confirmation_data = shared_data.get('confirmation_data', {})
-        email = confirmation_data.get('email', None)
-        if not email:
-            return JsonResponse({"success": "false","error": "Email is not validated"}, status=status.HTTP_400_BAD_REQUEST)
-        shared_data.pop('confirmation_data', None)
+        email = request.data['email']
+        nickname = request.data['nickname']
         try:
+            confirmation_data = Confirm.objects.get(email=email)
             register_validation(request.data)
             password = request.data['password'][10:-10]
             hashed_password = make_password(password)
-        except ValidationError as e:
-            return JsonResponse({"success": "false","error": e.message}, status=status.HTTP_400_BAD_REQUEST)
-        user = get_user_model().objects.create(
-            email=email,
-            first_name=request.data['name'],
-            username=request.data['nickname'],
-            password=hashed_password,
-        )
-        try:
+            user = get_user_model().objects.create(
+                email=email,
+                first_name=request.data['name'],
+                username=nickname,
+                password=hashed_password,
+            )
             data = Person.objects.create(
                 user=user,
                 email=email,
-                name = request.data['name'],
-                nickname=request.data['nickname'],
+                name=request.data['name'],
+                nickname=nickname,
                 password=hashed_password,
             )
             data.save_base64_image(image_path=os.path.join(os.path.dirname(__file__), 'default.jpg'))
             data.save_base64_background(background_path=os.path.join(os.path.dirname(__file__), 'background.jpg'))
-            # model_to_dict(data)
             data_to_send = {'email': email, 'nickname': request.data['nickname'], 'name': request.data['name']}
+            confirmation_data.delete()
+            return JsonResponse({"success": "true", "reg": data_to_send})
+        except Confirm.DoesNotExist:
+            return JsonResponse({"success": "false","error": "Email is not validated"}, status=status.HTTP_400_BAD_REQUEST)
         except ValidationError as e:
-            user.delete()
-            return JsonResponse({"success": "false","error": e.message}, status=500)
-        return JsonResponse({"success": "true", "reg": data_to_send})
+            if e.code == 'nickname_exists':
+                return Response({"error": "Nickname already exists"}, status=status.HTTP_409_CONFLICT)
+            else:
+                return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 class PasswordReset(APIView):
     def post(self, request):
-        
         email = request.data['email'].strip()
         try:
             if not email:
@@ -170,7 +171,7 @@ class PasswordReset(APIView):
             'code': code,
             'timestamp': timezone.now().isoformat(),
         }
-        shared_data['confirm_data'] = confirm_data
+        confirmation_data = Confirm.objects.create(email=email, code=code)
         return JsonResponse({"success": "true", "email": "model_to_dict(data)"})
 
 class ForgetConfirmation(APIView):
@@ -178,28 +179,29 @@ class ForgetConfirmation(APIView):
         confirm_front = request.data['code']
         if not confirm_front:
             return JsonResponse({"success": "false", "error": "Confirmation code not found"}, status=status.HTTP_400_BAD_REQUEST)
-        confirmation_data = shared_data.get('confirm_data')
-        if not confirmation_data:
-            return JsonResponse({"success": "false", "error": "Confirmation data not found"}, status=status.HTTP_400_BAD_REQUEST)
-        confirm_back = confirmation_data['code']
-        timer_str = confirmation_data['timestamp']
-        timer = timezone.datetime.fromisoformat(timer_str)
-        expiration_time = timer + timezone.timedelta(seconds=30)
-        if timezone.now() > expiration_time:
-            shared_data.pop('confirm_data', None)
-            return JsonResponse({"success": "false", "error": "Confirmation code expired"}, status=status.HTTP_408_REQUEST_TIMEOUT)
-        if confirm_front != confirm_back:
-            return JsonResponse({"success": "false", "error": "Invalid confirmation code"}, status=status.HTTP_404_NOT_FOUND)
+        email = request.data['email']
+        try:
+            confirmation_data = Confirm.objects.filter(email=email).latest('timestamp')       
+            if not confirmation_data:
+                return JsonResponse({"success": "false", "error": "Confirmation data not found"}, status=status.HTTP_400_BAD_REQUEST)
+            expiration_time = confirmation_data.timestamp + timezone.timedelta(seconds=35)
+            if timezone.now() > expiration_time:
+                confirmation_data.delete()
+                return JsonResponse({"success": "false", "error": "Confirmation code expired"}, status=status.HTTP_408_REQUEST_TIMEOUT)
+            if confirm_front != confirmation_data.code:
+                return JsonResponse({"success": "false", "error": "Invalid confirmation code"}, status=status.HTTP_404_NOT_FOUND)
+        except Confirm.DoesNotExist:
+            return JsonResponse({"success": "false","error": "Confirmation data not found"}, status=status.HTTP_400_BAD_REQUEST)
         return JsonResponse({"success": "true", "message": "Email is validated"})
 
 class Password(APIView):
     def post(self, request):
-        confirmation_data = shared_data.get('confirm_data', {})
+        email = request.data['email']
+        confirmation_data = Confirm.objects.get(email=email)
         if not confirmation_data:
             return JsonResponse({"success": "false", "error": "Confirmation data not found"}, status=status.HTTP_400_BAD_REQUEST)
-        shared_data.pop('confirm_data', None)
-        email = request.data['email'].strip()
-        data_email = confirmation_data.get('email')
+        data_email = confirmation_data.email
+        confirmation_data.delete()
         if email != data_email:
             return JsonResponse({"success": "false", "error": "Email is not validated"}, status=status.HTTP_400_BAD_REQUEST)
         password = request.data['password'][10:-10]
@@ -221,112 +223,138 @@ class Password(APIView):
             return JsonResponse({"success": "false", "error": e.message}, status=status.HTTP_400_BAD_REQUEST)
 
 class Login(APIView):
-
     def post(self, request):
         email = request.data['email']
         password = request.data['password'][10:-10]
         try:
-            user = Person.objects.get(email=email)
-        except Person.DoesNotExist:
+            user = User.objects.get(email=email)
+            person = Person.objects.get(email=email)
+        except User.DoesNotExist:
             return JsonResponse({"success": "false", "error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
-        if check_password(password, user.password):
-            refresh = RefreshToken()
-            refresh['email'] = user.email
-            access = str(refresh.access_token)
-            refresh = str(refresh)
+        if check_password(password, person.password):
+            person.is_online = True
+            person.save()
+            token_serializer = TokenObtainPairSerializer()
+            token = token_serializer.get_token(user)
+            refresh = RefreshToken.for_user(user)
+
             response_data = {
                 "success": "true",
-                "access": access,
-                "refresh": refresh,
+                "access": str(token.access_token),
+                "refresh": str(refresh),
                 "user": {
-                    "id": user.id,
-                    "name": user.name,
-                    "nickname": user.nickname,
-                    "email": user.email,
-                    "image": user.image,
+                    "id": person.id,
+                    "name": person.name,
+                    "nickname": person.nickname,
+                    "email": person.email,
+                    "image": person.image,
                 }
             }
             return JsonResponse({"success": "true", "data": response_data})
         else:
             return JsonResponse({"success": "false", "error": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
 
-class ProfileById(APIView):
-    authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated]
-
-    def get(self, request, pk):
-        try:
-            user = Person.objects.get(id=pk)
-        except Person.DoesNotExist:
-            return JsonResponse({"success": "false", "error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
-        return JsonResponse({"success": "true", "profile": model_to_dict(user)})
-    #def put(self, request, pk):
-        
-    def delete(self, request, pk):
-        try:
-            user = Person.objects.get(pk=pk)
-        except Person.DoesNotExist:
-            return JsonResponse({"success": "false", "error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
-        user.delete()
-        return JsonResponse({"success": "true", "message": "Person deleted successfully"})
+class Logout(APIView):
+    def post(self, request, pk):
+        person = Person.objects.get(id=pk)
+        person.is_online = False
+        person.save()
+        return Response({"success": "true", "message": "Logged out successfully"}, status=status.HTTP_200_OK)
 
 class Profile(APIView):
+    # authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
     def get(self, request, pk):
         try:
             user = Person.objects.get(id=pk)
             serializer = ProfileSerializer(user)
         except Person.DoesNotExist:
             return JsonResponse({"success": "false", "error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
-        # return JsonResponse({"success": "true", "profile": serializer.data}, safe=False)
-        return Response(serializer.data)
+        return JsonResponse({"success": "true", "profile": serializer.data}, safe=False)
 
 class SettingsById(APIView):
-    authentication_classes = [TokenAuthentication]
+    # authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
-
     def get(self, request, pk):
         try:
             user = Person.objects.get(id=pk)
             serializer = SettingsSerializer(user)
+            return JsonResponse({"success": "true", "profile": serializer.data}, safe=False)
         except Person.DoesNotExist:
             return JsonResponse({"success": "false", "error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
-        return JsonResponse({"success": "true", "profile": serializer.data}, safe=False)
 
     def put(self, request, pk):
+        print("asdadasdasdasdasdasdasdasdasdasdadsasdasdasdasdasdasdasd    ",request)
         try:
-            user = Person.objects.get(pk=pk)
+            person = Person.objects.get(pk=pk)
+            user = User.objects.get(pk=pk)
         except Person.DoesNotExist:
+            return JsonResponse({"success": "false", "error": "Peron not found"}, status=status.HTTP_404_NOT_FOUND)
+        except User.DoesNotExist:
             return JsonResponse({"success": "false", "error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
         data = json.loads(request.body)
-        user.name = data.get('name', user.name)
-        user.nickname = data.get('nickname', user.nickname)
-        user.email = data.get('email', user.email)
-        user.image = data.get('image', user.image)
-        user.phone = data.get('phone', user.phone)
-        user.password = data.get('password', user.password)
-        user.gamemode = data.get('gamemode', user.gamemode)
-        user.background = data.get('background', user.background)
+        if 'name' in data and data['name']:
+            person.name = data['name']
+            user.first_name = data['name']
+        if 'nickname' in data and data['nickname']:
+            person.nickname = data['nickname']
+            user.username = data['nickname']
+        if 'email' in data and data['email']:
+            try:
+                email_validation(data['email'])
+            except ValidationError as e:
+                return JsonResponse({"success": "false","error": e.message}, status=status.HTTP_400_BAD_REQUEST)
+            person.email = data['email']
+            user.email = data['email']
+        if 'image' in data and data['image']:
+            person.image = data['image']
+        new_password = data.get('password')
+        if new_password:
+            try:
+                new_password = password_validation(data.get('password'))
+            except ValidationError as e:
+                error_message = e.messages[0] if hasattr(e, 'messages') else str(e)
+                return JsonResponse({"success": "false", "error": error_message}, status=status.HTTP_400_BAD_REQUEST)
+            hashed_password = make_password(new_password)
+            person.password = hashed_password
+            user.password = hashed_password
+        if 'gamemode' in data and data['gamemode']:
+            person.gamemode = data['gamemode']
+        if 'twofactor' in data and data['twofactor']:
+            person.twofactor = bool(data['twofactor'])
+        person.save()
         user.save()
         return JsonResponse({"success": "true", "profile": model_to_dict(user)})
-        
+
     def delete(self, request, pk):
+       
         try:
-            user = Person.objects.get(pk=pk)
+            user = User.objects.get(pk=pk)
+            person = Person.objects.get(pk=pk)
         except Person.DoesNotExist:
-            return JsonResponse({"success": "false", "error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+            return JsonResponse({"success": "false", "error": "person not found"}, status=status.HTTP_404_NOT_FOUND)
         user.delete()
-        return JsonResponse({"success": "true", "message": "Person deleted successfully"})
+        person.delete()
+        return JsonResponse({"success": "true", "message": "User deleted successfully"})
 
-class Lederboard(APIView):
-
+class Leaderboard(APIView):
+    permission_classes = [IsAuthenticated]
     def get(self, request, pk):
         try:
             user = Person.objects.get(id=pk)
-            serializer = LederboardSerializer(user)
+            serializer = LeaderboardSerializer(user)
+            leaderboard_data = {
+                "id": user.id,
+                "nickname": user.nickname,
+                "image": user.image,
+                "wins": user.wins,
+                "loses": user.loses,
+                "matches": user.matches,
+                "points": user.points,
+            }
         except Person.DoesNotExist:
             return JsonResponse({"success": "false", "error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
-        return JsonResponse({"success": "true", "profile": serializer.data}, safe=False)
-        # return Response(serializer.data)
+        return JsonResponse({"success": "true", "leaderboard": [leaderboard_data]}, safe=False)
 
 class Home(APIView):
 
@@ -340,65 +368,90 @@ class Home(APIView):
         return Response(serializer.data)
 
 class WaitingRoom(APIView):
-    authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
     def get(self, request, pk):
         try:
-            user = Person.objects.get(id=pk)
-            serializer = WaitingRoomSerializer(user)
-        except Person.DoesNotExist:
+            user = User.objects.get(id=pk)
+            active_users = User.objects.filter(is_active=True).exclude(id=pk)
+            active_persons = [user.person for user in active_users]
+            serializer = WaitingRoomSerializer(active_persons, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except User.DoesNotExist:
             return JsonResponse({"success": "false", "error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
-        # return JsonResponse({"success": "true", "profile": serializer.data}, safe=False)
-        return Response(serializer.data)
 
     def post(self, request, pk):
         try:
             user = Person.objects.get(id=pk)
             opponent_id = request.data.get('opponent_id')
             opponent = Person.objects.get(id=opponent_id)
-
-            # Check if the opponent is in the game room
             if opponent.ongoing is not None:
                 return JsonResponse({"success": "false", "error": "Opponent is already in a game room"}, status=status.HTTP_400_BAD_REQUEST)
             return Response({"success": "true", "message": "Invitation sent successfully"}, status=status.HTTP_200_OK)
         except Person.DoesNotExist:
             return Response({"success": "false", "error": "User or opponent not found"}, status=status.HTTP_404_NOT_FOUND)
 
-class JoinList(APIView):
-    # authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated]
+def save_base64_image(image_path):
+    with open(image_path, "rb") as img_file:
+        return base64.b64encode(img_file.read()).decode('utf-8')
 
+class JoinList(APIView):
+    # permission_classes = [IsAuthenticated]
     def get(self, request, pk):
         try:
             # Retrieve all persons with their associated game rooms
             persons = Person.objects.exclude(game_room=None).select_related('game_room').order_by('game_room_id')
-            # Group persons by game_room_id
-            game_room_data = defaultdict(list)
+            game_room_data = defaultdict(list) # Group persons by game_room_id
             for person in persons:
                 game_room_data[person.game_room_id].append(person)
             # Construct JSON response
-            result = {"success": True, "game_rooms": []}
+            result = {"success": True, "method": "update_room", "game_rooms": []}
             for game_room_id, persons_in_room in game_room_data.items():
                 # Ensure there are at least two persons in the room
-                if len(persons_in_room) >= 2:
-                    # Construct JSON data for the game room
-                    room_data = {
-                        "gameroom_id": game_room_id,
-                        "players": [],
-                        "gamemode": person.game_room.gamemode,
-                        "current_players": len(persons_in_room),
-                        "max_players": person.game_room.max_players,
-                        "ongoing": person.game_room.ongoing,
-                    }
-                    for person in persons_in_room:
-                        room_data["players"].append({
-                            "id": person.id,
-                            "image": person.image
-                        })
+                if len(persons_in_room) >= 1:
+                    # Get the associated game room
+                    game_room = persons_in_room[0].game_room
+                    if len(persons_in_room) <= 2 and game_room.max_players <= 2:
+                        room_data = {
+                            "id": game_room_id,
+                            "creator_id": game_room.creator_id,
+                            "src": [],
+                            "GameLevele": game_room.gamemode,
+                            "current_players": len(persons_in_room),
+                            "max_players": game_room.max_players,
+                            "isJoin": game_room.ongoing,
+                        }
+                        if len(persons_in_room) == 2:
+                            room_data["src"].append({
+                                "url": persons_in_room[0].image,
+                                "urlClient": persons_in_room[1].image
+                            })
+                        else:
+                            # Add image for the first player and default image for the second player if he is not in the room
+                            default = os.path.join(os.path.dirname(__file__), 'default.jpg')
+                            default_img = save_base64_image(default)
+                            room_data["src"].append({
+                                "url": persons_in_room[0].image,
+                                "urlClient": default_img  # Replace with your default image URL
+                            })
+                        room_data["type"] = "User"
+                    else:
+                        # Add only player IDs when there are not exactly two players
+                        cup = os.path.join(os.path.dirname(__file__), 'cup.jpg')
+                        cup_img = save_base64_image(cup)
+                        room_data = {
+                            "id": game_room_id,
+                            "creator_id": game_room.creator_id,
+                            "src": cup_img,
+                            "GameLevele": "Tournament",
+                            "current_players": len(persons_in_room),
+                            "max_players": game_room.max_players,
+                            "isJoin": game_room.ongoing,
+                            "type": "Tournament"
+                        }
                     # Add the game room data to the result
                     result["game_rooms"].append(room_data)
             return JsonResponse(result)
-        except Person.DoesNotExist:
+        except User.DoesNotExist:
             return JsonResponse({"success": False, "error": "No game rooms found"})
 
     def post(self, request, pk):
@@ -411,12 +464,14 @@ class JoinList(APIView):
                 game_room = creator.game_room
             except Person.DoesNotExist:
                 return JsonResponse({"success": "false", "error": "Creator not found"}, status=status.HTTP_404_NOT_FOUND)
-            if not game_room or game_room.id != game_room_id:
-                return JsonResponse({"success": "false", "error": "Game room not found"}, status=status.HTTP_404_NOT_FOUND)
             if creator.ongoing:
                 return JsonResponse({"success": "false", "error": "User is already in a game room"}, status=status.HTTP_400_BAD_REQUEST)
             if game_room.is_full():
-                return JsonResponse({"success": "false", "error": "Game room is full"}, status=status.HTTP_400_BAD_REQUEST)
+                if user in game_room.players.all():
+                    return JsonResponse({"success": "false", "error": "You already have a game room"}, status=status.HTTP_400_BAD_REQUEST)
+                else:
+                    PlayTournament().post(request, game_room_id=game_room_id, creator_id=creator_id)
+                    return JsonResponse({"success": "true", "error": "Game room is full"}, status=status.HTTP_400_BAD_REQUEST)
             else:
                 game_room.players.add(user)
                 game_room.save()
@@ -425,37 +480,51 @@ class JoinList(APIView):
                 creator.save()
                 # Check if the game room is now full after adding the user
                 if game_room.is_full():
-                    return JsonResponse({"success": "true", "message": "Successfully joined the game room. Game will start soon."}, status=status.HTTP_200_OK)
+                    PlayTournament().post(request, game_room_id=game_room_id, creator_id=creator_id)
+                    game = {
+                        'creator_id': creator_id,
+                        'game_room_id': game_room_id
+                    }
+                    return JsonResponse({"success": "true", "method": "start_game", "game": game, "message": "Successfully joined the game room. Game will start soon."}, status=status.HTTP_200_OK)
                 else:
-                    return JsonResponse({"success": "true", "message": "Successfully joined the game room"}, status=status.HTTP_200_OK)
+                    return JsonResponse({"success": "true", "method": "update_room", "message": "Successfully joined the game room"}, status=status.HTTP_200_OK)
         except Exception as e:
             return JsonResponse({"success": "false", "error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class CreateRoom(APIView):
-    # authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated]
+    authentication_classes = [TokenAuthentication]
+    # permission_classes = [IsAuthenticated]
     def post(self, request, pk):
         try:
-            max_players = int(request.data.get('number'))
-            live = request.data.get('live')
-            theme = request.data.get('theme')
-            gamemode = request.data.get('gamemode')
-            creator_id = request.user.id  # Get the numeric ID of the authenticated user
-            is_tournament = max_players > 2
-
+            creator = Person.objects.get(id=pk)
+            if creator.game_room:
+                return JsonResponse({"success": "false", "error": "User already has a game room"}, status=status.HTTP_400_BAD_REQUEST)
+            max_players = request.get('max_players', 2)
+            if max_players == '':
+                max_players = 2
+            else:
+                max_players = int(max_players)
+            live = request.get('live', "false")
+            if live == '':
+                live = "false"
+            theme = request.get('theme', "dark").lower()
+            if theme == '':
+                theme = "dark"
+            gamemode = request.get('gamemode', "classic").lower()
+            if gamemode == '':
+                gamemode = "classic"
             game_room_data = {
                 'max_players': max_players,
                 'live': live,
                 'theme': theme,
                 'gamemode': gamemode,
-                'creator': creator_id,
-                'players': [creator_id],
-                'is_tournament': is_tournament,
+                'creator': creator.id,
+                'players': [creator.id],
+                'is_tournament': max_players > 2,
             }
             game_room_serializer = GameRoomSerializer(data=game_room_data)
             if game_room_serializer.is_valid():
                 game_room = game_room_serializer.save()
-                creator = Person.objects.get(id=creator_id)
                 creator.game_room = game_room
                 creator.save()
                 return JsonResponse({"success": "true", "message": "Game room created successfully"}, status=status.HTTP_201_CREATED)
@@ -463,8 +532,6 @@ class CreateRoom(APIView):
                 return JsonResponse({"success": "false", "error": game_room_serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             return JsonResponse({"success": "false", "error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-#FIXME: Run game/ by Accept/Ignore
 
 class GameRoom(APIView):
     def post(self, request, pk):
@@ -489,18 +556,18 @@ class GameRoom(APIView):
         else:
             return JsonResponse({"success": "false", "error": "Invalid response"}, status=status.HTTP_400_BAD_REQUEST)
 
-class History(APIView):
-
+class HistoryView(APIView):
+    permission_classes = [IsAuthenticated]
     def get(self, request, pk):
         try:
             user = Person.objects.get(id=pk)
-            serializer = HistorySerializer(user)
+            history_data = History.objects.filter(player=user)
+            serializer = HistorySerializer(history_data, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         except Person.DoesNotExist:
-            return JsonResponse({"success": "false", "error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
-        # return JsonResponse({"success": "true", "profile": serializer.data}, safe=False)
-        return Response(serializer.data)
+            return JsonResponse({"success": False, "error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
 
-class FullHistory(APIView):
+class FullHistoryView(APIView):
 
     def get(self, request, pk):
         try:
@@ -508,8 +575,7 @@ class FullHistory(APIView):
             serializer = FullHistorySerializer(user)
         except Person.DoesNotExist:
             return JsonResponse({"success": "false", "error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
-        # return JsonResponse({"success": "true", "profile": serializer.data}, safe=False)
-        return Response(serializer.data)
+        return JsonResponse({"success": "true", "profile": serializer.data}, safe=False)
 
 class CustomTokenRefreshView(TokenRefreshView):
     def post(self, request, *args, **kwargs):

@@ -1,6 +1,6 @@
 //Signup Page
 class SignupPage extends HtmlElement {
-  //debugger
+  ////debugger
     constructor(){
       super(".SignupPage")
       this._style.display = "none";
@@ -30,7 +30,7 @@ class SignupPage extends HtmlElement {
         return false;
       }
       User._Name = name.value;
-      User._Nickname = name.value;
+      User._Nickname = nickname.value;
       return true;
     }
   
@@ -48,7 +48,9 @@ class SignupPage extends HtmlElement {
       }
       if (!PasswordisCorrect(this._NewPassword, NewPasswordError))
       {
+        RepeatPasswordError.innerHTML = "must be Uppercase lowercase symbol digit";
         User._Password = "";
+        RepeatPasswordError.style.color = "red";
         return false;
       }
       if (!this._RepeatPassword.value)
@@ -76,11 +78,11 @@ class SignupPage extends HtmlElement {
   
     async PasswordConfirmWithServer() {
       let Hash_code = HashCodeGeneration();
-      //debugger
+      ////debugger
       return await ControllerSignUp(Hash_code + "" + User._Password + "" + Hash_code, User);
     }
     
-    Drow(){
+    draw(){
       
     }
   }

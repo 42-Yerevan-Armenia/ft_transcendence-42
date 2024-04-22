@@ -1,0 +1,184 @@
+.CommunityPageIconDiv{
+    width: 25px;
+    height: 25px;
+    font-weight: bold;
+}
+
+
+.CommunityAddFriends{
+    background-color: #00A3FF;
+    height: 3em;
+    color: white;
+    border-style: none;
+    width: 95%;
+    text-align: center;
+}
+
+.CommunityAddFriends:not([disabled="true"]):active {
+    transform: translate(0px, 4px);
+    transition: transform 0.2s; /* Transition the transform property over 2 seconds */
+}
+
+
+
+.CommunitySeeUser{
+    background-color: #00A3FF;
+    height: 3em;
+    color: white;
+    border-style: none;
+    width: 90%;
+    text-align: center;
+}
+
+.CommunitySeeUser:active {
+    transform: translate(0px, 4px);
+    transition: transform 0.2s; /* Transition the transform property over 2 seconds */
+}
+
+
+.MidleCommunity{
+    width: 100%;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--background-color, 
+            radial-gradient(66.54% 118.23% at 37.47% 107.32%, #D9CBFD 10%, #7758D1 100%));
+}
+
+
+
+.MidleCommunityProfil {
+    border: 2px  solid red;
+    width: 80%;
+    height: 95%;
+    border-radius: 20px;
+    border: 1px solid var(--stroke-blue, rgba(0, 178, 255, 0.65));
+    background-color: rgba(92, 81, 143, 0.2);
+}
+
+.MidleCommunityHeroAll{
+    border-radius: 20px;
+    margin-bottom: 3px;
+    width: 100%;
+    height: 18%; 
+    color: rgba(255, 255, 255, 1);
+    font-size: bold;
+    font-family: Arial, Helvetica, sans-serif;
+    border: 1px solid var(--stroke-blue, rgba(0, 178, 255, 0.65));
+    box-shadow: 0px 2px 1px 0.1px rgba(84, 72, 128, 1);
+}
+
+.MidleCommunityHero{
+    width: 35%;
+    display: flex;
+    gap: 30px;
+    margin-top: 6%;
+    margin-bottom: auto;
+    margin-left: 10%;
+}
+
+.MidleCommunityHeroP{
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.MidleCommunityImage{
+    border-radius: 50px;
+    box-shadow: -0.1px -0.1px 10px 0.1px white;
+}
+
+.MidleCommunityEdit{
+    width: 100%;
+    margin-top: 30px;
+}
+
+.MidleCommunityConteinerTable{
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.MidleCommunityTable{
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr 1fr 1fr;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid white;
+    color: white;
+    text-align: center;
+}
+
+.MidleCommunityTableBody{
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr 1fr 1fr;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    color: white;
+    text-align: center;
+}
+.MidleCommunityTd{
+    display: flex;
+    justify-content: space-around;
+}
+
+.MidleCommunityTableImageBody{
+    margin-top: -7px;
+}
+
+.MidleCommunityList{
+    display: flex;
+    justify-content: space-between;
+    padding-left: 10%;
+    padding-right: 10%;
+}
+
+.MidleCommunityTableName, .MidleCommunityTableBodyNAme{
+    font-size: clamp(12px, 2.5vw, 20px); 
+}
+
+
+
+
+.Next{
+    display: flex;
+    color:white;
+    cursor: grab;
+}
+
+.NextLeft{
+    transform:scale(-1,1);
+}
+
+
+.Back{
+    display: flex;
+    color:white;
+    cursor: grab;
+}
+
+
+@media only screen and (max-width: 500px){
+    .MidleCommunityProfil{
+        width: 95%;
+    }
+    .CommunitySeeUser,.CommunityAddFriends{
+        font-size: 8px;
+    }
+}
+
+@media only screen and (max-width: 450px){
+    .MidleCommunityConteinerTable{
+        overflow: hidden;
+        width: 250px;
+    }
+    .MidleCommunityEdit{
+        overflow: scroll;
+        width: 169px;
+        margin: auto;
+        margin-top: 16px;
+        overflow-y: hidden;
+    }
+}
+
+

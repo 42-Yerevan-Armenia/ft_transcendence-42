@@ -34,6 +34,30 @@
     font-family: Arial, Helvetica, sans-serif;
     border-bottom: 1px solid rgba(94, 82, 140, 1);
 }
+#DeleteAccountSaveAccount{
+    width: 9em;
+    height: 3em;
+    margin-right: 1em;
+    background-color: #D823D7;
+    border-radius: 10px;
+
+}
+
+
+
+#DeleteAccountSave{
+    
+    display: flex;
+    margin-top: 10em;
+    justify-content: end;
+    padding-right: 5em;
+}
+#DeleteAccountSaveSave{
+    background-color: #00A3FF;
+    width: 9em;
+    height: 3em;
+    border-radius: 10px;
+}
 
 
 .MidleSettingImage{
@@ -42,20 +66,25 @@
 }
 
 .MidleSettingsEdit{
-  
     width: 100%;
     margin-top: 30px;
 }
 
 .MidleSettingsEditConteiner{
-    width: 40%;
+    width: 90%;
     margin-left: 5%;
+    display: grid;
+    grid-template-columns: auto auto;
+    column-gap: 50px;
+    row-gap: 15px;
+
+
 }
 
 .MidleSettingsBlocks{
     display: flex;
     color: white;
-    gap:10px;
+    gap:15px;
 }
 
 .MidleSettingsBlocksImage{
@@ -67,4 +96,81 @@
 .MidleSettingsBlocksP{
     font-size: clamp(12px, 1.5vw, 19px);
     text-align: start;
+}
+
+.MidleSettingsBlocksPMidleSettingsBlocksPPassword{
+    position: relative;
+    width: 100%;
+}
+
+.MidleSettingsBlocksPMidleSettingsBlocksPEmail{
+    position: relative;
+    width: 100%;
+}
+
+#MidleSettingsBlocksPEmailErrorhandling{
+    position: absolute;
+    font-size: 0.875em; /* clamp (minSize middleSize maxSize)*/
+    left: 0;
+    top: 23px;
+    box-sizing: border-box;
+}
+
+#MidleSettingsBlocksPChangePassword{
+    position: absolute;
+    font-size: 0.875em;
+    left: 0;
+    top: 25px;
+    box-sizing: border-box;
+    line-break: anywhere;
+}
+
+
+@media only screen and (max-width : 690px){
+    .MidleSettingsEditConteiner{
+        grid-template-columns: auto;
+    }
+}
+
+
+@media only screen and (max-width : 440px){
+    .MidleSettings{
+       width: 82%;
+    }
+    .MidleSettingsBlocks{
+        gap:5px;
+    };
+    .MidleSettingsEditConteiner{
+        grid-template-columns: none;
+        column-gap: 0px;
+        display: none;
+        width: 90%;
+        margin-left: 0%;
+        display: flex;
+        flex-direction: column;
+        column-gap: 50px;
+        row-gap: 15px;
+    }
+    .MidleSettingsBlocksP{
+        width: 80%;
+    }
+    #DeleteAccountSaveAccount{
+        width: 6em;
+        margin-right: 0em;
+    }
+    #DeleteAccountSaveSave{
+        width: 6em;
+    }
+    #DeleteAccountSave{
+        padding-right: 0em;
+    }
+}
+
+@media only screen and (max-width : 375px){
+    .MidleSettings{
+       width: 100%;
+    }
+    .MidleSettingsProfil{
+        width: 100%;
+    }
 }

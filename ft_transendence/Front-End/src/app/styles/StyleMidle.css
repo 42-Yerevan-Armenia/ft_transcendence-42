@@ -68,15 +68,16 @@
     width: 100%;
     margin: 2px;
     font-size: 14px;
-    color:#1B8CCE
+    color: #1B8CCE;
+    text-align: center;
 }
 
 
 .live {
     display: flex;
     gap: 10px;
-    padding-left: 71px;
     justify-content: flex-start;
+    padding-left: 71px;
 }
 
 .liveNow{
@@ -105,8 +106,8 @@
 }
 
 .AllItem{
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-rows: 2;
     height: 130px;
 }
 
@@ -147,7 +148,7 @@
 
 @media only screen and (max-width: 734px){
     .pingPong{
-        width:  81%;
+        width:  98%;
         height: auto;
     }
     .divpingPong{
@@ -179,11 +180,6 @@
     }
 }
 
-@media only screen and (max-width: 515px){
-    .pingPong{
-        width:  300px;
-    }
-}
 
 @media only screen and (max-width: 434px){
     .item:nth-child(3n){
@@ -191,9 +187,7 @@
     }
 }
 @media only screen and (max-width: 407px){
-    .pingPong{
-        width:  200px;
-    }
+
     .midle{
         padding: 0;
     }
@@ -242,7 +236,7 @@
 
 @media only screen and (max-width: 300px){
     .pingPong{
-        width:  170px;
+        /* width:  170px; */
         padding: 0;
         margin: 0;
         margin-left: auto;
@@ -300,4 +294,18 @@
         height: 107px;
     }
 
+}
+
+@media only screen and (max-width: 734px){
+    .howtoplay{
+        width: 96%;
+        margin: auto;
+    }
+    .liveNow{
+        width: 96%;
+        margin:auto;
+    }
+    .live{
+        padding-left: 0px;
+    }
 }

@@ -1,0 +1,279 @@
+.ProfileMidle {
+    width: 100%;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--background-color, radial-gradient(66.54% 118.23% at 37.47% 107.32%, #D9CBFD 10%, #7758D1 100%));
+}
+
+.ProfileMidleContenier {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.ProfileMidleHeaderDiv {
+    width: 100%;
+    height: 40%;
+    display: flex;
+    background-color: rgb(83, 75, 123);
+    justify-content: space-between;
+}
+
+
+
+
+
+.ProfileMidleBody{
+    width: 100%;
+    height: 25%;
+    display: flex;
+    background-color: rgb(83, 75, 123);
+    justify-content: space-around;
+}
+.ProfileMidleBodyItems{
+    width: 70em;
+    height: 90%;
+    display: flex;
+    align-items: center;
+    margin: auto;
+    gap: 10px;
+    overflow-x: scroll;
+    overflow-y: hidden;
+}
+
+.ProfileMidleBodyItem{
+    height: 90%;
+    width: 135px;
+}
+
+.ProfileMidleBodyUserImage{
+    width: 100%;
+    height: 100%;
+   
+}
+
+.ProfileMidleBodyImage{
+    width: 96px;
+    height: 88px;
+    border-radius: 20px;
+    background-color: #D6D6D6;
+    margin: auto;
+    overflow: hidden;
+}
+
+.ProfileMidleBodyItemConteiner{
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    display: grid;
+    grid-template-rows: 2fr 1fr 1fr;
+    color: white;
+    font-family: 'Courier New', Courier, monospace;
+}
+.AcceptReject{
+    display: flex;
+    justify-content: space-between;
+}
+
+.AcceptRejectAccept{
+    height: 21px;
+    width: 61px;
+    border-radius: 10px;
+    background-color: #00A3FF;
+}
+
+.AcceptRejectAccept:hover{
+    cursor: pointer;
+}
+
+.AcceptRejectAccept:active{
+    transform: translate(0,3px);
+}
+
+
+.AcceptRejectReject:hover{
+    cursor: pointer;
+}
+
+.AcceptRejectReject:active{
+    transform: translate(0,3px);
+}
+
+.AcceptRejectReject{
+    height: 21px;
+    width: 61px;
+    border-radius: 8px;
+    background-color: #D823D7;
+}
+
+
+
+
+
+
+.ProfileMidleHeaderImage {
+    width: 100%;
+    height: 50%;
+    background-image: url("../../../public/conva.png");
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.ProfileMidleHeaderMain {
+    width: 30%;
+    text-align: center;
+    color: white;
+    font-family: fantasy;
+    padding-top: 28px;
+}
+
+.ProfileMidleHeader {
+    height: 43%;
+    position: relative;
+}
+
+.ProfileMidleHeaderMainAvatar {
+    position: relative;
+}
+
+.ProfileMidleHeaderMainAvatar > img {
+    width: 9em;
+    height: 6em;
+    border-radius: 6em;
+    position: absolute;
+    top: -4em;
+    left: 35%;
+}
+
+.ProfileMidleHeaderMainData {
+    height: 1em;
+    width: 100%;
+    margin: 4em auto;
+    text-align: center;
+}
+
+.ProfileMidleHeaderMainData > h5, .ProfileMidleHeaderMainData > p {
+    margin: 0px;
+}
+
+.ProfileMidleHeaderMainWinCount,.ProfileMidleHeaderMainLossCountLossCount{
+    width: 7em;
+    margin: auto;
+}
+.ProfileMidleHeaderMainWinCount:hover, .ProfileMidleHeaderMainLossCountLossCount:hover{
+    cursor: pointer;
+    color: #7758D1;
+}
+
+
+
+/* footer */
+.ProfileMidleFooter {
+    width: 100%;
+    height: 30%;
+    background-color: #534B7B;
+}
+.ProfileMidleFooterFriends{
+    width: 100%;
+    height: 11%;
+    background-color: #534B7B;
+    border-radius: 15px;
+    color: white;
+}
+
+.ProfileMidleFooterDiv{
+    display: flex;
+    width: 100%;
+    height: 76%;
+    justify-content: space-around;
+    color: white;
+}
+.ProfileMidleFooterUser{
+    display: flex;
+    width: 20%;
+    height: 57%;
+    flex-direction: column;
+    text-align: center;
+}
+.ProfileMidleFooterUserImage{
+    width: 50px;
+    height: 50px;
+    border-radius: 50px;
+    margin: auto;
+}
+.ProfileMidleFooterUserName{
+    font-size: 1em;
+    margin: 4px;
+    text-align: center;
+}
+
+@media only screen and (max-width: 1700px)
+{
+    .ProfileMidleBodyItems{
+        width:50em;
+    }
+} 
+
+
+
+@media only screen and (max-width:1200px)
+{
+    .ProfileMidleHeaderMainAvatar>img{
+        left: 2em;
+    }
+    .ProfileMidleBodyItems{
+        width:30em;
+    }
+}
+
+
+@media only screen and (max-width:706px)
+{
+    .ProfileMidleHeaderMainAvatar>img{
+        left: 2em;
+    }
+    .ProfileMidleBodyItems{
+        width:20em;
+    }
+    
+}
+@media only screen and (max-width:580px)
+{
+    .ProfileMidleHeaderMainAvatar>img{
+        left: -0.5em;
+    }
+    .ProfileMidleHeaderMainLossCountLossCount,.ProfileMidleHeaderMainWinCount{
+        width: 7em;
+        margin: 46px auto;
+    }
+}
+@media only screen and (max-width:420px)
+{
+    .ProfileMidleHeaderMain{
+        font-size: 8px;
+    }
+    .ProfileMidleHeaderMainLossCountLossCount,.ProfileMidleHeaderMainWinCount{
+        width: 5em;
+        margin: 34px auto;
+        font-size: clamp(8px, 10px, 12px);
+    }
+    .ProfileMidle{
+        width: 73%;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+

@@ -2,20 +2,51 @@ from rest_framework import serializers
 from django import forms
 from django.contrib.auth import get_user_model, authenticate
 from django.core.exceptions import ValidationError
-from .models import User, Person, GameRoom
-from friendship.models import Friend
+from .models import User, Person, GameRoom, History
+from friendship.models import Friend, FriendshipRequest
 
 class UserSerializer(serializers.ModelSerializer):
+    friends = serializers.SerializerMethodField()
+    friendship_requests = serializers.SerializerMethodField()
+
     class Meta:
         model = Person
-        fields = ('id', 'name', 'nickname', 'email', 'phone', 'image', 'background', 'wins', 'loses', 'matches', 'points', 'gamemode', 'live')
+        fields = ('id', 'name', 'nickname', 'email', 'image', 'phone', 'wins', 'loses', 'matches', 'points', 'gamemode', 'live', 'is_online', 'friends', 'friendship_requests')
+
+    def get_friends(self, obj):
+        friends = Friend.objects.filter(from_user=obj.user)
+        serialized_friends = []
+        for friend in friends:
+            friend_person = friend.to_user.person
+            serialized_friend = {
+                'id': friend_person.id,
+                'name': friend_person.name,
+                'nickname': friend_person.nickname,
+                'image': friend_person.image,
+            }
+            serialized_friends.append(serialized_friend)
+        return serialized_friends
+
+    def get_friendship_requests(self, obj):
+        receiver_requests = FriendshipRequest.objects.filter(to_user_id=obj.user.id)
+        serialized_friendships = []
+        for friendships in receiver_requests:
+            serialized_friendship = {
+                'id': friendships.from_user_id,
+                'name': friendships.from_user.person.name,
+                'nickname': friendships.from_user.person.nickname,
+                'image': friendships.from_user.person.image,
+                'rejected': friendships.rejected,
+            }
+            serialized_friendships.append(serialized_friendship)
+        return serialized_friendships
 
 class HomeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Person
         fields = ('id', 'nickname', 'image', 'points', 'live')
 
-class LederboardSerializer(serializers.ModelSerializer):
+class LeaderboardSerializer(serializers.ModelSerializer):
     class Meta:
         model = Person
         fields = ('id', 'nickname', 'image', 'wins', 'loses', 'matches', 'points')
@@ -63,16 +94,6 @@ class WaitingRoomSerializer(serializers.ModelSerializer):
         model = Person
         fields = ('id', 'nickname', 'image', 'gamemode', 'points')
 
-class HistorySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Person
-        fields = ('id', 'nickname', 'image', 'gamemode', 'points', 'matches')
-
-class FullHistorySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Person
-        fields = ('id', 'nickname', 'image', 'gamemode', 'points', 'matches', 'wins', 'loses', 'gamedata')
-
 class MatchSerializer(serializers.ModelSerializer):
     class Meta:
         model = Person
@@ -83,11 +104,15 @@ class UsersSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id', 'username')
 
+class FriendListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Person
+        fields = ('id', 'nickname', 'image')
+
 class FriendSerializer(serializers.ModelSerializer):
-    user = UsersSerializer(source='user')
     class Meta:
         model = Friend
-        fields = ('id', 'friend_user')
+        fields = ('id', 'to_user_id')
 
 class ProfileSerializer(serializers.ModelSerializer):
     friends = serializers.SerializerMethodField()
@@ -103,7 +128,7 @@ class ProfileSerializer(serializers.ModelSerializer):
 class GameRoomSerializer(serializers.ModelSerializer):
     class Meta:
         model = GameRoom
-        fields = ['id', 'max_players', 'live', 'theme', 'gamemode', 'creator', 'players', 'ongoing']
+        fields = ['id', 'max_players', 'live', 'theme', 'gamemode', 'creator', 'players', 'ongoing', 'game_date']
 
     def create(self, validated_data):
         creator_id = validated_data.pop('creator').id
@@ -111,3 +136,25 @@ class GameRoomSerializer(serializers.ModelSerializer):
         game_room = GameRoom.objects.create(creator_id=creator_id, **validated_data)
         game_room.players.set(players_data)
         return game_room
+
+class HistorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = History
+        fields = '__all__'
+
+class FullHistorySerializer(serializers.ModelSerializer):
+    game_date = serializers.SerializerMethodField()
+    class Meta:
+        model = Person
+        fields = ('id', 'nickname', 'image', 'gamemode', 'points', 'matches', 'wins', 'loses', 'game_date')
+    
+    def get_game_date(self, obj):
+        try:
+            game_rooms = GameRoom.objects.filter(players=obj)
+            if game_rooms.exists():
+                # Return the game_date from the first GameRoom instance
+                return game_rooms.first().game_date
+            else:
+                return None
+        except GameRoom.DoesNotExist:
+            return None

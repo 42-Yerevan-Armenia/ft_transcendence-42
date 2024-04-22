@@ -16,7 +16,7 @@ def email_validation(email):
     except ValidationError:
         raise ValidationError('Invalid email format')
     if UserModel.objects.filter(email=email).exists():
-        raise ValidationError('Email already exists')
+        raise ValidationError('Email already exists') 
 
 def generate_numeric_token(length):
     return ''.join(str(secrets.randbelow(10)) for _ in range(length))
@@ -45,7 +45,7 @@ def register_validation(data):
     if not nickname:
         raise ValidationError('Waiting for a nickname')
     if UserModel.objects.filter(username=nickname).exists():
-        raise ValidationError('Nickname already exists')
+        raise ValidationError('Nickname already exists', code='nickname_exists')
     if not name:
         raise ValidationError('Waiting for a name')
     try:

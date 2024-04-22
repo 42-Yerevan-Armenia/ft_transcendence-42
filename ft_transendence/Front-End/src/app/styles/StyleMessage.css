@@ -176,9 +176,9 @@
     margin-top: 5px;
 }
 
-.MessagePrivateContent {
+#MessagePrivateContent {
     width: 90%;
-    height: 90%;
+    height: 80%;
 }
 
 .MessagePrivateUser {
@@ -285,7 +285,16 @@
 
 .MessagPrivateSubjectMessagPerson p, .MessagPrivateSubjectMessagSender p {
     margin: 0px;
+    font-size: 12px;
 }
+.MessagPrivateSubjectMessagPerson>p, .MessagPrivateSubjectMessagPerson>p{
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+}
+
+
+
+
 .MessagPrivateSubjectMessagSenderMessag, .MessagPrivateSubjectMessagPersonChat{
     line-height: 12px;
     padding: 10px;
@@ -326,8 +335,8 @@
 
 .MessagPrivateSubjectPrivate{
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: end;
 }
 .MessagPrivateSubjectPrivate>input{
     height: 40px;

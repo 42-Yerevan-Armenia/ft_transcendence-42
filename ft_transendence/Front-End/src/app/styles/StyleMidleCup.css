@@ -78,9 +78,10 @@
     color: white;
     text-align: center;
 }
+
 .MidleCubTd{
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
 }
 
 .MidleCubTableImageBody{
@@ -133,6 +134,8 @@
     .MidleCubEdit{
         overflow: scroll;
         width: 169px;
+        margin: auto;
+        overflow-y: hidden;
     }
 }
 

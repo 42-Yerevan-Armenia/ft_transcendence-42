@@ -163,7 +163,7 @@ ElementData.prototype.createBlock = function(Group, nameElement) {
     document.getElementById(`addChild${nameElement}`).appendChild(node);
 }
 
-{/* 
+/* 
 <div class="MessagPrivateSubjectMessagPerson">
     <div class="MessagPrivateSubjectMessagDivPerson">
         <p class="MessagPrivateSubjectMessagPersonChat">
@@ -174,7 +174,7 @@ ElementData.prototype.createBlock = function(Group, nameElement) {
         9.20 AM
     </p>
 </div>
-*/}
+*/
 
 ElementData.prototype.MessagPrivateSubjectMessagPerson = function(Person) {
     //debugger
@@ -248,7 +248,7 @@ var MessagePage = function(name) {
         if (!Groups.state)
             return null;
 
-        document.getElementById("addChildGrup").style.display = "none";       // for start new message drow
+        document.getElementById("addChildGrup").style.display = "none";       // for start new message draw
         Groups.message.forEach(element => {
              this.createBlock(element, "Grup")
             });
@@ -263,7 +263,7 @@ var MessagePage = function(name) {
         if (!Persons.state)
         return null;
 
-        document.getElementById("addChildPersonal").style.display = "none";       // for start new message drow
+        document.getElementById("addChildPersonal").style.display = "none";       // for start new message draw
         Persons.message.forEach(element => {
          this.createBlock(element, "Personal")
         });
@@ -273,23 +273,37 @@ var MessagePage = function(name) {
     this.chat = (chatPersonal) => {
         //debugger
 
+        
         chatPersonal.forEach((Person)=>{
-            if(Person.id == User._Id)
+            if(Person.username === User._Nickname)
                 this.MessagPrivateSubjectMessagPerson(Person)
             else
                 this.MessagPrivateSubjectMessagSender(Person)
         })
+        const Person = chatPersonal.find((Person)=>Person.username !== User._Nickname)
+        
+        const MessagePrivateUserH4 = document.querySelector(".MessagePrivateUserH4")
+        MessagePrivateUserH4.innerHTML = Person?.username || "Sender";
+        const MessagePrivateUserImg = document.querySelector(".MessagePrivateUserImg");
+        // MessagePrivateUserImg.src = `data:image/png;base64,${Person.src}`;
+        MessagePrivateUserImg.src = Person?.src || "Sender";
+        const MessagePrivateUserImagOnlain = document.querySelector(".MessagePrivateUserImagOnlain");
+        
+        !Person.isOnlain ? MessagePrivateUserImagOnlain.style.backgroundColor = "grey":MessagePrivateUserImagOnlain.style.backgroundColor = "green";
     };
 
 
-    this.Drow = async () => {
+    this.draw = async (data) => {
+
         //debugger
         if (!await User.menegAccsess())
             return null;
-        
-        this.Groups(Groups);
-        this.Personal(Groups);
-        this.chat(Privat);
+        if (data?.send == "Privat")
+            this.chat([data]);
+        else if(data?.send == "Personal") 
+            this.Personal([data]);
+        else if(data?.send == "Groups")
+            this.Groups([data]);
     }
 }
 

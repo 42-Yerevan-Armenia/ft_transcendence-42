@@ -2,6 +2,11 @@ import base64
 from django.db import models
 from django.contrib.auth.models import User
 
+class Confirm(models.Model):
+    email = models.EmailField()
+    code = models.CharField(max_length=100)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
 class Person(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100)
@@ -9,6 +14,7 @@ class Person(models.Model):
     email = models.EmailField(unique=True)
     phone = models.CharField(max_length=20, blank=True, null=True)
     password = models.CharField(max_length=100)
+    twofactor = models.BooleanField(default=False) 
     image = models.TextField(blank=True, null=True)
     background = models.TextField(blank=True, null=True)
     wins = models.IntegerField(default=0)
@@ -20,6 +26,7 @@ class Person(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='person')
     game_room = models.ForeignKey('GameRoom', on_delete=models.SET_NULL, null=True, blank=True, related_name='participants')
     ongoing = models.BooleanField(default=False)
+    is_online = models.BooleanField(default=False)
 
     def __str__(self):
         return self.nickname
@@ -65,14 +72,21 @@ class GameRoom(models.Model):
     creator = models.ForeignKey(Person, on_delete=models.CASCADE)  # Relationship with the Person who created the game room
     players = models.ManyToManyField(Person, related_name='joined_players', blank=True)  # Relationship with the players in the game room
     ongoing = models.BooleanField(default=False)  # Indicates if the game is ongoing or not
+    game_date = models.DateTimeField(null=True, blank=True) # Date of the game
 
     def __str__(self):
         return f"GameRoom {self.id}"
     
     def is_full(self):
-        """
-        Check if the GameRoom is full.
-        Returns:
-            bool: True if the room is full, False otherwise.
-        """
         return self.players.count() == self.max_players
+
+class History(models.Model):
+    player = models.ForeignKey(Person, on_delete=models.CASCADE)
+    opponent = models.ForeignKey(Person, on_delete=models.CASCADE, related_name='opponent_history')
+    game_room = models.ForeignKey(GameRoom, on_delete=models.CASCADE)
+    date = models.DateTimeField(auto_now_add=True)
+    win = models.BooleanField()
+    lose = models.BooleanField()
+
+    def __str__(self):
+        return f"{self.player.nickname} vs {self.opponent.nickname} - {self.date}"

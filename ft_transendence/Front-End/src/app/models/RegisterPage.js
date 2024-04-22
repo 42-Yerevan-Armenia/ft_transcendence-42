@@ -1,6 +1,6 @@
 //Register Page
 class RegisterPage extends HtmlElement {
-  //debugger
+  ////debugger
     constructor(){
       super(".RegisterPage")
       this._style.display = "none";
@@ -15,7 +15,7 @@ class RegisterPage extends HtmlElement {
     }
   
     async RegistersWithEmail() {
-      //debugger
+      ////debugger
       let err = document.querySelector(".RegisterErrorHandling");
       let _RegisterPageinput = document.querySelector(".RegisterPageinput");
       let value = _RegisterPageinput.value;
@@ -44,7 +44,7 @@ class RegisterPage extends HtmlElement {
       return false;
       }
     }
-    Drow(){
+    draw(){
       
     }
   };

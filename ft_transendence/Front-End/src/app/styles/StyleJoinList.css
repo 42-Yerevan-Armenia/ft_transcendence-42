@@ -8,6 +8,31 @@
             radial-gradient(66.54% 118.23% at 37.47% 107.32%, #D9CBFD 10%, #7758D1 100%));
 }
 
+#JoinListHeroDivProfilPlayers{
+    background-color: #816DC0;
+    color:white;
+}
+
+#LiveOnOff{
+    background-color: #816DC0;
+    color:white;
+}
+#JoinTheme{
+    background-color: #816DC0;
+    color:white;
+}
+
+#JoinListHeroDivGameMode{
+    background-color: #816DC0;
+    color:white;
+}
+.JoinListTableBodyNAmeImg, .JoinListTableImageBody{
+    width: 30px;
+    height: 30px;
+    border-radius: 10px;
+}
+
+
 
 .JoinListProfil {
     border: 2px  solid red;
@@ -48,6 +73,7 @@
 .JoinListEdit{
     width: 100%;
     margin-top: 30px;
+    overflow-y: hidden;
 }
 
 .JoinListConteinerTable{
@@ -90,6 +116,7 @@
 .JoinListTableClassJoin{
     display: block;
     background-color: #00A3FF;
+    width: 100%;
     color: white;
 }
 #JoinListTableID{
@@ -134,7 +161,7 @@
     height: 50%;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: start;
 }
 
 .JoinListHeroDiv{
@@ -157,7 +184,7 @@
 }
 .JoinListHeroDivProfilPlayer,.JoinListHeroDivProfilLive{
     display: flex;
-    justify-content: space-around;
+    /* justify-content: space-around; */
     align-items: center;
     height: 50%;
 }
@@ -224,22 +251,72 @@
 }
 
 
-@media only screen and (max-width: 400px){
-    .JoinListProfil{
-        width: 95%;
-    } 
-}
 
 @media only screen and (max-width: 339px){
     .JoinListConteinerTable{
         overflow: hidden;
         width: 250px;
     }
-
+    
     .JoinListEdit{
         overflow: scroll;
         width: 169px;
+        overflow-y: hidden;
     }
 }
 
+
+@media only screen and (max-width:390px){
+
+    .JoinListHeroDiv{
+        display: grid ;
+        grid-template-columns: 1fr 2fr;
+
+    }
+    .JoinListHeroDivButton{
+        grid-row: 1/span 2;
+        width: 63px;
+    }
+    .JoinListHeroDiv>div{
+        margin-left: 10px;
+        width: 60%;
+    }
+}
+
+@media only screen and (max-width: 650px){
+    .JoinListHeroDivButtonBack{
+        width: 100%;
+    }
+    .JoinListProfil{
+        width: 95%;
+    }
+    .JoinListHeroDiv svg{
+        width: 10px;
+    }
+}
+
+@media only screen and (max-width:730px){
+    .JoinListHeroDivButtonB{
+        width: 95%;
+        height: 43%;
+    }
+    .JoinListHeroDivProfil>div>select{
+        width: 50px; 
+    }
+    .JoinListHeroDivButtonBInvite{
+        width: 87px;
+        height: 38px;
+    }
+    .JoinListHeroDiv svg{
+        min-width: 8px;
+    }
+    .JoinListHeroDivTemeTheme>div, .JoinListHeroDivTemeGameMode>div{
+        width: 28px;
+    }
+    #JoinListHeroDivGameMode, #JoinListHeroDivProfilPlayers, #LiveOnOff,#JoinTheme{
+        font-size: clamp(6px, 8px, 10px)
+    }
+
+    
+}
 
