@@ -425,5 +425,3 @@ Register?._RegisterPageContinue?.addEventListener("click",  async () => {
 Login._ContinueWith42Intra.addEventListener("click", async () => {
   const respons =  await Login.Get42Connect();
 })
-
-

@@ -224,6 +224,3 @@ urlRouteForward();
 // 	console.log("1 DOMContentLoaded   + " + e.target);
 // 	console.log("2 DOMContentLoaded   + " + location.pathname);
 // })
-
-
-
