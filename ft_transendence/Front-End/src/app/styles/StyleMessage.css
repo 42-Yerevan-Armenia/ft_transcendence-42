@@ -1,7 +1,7 @@
 .Message {
     min-width: 76px;
     width: 27%;
-    height: 100%;
+    height: 856px;
     align-items: center;
     background: rgba(29, 32, 62, 0.3);
     backdrop-filter: blur(10px);
@@ -370,7 +370,6 @@
     .Message{
         position: absolute;
         right: 0px;
-        height: 90vh;
         width: 50%;
     }
 
@@ -406,9 +405,7 @@
 } 
 
 @media only screen and (max-width:400px){
-    .Message{
-        width: 70%;
-    }
+
     .GrupADDSubject, .PersonalADDSubject{
         width: 70%;
     }

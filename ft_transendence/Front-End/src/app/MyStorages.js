@@ -1,11 +1,8 @@
-//hovhannes_vardanyan1@mail.ru
-//Hovo@1234
 //-------------------------------------------------       browser storage     ----------------------------------------
 
 //manag browser storage
 const myStorages = {
     setStorageLogin(tockens) {
-      ////debugger
       console.log("tockens     --------   " + tockens)
       console.log(tockens);
       const {refresh, success, access} = tockens;
@@ -42,7 +39,7 @@ const myStorages = {
     },
     
     async longOut() {
-      //debugger
+      ////debugger
       // api/v1/logout/
       const dataUrs={
         "pk":User._Id

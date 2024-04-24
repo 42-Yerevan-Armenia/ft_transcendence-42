@@ -1,6 +1,5 @@
 // Home Page
 class HomePage extends HtmlElement {
-  // //debugger
     constructor(){
       debugger;
       super(".homeSection");
@@ -31,8 +30,8 @@ class HomePage extends HtmlElement {
       _NavSignin : document.querySelector(".NavSignin"),
       _NavSignin1 :  document.querySelector(".RightsigninButton"),
   
-      _NavSignUp : document.querySelector(".NavSignUp"),
-      _NavSignUp1 : document.querySelector(".RightgninupButton"),
+      // _NavSignUp : document.querySelector(".NavSignUp"),
+      // _NavSignUp1 : document.querySelector(".RightgninupButton"),
     };
     usersDro = async () => {
         if (await User.menegAccsess())

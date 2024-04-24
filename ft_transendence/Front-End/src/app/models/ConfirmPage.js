@@ -1,7 +1,6 @@
 
 //confirm Page
 class ConfirmPage extends HtmlElement {
-  // //debugger
     constructor() {
       super(".ConfirmPage")
       this._style.display = "none";

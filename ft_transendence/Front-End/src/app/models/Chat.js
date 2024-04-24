@@ -3,9 +3,7 @@
 // const chatSocket = new WebSocket("ws://" + window.location.host + "/");
 const chatSocket = new WebSocket("ws://" + HostPort.slice(7) + "/");
 
-console.log("window.location.host  = " + window.location.host);
 
-console.log("["+ HostPort.slice(7) + "]");
 
 //Whene opened socket
 chatSocket.onopen = function (e) {
@@ -117,10 +115,6 @@ chatSocket.onmessage = function (e) {
     }
     // if (data.message == )
 
-
-
-console.log("+++++++++++++++++" +data)
-console.log(data);
 
     // if (data.username === User._Nickname)
     // {

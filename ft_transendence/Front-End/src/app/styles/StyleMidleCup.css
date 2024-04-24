@@ -81,7 +81,7 @@
 
 .MidleCubTd{
     display: flex;
-    justify-content: space-between;
+    justify-content: start;
 }
 
 .MidleCubTableImageBody{
@@ -97,6 +97,7 @@
 
 .MidleCubTableName, .MidleCubTableBodyNAme{
     font-size: clamp(12px, 2.5vw, 20px); 
+    margin-left: 10px;
 }
 
 
