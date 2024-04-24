@@ -45,8 +45,23 @@ var GameRom = {
 
 // const chatSocket = new WebSocket("ws://" + HostPort.slice(7) + "/");
 // const ws = new WebSocket("ws://" + window.location.host + "/ws/joinlist/")
-const Join_Ws = new WebSocket("ws://" + HostPort.slice(7) + "/ws/joinlist/")
+// debugger;
+// console.log("barev");
+// const Join_Ws = new WebSocket("ws://" + HostPort.slice(7) + "/ws/joinlist/")
 
+// Join_Ws.onopen = Join_Ws.onmessage = message => {
+//   debugger;
+//   if (!message.data) {
+//       return;
+//   }
+//   let response = JSON.parse(message.data);
+//   console.log(JSON.stringify(response))
+//   debugger;
+//   if (response.method === "update_room" && User._getAccess) {
+//       Home._MidleJoinList._game_rooms = response.game_rooms;
+//       ManageMidle.Manage("JoinList");
+//   }
+// }
 
 // console.log("window.location.host  = " + window.location.host);
 
@@ -59,6 +74,21 @@ class JoinList extends HtmlElement {
       super(".JoinList")
       this._style.display = "none";
       this._JoinListInvit = new JoinListInvit();
+      debugger;
+      this.Join_Ws = new WebSocket("ws://" + HostPort.slice(7) + "/ws/joinlist/")
+
+      this.Join_Ws.onopen = this.Join_Ws.onmessage = message => {
+        if (!message.data) {
+            return;
+        }
+        let response = JSON.parse(message.data);
+        console.log(JSON.stringify(response))
+        debugger;
+        if (response.method === "update_room" && User._getAccess) {
+            this._game_rooms = response.game_rooms;
+            ManageMidle.Manage("JoinList");
+        }
+      }
     }
     _game_rooms = "";
     _CreateButton = document.querySelector(".JoinListHeroDivButtonB");

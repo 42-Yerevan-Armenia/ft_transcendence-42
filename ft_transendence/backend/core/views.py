@@ -35,7 +35,6 @@ from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth.hashers import make_password, check_password
 from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
-from django.contrib.sessions.models import Session
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from django.core.files.base import ContentFile
@@ -257,6 +256,18 @@ class Login(APIView):
 class Logout(APIView):
     def post(self, request, pk):
         person = Person.objects.get(id=pk)
+        gameroom = person.game_room
+        if gameroom and gameroom.creator_id == person.id:
+            for player in gameroom.players.all():
+                player.ongoing = False
+                player.game_room_id = None
+                player.save()
+            gameroom.players.clear()
+            gameroom.delete()
+        else:
+            gameroom.players.remove(person)
+            person.ongoing = False
+            person.game_room_id = None
         person.is_online = False
         person.save()
         return Response({"success": "true", "message": "Logged out successfully"}, status=status.HTTP_200_OK)

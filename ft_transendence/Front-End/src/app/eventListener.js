@@ -60,7 +60,8 @@ Home._MiddleSettings?._ImageFileAccess?.addEventListener("change", (event)=>{
     // Get the base64 encoded image data
     // <<data:image/png;base64,>> .length === 22
     base64EncodedImage  = base64EncodedImage.slice(22);
-
+    if (base64EncodedImage[0] == ",")
+      base64EncodedImage  = base64EncodedImage.slice(1);
     // You can now send the base64EncodedImage to the server via AJAX or any other method.
     console.log(base64EncodedImage);
     
@@ -177,7 +178,7 @@ Home._MidleJoinList?._CreateButton?.addEventListener("click", async ()=>{
   }
   const str = JSON.stringify(paload)
   
-  Join_Ws.send(str);
+  Home._MidleJoinList.Join_Ws.send(str);
 //   await FetchRequest("POST", url, objCreate);
   //redirect
  
@@ -190,19 +191,19 @@ Home._MidleJoinList?._CreateButton?.addEventListener("click", async ()=>{
 })
 
 
-Join_Ws.onmessage = message => {
-    debugger;
-    if (!message.data) {
-        return;
-    }
-    let response = JSON.parse(message.data);
-    console.log(JSON.stringify(response))
-    debugger;
-    if (response.method === "update_room" && User._getAccess) {
-        Home._MidleJoinList._game_rooms = response.game_rooms;
-        ManageMidle.Manage("JoinList");
-    }
-}
+// this.Join_Ws.onmessage = message => {
+//     debugger;
+//     if (!message.data) {
+//         return;
+//     }
+//     let response = JSON.parse(message.data);
+//     console.log(JSON.stringify(response))
+//     debugger;
+//     if (response.method === "update_room" && User._getAccess) {
+//         Home._MidleJoinList._game_rooms = response.game_rooms;
+//         ManageMidle.Manage("JoinList");
+//     }
+// }
 
 
 //sign in

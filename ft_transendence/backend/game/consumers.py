@@ -98,10 +98,13 @@ class joinListConsumer(WebsocketConsumer):
         # print("open_code", open_code)
         self.joinList = self.scope["path"].strip("/").replace(" ", "_")
         self.joinList = "barev"
-
         async_to_sync(self.channel_layer.group_add)(self.joinList, self.channel_name)
-
         self.accept()
+        response = JoinList.get(self, None, None)
+        async_to_sync(self.channel_layer.group_send)(
+            self.joinList,
+            {"type": "stream", "response": response,},
+        )
 
     def disconnect(self, close_code):
         print("close_code = ", close_code)
@@ -117,17 +120,17 @@ class joinListConsumer(WebsocketConsumer):
             response = CreateRoom.post(self, request, user_id)
             all_user_ids = list(Person.objects.values_list('id', flat=True))
             response["all_user_ids"] = all_user_ids
-            response = JoinList.get(self, request, all_user_ids)
+            response = JoinList.get(self, None, None)
             response["method"] = "create"
-        elif method == "join":
+        elif method == "join" or method == "invite":
             # Extract the user ID from the request payload
             user_id = request.get("user_id")
-            response = JoinList.post(request, user_id, self)
+            response = JoinList.post(self, request, user_id)
             # Include user_id in the response for reference
             response["user_id"] = user_id
             all_user_ids = list(Person.objects.values_list('id', flat=True))
             response["all_user_ids"] = all_user_ids
-            response = JoinList.get(self, request, all_user_ids)
+            response = JoinList.get(self, None, None)
             response["method"] = "join"
             game_room_full = len(user_id) >= MAX_PLAYERS
             if game_room_full:
