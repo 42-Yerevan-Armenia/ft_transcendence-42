@@ -26,6 +26,7 @@ function pongGame(userObj) {
     let playerColor = null;
 
     let ws = new WebSocket("ws://" + window.location.host + "/ws/joinlist/")
+    
     console.log("ws://" + window.location.host + "/ws/joinlist/");
     console.log("ws = ", window.location.host);
     const txtGameId = document.getElementById("txtGameId");
