@@ -85,6 +85,3 @@ var ManageRight = {
         {"Message": Home._HomeMessage}
     ]
 }
-
-
-
