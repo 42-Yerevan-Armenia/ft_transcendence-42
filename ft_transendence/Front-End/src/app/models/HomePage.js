@@ -1,6 +1,7 @@
 // Home Page
 class HomePage extends HtmlElement {
     constructor(){
+      debugger;
       super(".homeSection");
       this._style.display = "block";
       this._Midle = new MiddleSECTION();
