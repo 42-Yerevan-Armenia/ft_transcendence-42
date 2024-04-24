@@ -1,5 +1,5 @@
 body{
-  height: 100vh;
+  height: 1073px;
   padding: 0%;
   margin: 0;
   background: var(--background-color, 
@@ -74,13 +74,13 @@ main{
     width: 100%;
   }
   .topplayers{
-    width: 81%;
+    width: 98%;
   } 
 }
 
 @media only screen and (max-width: 734px){
   .midle{
-    width: 100%;
+    width: 98%;
     justify-content: center;
   }
 

@@ -6,7 +6,6 @@ class MidleCub extends HtmlElement {
       this.MidleCubHeroId = document.querySelector("#MidleCubHeroId");
       this.MidleCubImage = document.querySelector(".MidleCubImage");
     }
-
     // 1<div class="MidleCubTableBody">
     //  2 <div class="MidleCubTableBodyNAme">125</div>
     //   3<div class="MidleCubTd">
@@ -24,12 +23,10 @@ class MidleCub extends HtmlElement {
       //1
       const div1 = document.createElement("div");
       div1.setAttribute("class", "MidleCubTableBody");
-      
       //2
       const div2 = document.createElement("div");
       div2.setAttribute("class", "MidleCubTableBodyNAme");
       div2.innerHTML = i;
-
       //3
       const div3 =  document.createElement("div");
       div3.setAttribute("class", "MidleCubTd");
@@ -68,27 +65,27 @@ class MidleCub extends HtmlElement {
 
 
 
-    //Section Cup Drow DOM
-    async setHero(){
-      let i = 1;
-      //headerSection
-      this.MidleCubHeroName.innerHTML = User._Name;
-      this.MidleCubHeroId.innerHTML = User._Id;
-      this.MidleCubImage.src =`data:image/png;base64,${User._Image}`
-      const Items = await getFetchRequest("api/v1/leaderboard/" + User._Id);
-      //bodySection
-      if (!Items || !Items.state)
-        return;
-      Items.message.leaderboard.sort((e, e2)=>{
-        return e.points < e2.points
-      }).forEach(Item => {
-        this.midleCubItem(i++, Item)
-      });
-    }
-    async draw(){
-      debugger
-      await this.setHero();
-    }
-  
+  //Section Cup Drow DOM
+  async setHero(){
+    let i = 1;
+    const domDat = document.querySelector(".MidleCubEditSection")
+    domDat.innerHTML = "";
+    //headerSection
+    this.MidleCubHeroName.innerHTML = User._Name;
+    this.MidleCubHeroId.innerHTML = User._Id;
+    this.MidleCubImage.src =`data:image/png;base64,${User._Image}`
+    const Items = await getFetchRequest("users");
+    //bodySection
+    if (!Items || !Items.state)
+      return;
+    Items.message.sort((e, e2)=>{
+      return e.points < e2.points
+    }).forEach(Item => {
+      this.midleCubItem(i++, Item)
+    });
   }
-  
+  async draw(){
+    await this.setHero();
+  }
+}
+

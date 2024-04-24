@@ -2,8 +2,6 @@ import json
 import uuid
 import constants
 
-from core.models import Person
-
 from .pong_controller import GameController, PaddleController, BallController
 from .thread_pool import ThreadPool
 
@@ -11,10 +9,8 @@ from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
 import time
 
-from core.views import CreateRoom, JoinList
 
-
-class PongConsumer(WebsocketConsumer):
+class JoinListConsumer(WebsocketConsumer):
     def __init__(self, *args, **kwargs):
         self.ball_controller = BallController()
         self.thread = None
@@ -26,6 +22,7 @@ class PongConsumer(WebsocketConsumer):
         # print("open_code", open_code)
         self.game = self.scope["path"].strip("/").replace(" ", "_")
         self.game = "barev"
+        print("stex\n")
         if self.game not in ThreadPool.threads:
             ThreadPool.add_game(self.game, self)
 
@@ -89,62 +86,3 @@ class PongConsumer(WebsocketConsumer):
             "state": state
         }
         self.send(text_data=json.dumps(payload))
-
-class joinListConsumer(WebsocketConsumer):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-    def connect(self):
-        # print("open_code", open_code)
-        self.joinList = self.scope["path"].strip("/").replace(" ", "_")
-        self.joinList = "barev"
-        async_to_sync(self.channel_layer.group_add)(self.joinList, self.channel_name)
-        self.accept()
-        response = JoinList.get(self, None, None)
-        async_to_sync(self.channel_layer.group_send)(
-            self.joinList,
-            {"type": "stream", "response": response,},
-        )
-
-    def disconnect(self, close_code):
-        print("close_code = ", close_code)
-        print("self.channel_name = ", self.channel_name)
-
-        async_to_sync(self.channel_layer.group_discard)(self.joinList, self.channel_name)
-
-    def receive(self, text_data):
-        request = json.loads(text_data)
-        method = request.get("method")
-        if method == "create":
-            user_id = request.get("pk")
-            response = CreateRoom.post(self, request, user_id)
-            all_user_ids = list(Person.objects.values_list('id', flat=True))
-            response["all_user_ids"] = all_user_ids
-            response = JoinList.get(self, None, None)
-            response["method"] = "create"
-        elif method == "join" or method == "invite":
-            # Extract the user ID from the request payload
-            user_id = request.get("user_id")
-            response = JoinList.post(self, request, user_id)
-            # Include user_id in the response for reference
-            response["user_id"] = user_id
-            all_user_ids = list(Person.objects.values_list('id', flat=True))
-            response["all_user_ids"] = all_user_ids
-            response = JoinList.get(self, None, None)
-            response["method"] = "join"
-            game_room_full = len(user_id) >= MAX_PLAYERS
-            if game_room_full:
-                PlayTournament().post(request, game_room_id=game_room_id, creator_id=creator_id)
-        else:
-            response = {"error": "Invalid method"}
-        async_to_sync(self.channel_layer.group_send)(
-            self.joinList,
-            {"type": "stream", "response": response,},
-        )
-
-    def stream(self, event):
-        response = event["response"]
-        # Serialize the data to JSON
-        response_json = response.content.decode("utf-8")
-        # print("❇️ response_json = ", response_json)
-        self.send(response_json)

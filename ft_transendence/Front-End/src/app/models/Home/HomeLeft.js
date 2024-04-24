@@ -14,21 +14,18 @@ class HomeLeft extends HtmlElement {
     _ExploreMessag = document.querySelector(".Explore");
     _NavLoginOut = document.querySelector("#NavLoginOut");
     draw() {
-      // debugger
-      console.warn("++++++++++++++++++1")
       if (User.checkSignIn())
       {
-        console.warn("++++++++++++++++++2")
         this._Name.innerHTML = User._Name;
         this._Nickname.innerHTML = User._Nickname;
         // Get the Base64-encoded string
         this._Image.src = `data:image/png;base64,${User._Image}`;
                       
         this._NavSigninNavSignUp.style.display = "none";
-        this._NAVSIGNINSIGNOUTNavLoginOut.style.display = "block";
+        this._NAVSIGNINSIGNOUTNavLoginOut.style.display = "flex";
       }
       else{
-        this._NavSigninNavSignUp.style.display = "block";
+        this._NavSigninNavSignUp.style.display = "flex";
         this._NAVSIGNINSIGNOUTNavLoginOut.style.display = "none";
       }
     }

@@ -4,17 +4,18 @@
 const HostPort="http://10.12.11.2:8000"
 
 
+let INTRA_API_URL="https://api.intra.42.fr/";
+let INTRA_API_UID="u-s4t2ud-8c8a43d63fe269a7b39126edcb94196a6fa343c2c83ce9e2b922ce7dbf7d2029";
+let INTRA_REDIRECT_URI="http%3A%2F%2F10.12.11.2%3A3000%2F";
 
 // hovhannes_vardanyan1@mail.ru
 
-
-
-//#################################################################################   Controller.js
+//#################################################################################   Controllers.js
 
 //queshon too backend Email exist or not and 
 //if create 
 async function ControllerCheckEmail(email) {
-  // debugger
+  // ////debugger
   try {
     // const response = await fetch(`${HostPort}/registerpage?email=${email}`,{
     const response = await fetch(`${HostPort}/email_validation/`,{
@@ -34,7 +35,7 @@ async function ControllerCheckEmail(email) {
     if (!result || typeof result !== 'object') {
       throw new Error("Invalid response data");
     }
-    console.log( "Succsse++++++++++++++++++++    222222")
+    //console.log( "Succsse++++++++++++++++++++    222222")
     return {state:true, message: result.message};
   }
   catch(err) {
@@ -53,7 +54,7 @@ async function ControllerCheckEmail(email) {
 // });
 
 async function ControllerCheckReplayCode(code) {
-  // debugger
+  // ////debugger
   try {
       const response = await fetch(`${HostPort}/confirm/`, {
           method: 'POST',
@@ -71,7 +72,7 @@ async function ControllerCheckReplayCode(code) {
         throw new Error("Invalid response data");
       }
 
-      console.log( "Succsse++++++++++++++++++++    222222")
+      //console.log( "Succsse++++++++++++++++++++    222222")
 
       return{state:true, "message": data };
   }
@@ -84,7 +85,7 @@ async function ControllerCheckReplayCode(code) {
 }
 
 async function ControllerSignUp(password, User) {
-  // debugger
+  // ////debugger
 
   try {
     const response = await fetch(`${HostPort}/register/`, {
@@ -104,7 +105,7 @@ async function ControllerSignUp(password, User) {
     if (!data || typeof data !== 'object') {
       throw new Error("Invalid response data");
     }
-    console.log( "Succsse++++++++++++++++++++    222222")
+    //console.log( "Succsse++++++++++++++++++++    222222")
     return { state: true, message: data };
   } catch (error) {
     console.error("Error:", error);
@@ -113,7 +114,7 @@ async function ControllerSignUp(password, User) {
 }
 
 async function ControllerPessPassword(password, User) {
-  // debugger
+  // ////debugger
 
 
   try {
@@ -134,7 +135,7 @@ async function ControllerPessPassword(password, User) {
     if (!data || typeof data !== 'object') {
       throw new Error("Invalid response data");
     }
-    console.log( "Succsse++++++++++++++++++++    11111")
+    //console.log( "Succsse++++++++++++++++++++    11111")
 
     return { state: true, message: data };
   } catch (error) {
@@ -146,12 +147,11 @@ async function ControllerPessPassword(password, User) {
 
 //fetch universal POST request
 async function FetchRequest(Tomethod, Torequest, ToObj) {
-  // debugger
-  console.log("1----------------------------------------")
-  console.log( "method : " + Tomethod);
-  console.log( "request : " + Torequest);
-  console.log( ToObj);
-  console.log("2----------------------------------------")
+  //console.log("1----------------------------------------")
+  //console.log( "method : " + Tomethod);
+  //console.log( "request : " + Torequest);
+  //console.log( ToObj);
+  //console.log("2----------------------------------------")
   try {
     const response = await fetch(`${HostPort}/${Torequest}/`, {
       method: Tomethod,
@@ -170,7 +170,7 @@ async function FetchRequest(Tomethod, Torequest, ToObj) {
     if (!data || typeof data !== 'object') {
       throw new Error("Invalid response data");
     }
-    console.log("ControllerPessPassword  Succsse++++++++++++++++++++");
+    //console.log("ControllerPessPassword  Succsse++++++++++++++++++++");
     return { state: true, message: data };
   } catch (error) {
     console.error("Error:", error);
@@ -181,8 +181,9 @@ async function FetchRequest(Tomethod, Torequest, ToObj) {
 
 //fetch universal  GET request
 async function getFetchRequest(ToRequest) {
-  debugger
-
+  //console.log("1----------------------------------------")
+  //console.log( "request : " + ToRequest);
+  //console.log("2----------------------------------------")
 
   //get access tocken and id
   const ToObj = User.getAccessTocken();
@@ -193,7 +194,6 @@ async function getFetchRequest(ToRequest) {
   try {
     const response = await fetch(`${HostPort}/${ToRequest}/`, {
       method: "GET",
-      // body: JSON.stringify(ToObj),
       headers: {
         "Content-Type": "application/json",
         'Authorization': 'Bearer ' + ToUser
@@ -209,7 +209,7 @@ async function getFetchRequest(ToRequest) {
     if (!data || typeof data !== 'object') {
       throw new Error("Invalid response data");
     }
-    console.log("ControllerPessPassword  Succsse++++++++++++++++++++");
+    //console.log("ControllerPessPassword  Succsse++++++++++++++++++++");
 
     return { state: true, message: data };
   } catch (error) {
@@ -222,13 +222,12 @@ async function getFetchRequest(ToRequest) {
 
 //fetch universal POST request
 async function putRequest(Tomethod, Torequest, ToObj) {
-  // debugger
-  console.log("1----------------------------------------")
-  console.log( "method : " + Tomethod);
-  console.log( "request : " + Torequest);
-  console.log( ToObj);
+  //console.log("1----------------------------------------")
+  //console.log( "method : " + Tomethod);
+  //console.log( "request : " + Torequest);
+  //console.log( ToObj);
   const token =  await User.getAccessTocken();
-  console.log("2----------------------------------------")
+  //console.log("2----------------------------------------")
   try {
     const response = await fetch(`${HostPort}/${Torequest}/`, {
       method: Tomethod,
@@ -248,7 +247,34 @@ async function putRequest(Tomethod, Torequest, ToObj) {
     if (!data || typeof data !== 'object') {
       throw new Error("Invalid response data");
     }
-    console.log("ControllerPessPassword  Succsse++++++++++++++++++++");
+    //console.log("ControllerPessPassword  Succsse++++++++++++++++++++");
+    return { state: true, message: data };
+  } catch (error) {
+    console.error("Error:", error);
+    return { state: false, message: error.message };
+  }
+}
+
+
+
+//fetch universal Get request prune
+async function getPureFetchRequest(Torequest) {
+  //console.log("1----------------------------------------")
+  //console.log( "request : " + Torequest);
+  //console.log("2----------------------------------------")
+  try {
+    const response = await fetch(`${HostPort}/${Torequest}/`)
+
+    if (!response.ok) {
+      throw new Error(`Failed to ${response.message} Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+
+    if (!data || typeof data !== 'object') {
+      throw new Error("Invalid response data");
+    }
+    //console.log("ControllerPessPassword  Succsse++++++++++++++++++++");
     return { state: true, message: data };
   } catch (error) {
     console.error("Error:", error);

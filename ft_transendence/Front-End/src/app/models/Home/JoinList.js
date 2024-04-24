@@ -38,6 +38,30 @@
 //     type: "Tournament"
 //   }
 // ]
+var GameRom = {
+  creator_id :0,
+  game_room_id : 0
+}
+
+// const chatSocket = new WebSocket("ws://" + HostPort.slice(7) + "/");
+// const ws = new WebSocket("ws://" + window.location.host + "/ws/joinlist/")
+// debugger;
+// console.log("barev");
+// const Join_Ws = new WebSocket("ws://" + HostPort.slice(7) + "/ws/joinlist/")
+
+// Join_Ws.onopen = Join_Ws.onmessage = message => {
+//   debugger;
+//   if (!message.data) {
+//       return;
+//   }
+//   let response = JSON.parse(message.data);
+//   console.log(JSON.stringify(response))
+//   debugger;
+//   if (response.method === "update_room" && User._getAccess) {
+//       Home._MidleJoinList._game_rooms = response.game_rooms;
+//       ManageMidle.Manage("JoinList");
+//   }
+// }
 
 
 class JoinList extends HtmlElement {
@@ -45,7 +69,23 @@ class JoinList extends HtmlElement {
       super(".JoinList")
       this._style.display = "none";
       this._JoinListInvit = new JoinListInvit();
+      debugger;
+      this.Join_Ws = new WebSocket("ws://" + HostPort.slice(7) + "/ws/joinlist/")
+
+      this.Join_Ws.onopen = this.Join_Ws.onmessage = message => {
+        if (!message.data) {
+            return;
+        }
+        let response = JSON.parse(message.data);
+        console.log(JSON.stringify(response))
+        debugger;
+        if (response.method === "update_room" && User._getAccess) {
+            this._game_rooms = response.game_rooms;
+            ManageMidle.Manage("JoinList");
+        }
+      }
     }
+    _game_rooms = "";
     _CreateButton = document.querySelector(".JoinListHeroDivButtonB");
     _InviteButton = document.querySelector("#JoinListHeroDivButtonBInvite");
     // 2<div class="JoinListTd">
@@ -152,7 +192,6 @@ class JoinList extends HtmlElement {
     </div>
 </div> */
     JoinListItem (Item){
-      debugger
       const divJoin = document.createElement("div");
       divJoin.setAttribute("class", "JoinListTableBody");
       //1
@@ -190,31 +229,41 @@ class JoinList extends HtmlElement {
 
       //    Iterate over each button and attach an event listener
       buttonsJoin.forEach(button => {
-        debugger
         button.addEventListener("click", async function(e) {
-                debugger
+          //debugger
                 // Item.id + ":JoinListTableID:" + Item.creator_id
                 // api/v1/joinlist/<int:pk>/' POST
                 const idLeft = e.target.id.slice(0, e.target.id.indexOf(':'));
                 const idRight = e.target.id.slice(e.target.id.lastIndexOf(':')+1);
                 const creator_id = idLeft;
                 const game_room_id = idRight;
-                console.log("creator_id = " + creator_id + "  game_room_id " + game_room_id + " ");
 
                 const data = await FetchRequest("POST", "api/v1/joinlist/"+User._Id, {
-                  "creator_id": idLeft,
-                  'game_room_id': idRight
-                });
-                // Your code here
-                console.log(JSON.stringify(e.target.id));
-                console.log("buttonsJoin!");
+                                    "creator_id": idRight,
+                                    'game_room_id': idLeft
+                                  });
+
+
+                if (data && data.state)
+                {
+                  GameRom.creator_id = data.message.game.game_room_id;
+
+                  GameRom.game_room_id = data.message.game_room_id;
+                  const select = document.querySelector(".ScriptData");
+                  window.location.href = "http://10.12.11.2:8000/game";
+
+
+
+                  select.setAttribute("src","./src/app/models/Home/game/game.js")
+
+                }
             })
       })
       //    Iterate over each button and attach an event listener
       buttonsView.forEach(button => {
-        debugger
+
         button.addEventListener("click", async function(e) {
-                debugger
+
                 // Your code here
                 console.log(JSON.stringify(e.target.id));
                 console.log("buttonsView");
@@ -222,9 +271,7 @@ class JoinList extends HtmlElement {
         })
       //    Iterate over each button and attach an event listener
       buttonsMembers.forEach(button => {
-        debugger
         button.addEventListener("click", async function(e) {
-                debugger
                 // Your code here
                 console.log(JSON.stringify(e.target.id));
                 console.log("buttonsMembers!");
@@ -233,22 +280,24 @@ class JoinList extends HtmlElement {
     }
 
 
-    async getJoinListItemAll(){
-      const JoinList = await getFetchRequest("api/v1/joinlist/" + User._Id);
+    // async getJoinListItemAll(JoinList) {
+    //   if (!JoinList || !JoinList.state)
+    //     return;
 
-      if (JoinList && JoinList.state)
-      {
-        document.querySelector(".JoinListConteinerTableALL").innerHTML = "";
-        JoinList.message.game_rooms.sort((e,e1)=>e.id < e1.id).forEach(e => {
-          this.JoinListItem(e);
+    //   document.querySelector(".JoinListConteinerTableALL").innerHTML = "";
+    //   JoinList.message.game_rooms.sort((e,e1)=>e.id < e1.id).forEach(e => {
+    //     this.JoinListItem(e);
+    //   });
+    //   this.setEventAllButton();
+    // }
+
+  async draw() {
+    document.querySelector(".JoinListConteinerTableALL").innerHTML = "";
+    if (this._game_rooms) {
+        this._game_rooms.sort((e,e1)=>e.id < e1.id).forEach(e => {
+            this.JoinListItem(e);
         });
-      }
-      this.setEventAllButton();
     }
-
-    async draw(){
-      debugger
-     await this.getJoinListItemAll();
-    }
-  
+    this.setEventAllButton();
   }
+}

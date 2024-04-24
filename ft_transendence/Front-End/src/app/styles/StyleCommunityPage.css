@@ -1,4 +1,42 @@
-.MidleCub{
+.CommunityPageIconDiv{
+    width: 25px;
+    height: 25px;
+    font-weight: bold;
+}
+
+
+.CommunityAddFriends{
+    background-color: #00A3FF;
+    height: 3em;
+    color: white;
+    border-style: none;
+    width: 95%;
+    text-align: center;
+}
+
+.CommunityAddFriends:not([disabled="true"]):active {
+    transform: translate(0px, 4px);
+    transition: transform 0.2s; /* Transition the transform property over 2 seconds */
+}
+
+
+
+.CommunitySeeUser{
+    background-color: #00A3FF;
+    height: 3em;
+    color: white;
+    border-style: none;
+    width: 90%;
+    text-align: center;
+}
+
+.CommunitySeeUser:active {
+    transform: translate(0px, 4px);
+    transition: transform 0.2s; /* Transition the transform property over 2 seconds */
+}
+
+
+.MidleCommunity{
     width: 100%;
     height: auto;
     display: flex;
@@ -9,7 +47,8 @@
 }
 
 
-.MidleCubProfil {
+
+.MidleCommunityProfil {
     border: 2px  solid red;
     width: 80%;
     height: 95%;
@@ -18,7 +57,7 @@
     background-color: rgba(92, 81, 143, 0.2);
 }
 
-.MidleCubHeroAll{
+.MidleCommunityHeroAll{
     border-radius: 20px;
     margin-bottom: 3px;
     width: 100%;
@@ -30,7 +69,7 @@
     box-shadow: 0px 2px 1px 0.1px rgba(84, 72, 128, 1);
 }
 
-.MidleCubHero{
+.MidleCommunityHero{
     width: 35%;
     display: flex;
     gap: 30px;
@@ -39,28 +78,28 @@
     margin-left: 10%;
 }
 
-.MidleCubHeroP{
+.MidleCommunityHeroP{
     margin-top: 0;
     margin-bottom: 10px;
 }
 
-.MidleCubImage{
+.MidleCommunityImage{
     border-radius: 50px;
     box-shadow: -0.1px -0.1px 10px 0.1px white;
 }
 
-.MidleCubEdit{
+.MidleCommunityEdit{
     width: 100%;
     margin-top: 30px;
 }
 
-.MidleCubConteinerTable{
+.MidleCommunityConteinerTable{
     width: 90%;
     margin-left: auto;
     margin-right: auto;
 }
 
-.MidleCubTable{
+.MidleCommunityTable{
     display: grid;
     grid-template-columns: 1fr 2fr 1fr 1fr 1fr;
     padding-top: 10px;
@@ -70,7 +109,7 @@
     text-align: center;
 }
 
-.MidleCubTableBody{
+.MidleCommunityTableBody{
     display: grid;
     grid-template-columns: 1fr 2fr 1fr 1fr 1fr;
     padding-top: 10px;
@@ -78,25 +117,24 @@
     color: white;
     text-align: center;
 }
-
-.MidleCubTd{
+.MidleCommunityTd{
     display: flex;
     justify-content: start;
 }
 
-.MidleCubTableImageBody{
+.MidleCommunityTableImageBody{
     margin-top: -7px;
 }
 
-.MidleCubList{
+.MidleCommunityList{
     display: flex;
     justify-content: space-between;
     padding-left: 10%;
     padding-right: 10%;
 }
 
-.MidleCubTableName, .MidleCubTableBodyNAme{
-    font-size: clamp(12px, 2.5vw, 20px); 
+.MidleCommunityTableName, .MidleCommunityTableBodyNAme{
+    font-size: clamp(12px, 2.5vw, 20px);
     margin-left: 10px;
 }
 
@@ -121,21 +159,25 @@
 }
 
 
-@media only screen and (max-width: 400px){
-    .MidleCubProfil{
+@media only screen and (max-width: 500px){
+    .MidleCommunityProfil{
         width: 95%;
-    } 
+    }
+    .CommunitySeeUser,.CommunityAddFriends{
+        font-size: 8px;
+    }
 }
 
-@media only screen and (max-width: 339px){
-    .MidleCubConteinerTable{
+@media only screen and (max-width: 450px){
+    .MidleCommunityConteinerTable{
         overflow: hidden;
         width: 250px;
     }
-    .MidleCubEdit{
+    .MidleCommunityEdit{
         overflow: scroll;
         width: 169px;
         margin: auto;
+        margin-top: 16px;
         overflow-y: hidden;
     }
 }

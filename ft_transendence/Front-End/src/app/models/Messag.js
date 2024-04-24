@@ -177,7 +177,7 @@ ElementData.prototype.createBlock = function(Group, nameElement) {
 */
 
 ElementData.prototype.MessagPrivateSubjectMessagPerson = function(Person) {
-    //debugger
+    ////debugger
     const node = document.createElement("div")
     node.setAttribute("class", "MessagPrivateSubjectMessagPerson");
       const PersonDiv = document.createElement("div")
@@ -212,7 +212,7 @@ ElementData.prototype.MessagPrivateSubjectMessagPerson = function(Person) {
 */}
 
 ElementData.prototype.MessagPrivateSubjectMessagSender = function(Person) {
-    //debugger
+    ////debugger
     const node = document.createElement("div");
     node.setAttribute("class", "MessagPrivateSubjectMessagSender");
     const nodeDiv = document.createElement("div")
@@ -271,25 +271,34 @@ var MessagePage = function(name) {
 
     // for chat private
     this.chat = (chatPersonal) => {
-        //debugger
-
         chatPersonal.forEach((Person)=>{
-            if(Person.id == User._Id)
+            if(Person.username === User._Nickname)
                 this.MessagPrivateSubjectMessagPerson(Person)
             else
                 this.MessagPrivateSubjectMessagSender(Person)
         })
+        const Person = chatPersonal.find((Person)=>Person.username !== User._Nickname)
+        
+        const MessagePrivateUserH4 = document.querySelector(".MessagePrivateUserH4")
+        MessagePrivateUserH4.innerHTML = Person?.username || "Sender";
+        const MessagePrivateUserImg = document.querySelector(".MessagePrivateUserImg");
+        // MessagePrivateUserImg.src = `data:image/png;base64,${Person.src}`;
+        MessagePrivateUserImg.src = Person?.src || "Sender";
+        const MessagePrivateUserImagOnlain = document.querySelector(".MessagePrivateUserImagOnlain");
+        
+        !Person.isOnlain ? MessagePrivateUserImagOnlain.style.backgroundColor = "grey":MessagePrivateUserImagOnlain.style.backgroundColor = "green";
     };
 
 
-    this.draw = async () => {
-        //debugger
+    this.draw = async (data) => {
         if (!await User.menegAccsess())
             return null;
-        
-        this.Groups(Groups);
-        this.Personal(Groups);
-        this.chat(Privat);
+        if (data?.send == "Privat")
+            this.chat([data]);
+        else if(data?.send == "Personal") 
+            this.Personal([data]);
+        else if(data?.send == "Groups")
+            this.Groups([data]);
     }
 }
 

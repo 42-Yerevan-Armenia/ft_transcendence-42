@@ -28,7 +28,7 @@
 .IconExit {
     width: 15px;
     height: 15px;
-    margin-top: -10px; 
+    margin-top: 5px; 
     margin-left: 55px;
     cursor: pointer;
 }
@@ -153,22 +153,21 @@
     display: none;
 }
 
-
+.navLinkP{
+    width: 83px;
+}
 #NAVSIGNINSIGNOUTNavLoginOut
 {
     display: none;
-    width: 75px;
-    height: 25px;
-    text-align: center;
-    margin: auto 4% auto;
 }
 
 #NavLoginOut{
     
-    width: 70px;
+    width: 20px;
     height: 20px;
     border: 2px solid rgb(101 94 105);
-    margin: auto auto;
+     /* margin: auto auto; */
+
 }
 
 #NavLoginOut:hover{
@@ -183,12 +182,16 @@
 /*-----------------end-------------*/
 
 .NavSignin, .NavSignUp{
+    display: flex;
     background-color:#1B8CCE;
     text-align: center;
     border-radius: 10px;
-    border: 2px solid #1B8CCE;
+    border: 1px solid #1B8CCE;
     width: 70px;
     cursor: pointer;
+    height: 40px;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .NavSignUp{

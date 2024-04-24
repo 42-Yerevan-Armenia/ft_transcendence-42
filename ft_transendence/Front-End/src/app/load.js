@@ -44,23 +44,35 @@ if (mainElement) {
 
 document.addEventListener("DOMContentLoaded", async () => {
 
-    // debugger
+    console.log(" console.log(window.history);")
+    console.log(window.history);
+//debugger
     if(User.checkSignIn())
     {
-
         //once expiration a new refresh token is generated
-        const res = await User.accessRefresh();
-
         //set data from backend
-        if (res && await User.setDataFromBackEnd())
+        if (await User.menegAccsess())
         {
-
-            console.log("true")
+            if (await User.setDataFromBackEnd())
+                console.log("true")
+            else
+                await myStorages.longOut();
         }
         else
-            myStorages.longOut();
+            await myStorages.longOut();
     }
-   
+    else
+    {
+
+        ////debugger
+        const code = window.location.search?.slice(6);
+
+        if (code)
+        {
+            User.url42schools = code;
+            await Login.Post42ConnectBackend();
+        }
+    }
     await ManageAllPage.Manage("Home");
 });
 

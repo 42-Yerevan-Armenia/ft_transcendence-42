@@ -13,7 +13,6 @@ var SignUp = new SignupPage();
 
 var ManageAllPage = {
     Manage: async function(pageName) {
-        //debugger
       await  ManageAllPage.pages.forEach(async (element) => {
             const [key, obj] = Object.entries(element)[0]; // Get the key-value pair of the element
 
@@ -26,13 +25,13 @@ var ManageAllPage = {
         });
     },
     pages: [
-        {"Login": Login},
-        {"Confirm": Confirm},
-        {"Register": Register},
-        {"Home": Home},
-        {"Password": Password},
-        {"SignUp": SignUp},
-        {"ResetPage": Reset},
+        {"Login": Login},              //http://10.12.11.1:3000/signin
+        {"Confirm": Confirm},          //http://10.12.11.1:3000/confirm
+        {"Register": Register},        //http://10.12.11.1:3000/register
+        {"Home": Home},                //http://10.12.11.1:3000/password
+        {"Password": Password},        //http://10.12.11.1:3000/pass
+        {"SignUp": SignUp},            //http://10.12.11.1:3000/setdata
+        {"ResetPage": Reset}           //http://10.12.11.1:3000/password
     ]
 };
 
@@ -41,7 +40,6 @@ var ManageAllPage = {
 //give name section name what we need show in middle Home->Midl section
 var ManageMidle = {
     Manage: async function(midleName) {
-         //debugger
        await ManageMidle.pages.forEach(async (element) => {
             const [key, obj] = Object.entries(element)[0]; // Get the key-value pair of the element
             if (key === midleName) {
@@ -59,16 +57,15 @@ var ManageMidle = {
         {"JoinList": Home._MidleJoinList},
         {"ProfileMidle":Home._HomeMidleProfile},
         {"MidleHistoryGame": Home._MidleHistoryGame},
-        {"JoinListInvite": Home._MidleJoinList._JoinListInvit}
-        // {"JoinListInvite": Home._HomeJoinListInvit}
-        // {"SignUp": SignUp}
+        {"JoinListInvite": Home._MidleJoinList._JoinListInvit},
+        {"MidleCommunity": Home._MidleCommunity},
+        {"AccountUser": Home._AccountUser}
     ]
 };
 
 
 var ManageRight = {
     Manage: async function(name) {
-        //debugger
         await ManageRight.pages.forEach(async (element) => {
             const [key, obj] = Object.entries(element)[0]; // Get the key-value pair of the element
 
@@ -85,6 +82,3 @@ var ManageRight = {
         {"Message": Home._HomeMessage}
     ]
 }
-
-
-
