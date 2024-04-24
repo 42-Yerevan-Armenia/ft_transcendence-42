@@ -14,11 +14,8 @@ class HomeLeft extends HtmlElement {
     _ExploreMessag = document.querySelector(".Explore");
     _NavLoginOut = document.querySelector("#NavLoginOut");
     draw() {
-      // //debugger
-      console.warn("++++++++++++++++++1")
       if (User.checkSignIn())
       {
-        console.warn("++++++++++++++++++2")
         this._Name.innerHTML = User._Name;
         this._Nickname.innerHTML = User._Nickname;
         // Get the Base64-encoded string

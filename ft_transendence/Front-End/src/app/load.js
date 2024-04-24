@@ -44,9 +44,9 @@ if (mainElement) {
 
 document.addEventListener("DOMContentLoaded", async () => {
 
-
-    
-debugger
+    console.log(" console.log(window.history);")
+    console.log(window.history);
+//debugger
     if(User.checkSignIn())
     {
         //once expiration a new refresh token is generated
@@ -64,7 +64,7 @@ debugger
     else
     {
 
-        //debugger
+        ////debugger
         const code = window.location.search?.slice(6);
 
         if (code)

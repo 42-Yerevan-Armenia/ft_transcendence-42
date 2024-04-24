@@ -22,7 +22,6 @@ class USER {
       this._geRefresh = localStorage.getItem("refresh");
       this._Id = localStorage.getItem("id");
   
-      console.log("access  [" + this._getAccess +"]");
       if (this._getAccess && this._geRefresh && this._Id)
         this._SignIn = true;
       else
@@ -49,7 +48,6 @@ class USER {
     }
 
     async setDataFromBackEnd(){
-      // //debugger
       // check signin
       if (!await this.menegAccsess())
         return false
@@ -87,10 +85,6 @@ class USER {
 
     //when refresh_token is not expired call for update access
     accessRefresh = async () => {
-      debugger
-      
-      // this._geRefresh = localStorage.getItem("refresh");
-
       const res = await FetchRequest("POST", "api/v1/token/refresh", {"refresh" : this._geRefresh});    //call for update access
 
       this.date = new Date();

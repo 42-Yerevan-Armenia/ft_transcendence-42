@@ -119,7 +119,7 @@
 }
 .MidleCommunityTd{
     display: flex;
-    justify-content: space-around;
+    justify-content: start;
 }
 
 .MidleCommunityTableImageBody{
@@ -134,7 +134,8 @@
 }
 
 .MidleCommunityTableName, .MidleCommunityTableBodyNAme{
-    font-size: clamp(12px, 2.5vw, 20px); 
+    font-size: clamp(12px, 2.5vw, 20px);
+    margin-left: 10px;
 }
 
 
