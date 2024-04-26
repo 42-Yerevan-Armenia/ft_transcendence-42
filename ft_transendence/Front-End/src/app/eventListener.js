@@ -137,8 +137,6 @@ Home?._NAV?._Community?._classname?.addEventListener("click",()=>{
 } )
 
 
-
-
 //whene create new list item for game
 //_MidleJoinList Create button
 Home._MidleJoinList?._CreateButton?.addEventListener("click", async ()=>{
@@ -157,78 +155,27 @@ Home._MidleJoinList?._CreateButton?.addEventListener("click", async ()=>{
     
   };
 
-  //send back-end
-  const url = "api/v1/createroom/" + User._Id;
-  const paload = {
-    "method": "create",
-    "pk":User._Id,
-    ...objCreate,
-  }
-  const str = JSON.stringify(paload)
+//send back-end
+// const url = "api/v1/createroom/" + User._Id;
+const paload = {
+  "method": "create",
+  "pk":User._Id,
+  ...objCreate,
+}
+
+const str = JSON.stringify(paload)
   
-  Home._MidleJoinList.Join_Ws.send(str);
+Join_Ws.send(str);
 //   await FetchRequest("POST", url, objCreate);
   //redirect
  
-// api/v1/createroom/:id
   Players.value = "";
   LiveOnOff.value = "";
   JoinTheme.value = "";
   JoinListHeroDivGameMode.value = "";
-  // LiveOnOff
 })
 
 
-<<<<<<< HEAD
-Join_Ws.onmessage = message => {
-    //debugger;
-    if (!message.data) {
-        return;
-    }
-    let response = JSON.parse(message.data);
-    console.log(JSON.stringify(response))
-    //debugger;
-    if (response.method === "update_room" && User._getAccess) {
-        Home._MidleJoinList._game_rooms = response.game_rooms;
-        ManageMidle.Manage("JoinList");
-    }
-}
-=======
-// this.Join_Ws.onmessage = message => {
-//     debugger;
-//     if (!message.data) {
-//         return;
-//     }
-//     let response = JSON.parse(message.data);
-//     console.log(JSON.stringify(response))
-//     debugger;
-//     if (response.method === "update_room" && User._getAccess) {
-//         Home._MidleJoinList._game_rooms = response.game_rooms;
-//         ManageMidle.Manage("JoinList");
-//     }
-// }
->>>>>>> f2548725f31e5e281ad7ff56527b3b6d109320cf
-
-
-//sign in
-// Home._NavSigninSignout?._NavSignin?.addEventListener("click", ()=> {
-//   Home.ButtonSignIn();
-//   Login.DisplayBlock();
-// })
-// Home._NavSigninSignout?._NavSignin1?.addEventListener("click", ()=> {
-//   Home.ButtonSignIn();
-//   Login.DisplayBlock();
-// })
-
-//sign up
-// Home._NavSigninSignout?._NavSignUp.addEventListener("click", async ()=> {
-//   Home.ButtonSignUp();
-//   await Register.DisplayBlock();
-// })
-// Home._NavSigninSignout?._NavSignUp1.addEventListener("click", ()=> {
-//   Home.ButtonSignUp();
-//   Register.DisplayBlock();
-// })
 
 
 

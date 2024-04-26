@@ -43,25 +43,6 @@ var GameRom = {
   game_room_id : 0
 }
 
-// const chatSocket = new WebSocket("ws://" + HostPort.slice(7) + "/");
-// const ws = new WebSocket("ws://" + window.location.host + "/ws/joinlist/")
-// debugger;
-// console.log("barev");
-// const Join_Ws = new WebSocket("ws://" + HostPort.slice(7) + "/ws/joinlist/")
-
-// Join_Ws.onopen = Join_Ws.onmessage = message => {
-//   debugger;
-//   if (!message.data) {
-//       return;
-//   }
-//   let response = JSON.parse(message.data);
-//   console.log(JSON.stringify(response))
-//   debugger;
-//   if (response.method === "update_room" && User._getAccess) {
-//       Home._MidleJoinList._game_rooms = response.game_rooms;
-//       ManageMidle.Manage("JoinList");
-//   }
-// }
 
 
 class JoinList extends HtmlElement {
@@ -70,20 +51,6 @@ class JoinList extends HtmlElement {
       this._style.display = "none";
       this._JoinListInvit = new JoinListInvit();
       debugger;
-      this.Join_Ws = new WebSocket("ws://" + HostPort.slice(7) + "/ws/joinlist/")
-
-      this.Join_Ws.onopen = this.Join_Ws.onmessage = message => {
-        if (!message.data) {
-            return;
-        }
-        let response = JSON.parse(message.data);
-        console.log(JSON.stringify(response))
-        debugger;
-        if (response.method === "update_room" && User._getAccess) {
-            this._game_rooms = response.game_rooms;
-            ManageMidle.Manage("JoinList");
-        }
-      }
     }
     _game_rooms = "";
     _CreateButton = document.querySelector(".JoinListHeroDivButtonB");
@@ -227,7 +194,7 @@ class JoinList extends HtmlElement {
 
 
 
-      //    Iterate over each button and attach an event listener
+      //    Iterate over each button and attach an event listener add Join
       buttonsJoin.forEach(button => {
         button.addEventListener("click", async function(e) {
           //debugger
@@ -250,7 +217,7 @@ class JoinList extends HtmlElement {
 
                   GameRom.game_room_id = data.message.game_room_id;
                   const select = document.querySelector(".ScriptData");
-                  window.location.href = "http://10.12.11.2:8000/game";
+                  // window.location.href = HostPort.slice(7) +"/game";
 
 
 
@@ -259,7 +226,9 @@ class JoinList extends HtmlElement {
                 }
             })
       })
-      //    Iterate over each button and attach an event listener
+
+
+      //    Iterate over each button and attach an event listener to View
       buttonsView.forEach(button => {
 
         button.addEventListener("click", async function(e) {
@@ -269,7 +238,9 @@ class JoinList extends HtmlElement {
                 console.log("buttonsView");
             })
         })
-      //    Iterate over each button and attach an event listener
+
+
+      //    Iterate over each button and attach an event listener Members
       buttonsMembers.forEach(button => {
         button.addEventListener("click", async function(e) {
                 // Your code here
