@@ -212,19 +212,6 @@ class JoinList extends HtmlElement {
                             "creator_id": idRight,
                             'game_room_id': idLeft
                           });
-
-        if (data && data.state)
-        {
-          /*
-          GameRom.creator_id = data.message.game.game_room_id;
-
-          GameRom.game_room_id = data.message.game_room_id;
-          const select = document.querySelector(".ScriptData");
-          // window.location.href = HostPort.slice(7) +"/game";
-
-          select.setAttribute("src","./src/app/models/Home/game/game.js")
-          */
-        }
       })
     })
 
