@@ -23,7 +23,7 @@ Join_Ws.onmessage = message => {
 
         if (User._Id == gameRoom.left_id || User._Id == gameRoom.right_id)
         {
-            pongGame(User);
+            pongGame(User, gameRoom.room_id);
         }
     }
 }
