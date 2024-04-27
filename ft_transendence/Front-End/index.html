@@ -54,7 +54,7 @@
     <title name="Home">Home</title>
 </head>
 <body>
-        <main >
+        <main>
 
             <!-- Confirm -->
             <div class="ConfirmPage">
@@ -367,14 +367,14 @@
                                     <!-- href="#" -->
                                     <div id="NavSigninNavSignUp">
                                         <div class="NAVSIGNINSIGNOUT">
-                                            <div class="NavSignin">
-                                                <a href="/signin" data-link>SignIn</a> 
-                                            </div>
-                                            <div class="NavSignUp">
-                                                <a href="/signup"  data-link>
+                                            <!-- <div > -->
+                                                <a href="/signin" data-link class="NavSignin">SignIn</a> 
+                                            <!-- </div> -->
+                                            <!-- <div > -->
+                                                <a href="/register"  data-link class="NavSignUp" >
                                                     SignUp
                                                 </a>
-                                            </div>
+                                            <!-- </div> -->
                                         </div>
                                     </div>
 
@@ -1110,11 +1110,11 @@
 
                                     <div class="Rightsection">
                                         <div class="Rightsignin">
-                                            <div class="RightsigninButton">
-                                                <a href="/signin" data-link>
+                                            <!-- <div > -->
+                                                <a href="/signin" data-link class="RightsigninButton">
                                                     Sign in
                                                 </a>
-                                            </div>
+                                            <!-- </div> -->
                                         </div>
                                         <div class="RightMidle">
                                             <div class="RightMidLepoint"></div>
@@ -1122,11 +1122,11 @@
                                             <div class="RightMidLepoint"></div>
                                         </div>
                                         <div class="Rightsignup">
-                                            <div class="RightgninupButton">
-                                                <a href="/signup"  data-link>
+                                            <!-- <div > -->
+                                                <a href="/register"  data-link class="RightgninupButton">
                                                     Sign up
                                                 </a>
-                                            </div>
+                                            <!-- </div> -->
                                         </div>
                                     </div>
                                 </section>
@@ -1157,9 +1157,9 @@
 
                                         <div class="MessagFriends">
                                             <div id="MessagePersonalAll">
-                                                <h4>Personal</h4>
+                                                <h4>Friends</h4>
                                                 <div id="addChildPersonal">
-                                                    <!-- <div class="PersonalADD">
+                                                    <div class="PersonalADD">
                                                         <img src="./public/Grup1.png" alt="GPersonal">
                                                         <div class="PersonalADDSubject">
                                                             <div>
@@ -1170,7 +1170,7 @@
                                                                 <p>15</p>
                                                             </div>
                                                         </div>
-                                                    </div> -->
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -1186,7 +1186,7 @@
                                                         </div>
                                                     </div>
                                                     <h4 class="MessagePrivateUserH4">
-                                                        <!-- Benny -->
+                                                        Benny
                                                     </h4>
                                                 </div>
 
@@ -1315,6 +1315,7 @@
         <script src="./src/app/models/ConfirmPage.js"></script>
         
         <script  src="./src/app/managePages.js"></script>
+        <script src="./src/app/socketListener.js"></script>
         <script src="./src/app/eventListener.js"></script>
         <script  src="./src/app/load.js"></script>
     </body>

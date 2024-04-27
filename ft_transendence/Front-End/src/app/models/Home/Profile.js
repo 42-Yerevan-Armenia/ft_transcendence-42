@@ -21,24 +21,18 @@ class MidleProfile extends HtmlElement {
      
 
     async addEventListenerAcceptOrReject(className){
-      debugger
       const nodsAcceptsOrRejects = document.querySelectorAll(className);
 
-      nodsAcceptsOrRejects.forEach(async (button)=>{
-        button.addEventListener("click", async (e)=>{
-          debugger
-
+      nodsAcceptsOrRejects.forEach(async (button) => {
+        button.addEventListener("click", async (e) => {
           //tack id
           const id = e.target.id.slice(e.target.id.lastIndexOf(':') + 1)
           const sendFrend = {
             sender_id: id
           }
 
-          console.log("++++++++++[[[[[" + id+ "]]]]]");
-
           if (className == ".AcceptRejectAccept")
           {
-            debugger
             // path('api/v1/accept/<int:pk>/', AcceptFriendRequest.as_view()),  
             const friendAdd = await putRequest("POST", "api/v1/accept/" + User._Id, sendFrend)
             if (!friendAdd.state)
@@ -46,7 +40,6 @@ class MidleProfile extends HtmlElement {
           }
           else{
             // path('api/v1/reject/<int:pk>/', RejectFriendRequest.as_view()),
-            debugger
             const friendAdd = await putRequest("POST", "api/v1/reject/" + User._Id, sendFrend)
             if (!friendAdd.state)
               return;
@@ -64,7 +57,6 @@ class MidleProfile extends HtmlElement {
   </div> 
 */
     profilHeader(){
-      //debugger
       document.querySelector("#ProfileMidleHeaderMainAvatarImage").src = `data:image/png;base64,${User._Image}`;
       document.querySelector(".ProfileMidleHeaderMainDataName").innerHTML = User._Name;
       document.querySelector(".ProfileMidleHeaderMainDataNickName").innerHTML = User._Nickname;
@@ -95,7 +87,6 @@ class MidleProfile extends HtmlElement {
   //   </div>
   // </div>
     profilBody(Item){
-      debugger
       //1  ProfileMidleBodyItem
       const div1 = document.createElement("div");
       div1.setAttribute("class","ProfileMidleBodyItem");
@@ -141,7 +132,6 @@ class MidleProfile extends HtmlElement {
     }
 
     frendsdrawScreen(friend){
-      //debugger
       const divProf = document.createElement("div");
       divProf.setAttribute("class", "ProfileMidleFooterUser");
       const img = document.createElement("img");
@@ -158,7 +148,6 @@ class MidleProfile extends HtmlElement {
       this._ProfileMidleFooterDiv.appendChild(divProf);
     }
     async getFriends(){
-      debugger
       this.profilHeader();
       const users = await getFetchRequest("users");
       
@@ -173,7 +162,6 @@ class MidleProfile extends HtmlElement {
           if (!item.rejected)
           this.profilBody(item);
         })
-        debugger
         //event listener in to friendship requests Accept
         this.addEventListenerAcceptOrReject(".AcceptRejectAccept");
 

@@ -1,5 +1,4 @@
 class MidleCommunity extends HtmlElement {
-    // //debugger
       constructor() {
         super(".MidleCommunity")
         this._style.display = "none";
@@ -15,9 +14,8 @@ class MidleCommunity extends HtmlElement {
 
         accounts.forEach((e) => {
           e.addEventListener("click", async (item) => {
-            debugger
+
             let id = item.target.id.slice(item.target.id.lastIndexOf(':') + 1);
-            console.log("++++++++++++++++++++++++[" + id + "]");
 
             const userAccount =  this.Items.message.find((e)=>e.id == id);
             
@@ -53,7 +51,7 @@ class MidleCommunity extends HtmlElement {
             //{0:CommunityAddFriends}.addEventListener
           e.addEventListener("click", async (item)=>{
             //<button id=""CommunityAddFriends:1">
-            debugger
+            //debugger
             let id = item.target.id.slice(item.target.id.lastIndexOf(':')+ 1);
 
             const sendFrend = {
@@ -88,7 +86,7 @@ class MidleCommunity extends HtmlElement {
   //     </div>
   // </div>
     MidleCommunityTableBodyI(i, Item){
-      debugger
+      //debugger
             //1
             const div1 = document.createElement("div");
             div1.setAttribute("class", "MidleCommunityTableBody");
@@ -155,7 +153,7 @@ class MidleCommunity extends HtmlElement {
 
     //Section Cup Drow DOM
     async setHero(){
-      debugger
+      //debugger
       let i = 1;
       this.Items = "";
       const domDat = document.querySelector(".MidleCommunityEditSection")
@@ -180,7 +178,7 @@ class MidleCommunity extends HtmlElement {
     }
 
     async draw(){
-      debugger
+      //debugger
       await this.setHero();
     }
 }

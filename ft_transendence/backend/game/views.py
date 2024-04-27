@@ -15,11 +15,12 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
-from core.models import Person, GameRoom, History
+from core.models import User, Person, GameRoom, History
 from core.serializers import MatchSerializer
 from django.http import JsonResponse
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
+from friendship.models import Block
 import time
 import random
 
@@ -95,14 +96,18 @@ class MatchmakingSystem():
             self.remove_player_from_pool(player_1['id'])
             self.remove_player_from_pool(player_2['id'])
 
+# TODO::for all
+
     def start_match(self, player1_id, player2_id):
         try:
             response_data = {
                 "success": True,
                 "method": "start_match",
                 "players": [
-                    {"id": player1_id},
-                    {"id": player2_id}
+                    {
+                        "left_id": player1_id,
+                        "right_id": player2_id
+                    }
                 ]
             }
             return JsonResponse(response_data, status=status.HTTP_200_OK)
@@ -292,3 +297,52 @@ def save_game_history(user1, user2, result_user1, result_user2):
     # Create history instances for both players
     History.objects.create(player=user1, opponent=user2, game_room=user1.game_room, win=win_user1, lose=not win_user1)
     History.objects.create(player=user2, opponent=user1, game_room=user2.game_room, win=win_user2, lose=not win_user2)
+
+class SendInviteRequest(APIView):
+    permission_classes = [IsAuthenticated]
+    def post(self, request, *args, **kwargs):
+        try:
+            usera = request.user
+            opponent_id = request.data.get('opponent_id')
+            sender = Person.objects.get(id=request.user.id)
+            opponent = Person.objects.get(id=opponent_id)
+            userb = User.objects.get(id=opponent_id)
+            if sender.game_room is None:
+                return JsonResponse({"success": "false", "error": "You don't have a game room"}, status=status.HTTP_400_BAD_REQUEST)
+            if Block.objects.is_blocked(usera, userb) == True:
+                return Response({"success": "false", "error": "You are banned by this user"}, status=status.HTTP_400_BAD_REQUEST)
+            if opponent.ongoing == True:
+                return JsonResponse({"success": "false", "error": "Opponent is already in another game room"}, status=status.HTTP_400_BAD_REQUEST)
+            if sender.game_room and opponent.game_room and sender.game_room == opponent.game_room:
+                return JsonResponse({"success": "false", "error": "Opponent is already in the same game room"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"success": "true", "message": "Invitation sent successfully"}, status=status.HTTP_200_OK)
+        except Person.DoesNotExist:
+            return Response({"success": "false", "error": "User or opponent not found"}, status=status.HTTP_404_NOT_FOUND)
+
+class AcceptInviteRequest(APIView):
+    permission_classes = [IsAuthenticated]
+    def post(self, request, *args, **kwargs):
+        try:
+            oponent = request.user
+            sender_id = request.data.get('sender_id')
+            sender = Person.objects.get(id=sender_id).user
+            # Check if in game room enuogh playes for oponent
+            if sender.game_room and sender.game_room.players.count() < sender.game_room.max_players:
+                sender.game_room.players.add(oponent)
+                return Response({"success": "true", "method": "invite", "message": "Oponent joind to gameroom"}, status=status.HTTP_200_OK)
+            else:
+                return Response({"success": "false", "error": "Game room is full"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"success": "false", "error": "Sender user not found"}, status=status.HTTP_404_NOT_FOUND)
+        except Person.DoesNotExist:
+            return Response({"success": "false", "error": "Sender user not found"}, status=status.HTTP_404_NOT_FOUND)
+
+class RejectInviteRequest(APIView):
+    permission_classes = [IsAuthenticated]
+    def post(self, request, *args, **kwargs):
+        try:
+            oponent = request.user
+            sender_id = request.data.get('sender_id')
+            sender = Person.objects.get(id=sender_id).user
+            return Response({"success": "true", "method": "reject", "message": "Oponent rejected invitation"}, status=status.HTTP_200_OK)
+        except Person.DoesNotExist:
+            return Response({"success": "false", "error": "Sender user not found"}, status=status.HTTP_404_NOT_FOUND)

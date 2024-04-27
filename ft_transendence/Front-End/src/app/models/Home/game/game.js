@@ -25,8 +25,12 @@ let playerColor = null;
 const sliceA = HostPort.slice(7);
 console.log(sliceA);
 let ws = new WebSocket("ws://" + sliceA+ "/ws/game/")
-window.location.href = "http://10.12.11.2:8000/game";
-console.log("ws = ", window.location.host);
+// window.location.href = HostPort + "/game";
+
+
+
+
+
 // const btnCreate = document.getElementById("btnCreate");
 // const btnJoin = document.getElementById("btnJoin");
 // const btnStart = document.getElementById("btnStart");
@@ -96,30 +100,21 @@ document.addEventListener("keydown", event => {
 // })
 
 ws.onmessage = message => {
-    //message.data
-    // console.log(message);
     let response;
     if (message) {
         try {
             response = JSON.parse(message.data);
         } catch (e) {
-            //debugger;
-            console.log("e = ", e);
             return console.error(e);
         }
     }
-    // console.log(response);
     if (response.method === "connect"){
-        console.log("response = ", response);
         clientId = response.clientId;
-        console.log("Client id Set successfully " + clientId)
     }
 
     //create
     if (response.method === "create"){
-        console.log("response = ", response);
         gameId = response.game["id"];
-        console.log("game successfully created with id " + response.game.id + " with " + response.game.balls + " balls")  
     }
 
 
@@ -128,7 +123,6 @@ ws.onmessage = message => {
         if (isStarted === false) {
             isStarted = true;
             const a = document.createElement("div");
-            // console.log("response.game = " ,response.game);
             const paddle1 = response.state.paddle1;
             a.id = "paddle1";
             a.className = "paddle";
@@ -176,8 +170,8 @@ ws.onmessage = message => {
             // context.fillRect(objToDraw._x, objToDraw._y, objToDraw._radius * 2, objToDraw._radius * 2);
             const ballObject = document.getElementById(b);
             if (ballObject === null) {
-                console.log("ballObject = ", ballObject);
-                console.log("b = ", b);
+                // console.log("ballObject = ", ballObject);
+                // console.log("b = ", b);
             } else {
                 if (response.mode === "updateScore") {
                     ballObject.textContent = objToDraw;
@@ -197,15 +191,12 @@ ws.onmessage = message => {
     //join
     if (response.method === "join"){
         const game = response.game;
-        console.log(game);
-        console.log("joined")
         // context.clearRect(0, 0, canvas.width, canvas.height);
         // context.fillRect(objToDraw.x, objToDraw.y, objToDraw.width, objToDraw.height);
         // context.fillRect(10, 100, 10, 10);
         // TODO change board with and heght
 
         const a = document.createElement("div");
-        // console.log("response.game = " ,response.game);
         a.id = "paddle1";
         a.className = "paddle";
         a.style.width = "20px";

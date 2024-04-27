@@ -43,15 +43,6 @@ var GameRom = {
   game_room_id : 0
 }
 
-// const chatSocket = new WebSocket("ws://" + HostPort.slice(7) + "/");
-// const ws = new WebSocket("ws://" + window.location.host + "/ws/joinlist/")
-const Join_Ws = new WebSocket("ws://" + HostPort.slice(7) + "/ws/joinlist/")
-
-
-// console.log("window.location.host  = " + window.location.host);
-
-// console.log("["+ HostPort.slice(7) + "]");
-
 
 
 class JoinList extends HtmlElement {
@@ -59,6 +50,7 @@ class JoinList extends HtmlElement {
       super(".JoinList")
       this._style.display = "none";
       this._JoinListInvit = new JoinListInvit();
+      debugger;
     }
     _game_rooms = "";
     _CreateButton = document.querySelector(".JoinListHeroDivButtonB");
@@ -202,17 +194,16 @@ class JoinList extends HtmlElement {
 
 
 
-      //    Iterate over each button and attach an event listener
+      //    Iterate over each button and attach an event listener add Join
       buttonsJoin.forEach(button => {
         button.addEventListener("click", async function(e) {
-          debugger
+          //debugger
                 // Item.id + ":JoinListTableID:" + Item.creator_id
                 // api/v1/joinlist/<int:pk>/' POST
                 const idLeft = e.target.id.slice(0, e.target.id.indexOf(':'));
                 const idRight = e.target.id.slice(e.target.id.lastIndexOf(':')+1);
                 const creator_id = idLeft;
                 const game_room_id = idRight;
-                console.log("creator_id = " + creator_id + "  game_room_id " + game_room_id + " ");
 
                 const data = await FetchRequest("POST", "api/v1/joinlist/"+User._Id, {
                                     "creator_id": idRight,
@@ -222,25 +213,22 @@ class JoinList extends HtmlElement {
 
                 if (data && data.state)
                 {
-                  console.log(data.message.game.game_room_id);
-                  console.log(data.message.game.creator_id);
                   GameRom.creator_id = data.message.game.game_room_id;
 
                   GameRom.game_room_id = data.message.game_room_id;
                   const select = document.querySelector(".ScriptData");
-                  // game/"+GameRom.game_room_id
-                  window.location.href = "http://10.12.11.2:8000/game";
-                  // location.assign();
-                  // location.replace();
+                  // window.location.href = HostPort.slice(7) +"/game";
+
 
 
                   select.setAttribute("src","./src/app/models/Home/game/game.js")
 
                 }
-                console.log("buttonsJoin!");
             })
       })
-      //    Iterate over each button and attach an event listener
+
+
+      //    Iterate over each button and attach an event listener to View
       buttonsView.forEach(button => {
 
         button.addEventListener("click", async function(e) {
@@ -250,7 +238,9 @@ class JoinList extends HtmlElement {
                 console.log("buttonsView");
             })
         })
-      //    Iterate over each button and attach an event listener
+
+
+      //    Iterate over each button and attach an event listener Members
       buttonsMembers.forEach(button => {
         button.addEventListener("click", async function(e) {
                 // Your code here

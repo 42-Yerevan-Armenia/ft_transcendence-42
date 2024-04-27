@@ -1,118 +1,3 @@
-// const dataUser12List =[
-//   {
-//     src : "./public/User.png",
-//     nickname :"User.png",
-//     innerHtml: "123456 points",
-//     pointer :5646,
-//     live : true
-//   },
-//   {
-//   src : "./public/User.png",
-//   nickname :"User.png",
-//   innerHtml: "123456 points",
-//   pointer :45646,
-//   live : false
-//   },
-//   {
-//     src : "./public/User.png",
-//     nickname :"User.png",
-//     innerHtml: "123456 points",
-//     pointer :345646,
-//     live : true
-//   },
-//   {
-//   src : "./public/User.png",
-//   nickname :"User.png",
-//   innerHtml: "123456 points",
-//   pointer :12345,
-//   live : false
-//   },
-//   {
-//     src : "./public/User.png",
-//     nickname :"User.png",
-//     innerHtml: "123456 points",
-//     pointer :145,
-//     live : true
-//   },
-//   {
-//   src : "./public/User.png",
-//   nickname :"User.png",
-//   innerHtml: "123456 points",
-//   pointer :4564646,
-//   live : false
-//   },
-//   {
-//     src : "./public/User.png",
-//     nickname :"User.png",
-//     innerHtml: "123456 points",
-//     pointer :45646,
-//     live : true
-//   },
-//   {
-//   src : "./public/User.png",
-//   nickname :"User.png",
-//   innerHtml: "123456 points",
-//   pointer :4564646,
-//   live : false
-//   },
-//   {
-//     src : "./public/User.png",
-//     nickname :"User.png",
-//     innerHtml: "123456 points",
-//     pointer :145,
-//     live : true
-//   },
-//   {
-//   src : "./public/User.png",
-//   nickname :"User.png",
-//   innerHtml: "123456 points",
-//   pointer :4564646,
-//   live : false
-//   },
-//   {
-//     src : "./public/User.png",
-//     nickname :"User.png",
-//     innerHtml: "123456 points",
-//     pointer :45646,
-//     live : true
-//   },
-//   {
-//   src : "./public/User.png",
-//   nickname :"User.png",
-//   innerHtml: "123456 points",
-//   pointer :4564646,
-//   live : false
-//   },
-//   {
-//     src : "./public/User.png",
-//     nickname :"User.png",
-//     innerHtml: "123456 points",
-//     pointer :145,
-//     live : true
-//   },
-//   {
-//   src : "./public/User.png",
-//   nickname :"User.png",
-//   innerHtml: "123456 points",
-//   pointer :4564646,
-//   live : false
-//   },
-//   {
-//     src : "./public/User.png",
-//     nickname :"User.png",
-//     innerHtml: "123456 points",
-//     pointer :45646,
-//     live : true
-//   },
-//   {
-//   src : "./public/User.png",
-//   nickname :"User.png",
-//   innerHtml: "123456 points",
-//   pointer :4564646,
-//   live : false
-//   }
-// ]
-
 //Middle Sections inside for Home Page
 class MiddleSECTION extends HtmlElement {
     constructor(){
@@ -197,7 +82,6 @@ class MiddleSECTION extends HtmlElement {
     }
 
     async loadBackEndX(){
-      debugger
         const Items =  await getPureFetchRequest("users");
 
         if (!Items || !Items.state)
@@ -206,14 +90,11 @@ class MiddleSECTION extends HtmlElement {
         const dataAllItem = Items.message.sort((e, e2)=>{
           return e.points < e2.points
         })
-        console.log("dataAllItem  =  ")
-        console.log(dataAllItem);
         return dataAllItem;
     }
     
     
     async drawList(){
-      debugger
       this.dataUser12List = 0;
       this.dataUser12List = await this.loadBackEndX();
   
@@ -238,8 +119,6 @@ class MiddleSECTION extends HtmlElement {
       if (LiveNowList)
       {
         LiveNowList.forEach(async (e, i) => {
-          console.log("eeeeee  {" + i +"} ")
-          console.log(e);
           await this.liveNow(e, i);
         })
       }
@@ -248,7 +127,6 @@ class MiddleSECTION extends HtmlElement {
 
   async draw()
   {
-    //debugger
     await this.drawList();
   }
 }

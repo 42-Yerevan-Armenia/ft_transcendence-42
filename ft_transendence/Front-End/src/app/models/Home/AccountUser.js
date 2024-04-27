@@ -15,7 +15,6 @@ class AccountUser extends HtmlElement{
     <p class="AccountMidleFooterUserName">User1</p>
 </div> */
     profilHeader(){
-      //debugger
       document.querySelector("#AccountMidleHeaderMainAvatarImage").src = `data:image/png;base64,${this.State._Image}`;
       document.querySelector(".AccountMidleHeaderMainDataName").innerHTML = this.State._Name;
       document.querySelector(".AccountMidleHeaderMainDataNickName").innerHTML = this.State._Nickname;
@@ -24,7 +23,6 @@ class AccountUser extends HtmlElement{
     }
 
     frendsdrawScreen(friend){
-      //debugger
       const divProf = document.createElement("div");
       divProf.setAttribute("class", "AccountMidleFooterUser");
       const img = document.createElement("img");
@@ -43,7 +41,6 @@ class AccountUser extends HtmlElement{
     }
 
     async getFriends(){
-      //debugger
        this.profilHeader();
 
       const friends = await getFetchRequest("api/v1/friendlist/" + this.State._Id);

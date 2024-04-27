@@ -73,7 +73,6 @@ class MiddleSettings extends HtmlElement {
     //for the middle section the backend needs to be changed, 
     //for that I need to load all the data and send white fetch
     async changeData(){
-      //debugger
       const profilName = document.querySelector("#MidleSettingsBlocksPName")                    //"Edit Profile Name
       const gameMode = document.querySelector("#MidleSettingsBlocksPGameMode")                  //Game Mode
       const userName = document.querySelector("#MidleSettingsBlocksPEditProfileUsername")       //Edit Profile Username
@@ -81,7 +80,6 @@ class MiddleSettings extends HtmlElement {
       const email = document.querySelector("#MidleSettingsBlocksPEmail")                         //Edit Profile Email.
       const NewPassword = document.querySelector("#MidleSettingsBlocksPPassword")             //MidleSettingsBlocksPPassword
 
-      debugger
       const newUser = {
         "name":profilName.value,
         "nickname": userName.value,
@@ -94,8 +92,6 @@ class MiddleSettings extends HtmlElement {
       const data = await putRequest("PUT", `api/v1/settings/${User._Id}`, newUser);
       if (data &&  data.state)
       {
-        console.log("New Data  == 11111111111111")
-        console.log(data.message);
         User.setData(data.message)
       }
       profilName.value = "";             //"Edit Profile Name

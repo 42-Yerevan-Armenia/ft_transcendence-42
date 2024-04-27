@@ -1,4 +1,4 @@
-//debugger
+////debugger
 class MidleHistoryGame extends HtmlElement{
     constructor(){
         super(".MidleHistoryGame");
@@ -8,8 +8,7 @@ class MidleHistoryGame extends HtmlElement{
     };
     createFullHistoryTableBodyContainerPlayedGames(dateContent, winContent, loseContent, modeContent)
     {
-        //debugger
-            // Create outer container div
+        // Create outer container div
         const outerContainer = document.createElement('div');
         outerContainer.classList.add('FullHistoryTableBodyContainerPlayedGames');
 
@@ -61,7 +60,7 @@ class MidleHistoryGame extends HtmlElement{
 
     createFullHistoryTableBodyUser(id, name, img, preference, points, matches) {
         // Create elements
-        //debugger
+        ////debugger
         const divFullHistoryTableBodyUser = document.createElement("div");
         divFullHistoryTableBodyUser.classList.add("FullHistoryTableBodyUser");
         divFullHistoryTableBodyUser.id = "FullHistoryTableBodyUserId";
@@ -131,7 +130,6 @@ class MidleHistoryGame extends HtmlElement{
 
     createFullHistory () {
         // Create elements
-        //debugger
         const divFullHistory = document.createElement("div");
         divFullHistory.classList.add("FullHistory");
         
@@ -203,7 +201,6 @@ class MidleHistoryGame extends HtmlElement{
         return (divFullHistory);
     }
     appandDiv(user){
-        //debugger
         const FullHistoryTableBodyUser = this.createFullHistoryTableBodyUser(1);
         const FullHistoryTableBodyUser1 = this.createFullHistoryTableBodyUser(2);
         // FullHistory.appendChild(FullHistoryTableBodyUser);
@@ -216,9 +213,8 @@ class MidleHistoryGame extends HtmlElement{
         document.body.appendChild(this.FullHistory);
     }
     async listUsers(){
-        //debugger
         const history = await getFetchRequest("api/v1/joinlist/" + User._Id);
-        //debugger
+
         if (history && history.state && history.message.game_rooms)
         {
             //history.message
@@ -228,7 +224,6 @@ class MidleHistoryGame extends HtmlElement{
         }
     }
     async draw(){
-        //debugger
         await this.listUsers();
     }
 }

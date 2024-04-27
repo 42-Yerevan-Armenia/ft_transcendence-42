@@ -35,7 +35,6 @@ from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth.hashers import make_password, check_password
 from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
-from django.contrib.sessions.models import Session
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from django.core.files.base import ContentFile
@@ -257,6 +256,18 @@ class Login(APIView):
 class Logout(APIView):
     def post(self, request, pk):
         person = Person.objects.get(id=pk)
+        gameroom = person.game_room
+        if gameroom and gameroom.creator_id == person.id:
+            for player in gameroom.players.all():
+                player.ongoing = False
+                player.game_room_id = None
+                player.save()
+            gameroom.players.clear()
+            gameroom.delete()
+        else:
+            gameroom.players.remove(person)
+            person.ongoing = False
+            person.game_room_id = None
         person.is_online = False
         person.save()
         return Response({"success": "true", "message": "Logged out successfully"}, status=status.HTTP_200_OK)
@@ -386,7 +397,7 @@ class WaitingRoom(APIView):
             opponent = Person.objects.get(id=opponent_id)
             if opponent.ongoing is not None:
                 return JsonResponse({"success": "false", "error": "Opponent is already in a game room"}, status=status.HTTP_400_BAD_REQUEST)
-            return Response({"success": "true", "message": "Invitation sent successfully"}, status=status.HTTP_200_OK)
+            return Response({"success": "true", "method": "invite_room", "message": "Invitation sent successfully"}, status=status.HTTP_200_OK)
         except Person.DoesNotExist:
             return Response({"success": "false", "error": "User or opponent not found"}, status=status.HTTP_404_NOT_FOUND)
 
@@ -404,7 +415,7 @@ class JoinList(APIView):
             for person in persons:
                 game_room_data[person.game_room_id].append(person)
             # Construct JSON response
-            result = {"success": True, "method": "update_room", "game_rooms": []}
+            result = {"success": True, "method": "", "game_rooms": []}
             for game_room_id, persons_in_room in game_room_data.items():
                 # Ensure there are at least two persons in the room
                 if len(persons_in_room) >= 1:
@@ -434,6 +445,10 @@ class JoinList(APIView):
                                 "urlClient": default_img  # Replace with your default image URL
                             })
                         room_data["type"] = "User"
+                        if (game_room.is_full()):
+                            method = "start_game"
+                        else:
+                            method = "join_list_room"
                     else:
                         # Add only player IDs when there are not exactly two players
                         cup = os.path.join(os.path.dirname(__file__), 'cup.jpg')
@@ -448,8 +463,13 @@ class JoinList(APIView):
                             "isJoin": game_room.ongoing,
                             "type": "Tournament"
                         }
+                        if (game_room.is_full()):
+                            method = "start_game"
+                        else:
+                            method = "join_list_room"
                     # Add the game room data to the result
                     result["game_rooms"].append(room_data)
+                    result["method"].append(method)
             return JsonResponse(result)
         except User.DoesNotExist:
             return JsonResponse({"success": False, "error": "No game rooms found"})
@@ -481,13 +501,9 @@ class JoinList(APIView):
                 # Check if the game room is now full after adding the user
                 if game_room.is_full():
                     PlayTournament().post(request, game_room_id=game_room_id, creator_id=creator_id)
-                    game = {
-                        'creator_id': creator_id,
-                        'game_room_id': game_room_id
-                    }
-                    return JsonResponse({"success": "true", "method": "start_game", "game": game, "message": "Successfully joined the game room. Game will start soon."}, status=status.HTTP_200_OK)
+                    return JsonResponse({"success": "true", "message": "Successfully joined the game room. Game will start soon."}, status=status.HTTP_200_OK)
                 else:
-                    return JsonResponse({"success": "true", "method": "update_room", "message": "Successfully joined the game room"}, status=status.HTTP_200_OK)
+                    return JsonResponse({"success": "true", "method": "join_list_room", "message": "Successfully joined the game room"}, status=status.HTTP_200_OK)
         except Exception as e:
             return JsonResponse({"success": "false", "error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 

@@ -18,7 +18,7 @@ app.get('/', (req, res) => {
 app.get('/index.html', (req, res) => {
     res.sendFile(path.resolve('index.html'));
 });
-app.get('/*', (req, res) => {
+app.get('*', (req, res) => {
     res.redirect("/")
 });
 

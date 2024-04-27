@@ -67,7 +67,6 @@ class MidleCub extends HtmlElement {
 
   //Section Cup Drow DOM
   async setHero(){
-    debugger
     let i = 1;
     const domDat = document.querySelector(".MidleCubEditSection")
     domDat.innerHTML = "";
@@ -86,7 +85,6 @@ class MidleCub extends HtmlElement {
     });
   }
   async draw(){
-    //debugger
     await this.setHero();
   }
 }
