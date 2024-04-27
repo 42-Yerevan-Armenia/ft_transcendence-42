@@ -1,33 +1,33 @@
 import constants
-
+from constants import *
 import time
 
 
-class GameController:
-    state = constants.INITIAL_STATE
+# class GameController:
+#     state = constants.INITIAL_STATE
 
 
 class PaddleController:
-    def __init__(self, paddle):
+    def __init__(self, paddle, state):
         
-        self.state = GameController.state
+        self.state = state
         self.paddle = paddle
         self.item = self.state[paddle]
 
     def move(self, direction):
         if direction == "down" and self.item["y"] < constants.MAX_PADDLE_Y:
-            self.item["y"] += 5
+            self.item["y"] += constants.PADDLE_STEP
 
         elif direction == "up" and self.item["y"] > 0:
-            self.item["y"] -= 5
+            self.item["y"] -= constants.PADDLE_STEP
 
     def __str__(self):
         return self.paddle
 
 
 class BallController:
-    def __init__(self):
-        self.state = GameController.state
+    def __init__(self, state):
+        self.state = state
         self.item = self.state["ball"]
         self.paddle1 = self.state["paddle1"]
         self.paddle2 = self.state["paddle2"]
@@ -52,8 +52,8 @@ class BallController:
         if 0 < self.item["x"] <= constants.PADDLE_WIDTH:
             if (
                 self.paddle1["y"]
-                < self.item["y"]
-                < (self.paddle1["y"] + constants.PADDLE_HEIGHT)
+                < (self.item["y"] + BALL_WIDTH)
+                < (self.paddle1["y"] + constants.PADDLE_HEIGHT + BALL_WIDTH)
             ):
                 # middle_y = left_paddle.y + left_paddle.height / 2
                 # difference_in_y = middle_y - ball.y
@@ -73,12 +73,14 @@ class BallController:
         elif self.item["x"] < 0:
             self.paddle2["score"] += 1
             self.reset_ball()
+            self.vel_x = -self.vel_x
+
 
         elif constants.SCREEN_WIDTH > self.item["x"] >= constants.MAX_BALL_X:
             if (
                 self.paddle2["y"]
-                < self.item["y"]
-                < (self.paddle2["y"] + constants.PADDLE_HEIGHT)
+                < (self.item["y"]) + BALL_WIDTH
+                < (self.paddle2["y"] + constants.PADDLE_HEIGHT + BALL_WIDTH)
             ):
 
                 middle_y = self.paddle2["y"] + constants.PADDLE_HEIGHT / 2
@@ -93,6 +95,7 @@ class BallController:
         elif self.item["x"] >= constants.SCREEN_WIDTH:
             self.paddle1["score"] += 1
             self.reset_ball()
+            self.vel_x= -self.vel_x
 
         self.item["x"] += self.vel_x
         self.item["y"] += self.vel_y

@@ -1,4 +1,9 @@
 import threading
+from constants import *
+from .pong_controller import PaddleController, BallController
+import copy
+# d = { ... }
+# d2 = copy.deepcopy(d)
 
 
 class ThreadPool:
@@ -16,11 +21,27 @@ class ThreadPool:
             "thread": threading.Thread(target=consumer_instance.propagate_state, args=(thread_event,)),
             "paddle1": False,
             "paddle2": False,
+            "ball": None,
             "active": False,
             "viewers": [],
+            "state": copy.deepcopy(INITIAL_STATE)
         }
-        thread = cls.threads[game_name]["thread"]
+        game = cls.threads[game_name]
+        game["ball"] = BallController(game["state"])
+        thread = game["thread"]
         thread.daemon = True
         thread.start()
+        # print(thread.join())
+
+    @classmethod
+    def del_game(cls, game_name):
+        if game_name not in cls.threads:
+            return    
+        thread = cls.threads[game_name]
+        thread["active"] = False
+        thread["stop_event"].set()
+        thread["thread"].join()
+        if game_name in cls.threads:
+            del cls.threads[game_name]
         # print(thread.join())
 

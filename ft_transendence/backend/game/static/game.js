@@ -1,31 +1,63 @@
 
 console.log("narev");
 
+
+
 let uuid = function(){
     return Array
-     .from(Array(16))
-     .map(e => Math.floor(Math.random() * 255)
-     .toString(16)
-     .padStart(2,"0"))
-     .join('')
-     .match(/.{1,4}/g)
-     .join('-')
+    .from(Array(16))
+    .map(e => Math.floor(Math.random() * 255)
+    .toString(16)
+    .padStart(2,"0"))
+    .join('')
+    .match(/.{1,4}/g)
+    .join('-')
+}
+
+const user = {
+    "id": uuid(),
+}
+function movePaddle(paddle, direction, max_paddle_y, paddle_step) {
+    // Delayed execution after 2000 milliseconds (2 seconds)
+    const paddleY = parseInt(paddle.style.top, 10);
+    const paddleHeight = parseInt(paddle.style.height, 10);
+    if (direction == "down" && paddleY + paddleHeight < max_paddle_y) {
+        paddle.style.top = (paddleY + paddle_step) + "px";
+    } else if  (direction == "up" && paddleY > 0) {
+        paddle.style.top = (paddleY - paddle_step) + "px";
+    }
 }
 
 function pongGame(userObj) {
     let isStarted = false;
-
     function isOpen(ws) { return ws.readyState === ws.OPEN }
 
     //HTML elements
-    let User_Id = userObj.User_Id;
+    let User_Id = userObj.id;
     let clientId = User_Id;
+    let paddleName = null;
+    const constants = {
+        "paddle_step": null,
+        "screen_width": null,
+        "screen_height": null
+    }
+    // let paddle_step = null;
+    // let screen_width = null;
+    // let screen_height = null;
+
     if (!clientId)
         clientId = uuid();
     let gameId = null;
     let playerColor = null;
 
-    let ws = new WebSocket("ws://" + window.location.host + "/ws/joinlist/")
+    let ws = new WebSocket("ws://" + window.location.host + "/ws/game/")
+    const payLoad = {
+        "method": "connect",
+        "clientId": clientId,
+        "gameId": gameId
+    }
+
+    ws.onopen = () => ws.send(JSON.stringify(payLoad));
     console.log("ws://" + window.location.host + "/ws/game/");
     console.log("ws = ", window.location.host);
     const txtGameId = document.getElementById("txtGameId");
@@ -43,10 +75,22 @@ function pongGame(userObj) {
             "clientId": clientId,
             "gameId": gameId
         }
+        console.log("paddleName = ", paddleName);
         if (event.key === "ArrowUp") {
             payLoad["direction"] = "up";
+            const paddle = document.getElementById(paddleName); // paddle2
+            // setTimeout(delayedFunction, 2000);
+            setTimeout(function() {
+                movePaddle(paddle , "up", board.offsetHeight, constants.paddle_step);
+            }, 100);
+            // movePaddle(paddle , "up", board.offsetHeight, constants.paddle_step);
         } else if (event.key === "ArrowDown") {
             payLoad["direction"] = "down";
+            const paddle = document.getElementById(paddleName); // paddle1
+            setTimeout(function() {
+                movePaddle(paddle, "down", board.offsetHeight, constants.paddle_step);
+            }, 100);
+            // movePaddle(paddle, "down", board.offsetHeight, constants.paddle_step);
         } else {
             return;
         }
@@ -107,10 +151,14 @@ function pongGame(userObj) {
                 return console.error(e);
             }
         }
-        console.log(response);
+        // console.log(response);
         if (response.method === "connect"){
             console.log("response = ", response);
-            clientId = response.clientId;
+            paddleName = response.state[clientId];
+            // clientId = response.clientId;
+            constants.paddle_step = response.constants.paddle_step;
+            constants.screen_width = response.constants.screen_width;
+            constants.screen_height = response.constants.screen_height;
             console.log("Client id Set successfully " + clientId)
         }
 
@@ -174,16 +222,17 @@ function pongGame(userObj) {
 
             ballObject.style.left = response.state.ball.x + "px";
             ballObject.style.top = response.state.ball.y + "px";
-
-            const paddle1 = document.getElementById("paddle1");
-
-            paddle1.style.left = response.state.paddle1.x + "px";
-            paddle1.style.top = response.state.paddle1.y + "px";
-            
-            const paddle2 = document.getElementById("paddle2");
-            
-            paddle2.style.left = response.state.paddle2.x + "px";
-            paddle2.style.top = response.state.paddle2.y + "px";
+            if (paddleName === "paddle1") {
+                const paddle2 = document.getElementById("paddle2");
+                
+                paddle2.style.left = response.state.paddle2.x + "px";
+                paddle2.style.top = response.state.paddle2.y + "px";
+            } else {
+                const paddle1 = document.getElementById("paddle1");
+    
+                paddle1.style.left = response.state.paddle1.x + "px";
+                paddle1.style.top = response.state.paddle1.y + "px";
+            }
 
             const score1 = document.getElementById("score1");
             const score2 = document.getElementById("score2");
@@ -316,4 +365,4 @@ function pongGame(userObj) {
 }
 
 
-pongGame({});
+pongGame(user);
