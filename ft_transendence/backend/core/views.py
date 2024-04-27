@@ -385,6 +385,8 @@ class WaitingRoom(APIView):
             user = User.objects.get(id=pk)
             active_users = User.objects.filter(is_active=True).exclude(id=pk)
             active_persons = [user.person for user in active_users]
+            if activate_persons.game_room_id is not None:
+                return JsonResponse({"success": "false", "error": "User is already in a game room"}, status=status.HTTP_400_BAD_REQUEST)
             serializer = WaitingRoomSerializer(active_persons, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except User.DoesNotExist:
@@ -469,7 +471,7 @@ class JoinList(APIView):
                             method = "join_list_room"
                     # Add the game room data to the result
                     result["game_rooms"].append(room_data)
-                    result["method"].append(method)
+                    result["method"] = method
             return JsonResponse(result)
         except User.DoesNotExist:
             return JsonResponse({"success": False, "error": "No game rooms found"})
@@ -501,7 +503,7 @@ class JoinList(APIView):
                 # Check if the game room is now full after adding the user
                 if game_room.is_full():
                     PlayTournament().post(request, game_room_id=game_room_id, creator_id=creator_id)
-                    return JsonResponse({"success": "true", "message": "Successfully joined the game room. Game will start soon."}, status=status.HTTP_200_OK)
+                    return JsonResponse({"success": "true", "method": "start_game", "message": "Successfully joined the game room. Game will start soon."}, status=status.HTTP_200_OK)
                 else:
                     return JsonResponse({"success": "true", "method": "join_list_room", "message": "Successfully joined the game room"}, status=status.HTTP_200_OK)
         except Exception as e:
