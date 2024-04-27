@@ -4,7 +4,7 @@ import constants
 
 from core.models import Person
 
-from .pong_controller import GameController, PaddleController, BallController
+from .pong_controller import PaddleController, BallController
 from .thread_pool import ThreadPool
 
 from asgiref.sync import async_to_sync
@@ -13,13 +13,14 @@ import time
 
 from core.views import CreateRoom, JoinList
 
+from constants import *
+
 
 class PongConsumer(WebsocketConsumer):
     def __init__(self, *args, **kwargs):
-        self.ball_controller = BallController()
         self.thread = None
         self.time = time.time()
-        print("barev")
+        self.id = None
         super().__init__(*args, **kwargs)
 
     def connect(self):
@@ -33,54 +34,96 @@ class PongConsumer(WebsocketConsumer):
 
         async_to_sync(self.channel_layer.group_add)(self.game, self.channel_name)
         print("self.channel_name = ", self.channel_name)
-        if not self.thread["paddle1"]:
-            self.paddle_controller = PaddleController("paddle1")
-            self.thread["paddle1"] = True
-            self.thread["paddle1_channel_name"] = self.channel_name
-
-        elif not self.thread["paddle2"]:
-            self.paddle_controller = PaddleController("paddle2")
-            self.thread["paddle2"] = True
-            self.thread["paddle2_channel_name"] = self.channel_name
-
-        if self.thread["paddle1"] and self.thread["paddle2"]:
-            self.thread["active"] = True
 
         self.accept()
 
     def disconnect(self, close_code):
         print("close_code = ", close_code)
-        self.thread[str(self.paddle_controller)] = False
-        self.thread["active"] = False
-        print("self.channel_name = ", self.channel_name)
-
         async_to_sync(self.channel_layer.group_discard)(self.game, self.channel_name)
-        self.thread["stop_event"].set()
+
+        if self.id:
+            self.thread[str(self.paddle_controller)] = False
+            self.thread["active"] = False
+            print("self.channel_name = ", self.channel_name)
+
+            self.thread["stop_event"].set()
+            ThreadPool.del_game(self.game)
+            print("len of threads = ", len(ThreadPool.threads))
+
 
     def receive(self, text_data):
-        direction = json.loads(text_data).get("direction")
+        data = json.loads(text_data)
+
+        if data["method"] == "updateKey":
+            direction = data.get("direction")
+            self.paddle_controller.move(direction)
+        elif data["method"] == "connect":
+            if not self.thread["paddle1"]:
+                self.paddle_controller = PaddleController("paddle1", self.thread["state"])
+                self.thread["paddle1"] = True
+                # GameController.state["player1"] = {
+                #     "id": data["clientId"],
+                #     "paddleName": "paddle1"
+                # }
+                self.id = data["clientId"]
+                self.thread["state"][self.id] = "paddle1"
+                self.thread["paddle1_channel_name"] = self.channel_name
+                payload = {
+                    "method": "connect",
+                    "state": self.thread["state"],
+                    "constants": {
+                        "paddle_step": constants.PADDLE_STEP,
+                        "screen_width": constants.SCREEN_WIDTH,
+                        "screen_height": constants.SCREEN_HEIGHT,
+                    }
+                }
+                self.send(text_data=json.dumps(payload))
+
+            elif not self.thread["paddle2"]:
+                self.paddle_controller = PaddleController("paddle2", self.thread["state"])
+                self.thread["paddle2"] = True
+
+                self.id = data["clientId"]
+                self.thread["state"][self.id] = "paddle2"
+                self.thread["paddle2_channel_name"] = self.channel_name
+                payload = {
+                    "method": "connect",
+                    "state": self.thread["state"],
+                    "constants": {
+                        "paddle_step": constants.PADDLE_STEP,
+                        "screen_width": constants.SCREEN_WIDTH,
+                        "screen_height": constants.SCREEN_HEIGHT,
+                    }
+                }
+                self.send(text_data=json.dumps(payload))
+
+            if self.thread["paddle1"] and self.thread["paddle2"]:
+                self.thread["active"] = True
+            
         # if ()
         # if self.thread["active"]:
         #     self.thread["viewers"].append()
         # print(text_data)
-        self.paddle_controller.move(direction)
 
     def propagate_state(self, thread_event):
         i = 0
         while not thread_event.is_set():
-            if time.time() - self.time > 0.003:
+            if time.time() - self.time > 0.00003:
 
                 if self.thread:
                     if self.thread["active"]:
-                        self.ball_controller.move()
+                        ball = self.thread["ball"]
+                        ball.move()
 
                         async_to_sync(self.channel_layer.group_send)(
                             self.game,
-                            {"type": "stream_state", "state": GameController.state,},
+                            {"type": "stream_state", "state": self.thread["state"],},
                         )
                 i += 1
                 # print(f"barev{i}")
                 self.time = time.time()
+
+        print(" thread finished")
 
     def stream_state(self, event):
         state = event["state"]
@@ -88,7 +131,10 @@ class PongConsumer(WebsocketConsumer):
             "method": "update",
             "state": state
         }
-        self.send(text_data=json.dumps(payload))
+        try:
+            self.send(text_data=json.dumps(payload))
+        except Exception as e:
+            print(e)
 
 class joinListConsumer(WebsocketConsumer):
     def __init__(self, *args, **kwargs):
