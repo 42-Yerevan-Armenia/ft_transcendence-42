@@ -114,7 +114,6 @@ class USER {
       this._Twofactor = false;
     }
 
-
   async menegAccsess() {
     if (!this.checkSignIn())
       return false;
