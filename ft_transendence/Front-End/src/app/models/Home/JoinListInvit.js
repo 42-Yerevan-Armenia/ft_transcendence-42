@@ -1,9 +1,9 @@
-class JoinListInvit extends HtmlElement {
+class JoinListInvit extends HtmlElement{
     constructor(){
         super(".JoinListInvite")
         this._style.display = "none";
     };
-    _invite_rooms = "";
+    data = "";
     _ItemButtonAll = document.querySelectorAll(".JoinListInviteClass");
 /* <tr class="JoinListInvitetbodyTr">
     1 <td class="JoinListInvitetbodyTd">1</td>
@@ -14,7 +14,7 @@ class JoinListInvit extends HtmlElement {
     5 <td class="JoinListInvitetbodyTd">123456</td>
     6 <td class="JoinListInvitetbodyTd"><button class="JoinListInviteClass" id="JoinListInviteid">Invite</button></td>
 </tr> */
-    JoinListInvitetbodyTr(Item) {
+    JoinListInvitetbodyTr(Item){
         ////debugger
         const tr = document.createElement("tr");
         tr.setAttribute("class", "JoinListInvitetbodyTr");
@@ -49,7 +49,7 @@ class JoinListInvit extends HtmlElement {
         td6.setAttribute("class", "JoinListInvitetbodyTd");
         const td6button = document.createElement("button");
         td6button.setAttribute("class", "JoinListInviteClass");
-        td6button.setAttribute("id", "JoinListInviteid" + Item.id);
+        td6button.setAttribute("id", "JoinListInviteid :" + Item.id);
         td6button.innerHTML = "Invite";
         td6.appendChild(td6button);
         
@@ -63,38 +63,45 @@ class JoinListInvit extends HtmlElement {
         const table = document.querySelector(".JoinListInvitetbody")
         table.appendChild(tr);
     }
-
-    //joinList invit button dawn and open list invit
     async setTableInvit() {
-        //clear body history
         document.querySelector(".JoinListInvitetbody").innerHTML = "";
-        //    const _invite_rooms = await getFetchRequest("api/v1/waitingroom/" + User._Id);
-        
-        if (!this._invite_rooms)
+       const data = await getFetchRequest("api/v1/waitingroom/" + User._Id);
+       if (!data.state)
         return ;
         // {'id':1, 'nickname':"dasdas", 'image':"", 'gamemode':"classic", 'points':123144}
-        _invite_rooms.sort((e,e1)=>e.id < e1.id).forEach(async item => {
-            await this.JoinListInvitetbodyTr(item);
-        });
+       data.message.sort((e,e1)=>e.id < e1.id).forEach(async item => {
+           await this.JoinListInvitetbodyTr(item);
+       });
 
-        const buttons =  document.querySelectorAll(".JoinListInviteClass");
 
-        //    Iterate over each button and attach an event listener
-        buttons.forEach(button => {
-            button.addEventListener("click", async function(e) {
-                debugger
-                    // Your code here
-                    console.log(JSON.stringify(e.target.id));
-                    console.log("Button clicked!");
+
+       
+       const buttons =  document.querySelectorAll(".JoinListInviteClass");;
+
+    //Iterate over each button and set event listener invit
+    buttons.forEach(async button => {
+        button.addEventListener("click", async function(e) {
+            debugger
+
+                const clientid = e.target.id.slice(e.target.id.lastIndexOf(':') + 1);
+
+                const sendFrend = {
+                    opponent_id : clientid
                 }
-            )
+
+                const res = await putRequest("POST", "api/v1/invite/" +User._Id, sendFrend);
+                if (!res || !res.state)
+                {
+                    alert("prevus you should create join list item");
+                    return ;
+                }
+                
+            })
         })
+        this.data = data;
     }
 
     async draw(){
-
-        _invite_rooms 
-
         await this.setTableInvit();
     }
 }

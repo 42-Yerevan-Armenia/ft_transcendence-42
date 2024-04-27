@@ -299,14 +299,18 @@ def save_game_history(user1, user2, result_user1, result_user2):
     History.objects.create(player=user2, opponent=user1, game_room=user2.game_room, win=win_user2, lose=not win_user2)
 
 class SendInviteRequest(APIView):
+    print("+++++++++++++++++++++++++++++++++++1")
     permission_classes = [IsAuthenticated]
+    print("+++++++++++++++++++++++++++++++++++2")
     def post(self, request, *args, **kwargs):
         try:
             usera = request.user
             opponent_id = request.data.get('opponent_id')
+            print("+++++++++++++++++++++++++++++++++++3")
             sender = Person.objects.get(id=request.user.id)
             opponent = Person.objects.get(id=opponent_id)
             userb = User.objects.get(id=opponent_id)
+            print("+++++++++++++++++++++++++++++++++++4 ::::", opponent_id ,"   :::",userb)
             if sender.game_room is None:
                 return JsonResponse({"success": "false", "error": "You don't have a game room"}, status=status.HTTP_400_BAD_REQUEST)
             if Block.objects.is_blocked(usera, userb) == True:
