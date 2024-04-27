@@ -1,9 +1,9 @@
-class JoinListInvit extends HtmlElement{
+class JoinListInvit extends HtmlElement {
     constructor(){
         super(".JoinListInvite")
         this._style.display = "none";
     };
-    data = "";
+    _invite_rooms = "";
     _ItemButtonAll = document.querySelectorAll(".JoinListInviteClass");
 /* <tr class="JoinListInvitetbodyTr">
     1 <td class="JoinListInvitetbodyTd">1</td>
@@ -14,7 +14,7 @@ class JoinListInvit extends HtmlElement{
     5 <td class="JoinListInvitetbodyTd">123456</td>
     6 <td class="JoinListInvitetbodyTd"><button class="JoinListInviteClass" id="JoinListInviteid">Invite</button></td>
 </tr> */
-    JoinListInvitetbodyTr(Item){
+    JoinListInvitetbodyTr(Item) {
         ////debugger
         const tr = document.createElement("tr");
         tr.setAttribute("class", "JoinListInvitetbodyTr");
@@ -63,34 +63,38 @@ class JoinListInvit extends HtmlElement{
         const table = document.querySelector(".JoinListInvitetbody")
         table.appendChild(tr);
     }
-    async setTableInvit(){
+
+    //joinList invit button dawn and open list invit
+    async setTableInvit() {
+        //clear body history
         document.querySelector(".JoinListInvitetbody").innerHTML = "";
-       const data = await getFetchRequest("api/v1/waitingroom/" + User._Id);
-       if (!data.state)
+        //    const _invite_rooms = await getFetchRequest("api/v1/waitingroom/" + User._Id);
+        
+        if (!this._invite_rooms)
         return ;
         // {'id':1, 'nickname':"dasdas", 'image':"", 'gamemode':"classic", 'points':123144}
-       data.message.sort((e,e1)=>e.id < e1.id).forEach(async item => {
-           await this.JoinListInvitetbodyTr(item);
-       });
+        _invite_rooms.sort((e,e1)=>e.id < e1.id).forEach(async item => {
+            await this.JoinListInvitetbodyTr(item);
+        });
 
-
-
-       
-       const buttons =  document.querySelectorAll(".JoinListInviteClass");;
+        const buttons =  document.querySelectorAll(".JoinListInviteClass");
 
         //    Iterate over each button and attach an event listener
-    buttons.forEach(button => {
-        button.addEventListener("click", async function(e) {
-                // Your code here
-                console.log(JSON.stringify(e.target.id));
-                console.log("Button clicked!");
-            })
+        buttons.forEach(button => {
+            button.addEventListener("click", async function(e) {
+                debugger
+                    // Your code here
+                    console.log(JSON.stringify(e.target.id));
+                    console.log("Button clicked!");
+                }
+            )
         })
-       
-        this.data = data;
     }
 
     async draw(){
+
+        _invite_rooms 
+
         await this.setTableInvit();
     }
 }

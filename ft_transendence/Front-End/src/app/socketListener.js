@@ -10,13 +10,18 @@ Join_Ws.onmessage = message => {
     console.log(JSON.stringify(response))
     debugger;
 
-    //update Join list items
+    //update JoinList list
     if (response.method === "update_room" && User._getAccess) {
         Home._MidleJoinList._game_rooms = response.game_rooms;
         const join_listButton = document.querySelector(".JoinList");
         if (join_listButton.style.display !== "none")
             ManageMidle.Manage("JoinList");
     }
-
-    //
+    //update JoinList->invite list
+    // if (response.method === "JoinListInvit_room" && User._getAccess) {
+    //     Home._MidleJoinList._game_rooms = response.game_rooms;
+    //     const join_listButton = document.querySelector(".JoinList");
+    //     if (join_listButton.style.display !== "none")
+    //         ManageMidle.Manage("JoinList");
+    // }
 }
