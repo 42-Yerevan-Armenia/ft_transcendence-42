@@ -96,14 +96,18 @@ class MatchmakingSystem():
             self.remove_player_from_pool(player_1['id'])
             self.remove_player_from_pool(player_2['id'])
 
+# TODO::for all
+
     def start_match(self, player1_id, player2_id):
         try:
             response_data = {
                 "success": True,
                 "method": "start_match",
                 "players": [
-                    {"id": player1_id},
-                    {"id": player2_id}
+                    {
+                        "left_id": player1_id,
+                        "right_id": player2_id
+                    }
                 ]
             }
             return JsonResponse(response_data, status=status.HTTP_200_OK)
