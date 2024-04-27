@@ -136,6 +136,10 @@ class JoinList extends HtmlElement {
         div6Button.setAttribute("class", "JoinListTableClassView");
         div6Button.innerHTML = "View";
       }
+      if (Item.id == User._Id){
+        div6Button.style.backgroundColor = "grey";
+        div6Button.disabled = true;
+      }
       div6.appendChild(div6Button);
       return div6;
     }
@@ -187,82 +191,68 @@ class JoinList extends HtmlElement {
       table.appendChild(divJoin);
     }
 
-    setEventAllButton(){
-      const buttonsJoin =  document.querySelectorAll(".JoinListTableClassJoin");
-      const buttonsView =  document.querySelectorAll(".JoinListTableClassView");
-      const buttonsMembers =  document.querySelectorAll(".JoinListTableBodyNAmeMembers");
+    //join button set event listener
+  setEventAllButton() {
+    const buttonsJoin =  document.querySelectorAll(".JoinListTableClassJoin");
+    const buttonsView =  document.querySelectorAll(".JoinListTableClassView");
+    const buttonsMembers =  document.querySelectorAll(".JoinListTableBodyNAmeMembers");
 
+    //    Iterate over each button and attach an event listener add Join
+    buttonsJoin.forEach(button => {
+      button.addEventListener("click", async function(e) {
+        debugger
+        // Item.id + ":JoinListTableID:" + Item.creator_id
+        // api/v1/joinlist/<int:pk>/' POST
+        const idLeft = e.target.id.slice(0, e.target.id.indexOf(':'));
+        const idRight = e.target.id.slice(e.target.id.lastIndexOf(':')+1);
+        const creator_id = idLeft;
+        const game_room_id = idRight;
 
+        const data = await FetchRequest("POST", "api/v1/joinlist/" + User._Id, {
+                            "creator_id": idRight,
+                            'game_room_id': idLeft
+                          });
 
-      //    Iterate over each button and attach an event listener add Join
-      buttonsJoin.forEach(button => {
-        button.addEventListener("click", async function(e) {
-          //debugger
-                // Item.id + ":JoinListTableID:" + Item.creator_id
-                // api/v1/joinlist/<int:pk>/' POST
-                const idLeft = e.target.id.slice(0, e.target.id.indexOf(':'));
-                const idRight = e.target.id.slice(e.target.id.lastIndexOf(':')+1);
-                const creator_id = idLeft;
-                const game_room_id = idRight;
+        if (data && data.state)
+        {
+          /*
+          GameRom.creator_id = data.message.game.game_room_id;
 
-                const data = await FetchRequest("POST", "api/v1/joinlist/"+User._Id, {
-                                    "creator_id": idRight,
-                                    'game_room_id': idLeft
-                                  });
+          GameRom.game_room_id = data.message.game_room_id;
+          const select = document.querySelector(".ScriptData");
+          // window.location.href = HostPort.slice(7) +"/game";
 
-
-                if (data && data.state)
-                {
-                  GameRom.creator_id = data.message.game.game_room_id;
-
-                  GameRom.game_room_id = data.message.game_room_id;
-                  const select = document.querySelector(".ScriptData");
-                  // window.location.href = HostPort.slice(7) +"/game";
-
-
-
-                  select.setAttribute("src","./src/app/models/Home/game/game.js")
-
-                }
-            })
+          select.setAttribute("src","./src/app/models/Home/game/game.js")
+          */
+        }
       })
+    })
 
 
-      //    Iterate over each button and attach an event listener to View
-      buttonsView.forEach(button => {
+    //    Iterate over each button and attach an event listener to View
+    buttonsView.forEach(button => {
 
-        button.addEventListener("click", async function(e) {
+      button.addEventListener("click", async function(e) {
 
-                // Your code here
-                console.log(JSON.stringify(e.target.id));
-                console.log("buttonsView");
-            })
+              // Your code here
+              console.log(JSON.stringify(e.target.id));
+              console.log("buttonsView");
         })
+    })
 
 
-      //    Iterate over each button and attach an event listener Members
-      buttonsMembers.forEach(button => {
-        button.addEventListener("click", async function(e) {
-                // Your code here
-                console.log(JSON.stringify(e.target.id));
-                console.log("buttonsMembers!");
-            })
-        })
-    }
-
-
-    // async getJoinListItemAll(JoinList) {
-    //   if (!JoinList || !JoinList.state)
-    //     return;
-
-    //   document.querySelector(".JoinListConteinerTableALL").innerHTML = "";
-    //   JoinList.message.game_rooms.sort((e,e1)=>e.id < e1.id).forEach(e => {
-    //     this.JoinListItem(e);
-    //   });
-    //   this.setEventAllButton();
-    // }
+    //    Iterate over each button and attach an event listener Members
+    buttonsMembers.forEach(button => {
+      button.addEventListener("click", async function(e) {
+              // Your code here
+              console.log(JSON.stringify(e.target.id));
+              console.log("buttonsMembers!");
+          })
+      })
+  }
 
   async draw() {
+    debugger
     document.querySelector(".JoinListConteinerTableALL").innerHTML = "";
     if (this._game_rooms) {
         this._game_rooms.sort((e,e1)=>e.id < e1.id).forEach(e => {

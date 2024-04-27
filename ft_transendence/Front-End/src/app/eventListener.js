@@ -139,8 +139,8 @@ Home?._NAV?._Community?._classname?.addEventListener("click",()=>{
 
 //whene create new list item for game
 //_MidleJoinList Create button
-Home._MidleJoinList?._CreateButton?.addEventListener("click", async ()=>{
-    //debugger
+Home._MidleJoinList?._CreateButton?.addEventListener("click", async () => {
+  debugger
   console.log("click... \n");
   const Players = document.querySelector("#JoinListHeroDivProfilPlayers");
   const LiveOnOff = document.querySelector("#LiveOnOff");
@@ -152,39 +152,42 @@ Home._MidleJoinList?._CreateButton?.addEventListener("click", async ()=>{
     live:LiveOnOff.value,
     theme:JoinTheme.value,
     gamemode:JoinListHeroDivGameMode.value,
-    
   };
 
-//send back-end
-// const url = "api/v1/createroom/" + User._Id;
-const paload = {
-  "method": "create",
-  "pk":User._Id,
-  ...objCreate,
-}
+  //send back-end
+  // const url = "api/v1/createroom/" + User._Id;
+  const paload = {
+    "method": "create",
+    "pk":User._Id,
+    ...objCreate,
+  }
 
-const str = JSON.stringify(paload)
-  
-Join_Ws.send(str);
-//   await FetchRequest("POST", url, objCreate);
+  const str = JSON.stringify(paload)
+  //   await FetchRequest("POST", url, objCreate);
   //redirect
- 
+  Join_Ws.onopen  = (e) => {
+    console.log('WebSocket connection is open1111111111');
+  };
+  if (Join_Ws.readyState === WebSocket.OPEN) {
+    console.log('WebSocket connection is open 222222222222');
+    Join_Ws.send(str);
+
+  }
+
+  //When Have Error
+  Join_Ws.onclose = function (e) {
+    console.log("Something unexpected happened ! Join_Ws closed");
+  };
+
   Players.value = "";
   LiveOnOff.value = "";
   JoinTheme.value = "";
   JoinListHeroDivGameMode.value = "";
 })
 
-
-
-
-
-
 Home._HomeLeft?._ExploreMessag?.addEventListener("click",  ()=>{
   if (!User.checkSignIn())
     return;
-
-
 
   const style = Home._HomeMessage?._style;
   console.log("d.display == " + style.display)
