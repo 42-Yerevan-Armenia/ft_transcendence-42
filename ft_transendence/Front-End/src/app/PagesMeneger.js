@@ -111,7 +111,7 @@ function StatePage (){
 
 // Stack to store navigation history
 // {page:1, title: "Home", href: document.location.href,path :document.location.pathname}
-var navigationHistory = [];
+var navigationHistoryA = [];
 
 // when in document click anyone <a> tag that watches the nav links only
 const links = document.querySelectorAll("a");
@@ -125,8 +125,8 @@ async function NavigateHistory(pathname, href, isATag){
 	//get the index from the page of the already existing one
 	index = isInNavigationStack(pathname);
 
-	if (navigationHistory.length > 1 &&  index != -1)
-			changStack(navigationHistory.length, index);
+	if (navigationHistoryA.length > 1 &&  index != -1)
+			changStack(navigationHistoryA.length, index);
 		else
         	urlRoute(pathname, href);
 	await urlLocationHandler(isATag);
@@ -140,7 +140,13 @@ links.forEach(link => {
 		console.log(window.history)
 
         event.preventDefault();
-		await NavigateHistory(event.target.pathname, event.target.href, true);
+		try {
+
+			await NavigateHistory(event.target.pathname, event.target.href, true);
+		}
+		catch(e){
+			console.log("PagesMeneger tag error" + e);
+		}
     });
 });
 
@@ -161,7 +167,7 @@ const urlRoute = (pathname, href) => {
 	let statePage = new StatePage();
 	statePage.page = ++pageIndex;
 	window.history.pushState(statePage, route.title, pathname);
-	navigationHistory.push({statePage, title:route.title, href:href, path: pathname});
+	navigationHistoryA.push({statePage, title:route.title, href:href, path: pathname});
 };
 
 //change page and draw in screen
@@ -211,23 +217,24 @@ const urlLocationHandler =  async (isATag) => {
 // Function to check if a state is in the navigation stack
 function  isInNavigationStack(path) {
 	debugger
-    const index =  navigationHistory.findLastIndex((element) => element.path == path)
+    // const index =  navigationHistoryA?.findLastIndex((element) => element.path == path)
+	const index =  navigationHistoryA?.findIndex((element) => element.path == path)
 	return index;
 }
 
 
-//change stack navigationHistory
-function changStack(n, index){
-	let currentTop = navigationHistory[n - 1];
-	let newTop =  navigationHistory[index];
+//change stack navigationHistoryA
+function changStack(n, index) {
+	let currentTop = navigationHistoryA[n - 1];
+	let newTop =  navigationHistoryA[index];
 
-	navigationHistory[n - 1] = newTop;
-	navigationHistory[index] = currentTop;
+	navigationHistoryA[n - 1] = newTop;
+	navigationHistoryA[index] = currentTop;
 
 	// Replace the current state in the history
 	window.history.replaceState(newTop.statePage, newTop.title, newTop.path);
-	// window.history.go(navigationHistory[n - 1].page)
-	// window.location.pathname = navigationHistory[n - 1].href;
+	// window.history.go(navigationHistoryA[n - 1].page)
+	// window.location.pathname = navigationHistoryA[n - 1].href;
 }
 
 //function  back()  and   forward()
@@ -241,13 +248,13 @@ const urlLocationHandlerForNavigateBackForward = async () => {
 	}
 	// get the route object from the urlRoutes object
 	const route = urlRoutes[Url] || urlRoutes["404"];
-	let LengthStack = navigationHistory.length;
+	let LengthStack = navigationHistoryA.length;
 
 	//check when Home Page
-	if (LengthStack < 2)// || (navigationHistory[LengthStack - 1].title == route.title))
+	if (LengthStack < 2)// || (navigationHistoryA[LengthStack - 1].title == route.title))
 		return;
 	let index = isInNavigationStack(window.location.pathname);
-	if (navigationHistory[LengthStack - 1].statePage.page > navigationHistory[index].statePage.page)
+	if (navigationHistoryA[LengthStack - 1].statePage.page > navigationHistoryA[index].statePage.page)
 	{
 		// history.back();
 		changStack(LengthStack, index)
@@ -279,7 +286,7 @@ const urlRouteForward = () => {
 	// window.history.pushState({page:0}, "Home", document.location.pathname);
 	let statePage = new StatePage();
 	window.history.pushState(statePage, "Home", document.location.pathname);
-	navigationHistory.push({
+	navigationHistoryA.push({
 		statePage,
 		title: "Home", 
 		href: document.location.href,

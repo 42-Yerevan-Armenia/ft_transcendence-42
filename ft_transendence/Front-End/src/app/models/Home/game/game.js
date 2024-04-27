@@ -25,7 +25,12 @@ let playerColor = null;
 const sliceA = HostPort.slice(7);
 console.log(sliceA);
 let ws = new WebSocket("ws://" + sliceA+ "/ws/game/")
-window.location.href = HostPort + "/game";
+// window.location.href = HostPort + "/game";
+
+
+
+
+
 // const btnCreate = document.getElementById("btnCreate");
 // const btnJoin = document.getElementById("btnJoin");
 // const btnStart = document.getElementById("btnStart");
