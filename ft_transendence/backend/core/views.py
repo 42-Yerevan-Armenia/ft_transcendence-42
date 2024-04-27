@@ -415,7 +415,7 @@ class JoinList(APIView):
             for person in persons:
                 game_room_data[person.game_room_id].append(person)
             # Construct JSON response
-            result = {"success": True, "method": "update_room", "game_rooms": []}
+            result = {"success": True, "method": "", "game_rooms": []}
             for game_room_id, persons_in_room in game_room_data.items():
                 # Ensure there are at least two persons in the room
                 if len(persons_in_room) >= 1:
@@ -445,6 +445,10 @@ class JoinList(APIView):
                                 "urlClient": default_img  # Replace with your default image URL
                             })
                         room_data["type"] = "User"
+                        if (game_room.is_full()):
+                            method = "start_game"
+                        else:
+                            method = "update_room"
                     else:
                         # Add only player IDs when there are not exactly two players
                         cup = os.path.join(os.path.dirname(__file__), 'cup.jpg')
@@ -459,8 +463,13 @@ class JoinList(APIView):
                             "isJoin": game_room.ongoing,
                             "type": "Tournament"
                         }
+                        if (game_room.is_full()):
+                            method = "start_game"
+                        else:
+                            method = "update_room"
                     # Add the game room data to the result
                     result["game_rooms"].append(room_data)
+                    result["method"].append(method)
             return JsonResponse(result)
         except User.DoesNotExist:
             return JsonResponse({"success": False, "error": "No game rooms found"})
@@ -492,11 +501,7 @@ class JoinList(APIView):
                 # Check if the game room is now full after adding the user
                 if game_room.is_full():
                     PlayTournament().post(request, game_room_id=game_room_id, creator_id=creator_id)
-                    game = {
-                        'creator_id': creator_id,
-                        'game_room_id': game_room_id
-                    }
-                    return JsonResponse({"success": "true", "method": "start_game", "game": game, "message": "Successfully joined the game room. Game will start soon."}, status=status.HTTP_200_OK)
+                    return JsonResponse({"success": "true", "message": "Successfully joined the game room. Game will start soon."}, status=status.HTTP_200_OK)
                 else:
                     return JsonResponse({"success": "true", "method": "update_room", "message": "Successfully joined the game room"}, status=status.HTTP_200_OK)
         except Exception as e:
