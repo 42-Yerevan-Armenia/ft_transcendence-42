@@ -397,7 +397,7 @@ class WaitingRoom(APIView):
             opponent = Person.objects.get(id=opponent_id)
             if opponent.ongoing is not None:
                 return JsonResponse({"success": "false", "error": "Opponent is already in a game room"}, status=status.HTTP_400_BAD_REQUEST)
-            return Response({"success": "true", "message": "Invitation sent successfully"}, status=status.HTTP_200_OK)
+            return Response({"success": "true", "method": "invite_room", "message": "Invitation sent successfully"}, status=status.HTTP_200_OK)
         except Person.DoesNotExist:
             return Response({"success": "false", "error": "User or opponent not found"}, status=status.HTTP_404_NOT_FOUND)
 
@@ -448,7 +448,7 @@ class JoinList(APIView):
                         if (game_room.is_full()):
                             method = "start_game"
                         else:
-                            method = "update_room"
+                            method = "join_list_room"
                     else:
                         # Add only player IDs when there are not exactly two players
                         cup = os.path.join(os.path.dirname(__file__), 'cup.jpg')
@@ -466,7 +466,7 @@ class JoinList(APIView):
                         if (game_room.is_full()):
                             method = "start_game"
                         else:
-                            method = "update_room"
+                            method = "join_list_room"
                     # Add the game room data to the result
                     result["game_rooms"].append(room_data)
                     result["method"].append(method)
@@ -503,7 +503,7 @@ class JoinList(APIView):
                     PlayTournament().post(request, game_room_id=game_room_id, creator_id=creator_id)
                     return JsonResponse({"success": "true", "message": "Successfully joined the game room. Game will start soon."}, status=status.HTTP_200_OK)
                 else:
-                    return JsonResponse({"success": "true", "method": "update_room", "message": "Successfully joined the game room"}, status=status.HTTP_200_OK)
+                    return JsonResponse({"success": "true", "method": "join_list_room", "message": "Successfully joined the game room"}, status=status.HTTP_200_OK)
         except Exception as e:
             return JsonResponse({"success": "false", "error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 

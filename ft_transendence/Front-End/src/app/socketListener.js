@@ -11,7 +11,7 @@ Join_Ws.onmessage = message => {
     debugger;
 
     //update Join list items
-    if (response.method === "update_room" && User._getAccess) {
+    if (response.method === "join_list_room" && User._getAccess) {
         Home._MidleJoinList._game_rooms = response.game_rooms;
         const join_listButton = document.querySelector(".JoinList");
         if (join_listButton.style.display !== "none")
