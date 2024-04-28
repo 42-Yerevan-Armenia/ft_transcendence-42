@@ -12,6 +12,7 @@ from channels.generic.websocket import WebsocketConsumer
 import time
 
 from core.views import CreateRoom, JoinList
+from game.views import PlayTournament
 
 from constants import *
 
@@ -139,6 +140,7 @@ class PongConsumer(WebsocketConsumer):
 class joinListConsumer(WebsocketConsumer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.pt = PlayTournament()
 
     def connect(self):
         # print("open_code", open_code)
@@ -171,16 +173,18 @@ class joinListConsumer(WebsocketConsumer):
         elif method == "join" or method == "invite":
             # Extract the user ID from the request payload
             user_id = request.get("user_id")
-            response = JoinList.post(self, request, user_id)
+            JoinList.post(self, request, user_id)
+            response_data = self.pt.get_response_data()
+            print("❌ response_data = ", response_data)
+            if response_data:
+                response = {"data": response_data}
+            else:
+                response = {}
             # Include user_id in the response for reference
-            response["user_id"] = user_id
             all_user_ids = list(Person.objects.values_list('id', flat=True))
-            response["all_user_ids"] = all_user_ids
             response = JoinList.get(self, None, None)
-            response["method"] = "join"
-            game_room_full = len(user_id) >= MAX_PLAYERS
-            if game_room_full:
-                PlayTournament().post(request, game_room_id=game_room_id, creator_id=creator_id)
+            response["all_user_ids"] = all_user_ids
+            response["user_id"] = user_id
         else:
             response = {"error": "Invalid method"}
         async_to_sync(self.channel_layer.group_send)(
@@ -192,5 +196,5 @@ class joinListConsumer(WebsocketConsumer):
         response = event["response"]
         # Serialize the data to JSON
         response_json = response.content.decode("utf-8")
-        # print("❇️ response_json = ", response_json)
+        print("❇️ response_json = ", response_json)
         self.send(response_json)

@@ -40,7 +40,7 @@ class PlayRandom(APIView):
 
 class MatchmakingSystem():
     _instance = None
-    
+   
     def __new__(cls):
         if cls._instance is None:
             cls._instance = super().__new__(cls)
@@ -101,20 +101,30 @@ class MatchmakingSystem():
         try:
             response_data = {
                 "success": True,
-                "method": "start_match",
+                "method": "start_game",
                 "game_room": {
                         "room_id": room_id,
                         "left_id": player1_id,
                         "right_id": player2_id
                 }
             }
-            return JsonResponse(response_data, status=status.HTTP_200_OK)
+            # return JsonResponse(response_data, status=status.HTTP_200_OK)
+            return response_data
         except Exception as e:
             return JsonResponse({"success": False, "error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class PlayTournament(APIView):
+    _instance = None
+
+    def __new__(cls, *args, **kwargs):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+            cls._instance.response_data = None
+        return cls._instance
+
     @csrf_exempt
     def post(self, request, creator_id=None, game_room_id=None):
+        self.response_data = None
         try:
             if creator_id is None:
                 creator_id = request.data.get('creator_id')
@@ -127,16 +137,23 @@ class PlayTournament(APIView):
             game_room.save()
             tns = TournamentSystem(game_room.players.all(), game_room_id)
             tns.run_tournament()
-            winner = tns.winners[0]
-            game_room.ongoing = False
-            game_room.players.update(game_room_id=None)
-            game_room.save()
-            Person.objects.filter(game_room_id=game_room_id).update(game_room_id=None)
-            return JsonResponse({"success": "true", "winner": winner}, status=status.HTTP_200_OK)
+            
+            self.response_data = tns.response_data
+            # winner = tns.winners[0]
+            # game_room.ongoing = False
+            # game_room.players.update(game_room_id=None)
+            # game_room.save()
+            # Person.objects.filter(game_room_id=game_room_id).update(game_room_id=None)
+            return JsonResponse({"success": "true"}, status=status.HTTP_200_OK)
+            # return JsonResponse({"success": "true", "winner": winner}, status=status.HTTP_200_OK)
         except Person.DoesNotExist:
             return JsonResponse({"success": "false", "error": "Invalid creator ID."}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             return JsonResponse({"success": "false", "error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    def get_response_data(self):
+        print("🔴", self.response_data)
+        return self.response_data
 
 class TournamentSystem:
     def __init__(self, players, game_room_id):
@@ -151,15 +168,17 @@ class TournamentSystem:
         for group in self.groups:
             round_winners = self.run_rounds(group)  # Run initial matches for each group
             all_round_winners.extend(round_winners)  # Collect round winners from each group
-        self.round_winners(all_round_winners) # Add winners for next rounds
-        while len(self.winners) > 1:
-            self.next_round()
-            for group in self.groups:
-                round_winners = self.run_matches(group) # Run matches for each new group
-                print("❌", round_winners)
-            self.get_winners()
-        winner = self.winners[0]
-        print(f"Tournament winner is: {winner}")
+        self.response_data = round_winners
+        return self.response_data
+        # self.round_winners(all_round_winners) # Add winners for next rounds
+        # while len(self.winners) > 1:
+        #     self.next_round()
+        #     for group in self.groups:
+        #         round_winners = self.run_matches(group) # Run matches for each new group
+        #         print("❌", round_winners)
+        #     self.get_winners()
+        # winner = self.winners[0]
+        # print(f"Tournament winner is: {winner}")
 
     def create_groups(self): # Finished
         player_ids = list(self.players.values_list('id', flat=True))  # Extract player IDs from queryset
@@ -298,18 +317,14 @@ def save_game_history(user1, user2, result_user1, result_user2):
     History.objects.create(player=user2, opponent=user1, game_room=user2.game_room, win=win_user2, lose=not win_user2)
 
 class SendInviteRequest(APIView):
-    print("+++++++++++++++++++++++++++++++++++1")
     permission_classes = [IsAuthenticated]
-    print("+++++++++++++++++++++++++++++++++++2")
     def post(self, request, *args, **kwargs):
         try:
             usera = request.user
             opponent_id = request.data.get('opponent_id')
-            print("+++++++++++++++++++++++++++++++++++3")
             sender = Person.objects.get(id=request.user.id)
             opponent = Person.objects.get(id=opponent_id)
             userb = User.objects.get(id=opponent_id)
-            print("+++++++++++++++++++++++++++++++++++4 ::::", opponent_id ,"   :::",userb)
             if sender.game_room is None:
                 return JsonResponse({"success": "false", "error": "You don't have a game room"}, status=status.HTTP_400_BAD_REQUEST)
             if Block.objects.is_blocked(usera, userb) == True:
