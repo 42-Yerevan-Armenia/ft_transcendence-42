@@ -394,8 +394,10 @@ class WaitingRoom(APIView):
 
     def post(self, request, pk):
         try:
+            print(opponent_id)
             user = Person.objects.get(id=pk)
             opponent_id = request.data.get('opponent_id')
+            print(user)
             opponent = Person.objects.get(id=opponent_id)
             if opponent.ongoing is not None:
                 return JsonResponse({"success": "false", "error": "Opponent is already in a game room"}, status=status.HTTP_400_BAD_REQUEST)
