@@ -96,19 +96,17 @@ class MatchmakingSystem():
             self.remove_player_from_pool(player_1['id'])
             self.remove_player_from_pool(player_2['id'])
 
-# TODO::for all
 
-    def start_match(self, player1_id, player2_id):
+    def start_match(self, player1_id, player2_id, room_id):
         try:
             response_data = {
                 "success": True,
                 "method": "start_match",
-                "players": [
-                    {
+                "game_room": {
+                        "room_id": room_id,
                         "left_id": player1_id,
                         "right_id": player2_id
-                    }
-                ]
+                }
             }
             return JsonResponse(response_data, status=status.HTTP_200_OK)
         except Exception as e:
@@ -127,7 +125,7 @@ class PlayTournament(APIView):
             game_room.ongoing = True
             game_room.game_date = timezone.now().strftime('%Y-%m-%d %H:%M:%S')
             game_room.save()
-            tns = TournamentSystem(game_room.players.all())
+            tns = TournamentSystem(game_room.players.all(), game_room_id)
             tns.run_tournament()
             winner = tns.winners[0]
             game_room.ongoing = False
@@ -141,10 +139,11 @@ class PlayTournament(APIView):
             return JsonResponse({"success": "false", "error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class TournamentSystem:
-    def __init__(self, players):
+    def __init__(self, players, game_room_id):
         self.players = players
         self.groups = []
         self.winners = []
+        self.room_id = game_room_id
     
     def run_tournament(self):
         self.create_groups() # Divide players into initial groups
@@ -198,7 +197,7 @@ class TournamentSystem:
 
     def run_match(self, player_1, player_2): # Finished
         mms = MatchmakingSystem()
-        win = mms.start_match(player_1, player_2)
+        win = mms.start_match(player_1, player_2, self.room_id)
         self.update_game_results(player_1, player_2, win)
         self.save_game_history(player_1, player_2, win)
         return win
@@ -235,7 +234,7 @@ class TournamentSystem:
         for i in range(0, len(group), 2):
             player_1 = group[i]
             player_2 = group[i+1]
-            win = mms.start_match(player_1, player_2)
+            win = mms.start_match(player_1, player_2, self.room_id)
             round_winners.append(win)
         return round_winners
 
@@ -327,13 +326,19 @@ class AcceptInviteRequest(APIView):
     permission_classes = [IsAuthenticated]
     def post(self, request, *args, **kwargs):
         try:
-            oponent = request.user
+            usera = request.user
             sender_id = request.data.get('sender_id')
-            sender = Person.objects.get(id=sender_id).user
+            sender = Person.objects.get(id=sender_id)
+            oponent = Person.objects.get(id=request.user.id)
             # Check if in game room enuogh playes for oponent
-            if sender.game_room and sender.game_room.players.count() < sender.game_room.max_players:
+            if sender.game_room and sender.game_room.is_full() == False:
+                oponent.game_room_id = sender.game_room_id
+                oponent.save()
                 sender.game_room.players.add(oponent)
-                return Response({"success": "true", "method": "invite", "message": "Oponent joind to gameroom"}, status=status.HTTP_200_OK)
+                sender.game_room.save()
+                if sender.game_room.is_full():
+                    PlayTournament().post(request, game_room_id=sender.game_room_id, creator_id=sender_id)
+                return Response({"success": "true", "method": "start_game", "message": "Oponent joind to gameroom"}, status=status.HTTP_200_OK)
             else:
                 return Response({"success": "false", "error": "Game room is full"}, status=status.HTTP_400_BAD_REQUEST)
             return Response({"success": "false", "error": "Sender user not found"}, status=status.HTTP_404_NOT_FOUND)
