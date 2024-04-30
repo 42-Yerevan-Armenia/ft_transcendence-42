@@ -17,8 +17,11 @@ Join_Ws.onmessage = message => {
         if (join_listButton.style.display !== "none")
             ManageMidle.Manage("JoinList");
     }
+    
+    console.log("=========================   response.method == " + response.method)
     // update JoinList->invite list
     if (response.method === "start_game" && User._getAccess) {
+        debugger
         const gameRoom = response.game_room;
 
         if (User._Id == gameRoom.left_id || User._Id == gameRoom.right_id)
