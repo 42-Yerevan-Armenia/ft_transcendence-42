@@ -414,6 +414,9 @@ class JoinList(APIView):
         super().__init__(*args, **kwargs)
         self.pt = PlayTournament()
 
+    def get_response_data(self):
+        print("self.pt.get_response_data() = ", self.pt.get_response_data())
+        return self.pt.get_response_data()
 
     def get(self, request, pk):
         try:
@@ -477,8 +480,8 @@ class JoinList(APIView):
                             method = "join_list_room"
                     # Add the game room data to the result
                     result["game_rooms"].append(room_data)
-                    result["method"] = "join_list_room"
-                    # result["method"] = method
+                    result["method"] = method
+                    result["data"] = self.pt.get_response_data()
             return JsonResponse(result)
         except User.DoesNotExist:
             return JsonResponse({"success": False, "error": "No game rooms found"})
@@ -552,7 +555,7 @@ class CreateRoom(APIView):
                 game_room = game_room_serializer.save()
                 creator.game_room = game_room
                 creator.save()
-                return JsonResponse({"success": "true", "message": "Game room created successfully"}, status=status.HTTP_201_CREATED)
+                return JsonResponse({"success": "true", "message": "Game room created successfully", "game_room":  creator.game_room.id}, status=status.HTTP_201_CREATED)
             else:
                 return JsonResponse({"success": "false", "error": game_room_serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
