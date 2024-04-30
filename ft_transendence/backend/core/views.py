@@ -410,7 +410,14 @@ def save_base64_image(image_path):
         return base64.b64encode(img_file.read()).decode('utf-8')
 
 class JoinList(APIView):
-    # permission_classes = [IsAuthenticated]
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.pt = PlayTournament()
+
+    def get_response_data(self):
+        print("self.pt.get_response_data() = ", self.pt.get_response_data())
+        return self.pt.get_response_data()
+
     def get(self, request, pk):
         try:
             # Retrieve all persons with their associated game rooms
@@ -437,16 +444,16 @@ class JoinList(APIView):
                         }
                         if len(persons_in_room) == 2:
                             room_data["src"].append({
-                                "url": persons_in_room[0].image,
-                                "urlClient": persons_in_room[1].image
+                                # "url": persons_in_room[0].image,
+                                # "urlClient": persons_in_room[1].image
                             })
                         else:
                             # Add image for the first player and default image for the second player if he is not in the room
                             default = os.path.join(os.path.dirname(__file__), 'default.jpg')
                             default_img = save_base64_image(default)
                             room_data["src"].append({
-                                "url": persons_in_room[0].image,
-                                "urlClient": default_img  # Replace with your default image URL
+                                # "url": persons_in_room[0].image,
+                                # "urlClient": default_img  # Replace with your default image URL
                             })
                         room_data["type"] = "User"
                         if (game_room.is_full()):
@@ -474,6 +481,7 @@ class JoinList(APIView):
                     # Add the game room data to the result
                     result["game_rooms"].append(room_data)
                     result["method"] = method
+                    result["data"] = self.pt.get_response_data()
             return JsonResponse(result)
         except User.DoesNotExist:
             return JsonResponse({"success": False, "error": "No game rooms found"})
@@ -481,8 +489,8 @@ class JoinList(APIView):
     def post(self, request, pk):
         try:
             user = Person.objects.get(id=pk)
-            creator_id = request.data.get('creator_id')
-            game_room_id = request.data.get('game_room_id')
+            creator_id = request.get('creator_id')
+            game_room_id = request.get('game_room_id')
             try:
                 creator = Person.objects.get(id=creator_id)
                 game_room = creator.game_room
@@ -547,7 +555,7 @@ class CreateRoom(APIView):
                 game_room = game_room_serializer.save()
                 creator.game_room = game_room
                 creator.save()
-                return JsonResponse({"success": "true", "message": "Game room created successfully"}, status=status.HTTP_201_CREATED)
+                return JsonResponse({"success": "true", "message": "Game room created successfully", "game_room":  creator.game_room.id}, status=status.HTTP_201_CREATED)
             else:
                 return JsonResponse({"success": "false", "error": game_room_serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
