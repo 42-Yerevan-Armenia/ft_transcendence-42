@@ -47,10 +47,10 @@ function pongGame(userObj, gameid) {
 
     if (!clientId)
         clientId = uuid();
-    let gameId = null;
+    let gameId = gameid;
     let playerColor = null;
 
-    let ws = new WebSocket("ws://" + window.location.host + "/ws/game/" + gameid)
+    let ws = new WebSocket("ws://" + window.location.host + "/ws/game/" + gameId)
     const payLoad = {
         "method": "connect",
         "clientId": clientId,
@@ -96,7 +96,7 @@ function pongGame(userObj, gameid) {
         }
         ws.send(JSON.stringify(payLoad));
     });
-
+/*
     btnJoin.addEventListener("click", e => {
         // const obj = {
         //     "key": [1, 2, 5, 5],
@@ -136,7 +136,7 @@ function pongGame(userObj, gameid) {
         }
         ws.send(JSON.stringify(payLoad));
     })
-
+*/
     ws.onmessage = message => {
         //message.data
         // console.log(message);
@@ -365,4 +365,4 @@ function pongGame(userObj, gameid) {
 }
 
 
-pongGame(user);
+// pongGame(user);

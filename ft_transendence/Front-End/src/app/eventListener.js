@@ -165,9 +165,7 @@ Home._MidleJoinList?._CreateButton?.addEventListener("click", async () => {
   const str = JSON.stringify(paload)
   //   await FetchRequest("POST", url, objCreate);
   //redirect
-  Join_Ws.onopen  = (e) => {
-    console.log('WebSocket connection is open1111111111');
-  };
+
   if (Join_Ws.readyState === WebSocket.OPEN) {
     console.log('WebSocket connection is open 222222222222');
     Join_Ws.send(str);

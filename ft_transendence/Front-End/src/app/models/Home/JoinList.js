@@ -136,7 +136,8 @@ class JoinList extends HtmlElement {
         div6Button.setAttribute("class", "JoinListTableClassView");
         div6Button.innerHTML = "View";
       }
-      if (Item.id == User._Id){
+      debugger
+      if (Item.creator_id == User._Id){
         div6Button.style.backgroundColor = "grey";
         div6Button.disabled = true;
       }
@@ -203,15 +204,36 @@ class JoinList extends HtmlElement {
         debugger
         // Item.id + ":JoinListTableID:" + Item.creator_id
         // api/v1/joinlist/<int:pk>/' POST
-        const idLeft = e.target.id.slice(0, e.target.id.indexOf(':'));
-        const idRight = e.target.id.slice(e.target.id.lastIndexOf(':')+1);
-        const creator_id = idLeft;
-        const game_room_id = idRight;
+        console.log("  +++    " + e.target.id);
+        const creator_id = e.target.id.slice(e.target.id.lastIndexOf(':')+1);
+        const game_room_id = e.target.id.slice(0, e.target.id.indexOf(':'));
+        
+       
+        // const creator_id = idLeft;
+        // const game_room_id = idRight;
 
-        const data = await FetchRequest("POST", "api/v1/joinlist/" + User._Id, {
-                            "creator_id": idRight,
-                            'game_room_id': idLeft
-                          });
+        // const data = await FetchRequest("POST", "api/v1/joinlist/" + User._Id, {
+        //                     "creator_id": idRight,
+        //                     'game_room_id': idLeft
+        //                   });
+        const paload = {
+          "method": "join",
+          "pk":User._Id,
+          "user_id":User._Id,
+          "creator_id": creator_id,
+          'game_room_id': game_room_id
+        }
+        const str = JSON.stringify(paload);
+
+        if (Join_Ws.readyState === WebSocket.OPEN) {
+          console.log('WebSocket connection is open 222222222222');
+          Join_Ws.send(str);
+        }
+      
+        //When Have Error
+        Join_Ws.onclose = function (e) {
+          console.log("Something unexpected happened ! Join_Ws closed");
+        };
       })
     })
 
