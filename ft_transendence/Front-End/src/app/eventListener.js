@@ -10,7 +10,7 @@ Home._NAV._SETTINGS._classname?.addEventListener("click",()=>{
 Home._MiddleSettings?._Save?.addEventListener("click", async ()=>{
   console.log("SAVE")
 
-//debugger
+debugger
 
   if(!Home._MiddleSettings.isArgumentsEmpty())
     return
@@ -228,6 +228,7 @@ Login?._LoginPageContinue?.addEventListener("click", async (e) => {
     //code random 10 numbers
     const hash = HashCodeGeneration();
 
+    User._Email = Login._LoginEmail.value;
     //respons beck-end to tack user
     const data =  await FetchRequest("POST", "login", {"email":Login._LoginEmail.value, "password" : hash + Login._LoginPassword.value + hash})
 
@@ -236,6 +237,13 @@ Login?._LoginPageContinue?.addEventListener("click", async (e) => {
 
     if (data.state)
     {
+      if (data?.message?.twoFA)
+      {
+        // Confirm.setDisplayBlock(Home);
+        ManageAllPage.Manage("Confirm");
+        await  NavigateHistory("/confirm", HostPort + '/confirm', false);
+        return;
+      }
       //set local storage data access and refresh tokin
       myStorages.setStorageLogin(data?.message?.data)
       if (User.checkSignIn())
@@ -285,9 +293,9 @@ Reset?._ConfirmReset?.addEventListener('click', async () => {
   if (!res)
     return ;
 
-  await ManageAllPage.Manage("Confirm");
-  Confirm.setDisplayBlock(Home);
-  await  NavigateHistory("/confirm", HostPort + '/confirm', false)
+  ManageAllPage.Manage("Confirm");
+  await  NavigateHistory("/confirm", HostPort + '/confirm', false);
+
   isReset = true;
 })
 
@@ -304,7 +312,8 @@ Confirm.ConfirmYourEmail.addEventListener('click', async () => {
   //when came this page in Reset Password page
   if (isReset)
   {
-    Confirm.setDisplayBlock(Home);
+    ManageAllPage.Manage("Confirm");
+    await  NavigateHistory("/confirm", HostPort + '/confirm', false);
     if (!data || !data.state)
     { 
       await ManageAllPage.Manage("ResetPage");
@@ -323,6 +332,18 @@ Confirm.ConfirmYourEmail.addEventListener('click', async () => {
     User._ConfirmEmail = false;
   }
   else if (data.state) {
+
+    if (data?.message?.twoFA)//----------------------------------------------------------
+    {
+      if (data.message.data)
+        myStorages.setStorageLogin(data?.message?.data)
+      ManageMidle.Manage("midle");
+      await ManageAllPage.Manage("Home")
+      await  NavigateHistory("/", HostPort + '/', false)
+      return;
+    }
+
+
     User._ConfirmEmail = true;
     Confirm.DisplayNone();
     await SignUp.DisplayBlock();
@@ -395,8 +416,8 @@ Register?._RegisterPageContinue?.addEventListener("click",  async () => {
       if (value)
       {
         Register.RegisterPageDisplayNone();
-        Confirm.setDisplayBlock(Home);
-        await  NavigateHistory("/confirm", HostPort + '/confirm', false)
+        ManageAllPage.Manage("Confirm");
+        await  NavigateHistory("/confirm", HostPort + '/confirm', false);
       }
 });
   
