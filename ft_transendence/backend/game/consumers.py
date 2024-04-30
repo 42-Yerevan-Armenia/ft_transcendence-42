@@ -12,9 +12,9 @@ from channels.generic.websocket import WebsocketConsumer
 import time
 
 from core.views import CreateRoom, JoinList
+from game.views import PlayTournament, MatchmakingSystem, PlayerPool, LiveGames, Player
 
 from constants import *
-
 
 class PongConsumer(WebsocketConsumer):
     def __init__(self, *args, **kwargs):
@@ -139,14 +139,18 @@ class PongConsumer(WebsocketConsumer):
 class joinListConsumer(WebsocketConsumer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.roomId = None
+        self.pt = PlayTournament()
+        self.playerPool = PlayerPool()
+        self.liveGames = LiveGames()
+        self.JoinList = JoinList()
 
     def connect(self):
-        # print("open_code", open_code)
         self.joinList = self.scope["path"].strip("/").replace(" ", "_")
         self.joinList = "barev"
         async_to_sync(self.channel_layer.group_add)(self.joinList, self.channel_name)
         self.accept()
-        response = JoinList.get(self, None, None)
+        response = self.JoinList.get(None, None)
         async_to_sync(self.channel_layer.group_send)(
             self.joinList,
             {"type": "stream", "response": response,},
@@ -161,26 +165,65 @@ class joinListConsumer(WebsocketConsumer):
     def receive(self, text_data):
         request = json.loads(text_data)
         method = request.get("method")
+<<<<<<< HEAD
         print("____________" ,method, "     :   ", request)
         if method == "create":
             user_id = request.get("pk")
             print("user_id = request.get(pk) == ", user_id)
             response = CreateRoom.post(self, request, user_id)
+=======
+        # if method == "connect":
+
+        if method == "create":
+            user_id = request.get("pk")
+            player = Player(user_id, self.channel_name)
+            self.playerPool.add_player(user_id, player)
+
+            response = CreateRoom.post(self, request, user_id)
+            responseDecoded = json.loads(response.content)
+
+            if (responseDecoded["success"] == "true"):
+                game_room_id = responseDecoded['game_room']
+>>>>>>> 9b08010526a4aa14e4aad5db1deed6b4614c1374
 
             all_user_ids = list(Person.objects.values_list('id', flat=True))
             response["all_user_ids"] = all_user_ids
-            response = JoinList.get(self, None, None)
+            response = self.JoinList.get(None, None)
             response["method"] = "create"
+            async_to_sync(self.channel_layer.group_send)(
+                self.joinList,
+                {"type": "stream", "response": response,},
+            )
         elif method == "join" or method == "invite":
-            # Extract the user ID from the request payload
+            # self.gameRoomId = request.get("game_room_id")
             user_id = request.get("user_id")
-            response = JoinList.post(self, request, user_id)
-            # Include user_id in the response for reference
-            response["user_id"] = user_id
+            json_data = self.JoinList.post(request, user_id)
+            print("json_data = ", json_data)
+            # async_to_sync(self.channel_layer.group_add)(self.gameRoomId, self.channel_name)
+
+
+            # print("self.JoinList.pt.get_response_data() = ", self.JoinList.pt.get_response_data())
+            game_data = self.JoinList.get_response_data()
+
+            print("game_data = ", game_data)
+            # self.roomId = game_data["room_id"]
+
+            # async_to_sync(self.channel_layer.group_add)(self.roomId, self.channel_name)
+            # async_to_sync(self.channel_layer.group_discard)(self.joinList, self.channel_name)
+
+
+            # async_to_sync(self.channel_layer.group_send)(
+            #     self.gameRoomId,
+            #     {"type": "stream", "response": game_data,},
+            # )
+
+            print("stex")
+            response = self.JoinList.get(None, None)
             all_user_ids = list(Person.objects.values_list('id', flat=True))
+            print("stex")
             response["all_user_ids"] = all_user_ids
-            response = JoinList.get(self, None, None)
             response["method"] = "join"
+<<<<<<< HEAD
             creator_id = request.get("creator_id")
             game_room_id = request.get("game_room_id")
             creator = Person.objects.get(id=creator_id)
@@ -189,16 +232,23 @@ class joinListConsumer(WebsocketConsumer):
                 PlayTournament().post(request, game_room_id=game_room_id, creator_id=creator_id)
 
             
+=======
+            response["user_id"] = user_id
+            async_to_sync(self.channel_layer.group_send)(
+                self.joinList,
+                {"type": "stream", "response": response,},
+            )
+
+>>>>>>> 9b08010526a4aa14e4aad5db1deed6b4614c1374
         else:
             response = {"error": "Invalid method"}
-        async_to_sync(self.channel_layer.group_send)(
-            self.joinList,
-            {"type": "stream", "response": response,},
-        )
+        # async_to_sync(self.channel_layer.group_send)(
+        #     self.joinList,
+        #     {"type": "stream", "response": response,},
+        # )
 
     def stream(self, event):
         response = event["response"]
-        # Serialize the data to JSON
         response_json = response.content.decode("utf-8")
-        # print("❇️ response_json = ", response_json)
+        print("❇️ response_json = ", response_json)
         self.send(response_json)
