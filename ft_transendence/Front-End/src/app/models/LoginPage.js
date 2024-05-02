@@ -4,6 +4,7 @@ class LoginPage extends HtmlElement {
       super(".LoginPage")
       this._style.display = "block";
     }
+    debugger
     _LoginPassword = document.querySelector(".LoginPageinputpassword")
     _LoginEmail = document.querySelector(".LoginPageinput");
     _LoginPageForgot = document.querySelector(".LoginPageForgot");
