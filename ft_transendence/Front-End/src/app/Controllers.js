@@ -15,7 +15,7 @@ let INTRA_REDIRECT_URI="http%3A%2F%2F10.12.11.2%3A3000%2F";
 //queshon too backend Email exist or not and 
 //if create 
 async function ControllerCheckEmail(email) {
-  // ////debugger
+  //debugger
   try {
     // const response = await fetch(`${HostPort}/registerpage?email=${email}`,{
     const response = await fetch(`${HostPort}/email_validation/`,{
@@ -54,7 +54,7 @@ async function ControllerCheckEmail(email) {
 // });
 
 async function ControllerCheckReplayCode(code) {
-  // ////debugger
+  //debugger
   try {
       const response = await fetch(`${HostPort}/confirm/`, {
           method: 'POST',
@@ -85,7 +85,7 @@ async function ControllerCheckReplayCode(code) {
 }
 
 async function ControllerSignUp(password, User) {
-  // ////debugger
+  //debugger
 
   try {
     const response = await fetch(`${HostPort}/register/`, {
@@ -114,7 +114,7 @@ async function ControllerSignUp(password, User) {
 }
 
 async function ControllerPessPassword(password, User) {
-  // ////debugger
+  //debugger
 
 
   try {

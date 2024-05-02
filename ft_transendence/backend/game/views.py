@@ -27,11 +27,16 @@ import random
 
 
 class LiveGames():
-    def __init__(self):
-        self.games = {}
+    _instance = None
+   
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+            cls.games = {}
+            cls._instance.player_pool = []  # Initialize player_pool only once
+        return cls._instance
 
     def add_game(self, game_id, game):
-        print("🎮", game_id, game)
         self.games[game_id] = game
 
     def del_game(self, game_id):
@@ -39,6 +44,9 @@ class LiveGames():
     
     def get_game(self, game_id):
         return self.games[game_id]
+
+    def get_all_games(self):
+        return self.games
 
 class PlayerPool():
     def __init__(self):
@@ -69,7 +77,8 @@ class PlayRandom(APIView):
             if user_id.id in mms.player_pool:
                 return JsonResponse({"success": "false", "error": "User is already in a game room"}, status=status.HTTP_400_BAD_REQUEST)
             else:
-                mms.add_player_to_pool(user_id)
+                game = mms.add_player_to_pool(user_id)
+                print("✅", game)
                 return JsonResponse({"success": "true", "message": "User successfully added in a game room"}, status=status.HTTP_200_OK)
         except Person.DoesNotExist:
             return Response({"success": "false", "error": "User not found"}, status=status.HTTP_404_NOT_FOUND)

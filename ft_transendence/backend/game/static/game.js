@@ -146,7 +146,8 @@ function pongGame(userObj) {
             try {
                 response = JSON.parse(message.data);
             } catch (e) {
-                debugger;
+                // debugger;
+                
                 console.log("e = ", e);
                 return console.error(e);
             }
