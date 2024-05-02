@@ -9,7 +9,7 @@ class MidleCommunity extends HtmlElement {
       }
       
 
-      async eventsListenerAddAccount(){
+      async eventsListenerAddAccount() {
         const accounts = document.querySelectorAll(".CommunitySeeUser")
 
         accounts.forEach((e) => {
@@ -43,11 +43,11 @@ class MidleCommunity extends HtmlElement {
         return Item.friends.find((e)=>e.id == User._Id); //|| Item.friendsShit.find((e)=>e.id == User._Id)
       }
 
-      eventsListenerAddFriends(){
-       
+      eventsListenerAddFriends() {
+       debugger
         const notFriends = document.querySelectorAll(".CommunityAddFriends");
         //[{0:CommunityAddFriends},{1:CommunityAddFriends} , {2:CommunityAddFriends} ]
-        notFriends.forEach((e)=>{
+        notFriends.forEach((e) => {
             //{0:CommunityAddFriends}.addEventListener
           e.addEventListener("click", async (item)=>{
             //<button id=""CommunityAddFriends:1">
@@ -85,7 +85,7 @@ class MidleCommunity extends HtmlElement {
   //         </button>
   //     </div>
   // </div>
-    MidleCommunityTableBodyI(i, Item){
+    MidleCommunityTableBodyI(i, Item) {
       //debugger
             //1
             const div1 = document.createElement("div");

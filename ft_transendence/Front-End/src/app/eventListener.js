@@ -108,7 +108,7 @@ Home?._MidleJoinList?._InviteButton?.addEventListener("click",async ()=>{       
 
 //3
 Home?._NAV?._Home?._classname?.addEventListener("click",()=>{
-  //////debugger
+  //debugger
   ManageMidle.Manage("midle");
 } );
 
@@ -119,28 +119,28 @@ Home?._NAV?._Profile?._classname?.addEventListener("click", async ()=>{
 
 //4
 Home?._NAV?._JoinListGame?._classname?.addEventListener("click",()=>{
-  //////debugger
+  //debugger
   ManageMidle.Manage("JoinList");
 
 } )
 
 // 1
 Home?._NAV?._LEADERBOARD?._classname?.addEventListener("click",()=>{
-  //////debugger
+  //debugger
   ManageMidle.Manage("MidleCub");
 } )
 
 // 
 Home?._NAV?._Community?._classname?.addEventListener("click",()=>{
-  //////debugger
+  //debugger
   ManageMidle.Manage("MidleCommunity");
 } )
 
 
 //whene create new list item for game
 //_MidleJoinList Create button
-Home._MidleJoinList?._CreateButton?.addEventListener("click", async ()=>{
-    //debugger
+Home._MidleJoinList?._CreateButton?.addEventListener("click", async () => {
+  debugger
   console.log("click... \n");
   const Players = document.querySelector("#JoinListHeroDivProfilPlayers");
   const LiveOnOff = document.querySelector("#LiveOnOff");
@@ -152,39 +152,40 @@ Home._MidleJoinList?._CreateButton?.addEventListener("click", async ()=>{
     live:LiveOnOff.value,
     theme:JoinTheme.value,
     gamemode:JoinListHeroDivGameMode.value,
-    
   };
 
-//send back-end
-// const url = "api/v1/createroom/" + User._Id;
-const paload = {
-  "method": "create",
-  "pk":User._Id,
-  ...objCreate,
-}
+  //send back-end
+  // const url = "api/v1/createroom/" + User._Id;
+  const paload = {
+    "method": "create",
+    "pk":User._Id,
+    ...objCreate,
+  }
 
-const str = JSON.stringify(paload)
-  
-Join_Ws.send(str);
-//   await FetchRequest("POST", url, objCreate);
+  const str = JSON.stringify(paload)
+  //   await FetchRequest("POST", url, objCreate);
   //redirect
- 
+
+  if (Join_Ws.readyState === WebSocket.OPEN) {
+    console.log('WebSocket connection is open 222222222222');
+    Join_Ws.send(str);
+
+  }
+
+  //When Have Error
+  Join_Ws.onclose = function (e) {
+    console.log("Something unexpected happened ! Join_Ws closed");
+  };
+
   Players.value = "";
   LiveOnOff.value = "";
   JoinTheme.value = "";
   JoinListHeroDivGameMode.value = "";
 })
 
-
-
-
-
-
 Home._HomeLeft?._ExploreMessag?.addEventListener("click",  ()=>{
   if (!User.checkSignIn())
     return;
-
-
 
   const style = Home._HomeMessage?._style;
   console.log("d.display == " + style.display)
@@ -261,7 +262,7 @@ Login?._LoginPageContinue?.addEventListener("click", async (e) => {
 
 // when forgot password
 Login?._LoginPageForgot?.addEventListener("click", async() => {
-  //////debugger
+  //debugger
   await ManageAllPage.Manage("ResetPage");
   await  NavigateHistory("/reset", HostPort + '/reset', false)
   ManageMidle.Manage("");
@@ -295,7 +296,7 @@ Reset?._ConfirmReset?.addEventListener('click', async () => {
 //-------------------------------------------------------------------  Confirm  ---------
 
 Confirm.ConfirmYourEmail.addEventListener('click', async () => {
-  debugger
+  // debugger
   const data = await Confirm.ConfirmPageContinue(isReset);
   Confirm.ValuesAllEmpty();
 
@@ -340,7 +341,7 @@ Confirm.ConfirmYourEmail.addEventListener('click', async () => {
 //-------------------------------------------------------------------  Password
 
 Password.PasswordConfirm.addEventListener("click", async () => {
-  debugger
+  // debugger
   const isCorrectPassword = Password.PasswordConfirmButton();
   if (isCorrectPassword)
   {
@@ -360,7 +361,7 @@ Password.PasswordConfirm.addEventListener("click", async () => {
 //-------------------------------------------------------------------  SignUp
 
 SignUp.SignupPageContinue.addEventListener("click", async () => {
-  debugger
+  // debugger
   const isCorrectPassword = SignUp.PasswordConfirmButton();
   const ischeckNameNickname = SignUp.checkNameNickname();
   const errorNickname = document.querySelector(".SignupPageinputDivErrorNickname");
@@ -389,7 +390,7 @@ SignUp.SignupPageContinue.addEventListener("click", async () => {
 
 //RegisterPage click confirm email
 Register?._RegisterPageContinue?.addEventListener("click",  async () => {
-  debugger
+  // debugger
       let value = await Register.RegistersWithEmail();
       if (value)
       {

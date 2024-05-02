@@ -52,7 +52,7 @@ import os
 
 from django.shortcuts import render
 
-#TODO: activate all Tokens
+#TODO: activate intra Tokens
 
 class UserAPIView(APIView):
     def get(self, request):
@@ -91,7 +91,7 @@ class EmailValidation(APIView):
             return JsonResponse({"success": "false","error": e.message}, status=status.HTTP_400_BAD_REQUEST)
         try:
             existing_confirmation_data = Confirm.objects.get(email=email)
-            existing_confirmation_data.delete()  # Delete existing confirmation data
+            existing_confirmation_data.delete()
         except ObjectDoesNotExist:
             pass
         confirmation_data = Confirm.objects.create(email=email, code=code)
@@ -115,6 +115,27 @@ class Confirmation(APIView):
                 return JsonResponse({"success": "false","error": "Invalid confirmation code"}, status=status.HTTP_404_NOT_FOUND)
         except Confirm.DoesNotExist:
             return JsonResponse({"success": "false","error": "Confirmation data not found"}, status=status.HTTP_400_BAD_REQUEST)
+
+        # user = User.objects.get(email=email)
+        # person = Person.objects.get(email=email)
+        # if person.twofactor is True:
+        #     token_serializer = TokenObtainPairSerializer()
+        #     token = token_serializer.get_token(user)
+        #     refresh = RefreshToken.for_user(user)
+
+        #     response_data = {
+        #         "success": "true",
+        #         "access": str(token.access_token),
+        #         "refresh": str(refresh),
+        #         "user": {
+        #             "id": person.id,
+        #             "name": person.name,
+        #             "nickname": person.nickname,
+        #             "email": person.email,
+        #             "image": person.image,
+        #         }
+        #     }
+        #     return JsonResponse({"success": "true", "twoFA": "true", "data": response_data})
         return JsonResponse({"success": "true", "message": "Email is validated"})
 
 class Register(APIView):
@@ -249,6 +270,20 @@ class Login(APIView):
                     "image": person.image,
                 }
             }
+            if person.twofactor is True:
+                code = send_confirmation_email(email)
+                confirm_data = {
+                    'email': email,
+                    'code': code,
+                    'timestamp': timezone.now().isoformat(),
+                }
+                try:
+                    existing_confirmation_data = Confirm.objects.get(email=email)
+                    existing_confirmation_data.delete()
+                except ObjectDoesNotExist:
+                    pass
+                confirmation_data = Confirm.objects.create(email=email, code=code)
+                return JsonResponse({"twoFA": "true"})
             return JsonResponse({"success": "true", "data": response_data})
         else:
             return JsonResponse({"success": "false", "error": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
@@ -295,7 +330,6 @@ class SettingsById(APIView):
             return JsonResponse({"success": "false", "error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
 
     def put(self, request, pk):
-        print("asdadasdasdasdasdasdasdasdasdasdadsasdasdasdasdasdasdasd    ",request)
         try:
             person = Person.objects.get(pk=pk)
             user = User.objects.get(pk=pk)
@@ -304,12 +338,17 @@ class SettingsById(APIView):
         except User.DoesNotExist:
             return JsonResponse({"success": "false", "error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
         data = json.loads(request.body)
+        print("❌", data)
         if 'name' in data and data['name']:
             person.name = data['name']
             user.first_name = data['name']
+        else:
+            data['name'] = person.name
         if 'nickname' in data and data['nickname']:
             person.nickname = data['nickname']
             user.username = data['nickname']
+        else:
+            data['nickname'] = person.nickname
         if 'email' in data and data['email']:
             try:
                 email_validation(data['email'])
@@ -317,8 +356,12 @@ class SettingsById(APIView):
                 return JsonResponse({"success": "false","error": e.message}, status=status.HTTP_400_BAD_REQUEST)
             person.email = data['email']
             user.email = data['email']
+        else:
+            data['email'] = person.email
         if 'image' in data and data['image']:
             person.image = data['image']
+        else:
+            data['image'] = person.image
         new_password = data.get('password')
         if new_password:
             try:
@@ -329,13 +372,20 @@ class SettingsById(APIView):
             hashed_password = make_password(new_password)
             person.password = hashed_password
             user.password = hashed_password
+        else:
+            new_password = person.password
         if 'gamemode' in data and data['gamemode']:
             person.gamemode = data['gamemode']
+        else:
+            data['gamemode'] = person.gamemode
         if 'twofactor' in data and data['twofactor']:
             person.twofactor = bool(data['twofactor'])
+        else:
+            data['twofactor'] = person.twofactor
         person.save()
         user.save()
-        return JsonResponse({"success": "true", "profile": model_to_dict(user)})
+        print("✅", data)
+        return JsonResponse({"success": "true", "profile": data})
 
     def delete(self, request, pk):
        
@@ -385,6 +435,8 @@ class WaitingRoom(APIView):
             user = User.objects.get(id=pk)
             active_users = User.objects.filter(is_active=True).exclude(id=pk)
             active_persons = [user.person for user in active_users]
+            if activate_persons.game_room_id is not None:
+                return JsonResponse({"success": "false", "error": "User is already in a game room"}, status=status.HTTP_400_BAD_REQUEST)
             serializer = WaitingRoomSerializer(active_persons, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except User.DoesNotExist:
@@ -392,8 +444,10 @@ class WaitingRoom(APIView):
 
     def post(self, request, pk):
         try:
+            print(opponent_id)
             user = Person.objects.get(id=pk)
             opponent_id = request.data.get('opponent_id')
+            print(user)
             opponent = Person.objects.get(id=opponent_id)
             if opponent.ongoing is not None:
                 return JsonResponse({"success": "false", "error": "Opponent is already in a game room"}, status=status.HTTP_400_BAD_REQUEST)
@@ -406,7 +460,14 @@ def save_base64_image(image_path):
         return base64.b64encode(img_file.read()).decode('utf-8')
 
 class JoinList(APIView):
-    # permission_classes = [IsAuthenticated]
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.pt = PlayTournament()
+
+    def get_response_data(self):
+        print("self.pt.get_response_data() = ", self.pt.get_response_data())
+        return self.pt.get_response_data()
+
     def get(self, request, pk):
         try:
             # Retrieve all persons with their associated game rooms
@@ -433,16 +494,16 @@ class JoinList(APIView):
                         }
                         if len(persons_in_room) == 2:
                             room_data["src"].append({
-                                "url": persons_in_room[0].image,
-                                "urlClient": persons_in_room[1].image
+                                # "url": persons_in_room[0].image,
+                                # "urlClient": persons_in_room[1].image
                             })
                         else:
                             # Add image for the first player and default image for the second player if he is not in the room
                             default = os.path.join(os.path.dirname(__file__), 'default.jpg')
                             default_img = save_base64_image(default)
                             room_data["src"].append({
-                                "url": persons_in_room[0].image,
-                                "urlClient": default_img  # Replace with your default image URL
+                                # "url": persons_in_room[0].image,
+                                # "urlClient": default_img  # Replace with your default image URL
                             })
                         room_data["type"] = "User"
                         if (game_room.is_full()):
@@ -469,7 +530,8 @@ class JoinList(APIView):
                             method = "join_list_room"
                     # Add the game room data to the result
                     result["game_rooms"].append(room_data)
-                    result["method"].append(method)
+                    result["method"] = method
+                    result["data"] = self.pt.get_response_data()
             return JsonResponse(result)
         except User.DoesNotExist:
             return JsonResponse({"success": False, "error": "No game rooms found"})
@@ -477,8 +539,8 @@ class JoinList(APIView):
     def post(self, request, pk):
         try:
             user = Person.objects.get(id=pk)
-            creator_id = request.data.get('creator_id')
-            game_room_id = request.data.get('game_room_id')
+            creator_id = request.get('creator_id')
+            game_room_id = request.get('game_room_id')
             try:
                 creator = Person.objects.get(id=creator_id)
                 game_room = creator.game_room
@@ -501,7 +563,7 @@ class JoinList(APIView):
                 # Check if the game room is now full after adding the user
                 if game_room.is_full():
                     PlayTournament().post(request, game_room_id=game_room_id, creator_id=creator_id)
-                    return JsonResponse({"success": "true", "message": "Successfully joined the game room. Game will start soon."}, status=status.HTTP_200_OK)
+                    return JsonResponse({"success": "true", "method": "start_game", "message": "Successfully joined the game room. Game will start soon."}, status=status.HTTP_200_OK)
                 else:
                     return JsonResponse({"success": "true", "method": "join_list_room", "message": "Successfully joined the game room"}, status=status.HTTP_200_OK)
         except Exception as e:
@@ -543,7 +605,7 @@ class CreateRoom(APIView):
                 game_room = game_room_serializer.save()
                 creator.game_room = game_room
                 creator.save()
-                return JsonResponse({"success": "true", "message": "Game room created successfully"}, status=status.HTTP_201_CREATED)
+                return JsonResponse({"success": "true", "message": "Game room created successfully", "game_room":  creator.game_room.id}, status=status.HTTP_201_CREATED)
             else:
                 return JsonResponse({"success": "false", "error": game_room_serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:

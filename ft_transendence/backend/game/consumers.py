@@ -3,6 +3,7 @@ import uuid
 import constants
 
 from core.models import Person
+from django.http import JsonResponse
 
 from .pong_controller import PaddleController, BallController
 from .thread_pool import ThreadPool
@@ -12,9 +13,9 @@ from channels.generic.websocket import WebsocketConsumer
 import time
 
 from core.views import CreateRoom, JoinList
+from game.views import PlayTournament, MatchmakingSystem, PlayerPool, LiveGames, Player
 
 from constants import *
-
 
 class PongConsumer(WebsocketConsumer):
     def __init__(self, *args, **kwargs):
@@ -139,14 +140,17 @@ class PongConsumer(WebsocketConsumer):
 class joinListConsumer(WebsocketConsumer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.roomId = None
+        self.pt = PlayTournament()
+        self.playerPool = PlayerPool()
+        self.JoinList = JoinList()
 
     def connect(self):
-        # print("open_code", open_code)
         self.joinList = self.scope["path"].strip("/").replace(" ", "_")
         self.joinList = "barev"
         async_to_sync(self.channel_layer.group_add)(self.joinList, self.channel_name)
         self.accept()
-        response = JoinList.get(self, None, None)
+        response = self.JoinList.get(None, None)
         async_to_sync(self.channel_layer.group_send)(
             self.joinList,
             {"type": "stream", "response": response,},
@@ -161,28 +165,44 @@ class joinListConsumer(WebsocketConsumer):
     def receive(self, text_data):
         request = json.loads(text_data)
         method = request.get("method")
+        print("____________" ,method, "     :   ", request)
         if method == "create":
             user_id = request.get("pk")
+            print("user_id = request.get(pk) == ", user_id)
             response = CreateRoom.post(self, request, user_id)
+
             all_user_ids = list(Person.objects.values_list('id', flat=True))
             response["all_user_ids"] = all_user_ids
-            response = JoinList.get(self, None, None)
+            response = self.JoinList.get(None, None)
             response["method"] = "create"
+            async_to_sync(self.channel_layer.group_send)(
+                self.joinList,
+                {"type": "stream", "response": response,},
+            )
         elif method == "join" or method == "invite":
-            # Extract the user ID from the request payload
             user_id = request.get("user_id")
-            response = JoinList.post(self, request, user_id)
-            # Include user_id in the response for reference
-            response["user_id"] = user_id
+            json_data = self.JoinList.post(request, user_id)
+
+            response = self.JoinList.get(None, None)
             all_user_ids = list(Person.objects.values_list('id', flat=True))
             response["all_user_ids"] = all_user_ids
-            response = JoinList.get(self, None, None)
             response["method"] = "join"
-            game_room_full = len(user_id) >= MAX_PLAYERS
-            if game_room_full:
+            creator_id = request.get("creator_id")
+            game_room_id = request.get("game_room_id")
+            creator = Person.objects.get(id=creator_id)
+            game_room = creator.game_room
+            if game_room.is_full():
                 PlayTournament().post(request, game_room_id=game_room_id, creator_id=creator_id)
+                game_room.ongoing = False
+                game_room.players.update(game_room_id=None)
+                game_room.save()
+                Person.objects.filter(game_room_id=game_room_id).update(game_room_id=None)
         else:
             response = {"error": "Invalid method"}
+        response_data = json.loads(response.content)
+        live = LiveGames().get_all_games()
+        response_data["liveGames"] = live
+        response = JsonResponse(response_data)
         async_to_sync(self.channel_layer.group_send)(
             self.joinList,
             {"type": "stream", "response": response,},
@@ -190,7 +210,6 @@ class joinListConsumer(WebsocketConsumer):
 
     def stream(self, event):
         response = event["response"]
-        # Serialize the data to JSON
         response_json = response.content.decode("utf-8")
-        # print("❇️ response_json = ", response_json)
+        print("❇️ response_json = ", response_json)
         self.send(response_json)

@@ -177,7 +177,7 @@ ElementData.prototype.createBlock = function(Group, nameElement) {
 */
 
 ElementData.prototype.MessagPrivateSubjectMessagPerson = function(Person) {
-    ////debugger
+    //debugger
     const node = document.createElement("div")
     node.setAttribute("class", "MessagPrivateSubjectMessagPerson");
       const PersonDiv = document.createElement("div")
@@ -212,7 +212,7 @@ ElementData.prototype.MessagPrivateSubjectMessagPerson = function(Person) {
 */}
 
 ElementData.prototype.MessagPrivateSubjectMessagSender = function(Person) {
-    ////debugger
+    //debugger
     const node = document.createElement("div");
     node.setAttribute("class", "MessagPrivateSubjectMessagSender");
     const nodeDiv = document.createElement("div")
