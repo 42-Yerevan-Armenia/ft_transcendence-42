@@ -42,7 +42,7 @@ const myStorages = {
     },
     
     async longOut() {
-      ////debugger
+      //debugger
       // api/v1/logout/
       const dataUrs={
         "pk":User._Id

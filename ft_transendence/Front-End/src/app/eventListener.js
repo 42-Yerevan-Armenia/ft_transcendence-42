@@ -108,7 +108,7 @@ Home?._MidleJoinList?._InviteButton?.addEventListener("click",async ()=>{       
 
 //3
 Home?._NAV?._Home?._classname?.addEventListener("click",()=>{
-  //////debugger
+  //debugger
   ManageMidle.Manage("midle");
 } );
 
@@ -119,20 +119,20 @@ Home?._NAV?._Profile?._classname?.addEventListener("click", async ()=>{
 
 //4
 Home?._NAV?._JoinListGame?._classname?.addEventListener("click",()=>{
-  //////debugger
+  //debugger
   ManageMidle.Manage("JoinList");
 
 } )
 
 // 1
 Home?._NAV?._LEADERBOARD?._classname?.addEventListener("click",()=>{
-  //////debugger
+  //debugger
   ManageMidle.Manage("MidleCub");
 } )
 
 // 
 Home?._NAV?._Community?._classname?.addEventListener("click",()=>{
-  //////debugger
+  //debugger
   ManageMidle.Manage("MidleCommunity");
 } )
 
@@ -270,7 +270,7 @@ Login?._LoginPageContinue?.addEventListener("click", async (e) => {
 
 // when forgot password
 Login?._LoginPageForgot?.addEventListener("click", async() => {
-  //////debugger
+  //debugger
   await ManageAllPage.Manage("ResetPage");
   await  NavigateHistory("/reset", HostPort + '/reset', false)
   ManageMidle.Manage("");
@@ -304,7 +304,7 @@ Reset?._ConfirmReset?.addEventListener('click', async () => {
 //-------------------------------------------------------------------  Confirm  ---------
 
 Confirm.ConfirmYourEmail.addEventListener('click', async () => {
-  debugger
+  // debugger
   const data = await Confirm.ConfirmPageContinue(isReset);
   Confirm.ValuesAllEmpty();
 
@@ -362,7 +362,7 @@ Confirm.ConfirmYourEmail.addEventListener('click', async () => {
 //-------------------------------------------------------------------  Password
 
 Password.PasswordConfirm.addEventListener("click", async () => {
-  debugger
+  // debugger
   const isCorrectPassword = Password.PasswordConfirmButton();
   if (isCorrectPassword)
   {
@@ -382,7 +382,7 @@ Password.PasswordConfirm.addEventListener("click", async () => {
 //-------------------------------------------------------------------  SignUp
 
 SignUp.SignupPageContinue.addEventListener("click", async () => {
-  debugger
+  // debugger
   const isCorrectPassword = SignUp.PasswordConfirmButton();
   const ischeckNameNickname = SignUp.checkNameNickname();
   const errorNickname = document.querySelector(".SignupPageinputDivErrorNickname");
@@ -411,7 +411,7 @@ SignUp.SignupPageContinue.addEventListener("click", async () => {
 
 //RegisterPage click confirm email
 Register?._RegisterPageContinue?.addEventListener("click",  async () => {
-  debugger
+  // debugger
       let value = await Register.RegistersWithEmail();
       if (value)
       {
