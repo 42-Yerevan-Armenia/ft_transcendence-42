@@ -115,27 +115,31 @@ class Confirmation(APIView):
                 return JsonResponse({"success": "false","error": "Invalid confirmation code"}, status=status.HTTP_404_NOT_FOUND)
         except Confirm.DoesNotExist:
             return JsonResponse({"success": "false","error": "Confirmation data not found"}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            user = User.objects.get(email=email)
+            person = Person.objects.get(email=email)
+            if person.twofactor is True:
+                token_serializer = TokenObtainPairSerializer()
+                token = token_serializer.get_token(user)
+                refresh = RefreshToken.for_user(user)
 
-        # user = User.objects.get(email=email)
-        # person = Person.objects.get(email=email)
-        # if person.twofactor is True:
-        #     token_serializer = TokenObtainPairSerializer()
-        #     token = token_serializer.get_token(user)
-        #     refresh = RefreshToken.for_user(user)
-
-        #     response_data = {
-        #         "success": "true",
-        #         "access": str(token.access_token),
-        #         "refresh": str(refresh),
-        #         "user": {
-        #             "id": person.id,
-        #             "name": person.name,
-        #             "nickname": person.nickname,
-        #             "email": person.email,
-        #             "image": person.image,
-        #         }
-        #     }
-        #     return JsonResponse({"success": "true", "twoFA": "true", "data": response_data})
+                response_data = {
+                    "success": "true",
+                    "access": str(token.access_token),
+                    "refresh": str(refresh),
+                    "user": {
+                        "id": person.id,
+                        "name": person.name,
+                        "nickname": person.nickname,
+                        "email": person.email,
+                        "image": person.image,
+                    }
+                }
+                return JsonResponse({"success": "true", "twoFA": "true", "data": response_data})
+        except User.DoesNotExist:
+            pass
+        except Person.DoesNotExist:
+            pass
         return JsonResponse({"success": "true", "message": "Email is validated"})
 
 class Register(APIView):
@@ -531,7 +535,6 @@ class JoinList(APIView):
                     # Add the game room data to the result
                     result["game_rooms"].append(room_data)
                     result["method"] = method
-                    # result["data"] = self.pt.get_response_data()
             return JsonResponse(result)
         except User.DoesNotExist:
             return JsonResponse({"success": False, "error": "No game rooms found"})

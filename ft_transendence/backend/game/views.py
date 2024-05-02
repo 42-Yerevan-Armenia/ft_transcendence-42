@@ -61,12 +61,10 @@ class PlayerPool():
     def get_player(self, player_id):
         return self.players[player_id]
 
-
 class Player():
     def __init__(self, id, channel_name):
         self.id = id
         self.joinListConsumer = channel_name
-
 
 class PlayRandom(APIView):
     permission_classes = [IsAuthenticated]
@@ -85,7 +83,7 @@ class PlayRandom(APIView):
 
 class MatchmakingSystem():
     _instance = None
-   
+
     def __new__(cls):
         if cls._instance is None:
             cls._instance = super().__new__(cls)
@@ -183,11 +181,11 @@ class PlayTournament(APIView):
             tns = TournamentSystem(game_room.players.all(), game_room_id)
             tns.run_tournament()
             self.response_data = tns.response_data
-            # winner = tns.winners[0]
-            # game_room.ongoing = False
-            # game_room.players.update(game_room_id=None)
-            # game_room.save()
-            # Person.objects.filter(game_room_id=game_room_id).update(game_room_id=None)
+            winner = tns.winners[0]
+            game_room.ongoing = False
+            game_room.players.update(game_room_id=None)
+            game_room.save()
+            Person.objects.filter(game_room_id=game_room_id).update(game_room_id=None)
             return JsonResponse({"success": "true"}, status=status.HTTP_200_OK)
             # return JsonResponse({"success": "true", "winner": winner}, status=status.HTTP_200_OK)
         except Person.DoesNotExist:
@@ -255,11 +253,17 @@ class TournamentSystem:
             group = self.winners[i:i+2]
             self.groups.append(group)
 
+
+
     def run_match(self, player_1, player_2): # Finished
         mms = MatchmakingSystem()
+        # generate room_id from game_room_id
         response_data = mms.start_match(player_1, player_2, self.room_id)
         self.response_data = response_data
+        # call async function to get winner
         win = player_1
+        # delete game from LiveGames
+        # LiveGames().del_game(self.room_id)
         self.update_game_results(player_1, player_2, win)
         self.save_game_history(player_1, player_2, win)
         return win
