@@ -74,6 +74,7 @@ class USER {
 
 
     setData(data){
+      debugger
       this._Name = data.name;
       this._Nickname = data.nickname;
       this._Email = data.email;

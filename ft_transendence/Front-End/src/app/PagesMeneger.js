@@ -136,7 +136,7 @@ async function NavigateHistory(pathname, href, isATag){
 links.forEach(link => {
 	//set event listener in each a tag
     link.addEventListener("click", async (event) => {
-		debugger
+		// debugger
 		console.log(window.history)
 
         event.preventDefault();
@@ -194,7 +194,7 @@ async function drawHtmlScreen(route, isATag){
 
 // create a function that handles the url location
 const urlLocationHandler =  async (isATag) => {
-	////debugger
+	//debugger
 	const Url = window.location.pathname; // get the url path
 	console.log("window.location.pathname == " + window.location.pathname);
 
@@ -216,7 +216,7 @@ const urlLocationHandler =  async (isATag) => {
 
 // Function to check if a state is in the navigation stack
 function  isInNavigationStack(path) {
-	debugger
+	// debugger
     // const index =  navigationHistoryA?.findLastIndex((element) => element.path == path)
 	const index =  navigationHistoryA?.findIndex((element) => element.path == path)
 	return index;
@@ -272,7 +272,7 @@ const urlLocationHandlerForNavigateBackForward = async () => {
 
 //add an event listener to the window that watches for url changes
 window.addEventListener("popstate", async function(event) {
-	debugger
+	// debugger
     console.log("History state changed:", event.state);
 
 	await urlLocationHandlerForNavigateBackForward();
@@ -281,7 +281,7 @@ window.addEventListener("popstate", async function(event) {
 
 // create a function that watches the url and calls the urlLocationHandler
 const urlRouteForward = () => {
-	debugger
+	// debugger
 	// window.history.pushState(state, unused, target link);
 	// window.history.pushState({page:0}, "Home", document.location.pathname);
 	let statePage = new StatePage();

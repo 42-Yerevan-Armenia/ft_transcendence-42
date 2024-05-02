@@ -50,7 +50,7 @@ class JoinList extends HtmlElement {
       super(".JoinList")
       this._style.display = "none";
       this._JoinListInvit = new JoinListInvit();
-      debugger;
+      // debugger;
     }
     _game_rooms = "";
     _CreateButton = document.querySelector(".JoinListHeroDivButtonB");
@@ -136,7 +136,7 @@ class JoinList extends HtmlElement {
         div6Button.setAttribute("class", "JoinListTableClassView");
         div6Button.innerHTML = "View";
       }
-      debugger
+      // debugger
       if (Item.creator_id == User._Id){
         div6Button.style.backgroundColor = "grey";
         div6Button.disabled = true;
@@ -201,7 +201,7 @@ class JoinList extends HtmlElement {
     //    Iterate over each button and attach an event listener add Join
     buttonsJoin.forEach(button => {
       button.addEventListener("click", async function(e) {
-        debugger
+        // debugger
         // Item.id + ":JoinListTableID:" + Item.creator_id
         // api/v1/joinlist/<int:pk>/' POST
         console.log("  +++    " + e.target.id);
@@ -261,7 +261,7 @@ class JoinList extends HtmlElement {
   }
 
   async draw() {
-    debugger
+    // debugger
     document.querySelector(".JoinListConteinerTableALL").innerHTML = "";
     if (this._game_rooms) {
         this._game_rooms.sort((e,e1)=>e.id < e1.id).forEach(e => {

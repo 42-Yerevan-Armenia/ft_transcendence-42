@@ -52,7 +52,7 @@ import os
 
 from django.shortcuts import render
 
-#TODO: activate all Tokens
+#TODO: activate intra Tokens
 
 class UserAPIView(APIView):
     def get(self, request):
@@ -91,7 +91,7 @@ class EmailValidation(APIView):
             return JsonResponse({"success": "false","error": e.message}, status=status.HTTP_400_BAD_REQUEST)
         try:
             existing_confirmation_data = Confirm.objects.get(email=email)
-            existing_confirmation_data.delete()  # Delete existing confirmation data
+            existing_confirmation_data.delete()
         except ObjectDoesNotExist:
             pass
         confirmation_data = Confirm.objects.create(email=email, code=code)
@@ -115,6 +115,27 @@ class Confirmation(APIView):
                 return JsonResponse({"success": "false","error": "Invalid confirmation code"}, status=status.HTTP_404_NOT_FOUND)
         except Confirm.DoesNotExist:
             return JsonResponse({"success": "false","error": "Confirmation data not found"}, status=status.HTTP_400_BAD_REQUEST)
+
+        # user = User.objects.get(email=email)
+        # person = Person.objects.get(email=email)
+        # if person.twofactor is True:
+        #     token_serializer = TokenObtainPairSerializer()
+        #     token = token_serializer.get_token(user)
+        #     refresh = RefreshToken.for_user(user)
+
+        #     response_data = {
+        #         "success": "true",
+        #         "access": str(token.access_token),
+        #         "refresh": str(refresh),
+        #         "user": {
+        #             "id": person.id,
+        #             "name": person.name,
+        #             "nickname": person.nickname,
+        #             "email": person.email,
+        #             "image": person.image,
+        #         }
+        #     }
+        #     return JsonResponse({"success": "true", "twoFA": "true", "data": response_data})
         return JsonResponse({"success": "true", "message": "Email is validated"})
 
 class Register(APIView):
@@ -249,6 +270,20 @@ class Login(APIView):
                     "image": person.image,
                 }
             }
+            if person.twofactor is True:
+                code = send_confirmation_email(email)
+                confirm_data = {
+                    'email': email,
+                    'code': code,
+                    'timestamp': timezone.now().isoformat(),
+                }
+                try:
+                    existing_confirmation_data = Confirm.objects.get(email=email)
+                    existing_confirmation_data.delete()
+                except ObjectDoesNotExist:
+                    pass
+                confirmation_data = Confirm.objects.create(email=email, code=code)
+                return JsonResponse({"twoFA": "true"})
             return JsonResponse({"success": "true", "data": response_data})
         else:
             return JsonResponse({"success": "false", "error": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
@@ -295,7 +330,6 @@ class SettingsById(APIView):
             return JsonResponse({"success": "false", "error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
 
     def put(self, request, pk):
-        print("asdadasdasdasdasdasdasdasdasdasdadsasdasdasdasdasdasdasd    ",request)
         try:
             person = Person.objects.get(pk=pk)
             user = User.objects.get(pk=pk)
@@ -304,12 +338,17 @@ class SettingsById(APIView):
         except User.DoesNotExist:
             return JsonResponse({"success": "false", "error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
         data = json.loads(request.body)
+        print("❌", data)
         if 'name' in data and data['name']:
             person.name = data['name']
             user.first_name = data['name']
+        else:
+            data['name'] = person.name
         if 'nickname' in data and data['nickname']:
             person.nickname = data['nickname']
             user.username = data['nickname']
+        else:
+            data['nickname'] = person.nickname
         if 'email' in data and data['email']:
             try:
                 email_validation(data['email'])
@@ -317,8 +356,12 @@ class SettingsById(APIView):
                 return JsonResponse({"success": "false","error": e.message}, status=status.HTTP_400_BAD_REQUEST)
             person.email = data['email']
             user.email = data['email']
+        else:
+            data['email'] = person.email
         if 'image' in data and data['image']:
             person.image = data['image']
+        else:
+            data['image'] = person.image
         new_password = data.get('password')
         if new_password:
             try:
@@ -329,13 +372,20 @@ class SettingsById(APIView):
             hashed_password = make_password(new_password)
             person.password = hashed_password
             user.password = hashed_password
+        else:
+            new_password = person.password
         if 'gamemode' in data and data['gamemode']:
             person.gamemode = data['gamemode']
+        else:
+            data['gamemode'] = person.gamemode
         if 'twofactor' in data and data['twofactor']:
             person.twofactor = bool(data['twofactor'])
+        else:
+            data['twofactor'] = person.twofactor
         person.save()
         user.save()
-        return JsonResponse({"success": "true", "profile": model_to_dict(user)})
+        print("✅", data)
+        return JsonResponse({"success": "true", "profile": data})
 
     def delete(self, request, pk):
        

@@ -15,7 +15,7 @@ class JoinListInvit extends HtmlElement{
     6 <td class="JoinListInvitetbodyTd"><button class="JoinListInviteClass" id="JoinListInviteid">Invite</button></td>
 </tr> */
     JoinListInvitetbodyTr(Item){
-        ////debugger
+        //debugger
         const tr = document.createElement("tr");
         tr.setAttribute("class", "JoinListInvitetbodyTr");
         const td1 = document.createElement("td");
@@ -81,7 +81,7 @@ class JoinListInvit extends HtmlElement{
     //Iterate over each button and set event listener invit
     buttons.forEach(async button => {
         button.addEventListener("click", async function(e) {
-            debugger
+            // debugger
 
                 const clientid = e.target.id.slice(e.target.id.lastIndexOf(':') + 1);
 

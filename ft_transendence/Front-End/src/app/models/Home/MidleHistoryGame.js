@@ -1,4 +1,4 @@
-////debugger
+//debugger
 class MidleHistoryGame extends HtmlElement{
     constructor(){
         super(".MidleHistoryGame");
@@ -60,7 +60,7 @@ class MidleHistoryGame extends HtmlElement{
 
     createFullHistoryTableBodyUser(id, name, img, preference, points, matches) {
         // Create elements
-        ////debugger
+        //debugger
         const divFullHistoryTableBodyUser = document.createElement("div");
         divFullHistoryTableBodyUser.classList.add("FullHistoryTableBodyUser");
         divFullHistoryTableBodyUser.id = "FullHistoryTableBodyUserId";
