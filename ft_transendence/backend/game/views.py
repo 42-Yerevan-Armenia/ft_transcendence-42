@@ -210,16 +210,16 @@ class TournamentSystem:
         all_round_winners = []
         for group in self.groups:
             round_winners = self.run_rounds(group)  # Run initial matches for each group
-            # all_round_winners.extend(round_winners)  # Collect round winners from each group
-        # self.round_winners(all_round_winners) # Add winners for next rounds
-        # while len(self.winners) > 1:
-        #     self.next_round()
-        #     for group in self.groups:
-        #         round_winners = self.run_matches(group) # Run matches for each new group
-        #         print("❌", round_winners)
-        #     self.get_winners()
-        # winner = self.winners[0]
-        # print(f"Tournament winner is: {winner}")
+            all_round_winners.extend(round_winners)  # Collect round winners from each group
+        self.round_winners(all_round_winners) # Add winners for next rounds
+        while len(self.winners) > 1:
+            self.next_round()
+            for group in self.groups:
+                round_winners = self.run_matches(group) # Run matches for each new group
+                print("❌ round_winners = ", round_winners)
+            self.get_winners()
+        winner = self.winners[0]
+        print(f"Tournament winner is: {winner}")
 
     def create_groups(self): # Finished
         player_ids = list(self.players.values_list('id', flat=True))  # Extract player IDs from queryset
@@ -236,9 +236,9 @@ class TournamentSystem:
             player_1 = group[i]
             player_2 = group[i+1]
             round_winner = self.run_match(player_1, player_2)
-            # round_winners.append(round_winner)
-            # print("Winners", round_winners)
-        # return round_winners
+            round_winners.append(round_winner)
+            print("Winners", round_winners)
+        return round_winners
 
     def round_winners(self, round_winners): 
         self.winners.extend(round_winners)

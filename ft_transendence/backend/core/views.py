@@ -517,7 +517,7 @@ class JoinList(APIView):
                         room_data = {
                             "id": game_room_id,
                             "creator_id": game_room.creator_id,
-                            "src": cup_img,
+                            # "src": cup_img,
                             "GameLevele": "Tournament",
                             "current_players": len(persons_in_room),
                             "max_players": game_room.max_players,
@@ -531,7 +531,7 @@ class JoinList(APIView):
                     # Add the game room data to the result
                     result["game_rooms"].append(room_data)
                     result["method"] = method
-                    result["data"] = self.pt.get_response_data()
+                    # result["data"] = self.pt.get_response_data()
             return JsonResponse(result)
         except User.DoesNotExist:
             return JsonResponse({"success": False, "error": "No game rooms found"})

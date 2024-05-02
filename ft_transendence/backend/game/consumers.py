@@ -187,16 +187,6 @@ class joinListConsumer(WebsocketConsumer):
             all_user_ids = list(Person.objects.values_list('id', flat=True))
             response["all_user_ids"] = all_user_ids
             response["method"] = "join"
-            creator_id = request.get("creator_id")
-            game_room_id = request.get("game_room_id")
-            creator = Person.objects.get(id=creator_id)
-            game_room = creator.game_room
-            if game_room.is_full():
-                PlayTournament().post(request, game_room_id=game_room_id, creator_id=creator_id)
-                game_room.ongoing = False
-                game_room.players.update(game_room_id=None)
-                game_room.save()
-                Person.objects.filter(game_room_id=game_room_id).update(game_room_id=None)
         else:
             response = {"error": "Invalid method"}
         response_data = json.loads(response.content)
