@@ -43,7 +43,7 @@ if (mainElement) {
 
 
 document.addEventListener("DOMContentLoaded", async () => {
-
+debugger
     console.log(" console.log(window.history);")
     console.log(window.history);
 //debugger

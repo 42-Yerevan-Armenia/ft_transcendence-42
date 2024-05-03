@@ -170,7 +170,6 @@ class joinListConsumer(WebsocketConsumer):
             user_id = request.get("pk")
             print("user_id = request.get(pk) == ", user_id)
             response = CreateRoom.post(self, request, user_id)
-
             all_user_ids = list(Person.objects.values_list('id', flat=True))
             response["all_user_ids"] = all_user_ids
             response = self.JoinList.get(None, None)

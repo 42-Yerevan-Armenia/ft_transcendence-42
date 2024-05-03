@@ -147,6 +147,7 @@ async function ControllerPessPassword(password, User) {
 
 //fetch universal POST request
 async function FetchRequest(Tomethod, Torequest, ToObj) {
+  debugger
   //console.log("1----------------------------------------")
   //console.log( "method : " + Tomethod);
   //console.log( "request : " + Torequest);
