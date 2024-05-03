@@ -28,13 +28,12 @@ function movePaddle(paddle, direction, max_paddle_y, paddle_step) {
     }
 }
 
-function pongGame(userObj, gameid) {
+function pongGame(gameid) {
     let isStarted = false;
     function isOpen(ws) { return ws.readyState === ws.OPEN }
 
     //HTML elements
-    let User_Id = userObj.id;
-    let clientId = User_Id;
+    let clientId = User._Id;
     let paddleName = null;
     const constants = {
         "paddle_step": null,
@@ -49,8 +48,8 @@ function pongGame(userObj, gameid) {
         clientId = uuid();
     let gameId = gameid;
     let playerColor = null;
-
-    let ws = new WebSocket("ws://" + window.location.host + "/ws/game/" + gameId)
+    // let ws = new WebSocket("ws://" + window.location.host + "/ws/game/" + gameId)
+    let ws = new WebSocket("ws://" + HostPort.slice(7) + "/ws/game/" + gameId)
     const payLoad = {
         "method": "connect",
         "clientId": clientId,
@@ -62,6 +61,7 @@ function pongGame(userObj, gameid) {
     console.log("ws = ", window.location.host);
     const txtGameId = document.getElementById("txtGameId");
     // const divPlayers = document.getElementById("divPlayers");
+    debugger
     const board = document.getElementById("board");
 
 
