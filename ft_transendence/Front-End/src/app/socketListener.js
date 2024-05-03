@@ -22,12 +22,21 @@ Join_Ws.onmessage = message => {
     console.log("=========================   response.method == " + response.method)
     // update JoinList->invite list
     if (response.method === "start_game" && User._getAccess) {
-        // debugger
-        const gameRoom = response.game_room;
+        debugger
+        debugger
+        response.liveGames.forEach(element => {
+            if (User._Id == element.game_room.left_id || User._Id == element.game_room.right_id)
+            {
+                const mainOnHtml = document.getElementById("mainSectionUsually");
+                mainOnHtml.style.display = "none";
+                const gameOnHtml = document.createElement("div");
+                gameOnHtml.setAttribute("id", "board")
 
-        if (User._Id == gameRoom.left_id || User._Id == gameRoom.right_id)
-        {
-            pongGame(User, gameRoom.room_id);
-        }
+                //call game function for start game
+                pongGame(element.game_room.room_id);
+                mainOnHtml.style.display = "block";
+                gameOnHtml.style.display = "none";
+            }
+        });
     }
 }
