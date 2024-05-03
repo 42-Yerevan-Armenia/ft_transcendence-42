@@ -17,6 +17,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
 from core.models import User, Person, GameRoom, History
 from core.serializers import MatchSerializer
+from game.models import GameInvite
 from django.http import JsonResponse
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
@@ -380,6 +381,13 @@ class SendInviteRequest(APIView):
                 return JsonResponse({"success": "false", "error": "Opponent is already in another game room"}, status=status.HTTP_400_BAD_REQUEST)
             if sender.game_room and opponent.game_room and sender.game_room == opponent.game_room:
                 return JsonResponse({"success": "false", "error": "Opponent is already in the same game room"}, status=status.HTTP_400_BAD_REQUEST)
+            invite_request = GameInvite.objects.filter(sender=sender, receiver=opponent).first()
+            if invite_request:
+                if invite_request.rejected:
+                    invite_request.delete()
+                else:
+                    return Response({"success": "false", "error": "Invitation already sent"}, status=status.HTTP_400_BAD_REQUEST)
+            GameInvite.objects.create(sender=sender, receiver=opponent)
             return Response({"success": "true", "message": "Invitation sent successfully"}, status=status.HTTP_200_OK)
         except Person.DoesNotExist:
             return Response({"success": "false", "error": "User or opponent not found"}, status=status.HTTP_404_NOT_FOUND)
@@ -388,22 +396,25 @@ class AcceptInviteRequest(APIView):
     permission_classes = [IsAuthenticated]
     def post(self, request, *args, **kwargs):
         try:
-            usera = request.user
             sender_id = request.data.get('sender_id')
             sender = Person.objects.get(id=sender_id)
             oponent = Person.objects.get(id=request.user.id)
-            # Check if in game room enuogh playes for oponent
-            if sender.game_room and sender.game_room.is_full() == False:
-                oponent.game_room_id = sender.game_room_id
-                oponent.save()
-                sender.game_room.players.add(oponent)
-                sender.game_room.save()
-                if sender.game_room.is_full():
-                    PlayTournament().post(request, game_room_id=sender.game_room_id, creator_id=sender_id)
-                return Response({"success": "true", "method": "start_game", "message": "Oponent joind to gameroom"}, status=status.HTTP_200_OK)
+            invite_request = GameInvite.objects.filter(sender=sender, receiver=oponent).first()
+            if invite_request:
+                invite_request.accept()
+                if sender.game_room and sender.game_room.is_full() == False:
+                    oponent.game_room_id = sender.game_room_id
+                    oponent.save()
+                    sender.game_room.players.add(oponent)
+                    sender.game_room.save()
+                    if sender.game_room.is_full():
+                        PlayTournament().post(request, game_room_id=sender.game_room_id, creator_id=sender_id)
+                        invite_request.delete()
+                    return Response({"success": "true", "method": "start_game", "message": "Oponent joind to gameroom"}, status=status.HTTP_200_OK)
+                else:
+                    return Response({"success": "false", "error": "Game room is full"}, status=status.HTTP_400_BAD_REQUEST)
             else:
-                return Response({"success": "false", "error": "Game room is full"}, status=status.HTTP_400_BAD_REQUEST)
-            return Response({"success": "false", "error": "Sender user not found"}, status=status.HTTP_404_NOT_FOUND)
+                return Response({"success": "false", "error": "Sender user not found"}, status=status.HTTP_404_NOT_FOUND)
         except Person.DoesNotExist:
             return Response({"success": "false", "error": "Sender user not found"}, status=status.HTTP_404_NOT_FOUND)
 
@@ -411,9 +422,14 @@ class RejectInviteRequest(APIView):
     permission_classes = [IsAuthenticated]
     def post(self, request, *args, **kwargs):
         try:
-            oponent = request.user
             sender_id = request.data.get('sender_id')
-            sender = Person.objects.get(id=sender_id).user
-            return Response({"success": "true", "method": "reject", "message": "Oponent rejected invitation"}, status=status.HTTP_200_OK)
+            sender = Person.objects.get(id=sender_id)
+            oponent = Person.objects.get(nickname=request.user)
+            invite_request = GameInvite.objects.filter(sender=sender, receiver=oponent).first()
+            if invite_request:
+                invite_request.reject()
+                return Response({"success": "true", "method": "reject", "message": "Oponent rejected invitation"}, status=status.HTTP_200_OK)
+            else:
+                return Response({"success": "false", "error": "Sender user not found"}, status=status.HTTP_404_NOT_FOUND)
         except Person.DoesNotExist:
             return Response({"success": "false", "error": "Sender user not found"}, status=status.HTTP_404_NOT_FOUND)

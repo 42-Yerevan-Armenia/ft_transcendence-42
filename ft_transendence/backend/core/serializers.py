@@ -3,15 +3,17 @@ from django import forms
 from django.contrib.auth import get_user_model, authenticate
 from django.core.exceptions import ValidationError
 from .models import User, Person, GameRoom, History
+from game.models import GameInvite
 from friendship.models import Friend, FriendshipRequest
 
 class UserSerializer(serializers.ModelSerializer):
     friends = serializers.SerializerMethodField()
     friendship_requests = serializers.SerializerMethodField()
+    gameinvite_requests = serializers.SerializerMethodField()
 
     class Meta:
         model = Person
-        fields = ('id', 'name', 'nickname', 'email', 'image', 'phone', 'wins', 'loses', 'matches', 'points', 'gamemode', 'live', 'is_online', 'friends', 'friendship_requests')
+        fields = ('id', 'name', 'nickname', 'email', 'image', 'phone', 'wins', 'loses', 'matches', 'points', 'gamemode', 'live', 'is_online', 'friends', 'friendship_requests', 'gameinvite_requests')
 
     def get_friends(self, obj):
         friends = Friend.objects.filter(from_user=obj.user)
@@ -40,6 +42,21 @@ class UserSerializer(serializers.ModelSerializer):
             }
             serialized_friendships.append(serialized_friendship)
         return serialized_friendships
+
+    def get_gameinvite_requests(self, obj):
+        receiver_requests = GameInvite.objects.filter(receiver_id=obj.id)
+        serialized_gameinvites = []
+        for gameinvites in receiver_requests:
+            serialized_gameinvite = {
+                'id': gameinvites.sender_id,
+                'name': gameinvites.sender.name,
+                'nickname': gameinvites.sender.nickname,
+                'image': gameinvites.sender.image,
+                'accepted': gameinvites.accepted,
+                'rejected': gameinvites.rejected,
+            }
+            serialized_gameinvites.append(serialized_gameinvite)
+        return serialized_gameinvites
 
 class HomeSerializer(serializers.ModelSerializer):
     class Meta:

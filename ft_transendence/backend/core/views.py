@@ -439,8 +439,8 @@ class WaitingRoom(APIView):
             user = User.objects.get(id=pk)
             active_users = User.objects.filter(is_active=True).exclude(id=pk)
             active_persons = [user.person for user in active_users]
-            if activate_persons.game_room_id is not None:
-                return JsonResponse({"success": "false", "error": "User is already in a game room"}, status=status.HTTP_400_BAD_REQUEST)
+            # if active_persons.game_room_id is not None:
+            #     return JsonResponse({"success": "false", "error": "User is already in a game room"}, status=status.HTTP_400_BAD_REQUEST)
             serializer = WaitingRoomSerializer(active_persons, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except User.DoesNotExist:
@@ -448,9 +448,9 @@ class WaitingRoom(APIView):
 
     def post(self, request, pk):
         try:
-            print(opponent_id)
             user = Person.objects.get(id=pk)
             opponent_id = request.data.get('opponent_id')
+            print(opponent_id)
             print(user)
             opponent = Person.objects.get(id=opponent_id)
             if opponent.ongoing is not None:
@@ -498,16 +498,16 @@ class JoinList(APIView):
                         }
                         if len(persons_in_room) == 2:
                             room_data["src"].append({
-                                # "url": persons_in_room[0].image,
-                                # "urlClient": persons_in_room[1].image
+                                "url": persons_in_room[0].image,
+                                "urlClient": persons_in_room[1].image
                             })
                         else:
                             # Add image for the first player and default image for the second player if he is not in the room
                             default = os.path.join(os.path.dirname(__file__), 'default.jpg')
                             default_img = save_base64_image(default)
                             room_data["src"].append({
-                                # "url": persons_in_room[0].image,
-                                # "urlClient": default_img  # Replace with your default image URL
+                                "url": persons_in_room[0].image,
+                                "urlClient": default_img  # Replace with your default image URL
                             })
                         room_data["type"] = "User"
                         if (game_room.is_full()):
@@ -521,7 +521,7 @@ class JoinList(APIView):
                         room_data = {
                             "id": game_room_id,
                             "creator_id": game_room.creator_id,
-                            # "src": cup_img,
+                            "src": cup_img,
                             "GameLevele": "Tournament",
                             "current_players": len(persons_in_room),
                             "max_players": game_room.max_players,
