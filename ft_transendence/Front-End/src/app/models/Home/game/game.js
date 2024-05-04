@@ -28,12 +28,12 @@ function movePaddle(paddle, direction, max_paddle_y, paddle_step) {
     }
 }
 
-function pongGame(gameid) {
+async function pongGame(objUser ,gameid) {
     let isStarted = false;
     function isOpen(ws) { return ws.readyState === ws.OPEN }
 
     //HTML elements
-    let clientId = User._Id;
+    let clientId = objUser._Id;
     let paddleName = null;
     const constants = {
         "paddle_step": null,
@@ -59,7 +59,8 @@ function pongGame(gameid) {
     ws.onopen = () => ws.send(JSON.stringify(payLoad));
     console.log("ws://" + window.location.host + "/ws/game/");
     console.log("ws = ", window.location.host);
-    const txtGameId = document.getElementById("txtGameId");
+
+    // const txtGameId = document.getElementById("txtGameId");
     // const divPlayers = document.getElementById("divPlayers");
     debugger
     const board = document.getElementById("board");
