@@ -1,7 +1,7 @@
 from django.shortcuts import render
 # from . import app
 
-def index(request):
+def index(request, game_id):
     # app.game()
     return render(request, 'index.html')
 
@@ -33,18 +33,18 @@ class LiveGames():
     def __new__(cls):
         if cls._instance is None:
             cls._instance = super().__new__(cls)
-            cls.games = {}
+            cls.games = []
             cls._instance.player_pool = []  # Initialize player_pool only once
         return cls._instance
 
     def add_game(self, game_id, game):
-        self.games[game_id] = game
+        self.games.append(game)
 
-    def del_game(self, game_id):
-        del self.games[game_id]
+    # def del_game(self, game_id):
+    #     del self.games[game_id]
     
-    def get_game(self, game_id):
-        return self.games[game_id]
+    # def get_game(self, game_id):
+    #     return self.games[game_id]
 
     def get_all_games(self):
         return self.games
@@ -182,11 +182,11 @@ class PlayTournament(APIView):
             tns = TournamentSystem(game_room.players.all(), game_room_id)
             tns.run_tournament()
             self.response_data = tns.response_data
-            winner = tns.winners[0]
-            game_room.ongoing = False
-            game_room.players.update(game_room_id=None)
-            game_room.save()
-            Person.objects.filter(game_room_id=game_room_id).update(game_room_id=None)
+            # winner = tns.winners[0]
+            # game_room.ongoing = False
+            # game_room.players.update(game_room_id=None)
+            # game_room.save()
+            # Person.objects.filter(game_room_id=game_room_id).update(game_room_id=None)
             return JsonResponse({"success": "true"}, status=status.HTTP_200_OK)
             # return JsonResponse({"success": "true", "winner": winner}, status=status.HTTP_200_OK)
         except Person.DoesNotExist:
@@ -209,16 +209,16 @@ class TournamentSystem:
         all_round_winners = []
         for group in self.groups:
             round_winners = self.run_rounds(group)  # Run initial matches for each group
-            all_round_winners.extend(round_winners)  # Collect round winners from each group
-        self.round_winners(all_round_winners) # Add winners for next rounds
-        while len(self.winners) > 1:
-            self.next_round()
-            for group in self.groups:
-                round_winners = self.run_matches(group) # Run matches for each new group
-                print("❌ round_winners = ", round_winners)
-            self.get_winners()
-        winner = self.winners[0]
-        print(f"Tournament winner is: {winner}")
+        #     all_round_winners.extend(round_winners)  # Collect round winners from each group
+        # self.round_winners(all_round_winners) # Add winners for next rounds
+        # while len(self.winners) > 1:
+        #     self.next_round()
+        #     for group in self.groups:
+        #         round_winners = self.run_matches(group) # Run matches for each new group
+        #         print("❌ round_winners = ", round_winners)
+        #     self.get_winners()
+        # winner = self.winners[0]
+        # print(f"Tournament winner is: {winner}")
 
     def create_groups(self): # Finished
         player_ids = list(self.players.values_list('id', flat=True))  # Extract player IDs from queryset
@@ -235,8 +235,8 @@ class TournamentSystem:
             player_1 = group[i]
             player_2 = group[i+1]
             round_winner = self.run_match(player_1, player_2)
-            round_winners.append(round_winner)
-            print("Winners", round_winners)
+            # round_winners.append(round_winner)
+            # print("Winners", round_winners)
         return round_winners
 
     def round_winners(self, round_winners): 
@@ -265,8 +265,8 @@ class TournamentSystem:
         win = player_1
         # delete game from LiveGames
         # LiveGames().del_game(self.room_id)
-        self.update_game_results(player_1, player_2, win)
-        self.save_game_history(player_1, player_2, win)
+        # self.update_game_results(player_1, player_2, win)
+        # self.save_game_history(player_1, player_2, win)
         return win
 
     def update_game_results(self, player1_id, player2_id, win):
