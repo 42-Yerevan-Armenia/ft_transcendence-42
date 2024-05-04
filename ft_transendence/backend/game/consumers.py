@@ -200,5 +200,16 @@ class joinListConsumer(WebsocketConsumer):
     def stream(self, event):
         response = event["response"]
         response_json = response.content.decode("utf-8")
-        print("❇️ response_json = ", response_json)
+        # print("❇️ response_json = ", response_json)
         self.send(response_json)
+
+    def stream_state(self, event):
+        # Handle the "stream_state" message type here
+        state = event["state"]
+        # Process the incoming state message as needed
+        payload = {
+            "method": "update_state",
+            "state": state
+        }
+        # Send the processed state data back to the client
+        self.send(text_data=json.dumps(payload))

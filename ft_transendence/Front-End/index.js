@@ -9,7 +9,7 @@ app.use('/public', express.static('public'));
 
 app.use(express.static('.'));
 
-app.get("/ws/game",(req,res)=>{
+app.get("/",(req,res)=>{
     return ;
 })
 app.get('/', (req, res) => {
