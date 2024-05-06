@@ -55,12 +55,6 @@ class BallController:
                 < (self.item["y"] + BALL_WIDTH)
                 < (self.paddle1["y"] + constants.PADDLE_HEIGHT + BALL_WIDTH)
             ):
-                # middle_y = left_paddle.y + left_paddle.height / 2
-                # difference_in_y = middle_y - ball.y
-                # reduction_factor = (left_paddle.height / 2) / MAX_VEL
-                # y_vel = difference_in_y / reduction_factor
-                # ball.y_vel = -1 * y_vel
-
                 middle_y = self.paddle1["y"] + constants.PADDLE_HEIGHT / 2
                 difference_in_y = middle_y - self.item["y"]
                 reduction_factor = (constants.PADDLE_HEIGHT / 2) / constants.MAX_VEL
@@ -72,6 +66,8 @@ class BallController:
 
         elif self.item["x"] < 0:
             self.paddle2["score"] += 1
+            if self.paddle2["score"] == 10:
+                self.state["winner"] = self.paddle2["id"]
             self.reset_ball()
             self.vel_x = -self.vel_x
 
@@ -94,6 +90,8 @@ class BallController:
 
         elif self.item["x"] >= constants.SCREEN_WIDTH:
             self.paddle1["score"] += 1
+            if self.paddle1["score"] == 10:
+                self.state["winner"] = self.paddle1["id"]
             self.reset_ball()
             self.vel_x= -self.vel_x
 

@@ -25,8 +25,6 @@ from friendship.models import Block
 import time
 import random
 
-
-
 class LiveGames():
     _instance = None
    
