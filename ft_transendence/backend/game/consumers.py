@@ -51,10 +51,6 @@ class PongConsumer(WebsocketConsumer):
             ThreadPool.del_game(self.game)
             print("len of threads = ", len(ThreadPool.threads))
 
-
-
-
-
     def receive(self, text_data):
         data = json.loads(text_data)
 
@@ -128,11 +124,13 @@ class PongConsumer(WebsocketConsumer):
                         )
                     elif not self.thread["paddle1"]:
                         self.thread["state"]["winner"] = self.thread["paddle2"]["id"]
+                        LiveGames().get_winner(self.thread["state"]["winner"], self.thread["paddle1"]["id"])
                     elif not self.thread["paddle2"]:
                         self.thread["state"]["winner"] = self.thread["paddle1"]["id"]
+                        LiveGames().get_winner(self.thread["state"]["winner"], self.thread["paddle2"]["id"])
                 i += 1
                 self.time = time.time()
-
+        LiveGames().del_game(self.game)
         print(" thread finished")
 
     def stream_state(self, event):

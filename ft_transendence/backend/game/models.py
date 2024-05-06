@@ -19,3 +19,10 @@ class GameInvite(models.Model):
     def reject(self):
         self.rejected = True
         self.save()
+
+class Round(models.Model):
+    winner = models.ForeignKey('core.Person', on_delete=models.CASCADE)
+    game_room = models.ForeignKey('core.GameRoom', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'Round winner is {self.winner}'

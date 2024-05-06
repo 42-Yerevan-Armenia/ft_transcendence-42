@@ -17,7 +17,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
 from core.models import User, Person, GameRoom, History
 from core.serializers import MatchSerializer
-from game.models import GameInvite
+from game.models import GameInvite, Round
 from django.http import JsonResponse
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
@@ -38,11 +38,51 @@ class LiveGames():
     def add_game(self, game_id, game):
         self.games.append(game)
 
-    # def del_game(self, game_id):
-    #     del self.games[game_id]
-    
-    # def get_game(self, game_id):
-    #     return self.games[game_id]
+    def del_game(self, game_id):
+        for i, game in enumerate(self.games):
+            if game["game_room"]["room_id"] == game_id:
+                del self.games[i]
+                break
+
+    def get_winner(self, winner, loser):
+        winner_person = Person.objects.get(id=winner)  # Convert winner ID to Person instance
+        game_room = winner_person.game_room
+        if game_room.max_players == 2:
+            game_room.ongoing = False
+            game_room.players.update(game_room_id=None)
+            game_room.save()
+            for player in game_room.players.all():
+                player.ongoing = False
+                player.save()
+            Person.objects.filter(game_room_id=game_room.id).update(game_room_id=None)
+        else:
+            loser_person = Person.objects.get(id=loser)  # Convert loser ID to Person instance
+            loser_person.game_room_id = None
+            loser_person.ongoing = False
+            loser_person.save()
+            Round.objects.create(winner=winner_person, game_room=game_room)  # Pass winner_person instead of winner
+            self.check_and_start_new_match(game_room)
+
+    def check_and_start_new_match(self, game_room):
+        if len(game_room.players.all()) == 4:
+            last_round_winners = Round.objects.filter(game_room=game_room).order_by('-id')[:2]
+            player_1_id = None
+            player_2_id = None
+            # Find the players for the match
+            for winner in last_round_winners:
+                player_1_id = winner.winner_id
+                other_winner = [w for w in last_round_winners if w != winner and w.winner.game_room_id == game_room.id]
+                if other_winner:
+                    player_2_id = other_winner[0].winner_id
+                    break
+            if player_1_id and player_2_id:
+                mms = MatchmakingSystem()
+                mms.start_match(player_1_id, player_2_id, game_room.id)
+                Round.objects.filter(game_room=game_room).delete()
+
+
+    def get_game(self, game_id):
+        return self.games[game_id]
 
     def get_all_games(self):
         return self.games
@@ -138,9 +178,9 @@ class MatchmakingSystem():
             self.remove_player_from_pool(player_1['id'])
             self.remove_player_from_pool(player_2['id'])
 
-
     def start_match(self, player1_id, player2_id, room_id):
         try:
+            room_id = str(room_id) + str(player1_id) + str(player2_id)
             response_data = {
                 "success": True,
                 "method": "start_mutch",
@@ -150,8 +190,8 @@ class MatchmakingSystem():
                         "right_id": player2_id
                 }
             }
+            print("❌", response_data)
             LiveGames().add_game(room_id, response_data)
-            return response_data
         except Exception as e:
             return JsonResponse({"success": False, "error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
@@ -161,12 +201,10 @@ class PlayTournament(APIView):
     def __new__(cls, *args, **kwargs):
         if cls._instance is None:
             cls._instance = super().__new__(cls)
-            cls._instance.response_data = None
         return cls._instance
 
     @csrf_exempt
     def post(self, request, creator_id=None, game_room_id=None):
-        self.response_data = None
         try:
             if creator_id is None:
                 creator_id = request.data.get('creator_id')
@@ -175,50 +213,31 @@ class PlayTournament(APIView):
             creator = Person.objects.get(id=creator_id)
             game_room = creator.game_room
             game_room.ongoing = True
+            for player in game_room.players.all():
+                player.ongoing = True
+                player.save()
             game_room.game_date = timezone.now().strftime('%Y-%m-%d %H:%M:%S')
             game_room.save()
             tns = TournamentSystem(game_room.players.all(), game_room_id)
             tns.run_tournament()
-            self.response_data = tns.response_data
-            # winner = tns.winners[0]
-            # game_room.ongoing = False
-            # game_room.players.update(game_room_id=None)
-            # game_room.save()
-            # Person.objects.filter(game_room_id=game_room_id).update(game_room_id=None)
             return JsonResponse({"success": "true"}, status=status.HTTP_200_OK)
-            # return JsonResponse({"success": "true", "winner": winner}, status=status.HTTP_200_OK)
         except Person.DoesNotExist:
             return JsonResponse({"success": "false", "error": "Invalid creator ID."}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             return JsonResponse({"success": "false", "error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-    def get_response_data(self):
-        return self.response_data
-
 class TournamentSystem:
     def __init__(self, players, game_room_id):
         self.players = players
         self.groups = []
-        self.winners = []
         self.room_id = game_room_id
     
-    def run_tournament(self):
+    def run_tournament(self): # ✅
         self.create_groups() # Divide players into initial groups
-        all_round_winners = []
         for group in self.groups:
-            round_winners = self.run_rounds(group)  # Run initial matches for each group
-        #     all_round_winners.extend(round_winners)  # Collect round winners from each group
-        # self.round_winners(all_round_winners) # Add winners for next rounds
-        # while len(self.winners) > 1:
-        #     self.next_round()
-        #     for group in self.groups:
-        #         round_winners = self.run_matches(group) # Run matches for each new group
-        #         print("❌ round_winners = ", round_winners)
-        #     self.get_winners()
-        # winner = self.winners[0]
-        # print(f"Tournament winner is: {winner}")
+            self.run_rounds(group)  # Run initial matches for each group
 
-    def create_groups(self): # Finished
+    def create_groups(self): # ✅
         player_ids = list(self.players.values_list('id', flat=True))  # Extract player IDs from queryset
         random.shuffle(player_ids)  # Shuffle the list of player IDs
         num_players = len(player_ids)
@@ -227,45 +246,12 @@ class TournamentSystem:
         self.groups = [player_ids[i:i+2] for i in range(0, num_players, 2)]
         print("START", self.groups)
 
-    def run_rounds(self, group): # Finished
-        round_winners = []
+    def run_rounds(self, group): # ✅
         for i in range(0, len(group), 2):
             player_1 = group[i]
             player_2 = group[i+1]
-            round_winner = self.run_match(player_1, player_2)
-            # round_winners.append(round_winner)
-            # print("Winners", round_winners)
-        return round_winners
-
-    def round_winners(self, round_winners): 
-        self.winners.extend(round_winners)
-
-    def next_round(self):
-        self.groups.clear() # Clear the existing groups
-        num_winners = len(self.winners)
-        # If there's an odd number of winners, add the last one to the next round without pairing
-        if num_winners % 2 == 1:
-            self.groups.append([self.winners[-1]])
-            num_winners -= 1
-        # Pair up the winners for the next round
-        for i in range(0, num_winners, 2):
-            group = self.winners[i:i+2]
-            self.groups.append(group)
-
-
-
-    def run_match(self, player_1, player_2): # Finished
-        mms = MatchmakingSystem()
-        # generate room_id from game_room_id
-        response_data = mms.start_match(player_1, player_2, self.room_id)
-        self.response_data = response_data
-        # call async function to get winner
-        win = player_1
-        # delete game from LiveGames
-        # LiveGames().del_game(self.room_id)
-        # self.update_game_results(player_1, player_2, win)
-        # self.save_game_history(player_1, player_2, win)
-        return win
+            mms = MatchmakingSystem()
+            mms.start_match(player_1, player_2, self.room_id)
 
     def update_game_results(self, player1_id, player2_id, win):
         user1 = Person.objects.get(id=player1_id)
@@ -292,25 +278,6 @@ class TournamentSystem:
             result_user2 = 1
         # Call the existing save_game_history function
         save_game_history(user1, user2, result_user1, result_user2)
-
-    def run_matches(self, group):
-        mms = MatchmakingSystem()
-        round_winners = []
-        for i in range(0, len(group), 2):
-            player_1 = group[i]
-            player_2 = group[i+1]
-            win = mms.start_match(player_1, player_2, self.room_id)
-            round_winners.append(win)
-        return round_winners
-
-    def get_winners(self):
-        # Assuming each match returns a winner randomly for demonstration purposes
-        round_winners = []
-        for group in self.groups:
-            round_winner = random.choice(group)
-            round_winners.append(round_winner)
-            print("❎", group)
-        self.winners = round_winners
 
 class GameResult:
     @staticmethod

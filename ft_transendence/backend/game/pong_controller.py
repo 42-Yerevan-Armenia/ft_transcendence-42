@@ -2,6 +2,7 @@ import constants
 from constants import *
 import time
 
+from .views import LiveGames
 
 # class GameController:
 #     state = constants.INITIAL_STATE
@@ -66,8 +67,9 @@ class BallController:
 
         elif self.item["x"] < 0:
             self.paddle2["score"] += 1
-            if self.paddle2["score"] == 10:
+            if self.paddle2["score"] == 1:
                 self.state["winner"] = self.paddle2["id"]
+                LiveGames().get_winner(self.state["winner"], self.paddle1["id"])
             self.reset_ball()
             self.vel_x = -self.vel_x
 
@@ -90,8 +92,9 @@ class BallController:
 
         elif self.item["x"] >= constants.SCREEN_WIDTH:
             self.paddle1["score"] += 1
-            if self.paddle1["score"] == 10:
+            if self.paddle1["score"] == 1:
                 self.state["winner"] = self.paddle1["id"]
+                LiveGames().get_winner(self.state["winner"], self.paddle2["id"])
             self.reset_ball()
             self.vel_x= -self.vel_x
 
