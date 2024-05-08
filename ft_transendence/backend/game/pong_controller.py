@@ -95,7 +95,6 @@ class BallController:
         elif self.item["x"] >= constants.SCREEN_WIDTH:
             self.paddle1["score"] += 1
             self.reset_ball()
-            self.vel_x= -self.vel_x
 
         self.item["x"] += self.vel_x
         self.item["y"] += self.vel_y
