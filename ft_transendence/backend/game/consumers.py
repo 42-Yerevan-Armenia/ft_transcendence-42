@@ -130,7 +130,27 @@ class PongConsumer(WebsocketConsumer):
                         LiveGames().get_winner(self.thread["state"]["winner"], self.thread["paddle2"]["id"])
                 i += 1
                 self.time = time.time()
+
         LiveGames().del_game(self.game)
+        # get left and right ids from self.game
+        paddle1_id = self.thread["state"]["paddle1"]["id"]
+        paddle2_id = self.thread["state"]["paddle2"]["id"]
+
+        # Construct the JSON response with the finish signal
+        finish_response = {
+            "success": True,
+            "method": "finish_match",
+            "game_room": {
+                "room_id": self.game,
+                "left_id": paddle1_id,
+                "right_id": paddle2_id
+            }
+        }
+        print("✅", finish_response)
+        async_to_sync(self.channel_layer.group_send)(
+            self.game,
+            {"type": "stream_state", "state": finish_response,},
+        )
         print(" thread finished")
 
     def stream_state(self, event):

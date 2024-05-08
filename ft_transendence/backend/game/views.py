@@ -1,18 +1,6 @@
-from django.shortcuts import render
-# from . import app
-
-def index(request, game_id):
-    # app.game()
-    return render(request, 'index.html')
-
-def joinlist(request):
-    # app.game()
-    return render(request, 'joinlist.html')
-
-from rest_framework import generics, status, viewsets
+from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
 from core.models import User, Person, GameRoom, History
@@ -79,7 +67,22 @@ class LiveGames():
                 mms = MatchmakingSystem()
                 mms.start_match(player_1_id, player_2_id, game_room.id)
                 Round.objects.filter(game_room=game_room).delete()
-
+        elif len(game_room.players.all()) == 8:
+            last_round_winners = Round.objects.filter(game_room=game_room).order_by('-id')[:4]
+            player_1_id = None
+            player_2_id = None
+            # Find the players for the match
+            for winner in last_round_winners:
+                player_1_id = winner.winner_id
+                other_winner = [w for w in last_round_winners if w != winner and w.winner.game_room_id == game_room.id]
+                if other_winner:
+                    player_2_id = other_winner[0].winner_id
+                    break
+            if player_1_id and player_2_id:
+                mms = MatchmakingSystem()
+                mms.start_match(player_1_id, player_2_id, game_room.id)
+                Round.objects.filter(game_room=game_room).delete()
+            
 
     def get_game(self, game_id):
         return self.games[game_id]

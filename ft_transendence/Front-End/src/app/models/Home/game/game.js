@@ -350,7 +350,6 @@ async function pongGame(objUser ,gameid) {
             //     board.appendChild(b);
             // }
         }
-
         // if (response.method === "start") {
         //     //{1: "red", 1}
         //     // if (!response.game.state) return;
