@@ -86,6 +86,7 @@ class MidleProfile extends HtmlElement {
   //          </div>                                            
   //   </div>
   // </div>
+  // Request for Accept Ignore
     profilBody(Item){
       //1  ProfileMidleBodyItem
       const div1 = document.createElement("div");
@@ -130,7 +131,7 @@ class MidleProfile extends HtmlElement {
     
       this._ProfileMidleBodyItems.appendChild(div1);
     }
-
+// Friends list
     frendsdrawScreen(friend){
       const divProf = document.createElement("div");
       divProf.setAttribute("class", "ProfileMidleFooterUser");

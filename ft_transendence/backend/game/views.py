@@ -1,7 +1,7 @@
 from django.shortcuts import render
 # from . import app
 
-def index(request):
+def index(request, game_id):
     # app.game()
     return render(request, 'index.html')
 
@@ -17,6 +17,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
 from core.models import User, Person, GameRoom, History
 from core.serializers import MatchSerializer
+from game.models import GameInvite
 from django.http import JsonResponse
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
@@ -32,18 +33,18 @@ class LiveGames():
     def __new__(cls):
         if cls._instance is None:
             cls._instance = super().__new__(cls)
-            cls.games = {}
+            cls.games = []
             cls._instance.player_pool = []  # Initialize player_pool only once
         return cls._instance
 
     def add_game(self, game_id, game):
-        self.games[game_id] = game
+        self.games.append(game)
 
-    def del_game(self, game_id):
-        del self.games[game_id]
+    # def del_game(self, game_id):
+    #     del self.games[game_id]
     
-    def get_game(self, game_id):
-        return self.games[game_id]
+    # def get_game(self, game_id):
+    #     return self.games[game_id]
 
     def get_all_games(self):
         return self.games
@@ -61,12 +62,10 @@ class PlayerPool():
     def get_player(self, player_id):
         return self.players[player_id]
 
-
 class Player():
     def __init__(self, id, channel_name):
         self.id = id
         self.joinListConsumer = channel_name
-
 
 class PlayRandom(APIView):
     permission_classes = [IsAuthenticated]
@@ -85,7 +84,7 @@ class PlayRandom(APIView):
 
 class MatchmakingSystem():
     _instance = None
-   
+
     def __new__(cls):
         if cls._instance is None:
             cls._instance = super().__new__(cls)
@@ -210,13 +209,13 @@ class TournamentSystem:
         all_round_winners = []
         for group in self.groups:
             round_winners = self.run_rounds(group)  # Run initial matches for each group
-            # all_round_winners.extend(round_winners)  # Collect round winners from each group
+        #     all_round_winners.extend(round_winners)  # Collect round winners from each group
         # self.round_winners(all_round_winners) # Add winners for next rounds
         # while len(self.winners) > 1:
         #     self.next_round()
         #     for group in self.groups:
         #         round_winners = self.run_matches(group) # Run matches for each new group
-        #         print("❌", round_winners)
+        #         print("❌ round_winners = ", round_winners)
         #     self.get_winners()
         # winner = self.winners[0]
         # print(f"Tournament winner is: {winner}")
@@ -238,7 +237,7 @@ class TournamentSystem:
             round_winner = self.run_match(player_1, player_2)
             # round_winners.append(round_winner)
             # print("Winners", round_winners)
-        # return round_winners
+        return round_winners
 
     def round_winners(self, round_winners): 
         self.winners.extend(round_winners)
@@ -255,13 +254,19 @@ class TournamentSystem:
             group = self.winners[i:i+2]
             self.groups.append(group)
 
+
+
     def run_match(self, player_1, player_2): # Finished
         mms = MatchmakingSystem()
+        # generate room_id from game_room_id
         response_data = mms.start_match(player_1, player_2, self.room_id)
         self.response_data = response_data
+        # call async function to get winner
         win = player_1
-        self.update_game_results(player_1, player_2, win)
-        self.save_game_history(player_1, player_2, win)
+        # delete game from LiveGames
+        # LiveGames().del_game(self.room_id)
+        # self.update_game_results(player_1, player_2, win)
+        # self.save_game_history(player_1, player_2, win)
         return win
 
     def update_game_results(self, player1_id, player2_id, win):
@@ -376,6 +381,13 @@ class SendInviteRequest(APIView):
                 return JsonResponse({"success": "false", "error": "Opponent is already in another game room"}, status=status.HTTP_400_BAD_REQUEST)
             if sender.game_room and opponent.game_room and sender.game_room == opponent.game_room:
                 return JsonResponse({"success": "false", "error": "Opponent is already in the same game room"}, status=status.HTTP_400_BAD_REQUEST)
+            invite_request = GameInvite.objects.filter(sender=sender, receiver=opponent).first()
+            if invite_request:
+                if invite_request.rejected:
+                    invite_request.delete()
+                else:
+                    return Response({"success": "false", "error": "Invitation already sent"}, status=status.HTTP_400_BAD_REQUEST)
+            GameInvite.objects.create(sender=sender, receiver=opponent)
             return Response({"success": "true", "message": "Invitation sent successfully"}, status=status.HTTP_200_OK)
         except Person.DoesNotExist:
             return Response({"success": "false", "error": "User or opponent not found"}, status=status.HTTP_404_NOT_FOUND)
@@ -384,22 +396,25 @@ class AcceptInviteRequest(APIView):
     permission_classes = [IsAuthenticated]
     def post(self, request, *args, **kwargs):
         try:
-            usera = request.user
             sender_id = request.data.get('sender_id')
             sender = Person.objects.get(id=sender_id)
             oponent = Person.objects.get(id=request.user.id)
-            # Check if in game room enuogh playes for oponent
-            if sender.game_room and sender.game_room.is_full() == False:
-                oponent.game_room_id = sender.game_room_id
-                oponent.save()
-                sender.game_room.players.add(oponent)
-                sender.game_room.save()
-                if sender.game_room.is_full():
-                    PlayTournament().post(request, game_room_id=sender.game_room_id, creator_id=sender_id)
-                return Response({"success": "true", "method": "start_game", "message": "Oponent joind to gameroom"}, status=status.HTTP_200_OK)
+            invite_request = GameInvite.objects.filter(sender=sender, receiver=oponent).first()
+            if invite_request:
+                invite_request.accept()
+                if sender.game_room and sender.game_room.is_full() == False:
+                    oponent.game_room_id = sender.game_room_id
+                    oponent.save()
+                    sender.game_room.players.add(oponent)
+                    sender.game_room.save()
+                    if sender.game_room.is_full():
+                        PlayTournament().post(request, game_room_id=sender.game_room_id, creator_id=sender_id)
+                        invite_request.delete()
+                    return Response({"success": "true", "method": "start_game", "message": "Oponent joind to gameroom"}, status=status.HTTP_200_OK)
+                else:
+                    return Response({"success": "false", "error": "Game room is full"}, status=status.HTTP_400_BAD_REQUEST)
             else:
-                return Response({"success": "false", "error": "Game room is full"}, status=status.HTTP_400_BAD_REQUEST)
-            return Response({"success": "false", "error": "Sender user not found"}, status=status.HTTP_404_NOT_FOUND)
+                return Response({"success": "false", "error": "Sender user not found"}, status=status.HTTP_404_NOT_FOUND)
         except Person.DoesNotExist:
             return Response({"success": "false", "error": "Sender user not found"}, status=status.HTTP_404_NOT_FOUND)
 
@@ -407,9 +422,14 @@ class RejectInviteRequest(APIView):
     permission_classes = [IsAuthenticated]
     def post(self, request, *args, **kwargs):
         try:
-            oponent = request.user
             sender_id = request.data.get('sender_id')
-            sender = Person.objects.get(id=sender_id).user
-            return Response({"success": "true", "method": "reject", "message": "Oponent rejected invitation"}, status=status.HTTP_200_OK)
+            sender = Person.objects.get(id=sender_id)
+            oponent = Person.objects.get(nickname=request.user)
+            invite_request = GameInvite.objects.filter(sender=sender, receiver=oponent).first()
+            if invite_request:
+                invite_request.reject()
+                return Response({"success": "true", "method": "reject", "message": "Oponent rejected invitation"}, status=status.HTTP_200_OK)
+            else:
+                return Response({"success": "false", "error": "Sender user not found"}, status=status.HTTP_404_NOT_FOUND)
         except Person.DoesNotExist:
             return Response({"success": "false", "error": "Sender user not found"}, status=status.HTTP_404_NOT_FOUND)
