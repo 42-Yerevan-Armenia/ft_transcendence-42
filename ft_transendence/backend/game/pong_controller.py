@@ -96,7 +96,6 @@ class BallController:
                 self.state["winner"] = self.paddle1["id"]
                 LiveGames().get_winner(self.state["winner"], self.paddle2["id"])
             self.reset_ball()
-            self.vel_x= -self.vel_x
 
         self.item["x"] += self.vel_x
         self.item["y"] += self.vel_y
