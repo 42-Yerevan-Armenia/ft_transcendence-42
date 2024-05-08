@@ -27,7 +27,7 @@ class PongConsumer(WebsocketConsumer):
     def connect(self):
         # print("open_code", open_code)
         self.game = self.scope["path"].strip("/").replace(" ", "_")
-        self.game = "barev"
+        self.game = self.game.split("/")[-1]
         if self.game not in ThreadPool.threads:
             ThreadPool.add_game(self.game, self)
 
@@ -51,7 +51,6 @@ class PongConsumer(WebsocketConsumer):
             ThreadPool.del_game(self.game)
             print("len of threads = ", len(ThreadPool.threads))
 
-
     def receive(self, text_data):
         data = json.loads(text_data)
 
@@ -68,6 +67,7 @@ class PongConsumer(WebsocketConsumer):
                 # }
                 self.id = data["clientId"]
                 self.thread["state"][self.id] = "paddle1"
+                self.thread["state"]["paddle1"]["id"] = self.id
                 self.thread["paddle1_channel_name"] = self.channel_name
                 payload = {
                     "method": "connect",
@@ -86,6 +86,7 @@ class PongConsumer(WebsocketConsumer):
 
                 self.id = data["clientId"]
                 self.thread["state"][self.id] = "paddle2"
+                self.thread["state"]["paddle2"]["id"] = self.id
                 self.thread["paddle2_channel_name"] = self.channel_name
                 payload = {
                     "method": "connect",
@@ -99,6 +100,7 @@ class PongConsumer(WebsocketConsumer):
                 self.send(text_data=json.dumps(payload))
 
             if self.thread["paddle1"] and self.thread["paddle2"]:
+                self.thread["thread"].start()
                 self.thread["active"] = True
             
         # if ()
@@ -108,7 +110,7 @@ class PongConsumer(WebsocketConsumer):
 
     def propagate_state(self, thread_event):
         i = 0
-        while not thread_event.is_set():
+        while not thread_event.is_set() and self.thread["state"]["winner"] is None:
             if time.time() - self.time > 0.00003:
 
                 if self.thread:
@@ -120,10 +122,35 @@ class PongConsumer(WebsocketConsumer):
                             self.game,
                             {"type": "stream_state", "state": self.thread["state"],},
                         )
+                    elif not self.thread["paddle1"]:
+                        self.thread["state"]["winner"] = self.thread["paddle2"]["id"]
+                        LiveGames().get_winner(self.thread["state"]["winner"], self.thread["paddle1"]["id"])
+                    elif not self.thread["paddle2"]:
+                        self.thread["state"]["winner"] = self.thread["paddle1"]["id"]
+                        LiveGames().get_winner(self.thread["state"]["winner"], self.thread["paddle2"]["id"])
                 i += 1
-                # print(f"barev{i}")
                 self.time = time.time()
 
+        LiveGames().del_game(self.game)
+        # get left and right ids from self.game
+        paddle1_id = self.thread["state"]["paddle1"]["id"]
+        paddle2_id = self.thread["state"]["paddle2"]["id"]
+
+        # Construct the JSON response with the finish signal
+        finish_response = {
+            "success": True,
+            "method": "finish_match",
+            "game_room": {
+                "room_id": self.game,
+                "left_id": paddle1_id,
+                "right_id": paddle2_id
+            }
+        }
+        print("✅", finish_response)
+        async_to_sync(self.channel_layer.group_send)(
+            self.game,
+            {"type": "stream_state", "state": finish_response,},
+        )
         print(" thread finished")
 
     def stream_state(self, event):
