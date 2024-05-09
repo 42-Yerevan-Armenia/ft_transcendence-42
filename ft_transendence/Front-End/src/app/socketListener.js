@@ -21,6 +21,9 @@ Join_Ws.onmessage = message => {
     
     console.log("=========================   response.method == " + response.method)
     // update JoinList->invite list
+    const mainOnHtml = document.getElementById("mainSectionUsually");
+    const body = document.querySelector(".addBodyStile");
+
     if (response.method === "start_game" && User._getAccess) {
         debugger
         debugger
@@ -28,24 +31,18 @@ Join_Ws.onmessage = message => {
             if (User._Id == element.game_room.left_id || User._Id == element.game_room.right_id)
             {
                 //main displey none
-                const mainOnHtml = document.getElementById("mainSectionUsually");
                 mainOnHtml.style.display = "none";
 
                 //add game
                 const gameOnHtml = document.createElement("div");
                 gameOnHtml.setAttribute("id", "board")
-                const body = document.querySelector(".addBodyStile");
                 body.style.display = "block";
                 body.appendChild(gameOnHtml)
                 
                 //call game function for start game
                 await pongGame(User, element.game_room.room_id);
-
-
-                //update when game terminate
-                // mainOnHtml.style.display = "block";
-                // body.style.display = "none";
             }
         });
     }
+
 }
