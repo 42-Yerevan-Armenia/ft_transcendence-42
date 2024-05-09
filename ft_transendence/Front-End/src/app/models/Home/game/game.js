@@ -140,8 +140,6 @@ async function pongGame(objUser ,gameid) {
 */
     ws.onmessage = message => {
         //message.data
-        // console.log(message);
-
         let response;
         if (message) {
             try {
@@ -151,6 +149,20 @@ async function pongGame(objUser ,gameid) {
                 console.log("e = ", e);
                 return console.error(e);
             }
+        }
+        console.log("++++++++++++++++++++++++++"+message);
+        const mainOnHtml = document.getElementById("mainSectionUsually");
+        const body = document.querySelector(".addBodyStile");
+    debugger
+        if (response?.method === "finish_match" && User?._getAccess)
+        {
+                if (User._Id == response.state.game_room.left_id || User._Id == response.state.game_room.right_id)
+                {
+                    // update when game terminate
+                    mainOnHtml.style.display = "block";
+                    body.style.display = "none";
+                    return
+                }
         }
         // console.log(response);
         if (response.method === "connect"){
@@ -202,7 +214,8 @@ async function pongGame(objUser ,gameid) {
                 c.style.width = ballRadius * 2 + "px";
                 c.style.height = ballRadius * 2 + "px";
                 c.style.borderRadius = "30px";
-                c.style.left = response.state.ball.x - ballRadius + "px";
+
+                c.style.left = response?.state?.ball?.x - ballRadius + "px";
                 c.style.top = response.state.ball.y - ballRadius + "px";
                 board.appendChild(c);
         
@@ -220,9 +233,11 @@ async function pongGame(objUser ,gameid) {
             if (!response.state) return;
             const ballObject = document.getElementById("ball");
             // ballRadius = response.state.ballRadius;
+            if (!response?.state?.ball?.x || !response?.state?.ball?.y)
+                return
 
-            ballObject.style.left = response.state.ball.x + "px";
-            ballObject.style.top = response.state.ball.y + "px";
+            ballObject.style.left = response?.state?.ball?.x + "px";
+            ballObject.style.top = response?.state?.ball?.y + "px";
             if (paddleName === "paddle1") {
                 const paddle2 = document.getElementById("paddle2");
                 
@@ -312,6 +327,8 @@ async function pongGame(objUser ,gameid) {
             board.appendChild(score1);
             board.appendChild(score2);
             
+
+
             // d.textContent = c.clientId;
             // game.clients.forEach (c => {
 
