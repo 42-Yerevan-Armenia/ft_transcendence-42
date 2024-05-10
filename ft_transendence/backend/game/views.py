@@ -3,13 +3,19 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
-from core.models import User, Person, GameRoom, History
+
 from core.serializers import MatchSerializer
+from core.models import User, Person, GameRoom, History
+from friendship.models import Block
 from game.models import GameInvite, Round
+
 from django.http import JsonResponse
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
-from friendship.models import Block
+
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
+
 import time
 import random
 
@@ -18,6 +24,8 @@ class LiveGames():
    
     def __new__(cls):
         if cls._instance is None:
+            cls._channel_layer = get_channel_layer()
+            cls._group_name = None
             cls._instance = super().__new__(cls)
             cls.games = []
             cls._instance.player_pool = []  # Initialize player_pool only once
@@ -25,16 +33,35 @@ class LiveGames():
 
     def add_game(self, game_id, game):
         self.games.append(game)
+        if self._group_name:
+            async_to_sync(self._channel_layer.group_send)(
+                self._group_name,
+                {
+                    "type": "stream_sate_live",
+                    "liveGames": self.games
+                }
+            )
 
     def del_game(self, game_id):
         for i, game in enumerate(self.games):
             if game["game_room"]["room_id"] == game_id:
                 del self.games[i]
                 break
+        print("❌ del_game = ", self.games)
+        if self._group_name:
+            print("❌ self._group_name = ", self._group_name)
+            async_to_sync(self._channel_layer.group_send)(
+                self._group_name,
+                {
+                    "type": "stream_sate_live",
+                    "liveGames": self.games
+                }
+            )
 
-    def get_winner(self, winner, loser):
-        winner_person = Person.objects.get(id=winner)  # Convert winner ID to Person instance
+    def set_winner(self, winner, loser):
+        winner_person = Person.objects.get(id=winner)
         game_room = winner_person.game_room
+        # TournamentSystem.game_results_history(winner, loser, winner)
         if game_room.max_players == 2:
             game_room.ongoing = False
             game_room.players.update(game_room_id=None)
@@ -44,14 +71,13 @@ class LiveGames():
                 player.save()
             Person.objects.filter(game_room_id=game_room.id).update(game_room_id=None)
         else:
-            loser_person = Person.objects.get(id=loser)  # Convert loser ID to Person instance
+            loser_person = Person.objects.get(id=loser)
             loser_person.game_room_id = None
             loser_person.ongoing = False
             loser_person.save()
-            Round.objects.create(winner=winner_person, game_room=game_room)  # Pass winner_person instead of winner
-            self.check_and_start_new_match(game_room)
+            Round.objects.create(winner=winner_person, game_room=game_room)
 
-    def check_and_start_new_match(self, game_room):
+    def next_match(self, game_room):
         if len(game_room.players.all()) == 4:
             last_round_winners = Round.objects.filter(game_room=game_room).order_by('-id')[:2]
             player_1_id = None
@@ -82,7 +108,9 @@ class LiveGames():
                 mms = MatchmakingSystem()
                 mms.start_match(player_1_id, player_2_id, game_room.id)
                 Round.objects.filter(game_room=game_room).delete()
-            
+
+    def set_group_name(self, group_name):
+        self._group_name = group_name
 
     def get_game(self, game_id):
         return self.games[game_id]
@@ -256,35 +284,20 @@ class TournamentSystem:
             mms = MatchmakingSystem()
             mms.start_match(player_1, player_2, self.room_id)
 
-    def update_game_results(self, player1_id, player2_id, win):
+    def game_results_history(player1_id, player2_id, win):# ✅
         user1 = Person.objects.get(id=player1_id)
         user2 = Person.objects.get(id=player2_id)
-        # Update game results
         if win == player1_id:
             result_user1 = 1
             result_user2 = 0
         else:
             result_user1 = 0
             result_user2 = 1
-        # Call the existing update_game_results function
-        GameResult.update_game_results(user1, user2, result_user1, result_user2)
+        res_user1 = result_user1 == 1
+        res_user2 = result_user2 == 1
+        History.objects.create(player=user1, opponent=user2, game_room=user1.game_room, win=res_user1, lose=not res_user1)
+        History.objects.create(player=user2, opponent=user1, game_room=user2.game_room, win=res_user2, lose=not res_user2)  
 
-    def save_game_history(self, player1_id, player2_id, win):
-        user1 = Person.objects.get(id=player1_id)
-        user2 = Person.objects.get(id=player2_id)
-        # Save game history
-        if win == player1_id:
-            result_user1 = 1
-            result_user2 = 0
-        else:
-            result_user1 = 0
-            result_user2 = 1
-        # Call the existing save_game_history function
-        save_game_history(user1, user2, result_user1, result_user2)
-
-class GameResult:
-    @staticmethod
-    def update_game_results(user1, user2, result_user1, result_user2):
         # Update game results
         if result_user1 == 1:
             user1.wins += 1
@@ -322,15 +335,6 @@ class GameResult:
         # Save changes to the database
         user1.save()
         user2.save()
-
-def save_game_history(user1, user2, result_user1, result_user2):
-    # Determine win/lose based on the result
-    win_user1 = result_user1 == 1
-    win_user2 = result_user2 == 1
-    
-    # Create history instances for both players
-    History.objects.create(player=user1, opponent=user2, game_room=user1.game_room, win=win_user1, lose=not win_user1)
-    History.objects.create(player=user2, opponent=user1, game_room=user2.game_room, win=win_user2, lose=not win_user2)
 
 class SendInviteRequest(APIView):
     permission_classes = [IsAuthenticated]

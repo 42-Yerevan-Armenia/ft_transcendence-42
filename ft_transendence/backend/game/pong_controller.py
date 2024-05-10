@@ -69,7 +69,7 @@ class BallController:
             self.paddle2["score"] += 1
             if self.paddle2["score"] == 1:
                 self.state["winner"] = self.paddle2["id"]
-                LiveGames().get_winner(self.state["winner"], self.paddle1["id"])
+                LiveGames().set_winner(self.state["winner"], self.paddle1["id"])
             self.reset_ball()
             self.vel_x = -self.vel_x
 
@@ -94,7 +94,7 @@ class BallController:
             self.paddle1["score"] += 1
             if self.paddle1["score"] == 1:
                 self.state["winner"] = self.paddle1["id"]
-                LiveGames().get_winner(self.state["winner"], self.paddle2["id"])
+                LiveGames().set_winner(self.state["winner"], self.paddle2["id"])
             self.reset_ball()
 
         self.item["x"] += self.vel_x
