@@ -1,6 +1,7 @@
 import json
 import uuid
 import constants
+import pygame
 
 from core.models import Person
 from django.http import JsonResponse
@@ -27,7 +28,7 @@ class PongConsumer(WebsocketConsumer):
     def connect(self):
         # print("open_code", open_code)
         self.game = self.scope["path"].strip("/").replace(" ", "_")
-        self.game = "barev"
+        self.game = self.game.split("/")[-1]
         if self.game not in ThreadPool.threads:
             ThreadPool.add_game(self.game, self)
 
@@ -51,7 +52,6 @@ class PongConsumer(WebsocketConsumer):
             ThreadPool.del_game(self.game)
             print("len of threads = ", len(ThreadPool.threads))
 
-
     def receive(self, text_data):
         data = json.loads(text_data)
 
@@ -68,6 +68,7 @@ class PongConsumer(WebsocketConsumer):
                 # }
                 self.id = data["clientId"]
                 self.thread["state"][self.id] = "paddle1"
+                self.thread["state"]["paddle1"]["id"] = self.id
                 self.thread["paddle1_channel_name"] = self.channel_name
                 payload = {
                     "method": "connect",
@@ -86,6 +87,7 @@ class PongConsumer(WebsocketConsumer):
 
                 self.id = data["clientId"]
                 self.thread["state"][self.id] = "paddle2"
+                self.thread["state"]["paddle2"]["id"] = self.id
                 self.thread["paddle2_channel_name"] = self.channel_name
                 payload = {
                     "method": "connect",
@@ -99,6 +101,7 @@ class PongConsumer(WebsocketConsumer):
                 self.send(text_data=json.dumps(payload))
 
             if self.thread["paddle1"] and self.thread["paddle2"]:
+                self.thread["thread"].start()
                 self.thread["active"] = True
             
         # if ()
@@ -108,28 +111,53 @@ class PongConsumer(WebsocketConsumer):
 
     def propagate_state(self, thread_event):
         i = 0
-        while not thread_event.is_set():
-            if time.time() - self.time > 0.00003:
+        clock = pygame.time.Clock()
+        while not thread_event.is_set() and self.thread["state"]["winner"] is None:
+            # if time.time() - self.time > 0.00005:
+            clock.tick(60)
+            if self.thread:
+                if self.thread["active"]:
+                    ball = self.thread["ball"]
+                    ball.move()
+                    async_to_sync(self.channel_layer.group_send)(
+                        self.game,
+                        {"type": "stream_state", "state": self.thread["state"], "method": "update"},
+                    )
+                elif not self.thread["paddle1"]:
+                    self.thread["state"]["winner"] = self.thread["paddle2"]["id"]
+                    LiveGames().set_winner(self.thread["state"]["winner"], self.thread["paddle1"]["id"])
+                elif not self.thread["paddle2"]:
+                    self.thread["state"]["winner"] = self.thread["paddle1"]["id"]
+                    LiveGames().set_winner(self.thread["state"]["winner"], self.thread["paddle2"]["id"])
+            i += 1
+                # self.time = time.time()
 
-                if self.thread:
-                    if self.thread["active"]:
-                        ball = self.thread["ball"]
-                        ball.move()
+        LiveGames().del_game(self.game)
+        # get left and right ids from self.game
+        paddle1_id = self.thread["state"]["paddle1"]["id"]
+        paddle2_id = self.thread["state"]["paddle2"]["id"]
 
-                        async_to_sync(self.channel_layer.group_send)(
-                            self.game,
-                            {"type": "stream_state", "state": self.thread["state"],},
-                        )
-                i += 1
-                # print(f"barev{i}")
-                self.time = time.time()
-
-        print(" thread finished")
+        # Construct the JSON response with the finish signal
+        finish_response = {
+            "success": True,
+            "method": "finish_match",
+            "game_room": {
+                "room_id": self.game,
+                "left_id": paddle1_id,
+                "right_id": paddle2_id
+            } 
+        }
+        print("✅", finish_response)
+        async_to_sync(self.channel_layer.group_send)(
+            self.game,
+            {"type": "stream_state", "state": finish_response, "method": "finish_match"},
+        )
 
     def stream_state(self, event):
         state = event["state"]
+        method = event["method"]
         payload = {
-            "method": "update",
+            "method": method,
             "state": state
         }
         try:
@@ -151,6 +179,7 @@ class joinListConsumer(WebsocketConsumer):
         async_to_sync(self.channel_layer.group_add)(self.joinList, self.channel_name)
         self.accept()
         response = self.JoinList.get(None, None)
+        LiveGames().set_group_name(self.joinList)
         async_to_sync(self.channel_layer.group_send)(
             self.joinList,
             {"type": "stream", "response": response,},
@@ -189,8 +218,8 @@ class joinListConsumer(WebsocketConsumer):
         else:
             response = {"error": "Invalid method"}
         response_data = json.loads(response.content)
-        live = LiveGames().get_all_games()
-        response_data["liveGames"] = live
+        # live = LiveGames().get_all_games()
+        # response_data["liveGames"] = live
         response = JsonResponse(response_data)
         async_to_sync(self.channel_layer.group_send)(
             self.joinList,
@@ -213,3 +242,14 @@ class joinListConsumer(WebsocketConsumer):
         }
         # Send the processed state data back to the client
         self.send(text_data=json.dumps(payload))
+
+    def stream_sate_live(self, event):
+        liveGames = event["liveGames"]
+        playload = {
+            "method": "updateLiveGames",
+            "liveGames": liveGames
+        }
+        try:
+            self.send(text_data=json.dumps(playload))
+        except Exception as e:
+            print("Error", e)

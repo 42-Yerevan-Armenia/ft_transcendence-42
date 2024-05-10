@@ -342,7 +342,6 @@ class SettingsById(APIView):
         except User.DoesNotExist:
             return JsonResponse({"success": "false", "error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
         data = json.loads(request.body)
-        print("❌", data)
         if 'name' in data and data['name']:
             person.name = data['name']
             user.first_name = data['name']
@@ -388,7 +387,6 @@ class SettingsById(APIView):
             data['twofactor'] = person.twofactor
         person.save()
         user.save()
-        print("✅", data)
         return JsonResponse({"success": "true", "profile": data})
 
     def delete(self, request, pk):

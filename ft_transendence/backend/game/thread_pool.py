@@ -30,7 +30,7 @@ class ThreadPool:
         game["ball"] = BallController(game["state"])
         thread = game["thread"]
         thread.daemon = True
-        thread.start()
+        # thread.start()
         # print(thread.join())
 
     @classmethod
