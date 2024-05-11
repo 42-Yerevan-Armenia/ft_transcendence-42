@@ -2,6 +2,8 @@ import json
 import uuid
 import constants
 import pygame
+import asyncio
+
 
 from core.models import Person
 from django.http import JsonResponse
@@ -19,18 +21,18 @@ from game.views import PlayTournament, MatchmakingSystem, PlayerPool, LiveGames,
 from constants import *
 
 class PongConsumer(WebsocketConsumer):
-    def __init__(self, *args, **kwargs):
+    async def __init__(self, *args, **kwargs):
         self.thread = None
         self.time = time.time()
         self.id = None
         super().__init__(*args, **kwargs)
 
-    def connect(self):
+    async def connect(self):
         # print("open_code", open_code)
         self.game = self.scope["path"].strip("/").replace(" ", "_")
         self.game = self.game.split("/")[-1]
         if self.game not in ThreadPool.threads:
-            ThreadPool.add_game(self.game, self)
+            await ThreadPool.add_game(self.game, self)
 
         self.thread = ThreadPool.threads[self.game]
 
@@ -39,7 +41,7 @@ class PongConsumer(WebsocketConsumer):
 
         self.accept()
 
-    def disconnect(self, close_code):
+    async def disconnect(self, close_code):
         print("close_code = ", close_code)
         async_to_sync(self.channel_layer.group_discard)(self.game, self.channel_name)
 
@@ -49,10 +51,10 @@ class PongConsumer(WebsocketConsumer):
             print("self.channel_name = ", self.channel_name)
 
             self.thread["stop_event"].set()
-            ThreadPool.del_game(self.game)
+            await ThreadPool.del_game(self.game)
             print("len of threads = ", len(ThreadPool.threads))
 
-    def receive(self, text_data):
+    async def receive(self, text_data):
         data = json.loads(text_data)
 
         if data["method"] == "updateKey":
@@ -109,7 +111,10 @@ class PongConsumer(WebsocketConsumer):
         #     self.thread["viewers"].append()
         # print(text_data)
 
-    def propagate_state(self, thread_event):
+    def propagate_state_wrapper(self, thread_event):
+        asyncio.run(self.propagate_state(thread_event))
+
+    async def propagate_state(self, thread_event):
         i = 0
         clock = pygame.time.Clock()
         while not thread_event.is_set() and self.thread["state"]["winner"] is None:
@@ -153,7 +158,7 @@ class PongConsumer(WebsocketConsumer):
             {"type": "stream_state", "state": finish_response, "method": "finish_match"},
         )
 
-    def stream_state(self, event):
+    async def stream_state(self, event):
         state = event["state"]
         method = event["method"]
         payload = {
