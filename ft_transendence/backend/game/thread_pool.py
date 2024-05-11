@@ -14,11 +14,11 @@ class ThreadPool:
     threads = {}
 
     @classmethod
-    def add_game(cls, game_name, consumer_instance):
+    async def add_game(cls, game_name, consumer_instance):
         thread_event = threading.Event()
         cls.threads[game_name] = {
             "stop_event": thread_event,
-            "thread": threading.Thread(target=consumer_instance.propagate_state, args=(thread_event,)),
+            "thread": threading.Thread(target=consumer_instance.propagate_state_wrapper, args=(thread_event,)),
             "paddle1": False,
             "paddle2": False,
             "ball": None,
@@ -34,7 +34,7 @@ class ThreadPool:
         # print(thread.join())
 
     @classmethod
-    def del_game(cls, game_name):
+    async def del_game(cls, game_name):
         if game_name not in cls.threads:
             return    
         thread = cls.threads[game_name]
