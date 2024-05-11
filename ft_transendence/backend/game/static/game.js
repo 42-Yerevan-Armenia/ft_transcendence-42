@@ -1,5 +1,5 @@
 
-console.log("narev");
+// console.log("narev");
 
 
 
@@ -75,7 +75,7 @@ function pongGame(userObj) {
             "clientId": clientId,
             "gameId": gameId
         }
-        console.log("paddleName = ", paddleName);
+        // console.log("paddleName = ", paddleName);
         if (event.key === "ArrowUp") {
             payLoad["direction"] = "up";
             const paddle = document.getElementById(paddleName); // paddle2

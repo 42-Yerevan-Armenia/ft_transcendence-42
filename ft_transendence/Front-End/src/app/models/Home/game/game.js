@@ -76,7 +76,7 @@ async function pongGame(objUser ,gameid) {
             "clientId": clientId,
             "gameId": gameId
         }
-        console.log("paddleName = ", paddleName);
+        // console.log("paddleName = ", paddleName);
         if (event.key === "ArrowUp") {
             payLoad["direction"] = "up";
             const paddle = document.getElementById(paddleName); // paddle2
@@ -150,7 +150,7 @@ async function pongGame(objUser ,gameid) {
                 return console.error(e);
             }
         }
-        console.log("++++++++++++++++++++++++++"+message);
+        // console.log("++++++++++++++++++++++++++"+message);
         const mainOnHtml = document.getElementById("mainSectionUsually");
         const body = document.querySelector(".addBodyStile");
     debugger

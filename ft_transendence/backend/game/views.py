@@ -25,11 +25,20 @@ from friendship.models import Block
 import time
 import random
 
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
 
+
+# await channel_layer.send("channel_name", {
+#     "type": "chat.message",
+#     "text": "Hello there!",
+# })
 
 class LiveGames():
     _instance = None
-   
+    _channel_layer = get_channel_layer()
+    _channel_name = None
+
     def __new__(cls):
         if cls._instance is None:
             cls._instance = super().__new__(cls)
@@ -39,15 +48,40 @@ class LiveGames():
 
     def add_game(self, game_id, game):
         self.games[game_id] = game
+        if _channel_name:
+            async_to_sync(_channel_layer.group_send)(
+                _channel_name,
+                {"type": "stream_state", "liveGames": cls.games,},
+            )
+
+    def stream_state(self, event):
+        liveGames = event["liveGames"]
+        payload = {
+            "method": "updateLiveGames",
+            "state": liveGames
+        }
+        try:
+            self.send(text_data=json.dumps(payload))
+        except Exception as e:
+            print(e)
+
 
     def del_game(self, game_id):
         del self.games[game_id]
+        if _channel_name:
+            async_to_sync(_channel_layer.group_send)(
+                _channel_name,
+                {"type": "stream_state", "liveGames": cls.games,},
+            )
     
     def get_game(self, game_id):
         return self.games[game_id]
 
     def get_all_games(self):
         return self.games
+    
+    def set_channel_name(self, channel_name):
+        self._channel_name = channel_name
 
 class PlayerPool():
     def __init__(self):
