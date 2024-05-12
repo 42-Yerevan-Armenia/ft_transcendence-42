@@ -14,7 +14,8 @@ from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 
 from channels.layers import get_channel_layer
-from asgiref.sync import async_to_sync
+from asgiref.sync import async_to_sync, sync_to_async
+from django.db.models import Q
 
 import time
 import random
@@ -42,15 +43,13 @@ class LiveGames():
                 }
             )
 
-    def del_game(self, game_id):
+    async def del_game(self, game_id):
         for i, game in enumerate(self.games):
             if game["game_room"]["room_id"] == game_id:
                 del self.games[i]
                 break
-        print("❌ del_game = ", self.games)
         if self._group_name:
-            print("❌ self._group_name = ", self._group_name)
-            async_to_sync(self._channel_layer.group_send)(
+            await self._channel_layer.group_send(
                 self._group_name,
                 {
                     "type": "stream_sate_live",
@@ -58,24 +57,26 @@ class LiveGames():
                 }
             )
 
-    def set_winner(self, winner, loser):
-        winner_person = Person.objects.get(id=winner)
-        game_room = winner_person.game_room
+    async def set_winner(self, winner, loser):
+        winner_person = await sync_to_async(Person.objects.get)(id=winner)
+        game_room = await sync_to_async(lambda: winner_person.game_room)()
         # TournamentSystem.game_results_history(winner, loser, winner)
         if game_room.max_players == 2:
             game_room.ongoing = False
-            game_room.players.update(game_room_id=None)
-            game_room.save()
-            for player in game_room.players.all():
+            await sync_to_async(game_room.save)()
+            players = await sync_to_async(list)(game_room.players.all())
+            for player in players:
                 player.ongoing = False
-                player.save()
-            Person.objects.filter(game_room_id=game_room.id).update(game_room_id=None)
+                await sync_to_async(player.save)()
+            await sync_to_async(Person.objects.filter(game_room_id=game_room.id).update)(game_room_id=None)
         else:
-            loser_person = Person.objects.get(id=loser)
+            loser_person = await sync_to_async(Person.objects.get)(id=loser)
             loser_person.game_room_id = None
             loser_person.ongoing = False
-            loser_person.save()
-            Round.objects.create(winner=winner_person, game_room=game_room)
+            await sync_to_async(loser_person.save)()
+            await sync_to_async(Round.objects.create)(winner=winner_person, game_room=game_room)
+        await sync_to_async(self.next_match)(game_room)
+        
 
     def next_match(self, game_room):
         if len(game_room.players.all()) == 4:
@@ -354,6 +355,7 @@ class SendInviteRequest(APIView):
             if sender.game_room and opponent.game_room and sender.game_room == opponent.game_room:
                 return JsonResponse({"success": "false", "error": "Opponent is already in the same game room"}, status=status.HTTP_400_BAD_REQUEST)
             invite_request = GameInvite.objects.filter(sender=sender, receiver=opponent).first()
+            print("✅", invite_request)
             if invite_request:
                 if invite_request.rejected:
                     invite_request.delete()

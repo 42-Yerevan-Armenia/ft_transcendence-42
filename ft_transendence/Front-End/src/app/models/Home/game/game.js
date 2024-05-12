@@ -29,7 +29,7 @@ function movePaddle(paddle, direction, max_paddle_y, paddle_step) {
 }
 
 async function pongGame(objUser ,gameid) {
-    let isStarted = false;
+let isStarted = false;
     function isOpen(ws) { return ws.readyState === ws.OPEN }
 
     //HTML elements
@@ -65,6 +65,8 @@ async function pongGame(objUser ,gameid) {
     debugger
     const board = document.getElementById("board");
 
+    clearBox("board");
+
 
     //wiring events
     document.addEventListener("keydown", event => {
@@ -97,47 +99,11 @@ async function pongGame(objUser ,gameid) {
         }
         ws.send(JSON.stringify(payLoad));
     });
-/*
-    btnJoin.addEventListener("click", e => {
-        // const obj = {
-        //     "key": [1, 2, 5, 5],
-        //     "objs": [{"red": 5}, {"blue": 6}]
-        // };
-        if (gameId === null)
-            gameId = txtGameId.value;
-        const payLoad = {
-            "method": "join",
-            "clientId": clientId,
-            "gameId": gameId
-        }
-        if (ws.readyState === WebSocket.CLOSED) {
-            console.log("socket closed");
-        } 
-        // console.log("ws.readyState = ", ws.readyState);
-        ws.send(JSON.stringify(payLoad));
 
-    })
+    function clearBox(elementID) {
+        document.getElementById(elementID).innerHTML = "";
+    }
 
-    btnStart.addEventListener("click", e => {
-
-        const payLoad = {
-            "method": "start",
-            "clientId": clientId,
-            "gameId": gameId
-        }
-        ws.send(JSON.stringify(payLoad));
-
-    })
-
-    btnCreate.addEventListener("click", e => {
-
-        const payLoad = {
-            "method": "create",
-            "clientId": clientId,
-        }
-        ws.send(JSON.stringify(payLoad));
-    })
-*/
     ws.onmessage = message => {
         //message.data
         let response;
@@ -158,6 +124,7 @@ async function pongGame(objUser ,gameid) {
         {
                 if (User._Id == response.state.game_room.left_id || User._Id == response.state.game_room.right_id)
                 {
+                    clearBox("board");
                     // update when game terminate
                     mainOnHtml.style.display = "block";
                     body.style.display = "none";
@@ -185,7 +152,7 @@ async function pongGame(objUser ,gameid) {
 
         //update
         if (response.method === "update"){
-            if (isStarted === false) {
+if (isStarted === false) {
                 isStarted = true;
                 const a = document.createElement("div");
                 // console.log("response.game = " ,response.game);
@@ -280,9 +247,6 @@ async function pongGame(objUser ,gameid) {
             const game = response.game;
             console.log(game);
             console.log("joined")
-            // context.clearRect(0, 0, canvas.width, canvas.height);
-            // context.fillRect(objToDraw.x, objToDraw.y, objToDraw.width, objToDraw.height);
-            // context.fillRect(10, 100, 10, 10);
             // TODO change board with and heght
 
             const a = document.createElement("div");
@@ -326,60 +290,7 @@ async function pongGame(objUser ,gameid) {
             score2.appendChild(document.createTextNode("0"));
             board.appendChild(score1);
             board.appendChild(score2);
-            
-
-
-            // d.textContent = c.clientId;
-            // game.clients.forEach (c => {
-
-            //     const d = document.createElement("div");
-            //     d.style.width = "200px";
-            //     d.style.background = c.color
-            //     d.textContent = c.clientId;
-            //     divPlayers.appendChild(d);
-
-            //     if (c.clientId === clientId) playerColor = c.color;
-            // })
-
-
-            // while(board.firstChild)
-            // board.removeChild (board.firstChild)
-
-            // for (let i = 0; i < game.balls; i++){
-
-            //     const b = document.createElement("button");
-            //     b.id = "ball" + (i +1);
-            //     b.tag = i+1
-            //     b.textContent = i+1
-            //     b.style.width = "150px"
-            //     b.style.height = "150px"
-            //     b.addEventListener("click", e => {
-            //         b.style.background = playerColor
-            //         const payLoad = {
-            //             "method": "play",
-            //             "clientId": clientId,
-            //             "gameId": gameId,
-            //             "ballId": b.tag,
-            //             "color": playerColor
-            //         }
-            //         ws.send(JSON.stringify(payLoad))
-            //     })
-            //     board.appendChild(b);
-            // }
         }
-        // if (response.method === "start") {
-        //     //{1: "red", 1}
-        //     // if (!response.game.state) return;
-        //     // for(const b of Object.keys(response.game.state))
-        //     // {
-        //     //     const color = response.game.state[b];
-        //     //     const ballObject = document.getElementById("ball" + b);
-        //     //     ballObject.style.backgroundColor = color
-        //     // }
-        // }
     }
 
 }
-
-
-// pongGame(user);

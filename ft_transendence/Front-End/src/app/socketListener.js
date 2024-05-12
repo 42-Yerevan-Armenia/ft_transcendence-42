@@ -24,7 +24,28 @@ Join_Ws.onmessage = message => {
     const mainOnHtml = document.getElementById("mainSectionUsually");
     const body = document.querySelector(".addBodyStile");
 
-    if (response.method === "start_game" && User._getAccess) {
+    // if (response.method === "start_game" && User._getAccess) {
+    //     debugger
+    //     debugger
+    //     response.liveGames.forEach(async element => {
+    //         if (User._Id == element.game_room.left_id || User._Id == element.game_room.right_id)
+    //         {
+    //             //main displey none
+    //             mainOnHtml.style.display = "none";
+
+    //             //add game
+    //             const gameOnHtml = document.createElement("div");
+    //             gameOnHtml.setAttribute("id", "board")
+    //             body.style.display = "block";
+    //             body.appendChild(gameOnHtml)
+                
+    //             //call game function for start game
+    //             await pongGame(User, element.game_room.room_id);
+    //         }
+    //     });
+    // }
+
+    if (response.method === "updateLiveGames" && User._getAccess) {
         debugger
         debugger
         response.liveGames.forEach(async element => {
