@@ -1,7 +1,6 @@
 
-console.log("narev");
 
-
+let isStarted = false;
 
 let uuid = function(){
     return Array
@@ -29,7 +28,9 @@ function movePaddle(paddle, direction, max_paddle_y, paddle_step) {
 }
 
 async function pongGame(objUser ,gameid) {
-let isStarted = false;
+    if (isStarted) {
+        return;
+    }
     function isOpen(ws) { return ws.readyState === ws.OPEN }
 
     //HTML elements
@@ -49,7 +50,54 @@ let isStarted = false;
     let gameId = gameid;
     let playerColor = null;
     // let ws = new WebSocket("ws://" + window.location.host + "/ws/game/" + gameId)
-    let ws = new WebSocket("ws://" + HostPort.slice(7) + "/ws/game/" + gameId)
+
+
+
+
+
+
+
+
+
+
+
+
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
+
+let ws = new WebSocket("ws://" + HostPort.slice(7) + "/ws/game/" + gameId)
+
+
+
+
+
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     const payLoad = {
         "method": "connect",
         "clientId": clientId,
@@ -62,7 +110,7 @@ let isStarted = false;
 
     // const txtGameId = document.getElementById("txtGameId");
     // const divPlayers = document.getElementById("divPlayers");
-    debugger
+    // debugger
     const board = document.getElementById("board");
 
     clearBox("board");
@@ -97,7 +145,9 @@ let isStarted = false;
         } else {
             return;
         }
-        ws.send(JSON.stringify(payLoad));
+        if (ws.readyState === ws.OPEN) {
+            ws.send(JSON.stringify(payLoad));
+        }
     });
 
     function clearBox(elementID) {
@@ -106,6 +156,7 @@ let isStarted = false;
 
     ws.onmessage = message => {
         //message.data
+        console.log("✅ message = ", message);
         let response;
         if (message) {
             try {
@@ -116,20 +167,21 @@ let isStarted = false;
                 return console.error(e);
             }
         }
-        console.log("++++++++++++++++++++++++++"+message);
+        // console.log("++++++++++++++++++++++++++"+message);
         const mainOnHtml = document.getElementById("mainSectionUsually");
         const body = document.querySelector(".addBodyStile");
-    debugger
+    // debugger
         if (response?.method === "finish_match" && User?._getAccess)
         {
-                if (User._Id == response.state.game_room.left_id || User._Id == response.state.game_room.right_id)
-                {
-                    clearBox("board");
-                    // update when game terminate
-                    mainOnHtml.style.display = "block";
-                    body.style.display = "none";
-                    return
-                }
+            if (User._Id == response.state.game_room.left_id || User._Id == response.state.game_room.right_id)
+            {
+                ws.close();
+                clearBox("board");
+                // update when game terminate
+                mainOnHtml.style.display = "block";
+                body.style.display = "none";
+                return
+            }
         }
         // console.log(response);
         if (response.method === "connect"){
@@ -152,7 +204,7 @@ let isStarted = false;
 
         //update
         if (response.method === "update"){
-if (isStarted === false) {
+            if (isStarted === false) {
                 isStarted = true;
                 const a = document.createElement("div");
                 // console.log("response.game = " ,response.game);

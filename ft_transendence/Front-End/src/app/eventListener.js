@@ -10,7 +10,7 @@ Home._NAV._SETTINGS._classname?.addEventListener("click",()=>{
 Home._MiddleSettings?._Save?.addEventListener("click", async ()=>{
   console.log("SAVE")
 
-debugger
+// debugger
 
   if(!Home._MiddleSettings.isArgumentsEmpty())
     return
@@ -140,7 +140,7 @@ Home?._NAV?._Community?._classname?.addEventListener("click",()=>{
 //whene create new list item for game
 //_MidleJoinList Create button
 Home._MidleJoinList?._CreateButton?.addEventListener("click", async () => {
-  debugger
+  // debugger
   console.log("click... \n");
   const Players = document.querySelector("#JoinListHeroDivProfilPlayers");
   const LiveOnOff = document.querySelector("#LiveOnOff");
@@ -220,7 +220,7 @@ Home._HomeLeft._NavLoginOut.addEventListener("click", async () => {
 
 //when want to login you press button login
 Login?._LoginPageContinue?.addEventListener("click", async (e) => {
-  debugger
+  // debugger
   e.preventDefault();
   //check is correct email and password
   if (Login.ButtonSignIn())
@@ -283,7 +283,7 @@ let isReset = false;
 
 
 Reset?._ConfirmReset?.addEventListener('click', async () => {
-  debugger
+  // debugger
   const isValid = Reset.checkValidEmail();
   if (!isValid)
     return ;
