@@ -122,7 +122,7 @@ class PongConsumer(AsyncWebsocketConsumer):
                 elif not self.game["paddle2"]:
                     self.game["state"]["winner"] = self.game["paddle1"]["id"]
                     await LiveGames().set_winner(self.game["state"]["winner"], self.game["paddle2"]["id"])
-            sleep(0.00035)
+            sleep(0.0001)
                 # self.time = time.time()
 
         await LiveGames().del_game(self.game_id)
@@ -186,7 +186,6 @@ class joinListConsumer(WebsocketConsumer):
         method = request.get("method")
         if method == "create":
             user_id = request.get("pk")
-            print("✅ User =", user_id, " created game room")
             response = CreateRoom.post(self, request, user_id)
             all_user_ids = list(Person.objects.values_list('id', flat=True))
             response["all_user_ids"] = all_user_ids
@@ -198,7 +197,6 @@ class joinListConsumer(WebsocketConsumer):
             )
         elif method == "join" or method == "invite":
             user_id = request.get("user_id")
-            print("✅ User =", user_id, " joined to game room")
             json_data = self.JoinList.post(request, user_id)
             response = self.JoinList.get(None, None)
             all_user_ids = list(Person.objects.values_list('id', flat=True))

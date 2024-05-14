@@ -3,7 +3,7 @@ class MiddleSettings extends HtmlElement {
       super(".MidleSettings")
       this._style.display = "none";
     }
-    debugger
+    // debugger
     _Save = document.querySelector("#DeleteAccountSaveSave");
     _DeleteAccount = document.querySelector("#DeleteAccountSaveAccount");
     _ImageFileAccess = document.querySelector("#ImageFileAccess")                        //Edit Profile Photo.

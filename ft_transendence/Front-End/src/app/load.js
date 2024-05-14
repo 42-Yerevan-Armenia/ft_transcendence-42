@@ -43,7 +43,7 @@ if (mainElement) {
 
 
 document.addEventListener("DOMContentLoaded", async () => {
-debugger
+// debugger
     console.log(" console.log(window.history);")
     console.log(window.history);
 //debugger
@@ -64,7 +64,8 @@ debugger
     else
     {
 
-        //debugger
+        debugger
+
         const code = window.location.search?.slice(6);
 
         if (code)

@@ -46,8 +46,8 @@ Join_Ws.onmessage = message => {
     // }
 
     if (response.method === "updateLiveGames" && User._getAccess) {
-        debugger
-        debugger
+        // debugger
+        // debugger
         response.liveGames.forEach(async element => {
             if (User._Id == element.game_room.left_id || User._Id == element.game_room.right_id)
             {
@@ -55,10 +55,12 @@ Join_Ws.onmessage = message => {
                 mainOnHtml.style.display = "none";
 
                 //add game
-                const gameOnHtml = document.createElement("div");
-                gameOnHtml.setAttribute("id", "board")
-                body.style.display = "block";
-                body.appendChild(gameOnHtml)
+                if (body.querySelector("#board") == null) {
+                    const gameOnHtml = document.createElement("div");
+                    gameOnHtml.setAttribute("id", "board")
+                    body.style.display = "block";
+                    body.appendChild(gameOnHtml)
+                }
                 
                 //call game function for start game
                 await pongGame(User, element.game_room.room_id);

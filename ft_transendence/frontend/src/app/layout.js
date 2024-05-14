@@ -18,7 +18,7 @@ export default function RootLayout({ children }) {
           </header>
           {children}
           <footer>
-            &copy; 2023 all rights reserved
+            &copy; 2024 all rights reserved
           </footer>
         </main>
       </body>
