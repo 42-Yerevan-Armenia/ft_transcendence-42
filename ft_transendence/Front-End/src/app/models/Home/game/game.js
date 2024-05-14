@@ -126,7 +126,7 @@ let ws = new WebSocket("ws://" + HostPort.slice(7) + "/ws/game/" + gameId)
             "clientId": clientId,
             "gameId": gameId
         }
-        console.log("paddleName = ", paddleName);
+        // console.log("paddleName = ", paddleName);
         if (event.key === "ArrowUp") {
             payLoad["direction"] = "up";
             const paddle = document.getElementById(paddleName); // paddle2

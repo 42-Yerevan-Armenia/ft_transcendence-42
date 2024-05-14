@@ -48,6 +48,7 @@ Join_Ws.onmessage = message => {
     if (response.method === "updateLiveGames" && User._getAccess) {
         // debugger
         // debugger
+
         response.liveGames.forEach(async element => {
             if (User._Id == element.game_room.left_id || User._Id == element.game_room.right_id)
             {
