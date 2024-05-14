@@ -9,7 +9,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from .models import Confirm, Person, GameRoom, History
-from game.views import PlayTournament
+from game.views import PlayTournament, LiveGames
 from .serializers import (
     UserSerializer,
     SettingsSerializer,
@@ -301,9 +301,10 @@ class Logout(APIView):
                 player.ongoing = False
                 player.game_room_id = None
                 player.save()
+            # LiveGames().del_game(gameroom.id)
             gameroom.players.clear()
             gameroom.delete()
-        else:
+        elif gameroom and gameroom.creator_id != person.id:
             gameroom.players.remove(person)
             person.ongoing = False
             person.game_room_id = None
@@ -342,7 +343,6 @@ class SettingsById(APIView):
         except User.DoesNotExist:
             return JsonResponse({"success": "false", "error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
         data = json.loads(request.body)
-        print("❌", data)
         if 'name' in data and data['name']:
             person.name = data['name']
             user.first_name = data['name']
@@ -388,7 +388,6 @@ class SettingsById(APIView):
             data['twofactor'] = person.twofactor
         person.save()
         user.save()
-        print("✅", data)
         return JsonResponse({"success": "true", "profile": data})
 
     def delete(self, request, pk):

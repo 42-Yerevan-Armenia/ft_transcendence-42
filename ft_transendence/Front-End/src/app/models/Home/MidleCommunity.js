@@ -44,7 +44,7 @@ class MidleCommunity extends HtmlElement {
       }
 
       eventsListenerAddFriends() {
-       debugger
+      //  debugger
         const notFriends = document.querySelectorAll(".CommunityAddFriends");
         //[{0:CommunityAddFriends},{1:CommunityAddFriends} , {2:CommunityAddFriends} ]
         notFriends.forEach((e) => {

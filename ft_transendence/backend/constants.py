@@ -50,4 +50,5 @@ INITIAL_STATE = {
         "height": BALL_HEIGHT,
         "radius": BALL_RADIUS
     },
+    "winner": None,
 }

@@ -3,8 +3,8 @@
 //manag browser storage
 const myStorages = {
     setStorageLogin(tockens) {
-      debugger
-      debugger
+      // debugger
+      // debugger
 
       console.log("tockens     --------   " + tockens)
       console.log(tockens);

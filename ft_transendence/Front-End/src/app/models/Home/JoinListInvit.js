@@ -81,7 +81,7 @@ class JoinListInvit extends HtmlElement{
     //Iterate over each button and set event listener invit
     buttons.forEach(async button => {
         button.addEventListener("click", async function(e) {
-            debugger
+            // debugger
 
                 const clientid = e.target.id.slice(e.target.id.lastIndexOf(':') + 1);
 
