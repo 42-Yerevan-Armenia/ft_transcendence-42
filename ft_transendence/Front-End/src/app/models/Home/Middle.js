@@ -31,13 +31,11 @@ class MiddleSECTION extends HtmlElement {
       p.setAttribute("class", "itemP");
       p.innerHTML = Item.points + " points"
 
-
       item.appendChild(img);
       item.appendChild(h6);
       item.appendChild(p);
       document.querySelector("#playersIdTopMidle").appendChild(item);
     }
-
     // <div class="liveitem">
     //   <Image src="./public/User.png" width="60" height="60"
     //       alt="user" class="imag"></Image>
@@ -45,10 +43,8 @@ class MiddleSECTION extends HtmlElement {
     //       <PlayIcon/>
     //    </div>
     // </div>
-
     async liveNow(item, i){
       let row;
-
       const liveItem = document.createElement("div");
       liveItem.setAttribute("class", "liveitem");
       liveItem.setAttribute("id", "liveitem" + item.id);
@@ -83,50 +79,42 @@ class MiddleSECTION extends HtmlElement {
 
     async loadBackEndX(){
         const Items =  await getPureFetchRequest("users");
-
         if (!Items || !Items.state)
           return;
-
         const dataAllItem = Items.message.sort((e, e2)=>{
           return e.points < e2.points
         })
         return dataAllItem;
     }
     
-    
     async drawList(){
       this.dataUser12List = 0;
       this.dataUser12List = await this.loadBackEndX();
   
-      
       if (!this.dataUser12List)
-      return ;
-      
+        return ;
+
       const TopPlayerList = this.dataUser12List?.slice(0, 6);
       
       document.querySelector("#row1").innerHTML = "";
       document.querySelector("#row2").innerHTML = "";
       document.querySelector("#playersIdTopMidle").innerHTML = "";
 
-      if (TopPlayerList)
-      {
+      if (TopPlayerList) {
         TopPlayerList.forEach(async (e, i) => {
           if (i < 5)
             await this.topPlayers(e);
         })
       }
       const LiveNowList = this.dataUser12List?.filter(e => e.is_online)?.slice(0, 6);
-      if (LiveNowList)
-      {
+      if (LiveNowList) {
         LiveNowList.forEach(async (e, i) => {
           await this.liveNow(e, i);
         })
       }
     }
 
-
-  async draw()
-  {
+  async draw() {
     await this.drawList();
   }
 }

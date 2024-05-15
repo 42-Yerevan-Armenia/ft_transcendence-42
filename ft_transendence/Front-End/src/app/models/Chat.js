@@ -2,24 +2,16 @@
 // User.menegAccsess();
 // const chatSocket = new WebSocket("ws://" + window.location.host + "/");
 const chatSocket = new WebSocket("ws://" + HostPort.slice(7) + "/");
-
-
-
 //Whene opened socket
 chatSocket.onopen = function (e) {
     console.log("The connection was setup successfully !");
 };
-
 //When Have Error
 chatSocket.onclose = function (e) {
     console.log("Something unexpected happened !");
 };
 
-
-
-
 document.querySelector("#id_message_send_input").focus();
-
 //enter pres
 document.querySelector("#id_message_send_input").onkeyup = function (e) {
 if (e.keyCode == 13) {
@@ -29,8 +21,6 @@ if (e.keyCode == 13) {
         chatSocket.send(JSON.stringify({ message: messageInput, username : User._Name}));
     }
 };
-
-
 /* 
 <div class="MessagPrivateSubjectMessagSender">
     <div class="MessagPrivateSubjectMessagSenderDivMessag">
@@ -43,8 +33,6 @@ if (e.keyCode == 13) {
     <p>
 </div>
  */
-
-
 function sender(item){
     const div = document.createElement("div");
     div.setAttribute("class", "MessagPrivateSubjectMessagSender");
@@ -66,9 +54,6 @@ function sender(item){
     const divElement = document.querySelector("#containerScroll")
     divElement.appendChild(div);
 }
-
-
-
 /* 
 <div class="MessagPrivateSubjectMessagPerson">
     1<div class="MessagPrivateSubjectMessagDivPerson">
@@ -81,7 +66,6 @@ function sender(item){
     </p>
 </div> 
 */
-
 function person(item){
     const div = document.createElement("div");
     div.setAttribute("class", "MessagPrivateSubjectMessagPerson");
@@ -103,19 +87,15 @@ function person(item){
     divElement.appendChild(div);
 }
 
-
 chatSocket.onmessage = function (e) {
 
     const data = JSON.parse(e.data);
     var div = document.createElement("div");
-    if (!data.message)
-    {
+    if (!data.message) {
         document.querySelector("#id_message_send_input").value = "";
         return
     }
     // if (data.message == )
-
-
     // if (data.username === User._Nickname)
     // {
         Home._HomeMessage.draw({
@@ -139,13 +119,8 @@ chatSocket.onmessage = function (e) {
     //         "name" : data.username
     //     });
     // }
-    
     // div.innerHTML = data.username + " : " + data.message;
-
-
-
     document.querySelector("#id_message_send_input").value = "";
-
     // document.querySelector("#containerScroll").appendChild(div);
     scrollToLastTag();                                                  //for show new messag
 };

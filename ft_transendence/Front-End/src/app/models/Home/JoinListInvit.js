@@ -73,29 +73,19 @@ class JoinListInvit extends HtmlElement{
            await this.JoinListInvitetbodyTr(item);
        });
 
-
-
-       
        const buttons =  document.querySelectorAll(".JoinListInviteClass");;
-
     //Iterate over each button and set event listener invit
     buttons.forEach(async button => {
         button.addEventListener("click", async function(e) {
-            // debugger
-
                 const clientid = e.target.id.slice(e.target.id.lastIndexOf(':') + 1);
-
                 const sendFrend = {
                     opponent_id : clientid
                 }
-
                 const res = await putRequest("POST", "api/v1/invite/" +User._Id, sendFrend);
-                if (!res || !res.state)
-                {
+                if (!res || !res.state) {
                     alert("prevus you should create join list item");
                     return ;
                 }
-                
             })
         })
         this.data = data;

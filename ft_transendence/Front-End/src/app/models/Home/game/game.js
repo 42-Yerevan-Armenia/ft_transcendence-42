@@ -1,5 +1,3 @@
-
-
 let isStarted = false;
 
 let uuid = function(){
@@ -16,23 +14,23 @@ let uuid = function(){
 const user = {
     "id": uuid(),
 }
+
 function movePaddle(paddle, direction, max_paddle_y, paddle_step) {
     // Delayed execution after 2000 milliseconds (2 seconds)
     const paddleY = parseInt(paddle.style.top, 10);
     const paddleHeight = parseInt(paddle.style.height, 10);
     if (direction == "down" && paddleY + paddleHeight < max_paddle_y) {
         paddle.style.top = (paddleY + paddle_step) + "px";
-    } else if  (direction == "up" && paddleY > 0) {
+    }
+    else if  (direction == "up" && paddleY > 0) {
         paddle.style.top = (paddleY - paddle_step) + "px";
     }
 }
 
 async function pongGame(objUser ,gameid) {
-    if (isStarted) {
+    if (isStarted)
         return;
-    }
     function isOpen(ws) { return ws.readyState === ws.OPEN }
-
     //HTML elements
     let clientId = objUser._Id;
     let paddleName = null;
@@ -44,78 +42,32 @@ async function pongGame(objUser ,gameid) {
     // let paddle_step = null;
     // let screen_width = null;
     // let screen_height = null;
-
     if (!clientId)
         clientId = uuid();
     let gameId = gameid;
     let playerColor = null;
     // let ws = new WebSocket("ws://" + window.location.host + "/ws/game/" + gameId)
 
-
-
-
-
-
-
-
-
-
-
-
-
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-
-
 
 let ws = new WebSocket("ws://" + HostPort.slice(7) + "/ws/game/" + gameId)
 
-
-
-
-
-
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     const payLoad = {
         "method": "connect",
         "clientId": clientId,
         "gameId": gameId
     }
-
     ws.onopen = () => ws.send(JSON.stringify(payLoad));
     console.log("ws://" + window.location.host + "/ws/game/");
     console.log("ws = ", window.location.host);
-
     // const txtGameId = document.getElementById("txtGameId");
     // const divPlayers = document.getElementById("divPlayers");
     // debugger
     const board = document.getElementById("board");
 
     clearBox("board");
-
-
     //wiring events
     document.addEventListener("keydown", event => {
         // console.log(event);
@@ -135,16 +87,17 @@ let ws = new WebSocket("ws://" + HostPort.slice(7) + "/ws/game/" + gameId)
                 movePaddle(paddle , "up", board.offsetHeight, constants.paddle_step);
             }, 100);
             // movePaddle(paddle , "up", board.offsetHeight, constants.paddle_step);
-        } else if (event.key === "ArrowDown") {
+        }
+        else if (event.key === "ArrowDown") {
             payLoad["direction"] = "down";
             const paddle = document.getElementById(paddleName); // paddle1
             setTimeout(function() {
                 movePaddle(paddle, "down", board.offsetHeight, constants.paddle_step);
             }, 100);
             // movePaddle(paddle, "down", board.offsetHeight, constants.paddle_step);
-        } else {
-            return;
         }
+        else
+            return;
         if (ws.readyState === ws.OPEN) {
             ws.send(JSON.stringify(payLoad));
         }
@@ -161,20 +114,16 @@ let ws = new WebSocket("ws://" + HostPort.slice(7) + "/ws/game/" + gameId)
         if (message) {
             try {
                 response = JSON.parse(message.data);
-            } catch (e) {
-                // debugger;
+            }
+            catch (e) {
                 console.log("e = ", e);
                 return console.error(e);
             }
         }
-        // console.log("++++++++++++++++++++++++++"+message);
         const mainOnHtml = document.getElementById("mainSectionUsually");
         const body = document.querySelector(".addBodyStile");
-    // debugger
-        if (response?.method === "finish_match" && User?._getAccess)
-        {
-            if (User._Id == response.state.game_room.left_id || User._Id == response.state.game_room.right_id)
-            {
+        if (response?.method === "finish_match" && User?._getAccess) {
+            if (User._Id == response.state.game_room.left_id || User._Id == response.state.game_room.right_id) {
                 ws.close();
                 clearBox("board");
                 // update when game terminate
@@ -183,7 +132,6 @@ let ws = new WebSocket("ws://" + HostPort.slice(7) + "/ws/game/" + gameId)
                 return
             }
         }
-        // console.log(response);
         if (response.method === "connect"){
             console.log("response = ", response);
             paddleName = response.state[clientId];
@@ -193,21 +141,17 @@ let ws = new WebSocket("ws://" + HostPort.slice(7) + "/ws/game/" + gameId)
             constants.screen_height = response.constants.screen_height;
             console.log("Client id Set successfully " + clientId)
         }
-
         //create
         if (response.method === "create"){
             console.log("response = ", response);
             gameId = response.game["id"];
             console.log("game successfully created with id " + response.game.id + " with " + response.game.balls + " balls")  
         }
-
-
         //update
         if (response.method === "update"){
             if (isStarted === false) {
                 isStarted = true;
                 const a = document.createElement("div");
-                // console.log("response.game = " ,response.game);
                 const paddle1 = response.state.paddle1;
                 a.id = "paddle1";
                 a.className = "paddle";
@@ -249,26 +193,24 @@ let ws = new WebSocket("ws://" + HostPort.slice(7) + "/ws/game/" + gameId)
                 board.appendChild(score1);
                 board.appendChild(score2);
             }
-            if (!response.state) return;
+            if (!response.state)
+                return;
             const ballObject = document.getElementById("ball");
             // ballRadius = response.state.ballRadius;
             if (!response?.state?.ball?.x || !response?.state?.ball?.y)
                 return
-
             ballObject.style.left = response?.state?.ball?.x + "px";
             ballObject.style.top = response?.state?.ball?.y + "px";
             if (paddleName === "paddle1") {
                 const paddle2 = document.getElementById("paddle2");
-                
                 paddle2.style.left = response.state.paddle2.x + "px";
                 paddle2.style.top = response.state.paddle2.y + "px";
-            } else {
+            }
+            else {
                 const paddle1 = document.getElementById("paddle1");
-    
                 paddle1.style.left = response.state.paddle1.x + "px";
                 paddle1.style.top = response.state.paddle1.y + "px";
             }
-
             const score1 = document.getElementById("score1");
             const score2 = document.getElementById("score2");
             score1.textContent = response.state.paddle1.score;
@@ -293,16 +235,13 @@ let ws = new WebSocket("ws://" + HostPort.slice(7) + "/ws/game/" + gameId)
             //     }
             // }
         }
-
         //join
         if (response.method === "join"){
             const game = response.game;
             console.log(game);
             console.log("joined")
             // TODO change board with and heght
-
             const a = document.createElement("div");
-            // console.log("response.game = " ,response.game);
             a.id = "paddle1";
             a.className = "paddle";
             a.style.width = "20px";
@@ -344,5 +283,4 @@ let ws = new WebSocket("ws://" + HostPort.slice(7) + "/ws/game/" + gameId)
             board.appendChild(score2);
         }
     }
-
 }

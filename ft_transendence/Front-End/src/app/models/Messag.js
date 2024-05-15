@@ -23,7 +23,6 @@ let Groups = {
     ]
 }
 
-
 let Privat = [
 
         PrivatPerson = {
@@ -75,37 +74,15 @@ let Privat = [
             time: "9.23 AM"
         }
 ]
-
-
-
-
-
 //___________________________________________________________________
-
 function ElementData(name) {
     this._classname = document.querySelector(name);
     this._style = this._classname ? this._classname.style : null;
 }
-ElementData.prototype.Classname = function(){
-    return this._classname;
-}
-
-ElementData.prototype.Style = function(){
-    return this._style;
-}
-
-
-
-ElementData.prototype.DisplayBlock = function() {
-    if (this._style)
-        this._style.display = "block";
-}
-
-ElementData.prototype.DisplayNone = function() {
-    if (this._style)
-        this._style.display = "none";
-}
-
+ElementData.prototype.Style =           function() {return this._style;}
+ElementData.prototype.Classname =       function() {return this._classname;}
+ElementData.prototype.DisplayBlock =    function() {if (this._style) this._style.display = "block";}
+ElementData.prototype.DisplayNone =     function() {if (this._style) this._style.display = "none";}
 
 //function add this html code
 // <div class="GrupADD">                             //divSubject
@@ -162,7 +139,6 @@ ElementData.prototype.createBlock = function(Group, nameElement) {
     document.getElementById(`addChild${nameElement}`).style.display = "block";
     document.getElementById(`addChild${nameElement}`).appendChild(node);
 }
-
 /* 
 <div class="MessagPrivateSubjectMessagPerson">
     <div class="MessagPrivateSubjectMessagDivPerson">
@@ -175,7 +151,6 @@ ElementData.prototype.createBlock = function(Group, nameElement) {
     </p>
 </div>
 */
-
 ElementData.prototype.MessagPrivateSubjectMessagPerson = function(Person) {
     //debugger
     const node = document.createElement("div")
@@ -194,10 +169,7 @@ ElementData.prototype.MessagPrivateSubjectMessagPerson = function(Person) {
     node.appendChild(PersonP);
     document.querySelector(".MessagPrivateSubjectMessag").appendChild(node);
 }
-
-
-
-{/* 
+/* 
 <!-- Sender -->
 <div class="MessagPrivateSubjectMessagSender">
     <div class="MessagPrivateSubjectMessagSenderDivMessag">
@@ -209,8 +181,7 @@ ElementData.prototype.MessagPrivateSubjectMessagPerson = function(Person) {
         9.23 AM
     <p>
 </div>
-*/}
-
+*/
 ElementData.prototype.MessagPrivateSubjectMessagSender = function(Person) {
     //debugger
     const node = document.createElement("div");
@@ -233,42 +204,31 @@ ElementData.prototype.MessagPrivateSubjectMessagSender = function(Person) {
     document.querySelector(".MessagPrivateSubjectMessag").appendChild(node);
 }
 
-
-
-
 var MessagePage = function(name) {
     ElementData.call(this, name);                                                     // Call the parent constructor
     this.name = name;
-
     //for chat Groups
     this.Groups = (Groups) => {
         //request to backend for tacke all groups what user have 
         //const Groups = await getFetchRequest("groups");                        // Controller Get Groups
-
         if (!Groups.state)
             return null;
-
         document.getElementById("addChildGrup").style.display = "none";       // for start new message draw
         Groups.message.forEach(element => {
              this.createBlock(element, "Grup")
             });
     };
-
-
     // for chat Personal
     this.Personal = (Persons) => {
         //request to backend for tacke all groups what user have 
         //const Persons = await getFetchRequest("Personal");
-
         if (!Persons.state)
-        return null;
-
+            return null;
         document.getElementById("addChildPersonal").style.display = "none";       // for start new message draw
         Persons.message.forEach(element => {
          this.createBlock(element, "Personal")
         });
     };
-
     // for chat private
     this.chat = (chatPersonal) => {
         chatPersonal.forEach((Person)=>{
@@ -288,7 +248,6 @@ var MessagePage = function(name) {
         
         !Person.isOnlain ? MessagePrivateUserImagOnlain.style.backgroundColor = "grey":MessagePrivateUserImagOnlain.style.backgroundColor = "green";
     };
-
 
     this.draw = async (data) => {
         if (!await User.menegAccsess())
@@ -310,4 +269,3 @@ MessagePage.prototype = Object.create(ElementData.prototype, {
         configurable: true
     }
 });
-

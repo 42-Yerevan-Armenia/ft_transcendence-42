@@ -9,20 +9,10 @@ app.use('/public', express.static('public'));
 
 app.use(express.static('.'));
 
-app.get("/",(req,res)=>{
-    return ;
-})
-app.get('/', (req, res) => {
-    res.sendFile(path.resolve('index.html'));
-});
-app.get('/index.html', (req, res) => {
-    res.sendFile(path.resolve('index.html'));
-});
-app.get('*', (req, res) => {
-    res.redirect("/")
-});
-
+app.get("/",(req,res)=>{return ;})
+app.get('/', (req, res) => {res.sendFile(path.resolve('index.html'));});
+app.get('/index.html', (req, res) => {res.sendFile(path.resolve('index.html'));});
+app.get('*', (req, res) => {res.redirect("/")});
 
 const port = process.env.PORT || 3000;
-
 app.listen(port, () => console.log('Server working...on port:'+port));

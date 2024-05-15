@@ -3,8 +3,6 @@ class HomeRight extends HtmlElement{
         super(".right")
         this._style.display = "none";
     };
-    
-
     draw(){
     }
 }
