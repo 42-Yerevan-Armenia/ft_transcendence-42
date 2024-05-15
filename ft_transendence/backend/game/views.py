@@ -14,15 +14,23 @@ from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 
 from channels.layers import get_channel_layer
+
 from asgiref.sync import async_to_sync, sync_to_async
 from django.db.models import Q
 
 import time
 import random
 
+# await channel_layer.send("channel_name", {
+#     "type": "chat.message",
+#     "text": "Hello there!",
+# })
+
 class LiveGames():
     _instance = None
-   
+    _channel_layer = get_channel_layer()
+    _channel_name = None
+
     def __new__(cls):
         if cls._instance is None:
             cls._channel_layer = get_channel_layer()
@@ -33,6 +41,7 @@ class LiveGames():
         return cls._instance
 
     def add_game(self, game_id, game):
+
         self.games.append(game)
         if self._group_name:
             async_to_sync(self._channel_layer.group_send)(
@@ -113,11 +122,15 @@ class LiveGames():
     def set_group_name(self, group_name):
         self._group_name = group_name
 
+
     def get_game(self, game_id):
         return self.games[game_id]
 
     def get_all_games(self):
         return self.games
+    
+    def set_channel_name(self, channel_name):
+        self._channel_name = channel_name
 
 class PlayerPool():
     def __init__(self):
