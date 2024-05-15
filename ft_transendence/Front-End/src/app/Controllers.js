@@ -3,19 +3,12 @@
 // const HostPort="http://10.12.11.1:8000"
 const HostPort="http://10.12.11.2:8000"
 
-
 let INTRA_API_URL="https://api.intra.42.fr/";
 let INTRA_API_UID="u-s4t2ud-0b391bc545deef39af3fb3f0afa178783df06731c0fe9c387812a11d36f51d90";
 let INTRA_REDIRECT_URI="http%3A%2F%2F10.12.11.2%3A3000%2F";
 
-// hovhannes_vardanyan1@mail.ru
-
-//#################################################################################   Controllers.js
-
-//queshon too backend Email exist or not and 
 //if create 
 async function ControllerCheckEmail(email) {
-  //debugger
   try {
     // const response = await fetch(`${HostPort}/registerpage?email=${email}`,{
     const response = await fetch(`${HostPort}/email_validation/`,{
@@ -25,17 +18,12 @@ async function ControllerCheckEmail(email) {
         "Content-Type": "application/json"
       }
     });
-
     if (!response.ok)
-    {
       throw new  Error("Error: Whene Email check status " + response.status)
-    }
     const result = await response.json();
 
-    if (!result || typeof result !== 'object') {
+    if (!result || typeof result !== 'object')
       throw new Error("Invalid response data");
-    }
-    //console.log( "Succsse++++++++++++++++++++    222222")
     return {state:true, message: result.message};
   }
   catch(err) {
@@ -52,9 +40,7 @@ async function ControllerCheckEmail(email) {
 //   'AuthToken': '123456'
 //  } // Fixed 'header' to 'headers'
 // });
-
 async function ControllerCheckReplayCode(code) {
-  //debugger
   try {
       const response = await fetch(`${HostPort}/confirm/`, {
           method: 'POST',
@@ -65,28 +51,18 @@ async function ControllerCheckReplayCode(code) {
       });
       if (!response.ok)
         throw new Error(response.statusText  + " " + response.status);
-
       const data = await response.json(); // Await the parsing of JSON data
-
-      if (!data || typeof data !== 'object') {
+      if (!data || typeof data !== 'object')
         throw new Error("Invalid response data");
-      }
-
-      //console.log( "Succsse++++++++++++++++++++    222222")
-
       return{state:true, "message": data };
   }
   catch (err) {
-    
     const error = err + "";
-    
     return {state:false, "message": error};
   }
 }
 
 async function ControllerSignUp(password, User) {
-  //debugger
-
   try {
     const response = await fetch(`${HostPort}/register/`, {
       method: 'POST',
@@ -95,28 +71,19 @@ async function ControllerSignUp(password, User) {
         "Content-Type": "application/json"
       }
     });
-
-    if (!response.ok) {
+    if (!response.ok)
       throw new Error(`Failed to update password. Status: ${response.status}`);
-    }
-
     const data = await response.json();
-
-    if (!data || typeof data !== 'object') {
+    if (!data || typeof data !== 'object')
       throw new Error("Invalid response data");
-    }
-    //console.log( "Succsse++++++++++++++++++++    222222")
     return { state: true, message: data };
-  } catch (error) {
+  }
+  catch (error) {
     console.error("Error:", error);
     return { state: false, message: error.message };
   }
 }
-
 async function ControllerPessPassword(password, User) {
-  //debugger
-
-
   try {
     const response = await fetch(`${HostPort}/password/`, {
       method: 'POST',
@@ -125,34 +92,20 @@ async function ControllerPessPassword(password, User) {
         "Content-Type": "application/json"
       }
     });
-
-    if (!response.ok) {
+    if (!response.ok)
       throw new Error(`Failed to update password. Status: ${response.status}`);
-    }
-
     const data = await response.json();
-
-    if (!data || typeof data !== 'object') {
+    if (!data || typeof data !== 'object')
       throw new Error("Invalid response data");
-    }
-    //console.log( "Succsse++++++++++++++++++++    11111")
-
     return { state: true, message: data };
-  } catch (error) {
+  } 
+  catch (error) {
     console.error("Error:", error);
     return { state: false, message: error.message };
   }
 }
-
-
 //fetch universal POST request
 async function FetchRequest(Tomethod, Torequest, ToObj) {
-  // debugger
-  //console.log("1----------------------------------------")
-  //console.log( "method : " + Tomethod);
-  //console.log( "request : " + Torequest);
-  //console.log( ToObj);
-  //console.log("2----------------------------------------")
   try {
     const response = await fetch(`${HostPort}/${Torequest}/`, {
       method: Tomethod,
@@ -161,34 +114,22 @@ async function FetchRequest(Tomethod, Torequest, ToObj) {
         "Content-Type": "application/json"
       }
     });
-
-    if (!response.ok) {
+    if (!response.ok)
       throw new Error(`Failed to ${response.message} Status: ${response.status}`);
-    }
-
     const data = await response.json();
-
-    if (!data || typeof data !== 'object') {
+    if (!data || typeof data !== 'object')
       throw new Error("Invalid response data");
-    }
-    //console.log("ControllerPessPassword  Succsse++++++++++++++++++++");
     return { state: true, message: data };
-  } catch (error) {
+  }
+  catch (error) {
     console.error("Error:", error);
     return { state: false, message: error.message };
   }
 }
-
-
 //fetch universal  GET request
 async function getFetchRequest(ToRequest) {
-  //console.log("1----------------------------------------")
-  //console.log( "request : " + ToRequest);
-  //console.log("2----------------------------------------")
-
   //get access tocken and id
   const ToObj = User.getAccessTocken();
-
   if (!ToObj || !ToObj.access)
     return null;
   const ToUser = ToObj.access;
@@ -200,35 +141,21 @@ async function getFetchRequest(ToRequest) {
         'Authorization': 'Bearer ' + ToUser
       }
     });
-
-    if (!response.ok) {
+    if (!response.ok)
       throw new Error(`Failed to ${response.message} Status: ${response.status}`);
-    }
-
     const data = await response.json();
-
-    if (!data || typeof data !== 'object') {
+    if (!data || typeof data !== 'object')
       throw new Error("Invalid response data");
-    }
-    //console.log("ControllerPessPassword  Succsse++++++++++++++++++++");
-
     return { state: true, message: data };
-  } catch (error) {
+  }
+  catch (error) {
     console.error("Error:", error);
     return { state: false, message: error.message };
   }
 }
-
-
-
 //fetch universal POST request
 async function putRequest(Tomethod, Torequest, ToObj) {
-  //console.log("1----------------------------------------")
-  //console.log( "method : " + Tomethod);
-  //console.log( "request : " + Torequest);
-  //console.log( ToObj);
   const token =  await User.getAccessTocken();
-  //console.log("2----------------------------------------")
   try {
     const response = await fetch(`${HostPort}/${Torequest}/`, {
       method: Tomethod,
@@ -238,46 +165,30 @@ async function putRequest(Tomethod, Torequest, ToObj) {
         'Authorization': 'Bearer ' + token.access
       }
     });
-
-    if (!response.ok) {
+    if (!response.ok)
       throw new Error(`Failed to ${response.message} Status: ${response.status}`);
-    }
-
     const data = await response.json();
-
-    if (!data || typeof data !== 'object') {
+    if (!data || typeof data !== 'object')
       throw new Error("Invalid response data");
-    }
-    //console.log("ControllerPessPassword  Succsse++++++++++++++++++++");
     return { state: true, message: data };
-  } catch (error) {
+  }
+  catch (error) {
     console.error("Error:", error);
     return { state: false, message: error.message };
   }
 }
-
-
-
 //fetch universal Get request prune
 async function getPureFetchRequest(Torequest) {
-  //console.log("1----------------------------------------")
-  //console.log( "request : " + Torequest);
-  //console.log("2----------------------------------------")
   try {
     const response = await fetch(`${HostPort}/${Torequest}/`)
-
-    if (!response.ok) {
+    if (!response.ok)
       throw new Error(`Failed to ${response.message} Status: ${response.status}`);
-    }
-
     const data = await response.json();
-
-    if (!data || typeof data !== 'object') {
+    if (!data || typeof data !== 'object')
       throw new Error("Invalid response data");
-    }
-    //console.log("ControllerPessPassword  Succsse++++++++++++++++++++");
     return { state: true, message: data };
-  } catch (error) {
+  }
+  catch (error) {
     console.error("Error:", error);
     return { state: false, message: error.message };
   }

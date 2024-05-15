@@ -11,11 +11,9 @@ class MidleHistoryGame extends HtmlElement{
         // Create outer container div
         const outerContainer = document.createElement('div');
         outerContainer.classList.add('FullHistoryTableBodyContainerPlayedGames');
-
         // Create inner container div for played games
         const innerContainer = document.createElement('div');
         innerContainer.classList.add('FullHistoryTablePlayedGames');
-
         // Create inner divs for date, win, lose, and mode
         const tableHeader = ['Date', 'Win', 'Lose', 'Mode'];
 
@@ -24,7 +22,6 @@ class MidleHistoryGame extends HtmlElement{
             a.textContent = tableHeader[i];
             innerContainer.appendChild(a);
         }
-        
         // Create inner divs for game content
         const contentContainer = document.createElement('div');
         contentContainer.classList.add('FullHistoryTableBodyPlayedGamesContent');
@@ -40,27 +37,21 @@ class MidleHistoryGame extends HtmlElement{
 
         const modeContentDiv = document.createElement('div');
         modeContentDiv.textContent = modeContent;
-
         // Append date, win, lose, and mode content divs to content container div
         contentContainer.appendChild(dateContentDiv);
         contentContainer.appendChild(winContentDiv);
         contentContainer.appendChild(loseContentDiv);
         contentContainer.appendChild(modeContentDiv);
-
         // Append inner containers to outer container
         outerContainer.appendChild(innerContainer);
         outerContainer.appendChild(contentContainer);
-
         // Append outer container to the document body or any desired parent element
         // document.body.appendChild(outerContainer);
         return (outerContainer);
-
     }
-
 
     createFullHistoryTableBodyUser(id, name, img, preference, points, matches) {
         // Create elements
-        //debugger
         const divFullHistoryTableBodyUser = document.createElement("div");
         divFullHistoryTableBodyUser.classList.add("FullHistoryTableBodyUser");
         divFullHistoryTableBodyUser.id = "FullHistoryTableBodyUserId";
@@ -127,7 +118,6 @@ class MidleHistoryGame extends HtmlElement{
         return (divFullHistoryTableBodyUser);
     }
 
-
     createFullHistory () {
         // Create elements
         const divFullHistory = document.createElement("div");
@@ -176,7 +166,6 @@ class MidleHistoryGame extends HtmlElement{
         
         const divFullHistoryContainerTableAll = document.createElement("div");
         divFullHistoryContainerTableAll.classList.add("FullHistoryContainerTableALL");
-        
         // Append elements
         divFullHistoryTable.appendChild(divId);
         divFullHistoryTable.appendChild(divPlayerList);
@@ -196,7 +185,6 @@ class MidleHistoryGame extends HtmlElement{
         divFullHistoryProfil.appendChild(divFullHistoryEdit);
         
         divFullHistory.appendChild(divFullHistoryProfil);
-        
         // Append the created structure to the document body or any other desired parent element
         return (divFullHistory);
     }
@@ -227,11 +215,4 @@ class MidleHistoryGame extends HtmlElement{
         await this.listUsers();
     }
 }
-
-   
-    
-    
-
-    
-    // document.getElementById("FullHistoryTableBodyUserId").appendChild(createFullHistoryTableBodyContainerPlayedGames("0", "2", "3", "4"));
-    
+// document.getElementById("FullHistoryTableBodyUserId").appendChild(createFullHistoryTableBodyContainerPlayedGames("0", "2", "3", "4"));

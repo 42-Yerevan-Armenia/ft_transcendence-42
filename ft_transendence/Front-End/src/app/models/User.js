@@ -51,16 +51,12 @@ class USER {
       // check signin
       if (!await this.menegAccsess())
         return false
-
       //get for backend data
       const dataUser = await getFetchRequest("api/v1/persons/" + this._Id);
-
       //get data from dataUser
       const {id, name, nickname, email, image, gamemode, twofactor} = dataUser.message;
       if (!id || !name || !nickname || !email || !image)
         return false;
-
-
       this._Name = name;
       this._Nickname = nickname;
       this._Email = email;
@@ -72,7 +68,6 @@ class USER {
       return true
     }
 
-
     setData(data){
       // debugger
       this._Name = data.name;
@@ -82,26 +77,21 @@ class USER {
       this._Gamemode = data.gamemode;
       this._Twofactor = data.twofactor;
     }
-
-
     //when refresh_token is not expired call for update access
     accessRefresh = async () => {
       const res = await FetchRequest("POST", "api/v1/token/refresh", {"refresh" : this._geRefresh});    //call for update access
-
       this.date = new Date();
-
-      if (res?.state)
-      {
+      if (res?.state) {
         myStorages.setAccsessTockenLoading(res?.message?.data)
         return true;
       }
-      else
-      {
+      else {
         myStorages.longOut();
         ManageAllPage.Manage("Home");
         return false;
       }
     }
+
     async setDataFromBeckendTackIntra42(DataItem){
       this._Name = DataItem.user.name;
       this._Nickname = DataItem.user.nickname
@@ -118,16 +108,13 @@ class USER {
   async menegAccsess() {
     if (!this.checkSignIn())
       return false;
-    if(new Date().getMinutes() - this.date.getMinutes() > 1440)
-    {
+    if (new Date().getMinutes() - this.date.getMinutes() > 1440) {
       if (await this.accessRefresh())
         true
-      else{
+      else
         false;
-      }
     }
-    else {
+    else
       return true;
-    }
   }
 }

@@ -1,19 +1,11 @@
-//-------------------------------------------------       browser storage     ----------------------------------------
-
-//manag browser storage
 const myStorages = {
     setStorageLogin(tockens) {
-      // debugger
-      // debugger
-
       console.log("tockens     --------   " + tockens)
       console.log(tockens);
       const {refresh, success, access} = tockens;
   
       if (!success || !access || !refresh || !tockens.user)
         return false;
-  
-  
       User._Name = tockens.user.name;
       User._Nickname = tockens.user.nickname;
       User._ID = tockens.user.id;
@@ -42,7 +34,6 @@ const myStorages = {
     },
     
     async longOut() {
-      //debugger
       // api/v1/logout/
       const dataUrs={
         "pk":User._Id
@@ -52,15 +43,10 @@ const myStorages = {
       localStorage.removeItem("id");
       localStorage.removeItem("access");
       localStorage.removeItem("refresh");
-      
-
-
-      
-
       User.Destruc();
       window.location.search = ""
     },
-    
+
     checkSignIn() {
       this._getAccess = localStorage.getItem("access");
       this._geRefresh = localStorage.getItem("refresh");
@@ -71,8 +57,6 @@ const myStorages = {
       else
         this._SignIn = false;
       return this._SignIn;
-
     }
   }
-  
   

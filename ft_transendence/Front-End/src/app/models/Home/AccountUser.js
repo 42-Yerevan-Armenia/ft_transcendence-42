@@ -44,8 +44,7 @@ class AccountUser extends HtmlElement{
        this.profilHeader();
 
       const friends = await getFetchRequest("api/v1/friendlist/" + this.State._Id);
-      if (friends && friends.state)
-      {
+      if (friends && friends.state) {
         friends.message.friends.forEach(async item => {
             this.frendsdrawScreen(item);
         });

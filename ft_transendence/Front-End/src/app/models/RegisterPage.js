@@ -9,9 +9,7 @@ class RegisterPage extends HtmlElement {
       this._style.display = "none";
     }
     
-    DisplayBlock(){
-      this._style.display = "block";
-    }
+    DisplayBlock(){this._style.display = "block";}
   
     async RegistersWithEmail() {
       let err = document.querySelector(".RegisterErrorHandling");
@@ -19,7 +17,6 @@ class RegisterPage extends HtmlElement {
       let value = _RegisterPageinput.value;
   
       const ContextValidation = ValidateEmail(value);
-  
       //check your email address is correct
       if (ContextValidation[0] !== 'V') {
         err.style.color = "red";
@@ -28,7 +25,6 @@ class RegisterPage extends HtmlElement {
       }
       else {
         const result  = await ControllerCheckEmail(value)
-        
         if (result.state){
           err.style.color = "blue";
           err.innerHTML = ContextValidation;
@@ -42,7 +38,5 @@ class RegisterPage extends HtmlElement {
       return false;
       }
     }
-    draw(){
-      
-    }
+    draw(){}
   };
