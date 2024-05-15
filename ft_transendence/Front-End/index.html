@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- Home -->
@@ -56,7 +57,8 @@
     <body class="bodyClassAllForGame">
         <div class="addBodyStile">
         </div>
-        <script  src="./src/app/models/Home/game/game.js"></script>
+
+       
         <main id="mainSectionUsually">
 
             <!-- Confirm -->
@@ -88,10 +90,6 @@
                     &copy; 2024 all rights reserved
                 </footer>
             </div>
-
-
-
-
 
             <!-- SignupPage -->
             <div class="SignupPage">
@@ -127,8 +125,6 @@
                     &copy; 2024 all rights reserved
                 </footer>
             </div>
-
-
             
             <!-- password -->
             <div class="PasswordPage">
@@ -156,7 +152,6 @@
                 </footer>
             </div>
 
-
             <!-- Reset -->
             <div class="ResetPage">
                 <div class="ResetPageConteiner">
@@ -176,7 +171,6 @@
                     &copy; 2024 all rights reserved
                 </footer>
             </div>
-
 
             <!-- Login -->
             <div class="LoginPage">
@@ -239,10 +233,6 @@
                     &copy; 2024 all rights reserved
                 </footer>
             </div>
-
-
-
-
 
             <!-- Home -->
             <div class="homeSection">
@@ -1284,42 +1274,53 @@
             </div>
 
         </main>
-        <script  src="./public/playIcon.js"></script>
-        <script  src="./src/app/models/HtmlElement.js"></script>
-        <script  src="./src/app/Utils.js"></script>
-        <script  src="./src/app/MyStorages.js"></script>
-        <script  src="./src/app/Controllers.js"></script>
-        
-        <script src="./src/app/models/Home/HomeLeft.js"></script>
-        <script src="./src/app/models/Home/AccountUser.js"></script>
-        <script  src="./src/app/models/Home/HomeRight.js"></script>
-        <script src="./src/app/models/Home/Middle.js"></script>
-        <script src="./src/app/models/Home/MidleCup.js"></script>
-        <script src="./src/app/models/Home/MidleCommunity.js"></script>
-        <script src="./src/app/models/Home/JoinList.js"></script>
-        <script src="./src/app/models/Home/MidleHistoryGame.js"></script>
-        <script src="./src/app/models/Home/Profile.js"></script>
-        <script src="./src/app/models/Home/JoinListInvit.js"></script>
-        
-        <script  id="GameRoomNewClientID"></script>
-        <script src="./src/app/models/Home/MidleSettings.js"></script>
-        
-        <script src="./src/app/models/User.js"></script>
-        <script src="./src/app/models/SignupPage.js"></script>
-        <script src="./src/app/models/ResetPage.js"></script>
-        <script src="./src/app/models/RegisterPage.js"></script>
-        <script src="./src/app/models/PasswordPage.js"></script>
-        <script src="./src/app/models/LoginPage.js"></script>
-        <script src="./src/app/PagesMeneger.js"></script>
-        <script  src="./src/app/models/Chat.js"></script>
-        <script  src="./src/app/models/Messag.js"></script>
-        <script src="./src/app/models/HomePage.js"></script>
-        <script src="./src/app/models/ConfirmPage.js"></script>
-        
-        <script  src="./src/app/managePages.js"></script>
-        <script src="./src/app/socketListener.js"></script>
-        <script src="./src/app/eventListener.js"></script>
-        <script  src="./src/app/load.js"></script>
+         <!-- Scripting -->
+            <script  src="./public/playIcon.js"></script>
+            <script  src="./src/app/models/HtmlElement.js"></script>
+            <script  src="./src/app/Utils.js"></script>
+            <script  src="./src/app/MyStorages.js"></script>
+            <script  src="./src/app/Controllers.js"></script>
             
+            <script src="./src/app/models/Home/HomeLeft.js"></script>
+            <script src="./src/app/models/Home/AccountUser.js"></script>
+            <script  src="./src/app/models/Home/HomeRight.js"></script>
+            <script src="./src/app/models/Home/Middle.js"></script>
+            <script src="./src/app/models/Home/MidleCup.js"></script>
+            <script src="./src/app/models/Home/MidleCommunity.js"></script>
+            <script src="./src/app/models/Home/JoinList.js"></script>
+            <script src="./src/app/models/Home/MidleHistoryGame.js"></script>
+            <script src="./src/app/models/Home/Profile.js"></script>
+            <script src="./src/app/models/Home/JoinListInvit.js"></script>
+            
+            <script  id="GameRoomNewClientID"></script>
+            <script src="./src/app/models/Home/MidleSettings.js"></script>
+            
+            <script src="./src/app/models/User.js"></script>
+            <script src="./src/app/models/SignupPage.js"></script>
+            <script src="./src/app/models/ResetPage.js"></script>
+            <script src="./src/app/models/RegisterPage.js"></script>
+            <script src="./src/app/models/PasswordPage.js"></script>
+            <script src="./src/app/models/LoginPage.js"></script>
+            <script src="./src/app/PagesMeneger.js"></script>
+            <script  src="./src/app/models/Chat.js"></script>
+            <script  src="./src/app/models/Messag.js"></script>
+            <script src="./src/app/models/HomePage.js"></script>
+            <script src="./src/app/models/ConfirmPage.js"></script>
+            
+            <script  src="./src/app/managePages.js"></script>
+            <script type="importmap">
+                {
+                "imports": {
+                    "three": "https://unpkg.com/three@latest/build/three.module.js",
+                    "three/addons/": "https://unpkg.com/three@latest/examples/jsm/"
+                }
+                }
+            </script>
+            <script type="module" src="./src/app/socketListener.js"></script>
+            <script type="module" src="./src/app/eventListener.js"></script>
+            <script type="module" src="./src/app/load.js"></script>
+            <script type="module" src="./src/app/models/Home/game/pongGame.js"></script>
+            <script type="module" src="./src/app/models/Home/game/game.js"></script>
+        <!-- End Scripting -->
     </body>
 </html>

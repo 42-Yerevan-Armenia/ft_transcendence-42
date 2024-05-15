@@ -1,33 +1,8 @@
-let isStarted = false;
+import {PongGame} from "./pongGame.js";
 
-let uuid = function(){
-    return Array
-    .from(Array(16))
-    .map(e => Math.floor(Math.random() * 255)
-    .toString(16)
-    .padStart(2,"0"))
-    .join('')
-    .match(/.{1,4}/g)
-    .join('-')
-}
+var gameInstance = new PongGame();
 
-const user = {
-    "id": uuid(),
-}
-
-function movePaddle(paddle, direction, max_paddle_y, paddle_step) {
-    // Delayed execution after 2000 milliseconds (2 seconds)
-    const paddleY = parseInt(paddle.style.top, 10);
-    const paddleHeight = parseInt(paddle.style.height, 10);
-    if (direction == "down" && paddleY + paddleHeight < max_paddle_y) {
-        paddle.style.top = (paddleY + paddle_step) + "px";
-    }
-    else if  (direction == "up" && paddleY > 0) {
-        paddle.style.top = (paddleY - paddle_step) + "px";
-    }
-}
-
-async function pongGame(objUser ,gameid) {
+async function pongGamelol(objUser ,gameid) {
     if (isStarted)
         return;
     function isOpen(ws) { return ws.readyState === ws.OPEN }
@@ -284,3 +259,5 @@ let ws = new WebSocket("ws://" + HostPort.slice(7) + "/ws/game/" + gameId)
         }
     }
 }
+
+export {pongGamelol};

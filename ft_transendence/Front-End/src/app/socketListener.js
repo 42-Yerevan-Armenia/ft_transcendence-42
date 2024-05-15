@@ -1,3 +1,5 @@
+import {pongGamelol} from "./models/Home/game/game.js";
+
 var Join_Ws = new WebSocket("ws://" + HostPort.slice(7) + "/ws/joinlist/")
 
 console.log("HostPort.slice(7) =" + HostPort.slice(7))
@@ -50,7 +52,7 @@ Join_Ws.onmessage = message => {
                     body.appendChild(gameOnHtml)
                 }
                 //call game function for start game
-                await pongGame(User, element.game_room.room_id);
+                await pongGamelol(User, element.game_room.room_id);
             }
         });
     }

@@ -6,6 +6,8 @@ from .models import User, Person, GameRoom, History
 from game.models import GameInvite
 from friendship.models import Friend, FriendshipRequest
 
+#TODO 42 intra user in Serializer
+
 class UserSerializer(serializers.ModelSerializer):
     friends = serializers.SerializerMethodField()
     friendship_requests = serializers.SerializerMethodField()
