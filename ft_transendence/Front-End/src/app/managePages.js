@@ -7,10 +7,6 @@ var Home = new HomePage();
 var Password = new PasswordPage();
 var SignUp = new SignupPage();
 
-
-
-
-
 var ManageAllPage = {
     Manage: async function(pageName) {
       await  ManageAllPage.pages.forEach(async (element) => {
@@ -19,9 +15,9 @@ var ManageAllPage = {
             if (key === pageName) {
                 obj.DisplayBlock();
                 await obj.draw();
-            } else {
-                await obj.DisplayNone();
             }
+            else
+                await obj.DisplayNone();
         });
     },
     pages: [
@@ -34,8 +30,6 @@ var ManageAllPage = {
         {"ResetPage": Reset}           //http://10.12.11.1:3000/password
     ]
 };
-
-
 //manage Home Page in middle sections
 //give name section name what we need show in middle Home->Midl section
 var ManageMidle = {
@@ -45,9 +39,9 @@ var ManageMidle = {
             if (key === midleName) {
                 obj.DisplayBlock();
                 await obj.draw();
-            } else {
-                obj.DisplayNone();
             }
+            else
+                obj.DisplayNone();
         });
     },
     pages: [
@@ -63,7 +57,6 @@ var ManageMidle = {
     ]
 };
 
-
 var ManageRight = {
     Manage: async function(name) {
         await ManageRight.pages.forEach(async (element) => {
@@ -72,9 +65,9 @@ var ManageRight = {
             if (key === name) {
                 obj.DisplayBlock();
                 await obj.draw();
-            } else {
-                obj.DisplayNone();
             }
+            else
+                obj.DisplayNone();
         });
     },
     pages: [

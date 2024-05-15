@@ -17,9 +17,6 @@ class MidleProfile extends HtmlElement {
     _ProfileMidleFooterDiv  = document.querySelector(".ProfileMidleFooterDiv");
     _ProfileMidleBodyItems = document.querySelector(".ProfileMidleBodyItems");
 
-
-     
-
     async addEventListenerAcceptOrReject(className){
       const nodsAcceptsOrRejects = document.querySelectorAll(className);
 
@@ -30,15 +27,13 @@ class MidleProfile extends HtmlElement {
           const sendFrend = {
             sender_id: id
           }
-
-          if (className == ".AcceptRejectAccept")
-          {
+          if (className == ".AcceptRejectAccept") {
             // path('api/v1/accept/<int:pk>/', AcceptFriendRequest.as_view()),  
             const friendAdd = await putRequest("POST", "api/v1/accept/" + User._Id, sendFrend)
             if (!friendAdd.state)
               return;
           }
-          else{
+          else {
             // path('api/v1/reject/<int:pk>/', RejectFriendRequest.as_view()),
             const friendAdd = await putRequest("POST", "api/v1/reject/" + User._Id, sendFrend)
             if (!friendAdd.state)
@@ -48,8 +43,6 @@ class MidleProfile extends HtmlElement {
         })
       })
     }
-
-
 /* 
   1<div class="ProfileMidleFooterUser">
     <img src="./public/Grup2.png" alt="Friends" class="ProfileMidleFooterUserImage">
@@ -64,8 +57,6 @@ class MidleProfile extends HtmlElement {
       this._ProfileMidleFooterDiv.innerHTML = "";
       this._ProfileMidleBodyItems.innerHTML = "";
     }
-  
-  
   //who wants to be added to your friends list
   // 1<div class="ProfileMidleBodyItem">
   // 2  <div class="ProfileMidleBodyItemConteiner">
@@ -88,13 +79,12 @@ class MidleProfile extends HtmlElement {
   // </div>
   // Request for Accept Ignore
     profilBody(Item){
-      //1  ProfileMidleBodyItem
       const div1 = document.createElement("div");
       div1.setAttribute("class","ProfileMidleBodyItem");
-      //2
+
       const div2 = document.createElement("div");
       div2.setAttribute("class","ProfileMidleBodyItemConteiner");
-      //2_1
+
       const div2_1 = document.createElement("div");
       div2_1.setAttribute("class","ProfileMidleBodyImage");
       const div2img = document.createElement("img");
@@ -105,16 +95,15 @@ class MidleProfile extends HtmlElement {
       div2img.setAttribute("alt", "Invite");
       div2_1.appendChild(div2img);
       div2.appendChild(div2_1);
-      //2_2
+
       const div2_2 = document.createElement("p");
       div2_2.setAttribute("class", "ProfileMidleBodyUser");
       div2_2.innerHTML = Item.name;
       div2.appendChild(div2_2);
-      //2_3
       const div2_3 = document.createElement("div");
+
       div2_3.setAttribute("class", "AcceptReject");
       
-      //2_Accept
       const div2_Accept = document.createElement("div");
       div2_Accept.setAttribute("class","AcceptRejectAccept");
       div2_Accept.setAttribute("id","AcceptRejectAccept:"+Item.id);
@@ -151,35 +140,27 @@ class MidleProfile extends HtmlElement {
     async getFriends(){
       this.profilHeader();
       const users = await getFetchRequest("users");
-      
       // Of all the users, only my data was taken
       const UserData = users.message.find((e)=>e.id == User._Id);
-
       const friendship_requests = UserData.friendship_requests;
 
-      if (friendship_requests)
-      {
+      if (friendship_requests) {
         friendship_requests.forEach((item)=>{
           if (!item.rejected)
           this.profilBody(item);
         })
         //event listener in to friendship requests Accept
         this.addEventListenerAcceptOrReject(".AcceptRejectAccept");
-
         //event listener in to friendship requests Reject
         this.addEventListenerAcceptOrReject(".AcceptRejectReject");
-
       }
-  
       const friends = await getFetchRequest("api/v1/friendlist/" + User._Id);
-      if (friends && friends.state)
-      {
+      if (friends && friends.state) {
         friends.message.friends.forEach(async item => {
           this.frendsdrawScreen(item);
         });
       }
     }
-
     async draw(){
       await this.getFriends();
     }

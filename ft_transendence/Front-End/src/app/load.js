@@ -10,7 +10,6 @@ function handleMainLoad(User) {
             User._SignIn = false;
         return User._SignIn;
 }
-  
 // Select the main element
 const mainElement = document.querySelector("main");
 
@@ -31,28 +30,15 @@ if (mainElement) {
 } else {
     console.log("Main element not found");
 }
-
-
-
-
 "dev": "npx http-server . -p 3000"
 */
-
-
-
-
-
 document.addEventListener("DOMContentLoaded", async () => {
-// debugger
     console.log(" console.log(window.history);")
     console.log(window.history);
-//debugger
-    if(User.checkSignIn())
-    {
+    if(User.checkSignIn()) {
         //once expiration a new refresh token is generated
         //set data from backend
-        if (await User.menegAccsess())
-        {
+        if (await User.menegAccsess()) {
             if (await User.setDataFromBackEnd())
                 console.log("true")
             else
@@ -61,13 +47,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         else
             await myStorages.longOut();
     }
-    else
-    {
-
+    else {
         debugger
-
         const code = window.location.search?.slice(6);
-
         if (code)
         {
             User.url42schools = code;

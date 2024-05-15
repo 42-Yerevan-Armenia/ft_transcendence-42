@@ -16,8 +16,8 @@ class LoginPage extends HtmlElement {
       const ErrorPassword = document.querySelector(".LoginPasswordError");
       const ErrorEmail = document.querySelector(".LoginEmailError");
   
-      if (!this._LoginEmail?.value)
-      {//if empty email
+      if (!this._LoginEmail?.value) {
+        //if empty email
         ErrorEmail.style.color = "red";
         ErrorEmail.innerHTML = "Email must not be empty";
         return false;
@@ -36,7 +36,6 @@ class LoginPage extends HtmlElement {
           return false;
         }
       }
-  
       if (!this._LoginPassword?.value) {
         ErrorPassword.style.color = "red";
         ErrorPassword.innerHTML = "Password must not be empty";
@@ -53,9 +52,7 @@ class LoginPage extends HtmlElement {
       this.DisplayBlock();
       let LoginPageinput = document.querySelector(".LoginPageinput");
       if (email.length > 0)
-      {
         LoginPageinput.value = email;
-      }
     }
     Get42Connect = async () => {
       debugger
@@ -68,14 +65,11 @@ class LoginPage extends HtmlElement {
       const res = await FetchRequest("POST","api/v1/login", JSON.stringify({
         "code": User.url42schools
       }))
-      if (res.state)
-      {
+      if (res.state) {
         console.log("respons == " + JSON.stringify(res, undefined, 2));
         myStorages.setAccsessTocken(res.message?.data);
         User.setDataFromBeckendTackIntra42(res.message?.data)
       }
     }
-    draw() {
-      
-    }
+    draw(){}
 }

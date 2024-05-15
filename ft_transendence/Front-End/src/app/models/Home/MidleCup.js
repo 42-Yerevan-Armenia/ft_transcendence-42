@@ -18,16 +18,14 @@ class MidleCub extends HtmlElement {
     //   5<div class="MidleCubTableBodyNAme">14</div>
     //   6<div class="MidleCubTableBodyNAme">150</div>
     // </div>
-
     midleCubItem(i, Item){
-      //1
       const div1 = document.createElement("div");
       div1.setAttribute("class", "MidleCubTableBody");
-      //2
+
       const div2 = document.createElement("div");
       div2.setAttribute("class", "MidleCubTableBodyNAme");
       div2.innerHTML = i;
-      //3
+
       const div3 =  document.createElement("div");
       div3.setAttribute("class", "MidleCubTd");
       const img = document.createElement("img");
@@ -42,18 +40,19 @@ class MidleCub extends HtmlElement {
       div3div.innerHTML = Item.nickname;
       div3.appendChild(img);
       div3.appendChild(div3div);
-      //4
+
       const div4 = document.createElement("div");
       div4.setAttribute("class", "MidleCubTableBodyNAme");
       div4.innerHTML = Item.wins;
-      //5
+
       const div5 = document.createElement("div");
       div5.setAttribute("class", "MidleCubTableBodyNAme");
       div5.innerHTML = Item.loses;
-      //6
       const div6 = document.createElement("div");
+
       div6.setAttribute("class", "MidleCubTableBodyNAme");
       div6.innerHTML = Item.matches;
+
       div1.appendChild(div2);
       div1.appendChild(div3);
       div1.appendChild(div4);
@@ -62,9 +61,6 @@ class MidleCub extends HtmlElement {
       const domDat = document.querySelector(".MidleCubEditSection")
       domDat.appendChild(div1);
     }
-
-
-
   //Section Cup Drow DOM
   async setHero(){
     let i = 1;
