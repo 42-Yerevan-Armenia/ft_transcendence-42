@@ -53,6 +53,8 @@ class MidleProfile extends HtmlElement {
       document.querySelector("#ProfileMidleHeaderMainAvatarImage").src = `data:image/png;base64,${User._Image}`;
       document.querySelector(".ProfileMidleHeaderMainDataName").innerHTML = User._Name;
       document.querySelector(".ProfileMidleHeaderMainDataNickName").innerHTML = User._Nickname;
+      document.querySelector("#ProfileMidleHeaderToInvit1id1").innerHTML = User._WinCount || 0;
+      document.querySelector("#ProfileMidleHeaderToInvit2id2").innerHTML = User._LoseCount || 0;
 
       this._ProfileMidleFooterDiv.innerHTML = "";
       this._ProfileMidleBodyItems.innerHTML = "";
@@ -138,6 +140,7 @@ class MidleProfile extends HtmlElement {
       this._ProfileMidleFooterDiv.appendChild(divProf);
     }
     async getFriends(){
+      debugger
       this.profilHeader();
       const users = await getFetchRequest("users");
       // Of all the users, only my data was taken

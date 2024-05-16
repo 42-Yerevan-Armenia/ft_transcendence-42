@@ -104,8 +104,9 @@ async function ControllerPessPassword(password, User) {
     return { state: false, message: error.message };
   }
 }
-//fetch universal POST request
+//fetch universal POST request ❌
 async function FetchRequest(Tomethod, Torequest, ToObj) {
+  debugger
   try {
     const response = await fetch(`${HostPort}/${Torequest}/`, {
       method: Tomethod,
@@ -126,8 +127,9 @@ async function FetchRequest(Tomethod, Torequest, ToObj) {
     return { state: false, message: error.message };
   }
 }
-//fetch universal  GET request
+//fetch universal  GET request ❌
 async function getFetchRequest(ToRequest) {
+  debugger
   //get access tocken and id
   const ToObj = User.getAccessTocken();
   if (!ToObj || !ToObj.access)
@@ -153,8 +155,31 @@ async function getFetchRequest(ToRequest) {
     return { state: false, message: error.message };
   }
 }
-//fetch universal POST request
+// async function getFetchRequest(ToRequest) {
+//   debugger
+//   try {
+//     const response = await fetch(`${HostPort}/${ToRequest}/`, {
+//       method: "GET",
+//       headers: {
+//         "Content-Type": "application/json",
+//       }
+//     });
+//     if (!response.ok)
+//       throw new Error(`Failed to fetch. Status: ${response.status}`);
+//     const data = await response.json();
+//     if (!data || typeof data !== 'object')
+//       throw new Error("Invalid response data");
+//     return { state: true, message: data };
+//   }
+//   catch (error) {
+//     console.error("Error:", error);
+//     return { state: false, message: error.message };
+//   }
+// }
+
+//fetch universal POST request ❌
 async function putRequest(Tomethod, Torequest, ToObj) {
+  debugger
   const token =  await User.getAccessTocken();
   try {
     const response = await fetch(`${HostPort}/${Torequest}/`, {
@@ -177,8 +202,9 @@ async function putRequest(Tomethod, Torequest, ToObj) {
     return { state: false, message: error.message };
   }
 }
-//fetch universal Get request prune
+//fetch universal Get request prune ❌
 async function getPureFetchRequest(Torequest) {
+  debugger
   try {
     const response = await fetch(`${HostPort}/${Torequest}/`)
     if (!response.ok)

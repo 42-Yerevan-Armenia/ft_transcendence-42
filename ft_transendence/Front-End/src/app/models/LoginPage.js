@@ -66,8 +66,9 @@ class LoginPage extends HtmlElement {
         "code": User.url42schools
       }))
       if (res.state) {
+        debugger
         console.log("respons == " + JSON.stringify(res, undefined, 2));
-        myStorages.setAccsessTocken(res.message?.data);
+        myStorages.setAccsessTockenForIntra(res.message?.data);
         User.setDataFromBeckendTackIntra42(res.message?.data)
       }
     }

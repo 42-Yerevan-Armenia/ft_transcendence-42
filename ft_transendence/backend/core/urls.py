@@ -2,7 +2,7 @@ from django.urls import path, include
 from core import views as core_views
 from core.views import (
     UserAPIView,
-    UsersAPIView,
+    PersonsAPIView,
     EmailValidation, 
     Confirmation, 
     Register, 
@@ -35,7 +35,7 @@ urlpatterns = [
     path('api/v1/logout/<int:pk>/', Logout.as_view()),
     path('api/v1/home/<int:pk>/', Home.as_view()),
     path('users/', UserAPIView.as_view()),
-    path('api/v1/persons/<int:pk>/', UsersAPIView.as_view()),
+    path('api/v1/persons/<int:pk>/', PersonsAPIView.as_view()),
     path('api/v1/profile/<int:pk>/', Profile.as_view()),
     path('api/v1/leaderboard/<int:pk>/', Leaderboard.as_view()),
     path('api/v1/joinlist/<int:pk>/', JoinList.as_view()),

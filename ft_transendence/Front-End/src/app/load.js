@@ -33,6 +33,7 @@ if (mainElement) {
 "dev": "npx http-server . -p 3000"
 */
 document.addEventListener("DOMContentLoaded", async () => {
+    debugger
     console.log(" console.log(window.history);")
     console.log(window.history);
     if(User.checkSignIn()) {
@@ -56,6 +57,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             await Login.Post42ConnectBackend();
         }
     }
+    debugger
     await ManageAllPage.Manage("Home");
 });
 

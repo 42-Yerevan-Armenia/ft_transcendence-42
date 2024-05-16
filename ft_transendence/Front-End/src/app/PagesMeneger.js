@@ -1,7 +1,7 @@
 // Stack to store navigation history
 // {page:1, title: "Home", href: document.location.href,path :document.location.pathname}
 var navigationHistory = [];
-
+// debugger
 // create document click that watches the nav links only
 const links = document.querySelectorAll("a");
 

@@ -50,17 +50,17 @@ class MidleHistoryGame extends HtmlElement{
         return (outerContainer);
     }
 
-    createFullHistoryTableBodyUser(id, name, img, preference, points, matches) {
+    createFullHistoryTableBodyUser(Item) {
         // Create elements
         const divFullHistoryTableBodyUser = document.createElement("div");
         divFullHistoryTableBodyUser.classList.add("FullHistoryTableBodyUser");
-        divFullHistoryTableBodyUser.id = "FullHistoryTableBodyUserId";
+        divFullHistoryTableBodyUser.id = Item.id;
 
         const divFullHistoryTableBody = document.createElement("div");
         divFullHistoryTableBody.classList.add("FullHistoryTableBody");
 
         const divNumber = document.createElement("div");
-        divNumber.innerHTML = "<p>" + id + "</p>";
+        divNumber.innerHTML = "<p>" + Item.id + "</p>";
 
         const divFullHistoryPlayerList = document.createElement("div");
         divFullHistoryPlayerList.classList.add("FullHistoryPlayerList");
@@ -73,19 +73,19 @@ class MidleHistoryGame extends HtmlElement{
         imgUser.width = "40";
         imgUser.height = "40";
         imgUser.alt = "Users";
-        imgUser.classList.add("FullHistoryTableImageBody");
+        imgUser.setAttribute("class", "FullHistoryTableImageBody");
 
         const pName = document.createElement("p");
-        pName.textContent = name;
+        pName.textContent = Item.name;
 
         const divPreference = document.createElement("div");
-        divPreference.innerHTML = "<p>" + preference + "</p>";
+        divPreference.innerHTML = "<p>" + Item.preference + "</p>";
 
         const divNumber1 = document.createElement("div");
-        divNumber1.innerHTML = "<p>" + points + " </p>";
+        divNumber1.innerHTML = "<p>" + Item.points + " </p>";
 
         const divNumber2 = document.createElement("div");
-        divNumber2.innerHTML = "<p>" + matches + "</p>";
+        divNumber2.innerHTML = "<p>" + Item.matches + "</p>";
 
         const divFullHistoryTableBodyMoreDiv = document.createElement("div");
         divFullHistoryTableBodyMoreDiv.id = "FullHistoryTableBodyMoreDiv";
@@ -95,8 +95,9 @@ class MidleHistoryGame extends HtmlElement{
         btnFullHistoryTableBodyMore.id = "FullHistoryTableBodyMore";
 
         const imgButtonU = document.createElement("img");
-        imgButtonU.src = "./public/ButtonU.png";
-        imgButtonU.classList.add("FullHistoryTableBodyNAmeImg");
+        // imgButtonU.src = "./public/ButtonU.png";
+        imgButtonU.src = Item.image;
+        imgButtonU.setAttribute("class","FullHistoryTableBodyNAmeImg");
 
         // Append elements
         divFullHistoryTableBody.appendChild(divNumber);
@@ -189,24 +190,21 @@ class MidleHistoryGame extends HtmlElement{
         return (divFullHistory);
     }
     appandDiv(user){
-        const FullHistoryTableBodyUser = this.createFullHistoryTableBodyUser(1);
-        const FullHistoryTableBodyUser1 = this.createFullHistoryTableBodyUser(2);
-        // FullHistory.appendChild(FullHistoryTableBodyUser);
+        const FullHistoryTableBodyUser = this.createFullHistoryTableBodyUser(user);
+        
         this.FullHistory.children[0].appendChild(FullHistoryTableBodyUser);
-        this.FullHistory.children[0].appendChild(FullHistoryTableBodyUser1);
-        FullHistoryTableBodyUser1.appendChild(this.createFullHistoryTableBodyContainerPlayedGames("0", "2", "3", "4"));
-        FullHistoryTableBodyUser1.appendChild(this.createFullHistoryTableBodyContainerPlayedGames("0", "2", "3", "4"));
-        // document.getElementsByClassName("FullHistoryProfil").appendChild(FullHistoryTableBodyUser);
+
+
         FullHistoryTableBodyUser.appendChild(this.createFullHistoryTableBodyContainerPlayedGames("0", "2", "3", "4"));
         document.body.appendChild(this.FullHistory);
     }
     async listUsers(){
-        const history = await getFetchRequest("api/v1/joinlist/" + User._Id);
+        const history = await getFetchRequest("api/v1/history/" + User._Id);
 
-        if (history && history.state && history.message.game_rooms)
+        if (history && history.state && history.message)
         {
             //history.message
-            history?.message?.game_rooms?.forEach(e => {
+            history?.message?.forEach(e => {
                 this.appandDiv(e);
             });
         }
