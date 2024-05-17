@@ -140,7 +140,7 @@ class MidleProfile extends HtmlElement {
       this._ProfileMidleFooterDiv.appendChild(divProf);
     }
     async getFriends(){
-      debugger
+      // debugger
       this.profilHeader();
       const users = await getFetchRequest("users");
       // Of all the users, only my data was taken

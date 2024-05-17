@@ -1,8 +1,52 @@
-import {PongGame} from "./pongGame.js";
+// import {PongGame} from "./pongGame.js";
 
-var gameInstance = new PongGame();
+// var gameInstance = new PongGame();
+let isStarted = false;
+let pressed = false;
+let interval = null;
+// function disableScrolling(){
+//     var x=window.scrollX;
+//     var y=window.scrollY;
+//     window.onscroll=function(){window.scrollTo(x, y);};
+// }
 
-async function pongGamelol(objUser ,gameid) {
+// function enableScrolling(){
+//     window.onscroll=function(){};
+// }
+
+// var arrow_keys_handler = function(e) {
+//     switch(e.code){
+//         case "ArrowUp": case "ArrowDown": case "ArrowLeft": case "ArrowRight": 
+//             case "Space": e.preventDefault(); break;
+//         default: break; // do not block other keys
+//     }
+// };
+
+function disableScroll() {
+    // Get the current page scroll position in the vertical direction
+   scrollTop =
+       window.pageYOffset || document.documentElement.scrollTop;
+        
+        
+// Get the current page scroll position in the horizontal direction 
+
+ scrollLeft =
+   window.pageXOffset || document.documentElement.scrollLeft;
+   
+   
+  // if any scroll is attempted,
+ // set this to the previous value
+ window.onscroll = function() {
+  window.scrollTo(scrollLeft, scrollTop);
+ };
+}
+
+  function enableScroll() {
+     window.onscroll = function() {};
+ }
+
+async function pongGame(objUser ,gameid) {
+    disableScroll();
     if (isStarted)
         return;
     function isOpen(ws) { return ws.readyState === ws.OPEN }
@@ -25,7 +69,7 @@ async function pongGamelol(objUser ,gameid) {
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-let ws = new WebSocket("ws://" + HostPort.slice(7) + "/ws/game/" + gameId)
+    let ws = new WebSocket("ws://" + HostPort.slice(7) + "/ws/game/" + gameId)
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -56,19 +100,20 @@ let ws = new WebSocket("ws://" + HostPort.slice(7) + "/ws/game/" + gameId)
         // console.log("paddleName = ", paddleName);
         if (event.key === "ArrowUp") {
             payLoad["direction"] = "up";
-            const paddle = document.getElementById(paddleName); // paddle2
+            pressed = true;
+            // const paddle = document.getElementById(paddleName); // paddle2
             // setTimeout(delayedFunction, 2000);
-            setTimeout(function() {
-                movePaddle(paddle , "up", board.offsetHeight, constants.paddle_step);
-            }, 100);
+            // setTimeout(function() {
+            //     movePaddle(paddle , "up", board.offsetHeight, constants.paddle_step);
+            // }, 100);
             // movePaddle(paddle , "up", board.offsetHeight, constants.paddle_step);
         }
         else if (event.key === "ArrowDown") {
             payLoad["direction"] = "down";
-            const paddle = document.getElementById(paddleName); // paddle1
-            setTimeout(function() {
-                movePaddle(paddle, "down", board.offsetHeight, constants.paddle_step);
-            }, 100);
+            // const paddle = document.getElementById(paddleName); // paddle1
+            // setTimeout(function() {
+            //     movePaddle(paddle, "down", board.offsetHeight, constants.paddle_step);
+            // }, 100);
             // movePaddle(paddle, "down", board.offsetHeight, constants.paddle_step);
         }
         else
@@ -84,7 +129,7 @@ let ws = new WebSocket("ws://" + HostPort.slice(7) + "/ws/game/" + gameId)
 
     ws.onmessage = message => {
         //message.data
-        console.log("✅ message = ", message);
+        // console.log("✅ message = ", message);
         let response;
         if (message) {
             try {
@@ -99,11 +144,15 @@ let ws = new WebSocket("ws://" + HostPort.slice(7) + "/ws/game/" + gameId)
         const body = document.querySelector(".addBodyStile");
         if (response?.method === "finish_match" && User?._getAccess) {
             if (User._Id == response.state.game_room.left_id || User._Id == response.state.game_room.right_id) {
+                // debugger;
+                clearInterval(interval);
                 ws.close();
                 clearBox("board");
                 // update when game terminate
                 mainOnHtml.style.display = "block";
                 body.style.display = "none";
+                enableScroll();
+                isStarted = false;
                 return
             }
         }
@@ -115,6 +164,14 @@ let ws = new WebSocket("ws://" + HostPort.slice(7) + "/ws/game/" + gameId)
             constants.screen_width = response.constants.screen_width;
             constants.screen_height = response.constants.screen_height;
             console.log("Client id Set successfully " + clientId)
+            interval = setInterval(() => {
+                try {
+                    if (ws.readyState === ws.OPEN)
+                        ws.send(JSON.stringify({"method": "no_action"}));
+                }catch (e) {
+                    clearInterval(interval);
+                }
+            }, 10);
         }
         //create
         if (response.method === "create"){
@@ -126,47 +183,7 @@ let ws = new WebSocket("ws://" + HostPort.slice(7) + "/ws/game/" + gameId)
         if (response.method === "update"){
             if (isStarted === false) {
                 isStarted = true;
-                const a = document.createElement("div");
-                const paddle1 = response.state.paddle1;
-                a.id = "paddle1";
-                a.className = "paddle";
-                a.style.width = paddle1.width + "px";
-                a.style.height = paddle1.height + "px";
-                a.style.left = paddle1.x + "px";
-                a.style.top = paddle1.y + "px";
-                board.appendChild(a);
-        
-                const b = document.createElement("div");
-                const paddle2 = response.state.paddle2;
-                b.id = "paddle2";
-                b.className = "paddle";
-                b.style.width = paddle2.width + "px";
-                b.style.height = paddle2.height + "px";
-                b.style.left = paddle2.x + "px";
-                b.style.top = paddle2.y + "px";
-                board.appendChild(b);
-                const c = document.createElement("div");
-                const ballRadius = response.state.ball.radius;
-                c.className = "ball";
-                c.id = "ball";
-                c.style.width = ballRadius * 2 + "px";
-                c.style.height = ballRadius * 2 + "px";
-                c.style.borderRadius = "30px";
-
-                c.style.left = response?.state?.ball?.x - ballRadius + "px";
-                c.style.top = response.state.ball.y - ballRadius + "px";
-                board.appendChild(c);
-        
-                const score1 = document.createElement("span");
-                score1.className = "score";
-                score1.id = "score1";
-                score1.appendChild(document.createTextNode("0"));
-                const score2 = document.createElement("span");
-                score2.className = "score";
-                score2.id = "score2";
-                score2.appendChild(document.createTextNode("0"));
-                board.appendChild(score1);
-                board.appendChild(score2);
+                board.innerHTML = getPongContent();
             }
             if (!response.state)
                 return;
@@ -176,88 +193,45 @@ let ws = new WebSocket("ws://" + HostPort.slice(7) + "/ws/game/" + gameId)
                 return
             ballObject.style.left = response?.state?.ball?.x + "px";
             ballObject.style.top = response?.state?.ball?.y + "px";
-            if (paddleName === "paddle1") {
-                const paddle2 = document.getElementById("paddle2");
-                paddle2.style.left = response.state.paddle2.x + "px";
-                paddle2.style.top = response.state.paddle2.y + "px";
-            }
-            else {
+            // console.log("response.state.paddle2 = ",response.state.paddle2)
+            // console.log("response.state.paddle1 = ",response.state.paddle1)
+            // console.log("paddleName = ", paddleName);
+            // if (paddleName === "paddle1") {
                 const paddle1 = document.getElementById("paddle1");
                 paddle1.style.left = response.state.paddle1.x + "px";
                 paddle1.style.top = response.state.paddle1.y + "px";
-            }
+                // console.log("paddle1.style.left = ", paddle1.style.left);
+                // console.log("paddle1.style.top = ", paddle1.style.top);
+            // }
+            // else if (paddleName === "paddle2") {
+                const paddle2 = document.getElementById("paddle2");
+                paddle2.style.left = response.state.paddle2.x + "px";
+                paddle2.style.top = response.state.paddle2.y + "px";
+                // console.log("paddle2.style.left = ", paddle2.style.left);
+                // console.log("paddle2.style.top = ", paddle2.style.top);
+            // }
             const score1 = document.getElementById("score1");
             const score2 = document.getElementById("score2");
             score1.textContent = response.state.paddle1.score;
             score2.textContent = response.state.paddle2.score;
-            // for(const b of Object.keys(response.state))
-            // {
-            //     const objToDraw = response.state[b];
-            //     // context.fillRect(objToDraw._x, objToDraw._y, objToDraw._radius * 2, objToDraw._radius * 2);
-            //     const ballObject = document.getElementById(b);
-            //     if (ballObject === null) {
-            //         console.log("ballObject = ", ballObject);
-            //         console.log("b = ", b);
-            //     } else {
-            //         let ballRadius = 0;
-            //         if (b === "ball") {
-            //             ballRadius = response.state.ballRadius;
-            //         } else {
-            //             ballObject.textContent = response.state["paddle1"];
-            //         }
-            //         ballObject.style.left = objToDraw.x + "px";
-            //         ballObject.style.top = objToDraw.y + "px";
-            //     }
-            // }
         }
         //join
         if (response.method === "join"){
-            const game = response.game;
-            console.log(game);
-            console.log("joined")
-            // TODO change board with and heght
-            const a = document.createElement("div");
-            a.id = "paddle1";
-            a.className = "paddle";
-            a.style.width = "20px";
-            a.style.height = "100px";
-            a.style.left = response.game.state.paddle1.x + "px";
-            a.style.top = response.game.state.paddle1.y + "px";
-            board.appendChild(a);
-
-            const b = document.createElement("div");
-            
-            b.id = "paddle2";
-            b.className = "paddle";
-            b.style.width = "20px";
-            b.style.height = "100px";
-            b.style.left = response.game.state.paddle2.x + "px";
-            b.style.top = response.game.state.paddle2.y + "px";
-            board.appendChild(b);
-
-            const c = document.createElement("div");
-            const ballRadius = response.game.state.ball.ballRadius;
-            c.className = "ball";
-            c.id = "ball";
-            c.style.width = ballRadius * 2 + "px";
-            c.style.height = ballRadius * 2 + "px";
-            c.style.borderRadius = "30px";
-            c.style.left = response.game.state.ball.x - ballRadius + "px";
-            c.style.top = response.game.state.ball.y - ballRadius + "px";
-            board.appendChild(c);
-
-            const score1 = document.createElement("span");
-            score1.className = "score";
-            score1.id = "score1";
-            score1.appendChild(document.createTextNode("0"));
-            const score2 = document.createElement("span");
-            score2.className = "score";
-            score2.id = "score2";
-            score2.appendChild(document.createTextNode("0"));
-            board.appendChild(score1);
-            board.appendChild(score2);
+            board.innerHTML = getPongContent();
         }
     }
 }
 
-export {pongGamelol};
+// export {pongGamelol};
+
+function getPongContent() {
+    return `
+    <div id="board">
+        <div id="paddle1" class="paddle" style="width: 20px; height: 100px; left: 0px; top: 200px;"></div>
+        <div id="paddle2" class="paddle" style="width: 20px; height: 100px; left: 680px; top: 200px;"></div>
+        <div class="ball" id="ball" style="width: 14px; height: 14px; border-radius: 30px; left: 194.5px; top: 250px;"></div>
+        <span class="score" id="score1">0</span>
+        <span class="score" id="score2">0</span>
+    </div>
+    `;
+}

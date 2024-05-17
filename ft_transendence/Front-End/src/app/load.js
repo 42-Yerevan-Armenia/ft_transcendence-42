@@ -33,7 +33,7 @@ if (mainElement) {
 "dev": "npx http-server . -p 3000"
 */
 document.addEventListener("DOMContentLoaded", async () => {
-    debugger
+    // debugger
     console.log(" console.log(window.history);")
     console.log(window.history);
     if(User.checkSignIn()) {
@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             await myStorages.longOut();
     }
     else {
-        debugger
+        // debugger
         const code = window.location.search?.slice(6);
         if (code)
         {
@@ -57,7 +57,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             await Login.Post42ConnectBackend();
         }
     }
-    debugger
+    // debugger
     await ManageAllPage.Manage("Home");
 });
 

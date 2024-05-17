@@ -103,7 +103,7 @@ class Paddle {
 
 
 
-export class PongGame
+class PongGame
 {
 
     w = 700;

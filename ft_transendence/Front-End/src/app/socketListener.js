@@ -1,4 +1,4 @@
-import {pongGamelol} from "./models/Home/game/game.js";
+// import {pongGamelol} from "./models/Home/game/game.js";
 
 var Join_Ws = new WebSocket("ws://" + HostPort.slice(7) + "/ws/joinlist/")
 
@@ -7,9 +7,7 @@ Join_Ws.onmessage = message => {
     if (!message.data)
         return;
     let response = JSON.parse(message.data);
-    console.log(JSON.stringify(response))
-    // debugger;
-
+    // console.log(JSON.stringify(response))
     //update Join list items
     if (response.method === "join_list_room" && User._getAccess) {
         Home._MidleJoinList._game_rooms = response.game_rooms;
@@ -52,7 +50,7 @@ Join_Ws.onmessage = message => {
                     body.appendChild(gameOnHtml)
                 }
                 //call game function for start game
-                await pongGamelol(User, element.game_room.room_id);
+                await pongGame(User, element.game_room.room_id);
             }
         });
     }
