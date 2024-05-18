@@ -12,7 +12,8 @@ class HomeLeft extends HtmlElement {
     _Nickname = document.querySelector("#UserH6");
     _Image = document.querySelector("#UserImage");
     _ExploreMessag = document.querySelector(".Explore");
-    _NavLoginOut = document.querySelector("#NavLoginOut");
+    // _NavLoginOut = document.querySelector("#NavLoginOut");
+    _NavLoginOut = document.querySelector("#NAVSIGNINSIGNOUTNavLoginOut");
     draw() {
       if (User.checkSignIn()) {
         this._Name.innerHTML = User._Name;

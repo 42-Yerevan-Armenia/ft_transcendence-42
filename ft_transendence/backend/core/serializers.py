@@ -1,10 +1,11 @@
 from rest_framework import serializers
 from django import forms
-from django.contrib.auth import get_user_model, authenticate
 from django.core.exceptions import ValidationError
 from .models import User, Person, GameRoom, History
 from game.models import GameInvite
 from friendship.models import Friend, FriendshipRequest
+
+#TODO 42 intra user in Serializer
 
 class UserSerializer(serializers.ModelSerializer):
     friends = serializers.SerializerMethodField()

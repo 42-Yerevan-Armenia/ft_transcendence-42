@@ -1,3 +1,5 @@
+// import {pongGamelol} from "./models/Home/game/game.js";
+
 var Join_Ws = new WebSocket("ws://" + HostPort.slice(7) + "/ws/joinlist/")
 
 console.log("HostPort.slice(7) =" + HostPort.slice(7))
@@ -5,9 +7,7 @@ Join_Ws.onmessage = message => {
     if (!message.data)
         return;
     let response = JSON.parse(message.data);
-    console.log(JSON.stringify(response))
-    // debugger;
-
+    // console.log(JSON.stringify(response))
     //update Join list items
     if (response.method === "join_list_room" && User._getAccess) {
         Home._MidleJoinList._game_rooms = response.game_rooms;

@@ -70,6 +70,7 @@ class LiveGames():
         winner_person = await sync_to_async(Person.objects.get)(id=winner)
         game_room = await sync_to_async(lambda: winner_person.game_room)()
         # TournamentSystem.game_results_history(winner, loser, winner)
+        print("game_room = ", game_room)
         if game_room.max_players == 2:
             game_room.ongoing = False
             await sync_to_async(game_room.save)()
@@ -228,7 +229,7 @@ class MatchmakingSystem():
             room_id = str(room_id) + str(player1_id) + str(player2_id)
             response_data = {
                 "success": True,
-                "method": "start_mutch",
+                "method": "start_mutch",  # TODO
                 "game_room": {
                         "room_id": room_id,
                         "left_id": player1_id,

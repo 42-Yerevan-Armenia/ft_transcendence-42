@@ -58,6 +58,7 @@ class ConfirmPage extends HtmlElement {
     }
     //click confirm button and check respons
     async ConfirmPageContinue(isReset) {
+      
       this.err.innerHTML = "";
       this.v0.value += ""
       this.v1.value += ""

@@ -1,5 +1,8 @@
 const myStorages = {
     setStorageLogin(tockens) {
+      // debugger
+      // debugger
+      // debugger
       console.log("tockens     --------   " + tockens)
       console.log(tockens);
       const {refresh, success, access} = tockens;
@@ -15,6 +18,8 @@ const myStorages = {
       User._SignIn = true;
       User._Gamemode = tockens.user.gamemode || "Easy";
       User._Twofactor = tockens.user.twofactor || false;
+      User._WinCount = tockens.user?.wins || 0;
+      User._LoseCount = tockens.user?.loses || 0;
 
       localStorage.setItem("id", User._ID + "")
       localStorage.setItem("access", access + "")
@@ -30,6 +35,11 @@ const myStorages = {
     setAccsessTocken(data){
       localStorage.setItem("access", data.access.access_token + "")
       localStorage.setItem("refresh", data.access.access_token + "")
+      localStorage.setItem("id",  data.user.id + "")
+    },
+    setAccsessTockenForIntra(data){
+      localStorage.setItem("access", data.access + "")
+      localStorage.setItem("refresh", data.refresh + "")
       localStorage.setItem("id",  data.user.id + "")
     },
     

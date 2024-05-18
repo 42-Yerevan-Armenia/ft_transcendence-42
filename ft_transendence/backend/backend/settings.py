@@ -45,27 +45,27 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'daphne', #web server for ASGI
     'django.contrib.staticfiles',
+    'channels', #channels for websockets async communication
+    'corsheaders',
+    'rest_framework',
+    'rest_framework_simplejwt.token_blacklist',
     'core',
     'chat',
     'game',
     'user_api',
-    'friends_api',
-    'channels', #channels for websockets async communication
     'friendship',
-    'corsheaders',
-    'rest_framework',
-    'rest_framework_simplejwt.token_blacklist',
+    'friends_api',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'backend.urls'
@@ -86,14 +86,12 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'backend.wsgi.application'
-
+# WSGI_APPLICATION = 'backend.wsgi.application'
 ASGI_APPLICATION = 'backend.asgi.application'
 
 CHANNEL_LAYERS = {
 	"default": {
-		"BACKEND": "channels.layers.InMemoryChannelLayer"
-        
+		"BACKEND": "channels.layers.InMemoryChannelLayer" 
 	}
 }
 
@@ -134,15 +132,10 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
@@ -153,7 +146,6 @@ STATIC_URL = '/static/static/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
 
 CORS_ALLOW_ALL_ORIGINS = True
 
@@ -166,9 +158,9 @@ CORS_ALLOW_METHODS = [
     'PUT',
 ]
 
-APPEND_SLASH=True
-
 CORS_ALLOW_CREDENTIALS = True
+
+APPEND_SLASH=True
 
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
@@ -178,17 +170,17 @@ EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 REST_FRAMEWORK = {
+    # 'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAuthenticated',),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
 }
 
 LOGIN_REDIRECT_URL = "chat-page"
-
 LOGOUT_REDIRECT_URL = "login-user"
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=42),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=999),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
     "ROTATE_REFRESH_TOKENS": True, #for security reasons we should rotate the refresh tokens after each use (default is False)
     "BLACKLIST_AFTER_ROTATION": True, #to maintain the security of the application, we should blacklist the old refresh tokens after rotating (default is False)
@@ -219,7 +211,7 @@ SIMPLE_JWT = {
     "JTI_CLAIM": "jti",
 
     "SLIDING_TOKEN_REFRESH_EXP_CLAIM": "refresh_exp",
-    "SLIDING_TOKEN_LIFETIME": timedelta(minutes=42),
+    "SLIDING_TOKEN_LIFETIME": timedelta(minutes=999),
     "SLIDING_TOKEN_REFRESH_LIFETIME": timedelta(days=1),
 
     "TOKEN_OBTAIN_SERIALIZER": "rest_framework_simplejwt.serializers.TokenObtainPairSerializer",
