@@ -657,11 +657,8 @@ class HistoryView(APIView):
     def get(self, request, pk):
         try:
             user = Person.objects.get(id=pk)
-            print("❌", user)
             history_data = History.objects.filter(player=user)
-            print("❌", history_data)
             serializer = HistorySerializer(history_data, many=True)
-            print(serializer.data)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Person.DoesNotExist:
             return JsonResponse({"success": False, "error": "User not found"}, status=status.HTTP_404_NOT_FOUND)

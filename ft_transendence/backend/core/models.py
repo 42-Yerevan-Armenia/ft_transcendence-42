@@ -87,6 +87,8 @@ class History(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     win = models.BooleanField()
     lose = models.BooleanField()
+    image = models.TextField(blank=True, null=True)
+    oponent_points = models.IntegerField(default=0)
 
     def __str__(self):
         return f"{self.player.nickname} vs {self.opponent.nickname} - {self.date}"
