@@ -132,16 +132,26 @@ class FriendSerializer(serializers.ModelSerializer):
         model = Friend
         fields = ('id', 'to_user_id')
 
+class GameInviteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GameInvite
+        fields = ('id', 'sender', 'receiver', 'accepted', 'rejected')
+
 class ProfileSerializer(serializers.ModelSerializer):
     friends = serializers.SerializerMethodField()
+    game_invite = serializers.SerializerMethodField()
 
     class Meta:
         model = Person
-        fields = ('id', 'nickname', 'image', 'background', 'wins', 'loses', 'friends')
+        fields = ('id', 'nickname', 'image', 'background', 'wins', 'loses', 'friends', 'game_invite')
 
     def get_friends(self, obj):
         friends = Friend.objects.friends(obj.user)
         return FriendSerializer(friends, many=True).data if friends else []
+
+    def get_invite(self, obj):
+        game_invite = GameInvite.objects(obj.user)
+        return GameInviteSerializer(game_invite, many=True).data if game_invite else []
 
 class GameRoomSerializer(serializers.ModelSerializer):
     class Meta:
@@ -156,9 +166,20 @@ class GameRoomSerializer(serializers.ModelSerializer):
         return game_room
 
 class HistorySerializer(serializers.ModelSerializer):
+    player = serializers.CharField(source='player.nickname')
+    opponent = serializers.CharField(source='opponent.nickname', read_only=True)
+    win = serializers.SerializerMethodField()
+    lose = serializers.SerializerMethodField()
+
     class Meta:
         model = History
-        fields = '__all__'
+        fields = ['player', 'opponent', 'game_room', 'date', 'win', 'lose', 'image', 'oponent_points']
+
+    def get_win(self, obj):
+        return 1 if obj.win else 0
+
+    def get_lose(self, obj):
+        return 1 if obj.lose else 0
 
 class FullHistorySerializer(serializers.ModelSerializer):
     game_date = serializers.SerializerMethodField()

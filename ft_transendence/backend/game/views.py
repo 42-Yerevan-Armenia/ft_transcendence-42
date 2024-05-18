@@ -69,7 +69,7 @@ class LiveGames():
     async def set_winner(self, winner, loser):
         winner_person = await sync_to_async(Person.objects.get)(id=winner)
         game_room = await sync_to_async(lambda: winner_person.game_room)()
-        # TournamentSystem.game_results_history(winner, loser, winner)
+        await sync_to_async(game_results_history)(winner, loser, winner)
         print("game_room = ", game_room)
         if game_room.max_players == 2:
             game_room.ongoing = False
@@ -299,57 +299,73 @@ class TournamentSystem:
             mms = MatchmakingSystem()
             mms.start_match(player_1, player_2, self.room_id)
 
-    def game_results_history(player1_id, player2_id, win):# ✅
-        user1 = Person.objects.get(id=player1_id)
-        user2 = Person.objects.get(id=player2_id)
-        if win == player1_id:
-            result_user1 = 1
-            result_user2 = 0
-        else:
-            result_user1 = 0
-            result_user2 = 1
-        res_user1 = result_user1 == 1
-        res_user2 = result_user2 == 1
-        History.objects.create(player=user1, opponent=user2, game_room=user1.game_room, win=res_user1, lose=not res_user1)
-        History.objects.create(player=user2, opponent=user1, game_room=user2.game_room, win=res_user2, lose=not res_user2)  
-
-        # Update game results
-        if result_user1 == 1:
-            user1.wins += 1
-            score1 = 100
-        else:
-            user1.loses += 1
-            score1 = 50
-        if result_user2 == 1:
-            user2.wins += 1
-            score2 = 100
-        else:
-            user2.loses += 1
-            score2 = 50
-        # Update match count
-        user1.matches += 1
-        user2.matches += 1
-        # Set percentage bonus
-        win_bonus = 0.5
-        lose_bonus = 0.25
-        match_bonus = 0.1
-        # Calculate points
-        points_user1 = ( score1 +
-            user1.wins * win_bonus +
-            user1.loses * lose_bonus +
-            user1.matches * match_bonus
-        )
-        points_user2 = ( score2 +
-            user2.wins * win_bonus +
-            user2.loses * lose_bonus +
-            user2.matches * match_bonus
-        )
-        # Update points
-        user1.points += points_user1
-        user2.points += points_user2
-        # Save changes to the database
-        user1.save()
-        user2.save()
+def game_results_history(player1_id, player2_id, win):# ✅
+    user1 = Person.objects.get(id=player1_id)
+    user2 = Person.objects.get(id=player2_id)
+    if win == player1_id:
+        result_user1 = 1
+        result_user2 = 0
+    else:
+        result_user1 = 0
+        result_user2 = 1
+    res_user1 = result_user1 == 1
+    res_user2 = result_user2 == 1
+    # Update game results
+    if result_user1 == 1:
+        user1.wins += 1
+        score1 = 100
+    else:
+        user1.loses += 1
+        score1 = 50
+    if result_user2 == 1:
+        user2.wins += 1
+        score2 = 100
+    else:
+        user2.loses += 1
+        score2 = 50
+    # Update match count
+    user1.matches += 1
+    user2.matches += 1
+    # Set percentage bonus
+    win_bonus = 0.5
+    lose_bonus = 0.25
+    match_bonus = 0.1
+    # Calculate points
+    points_user1 = ( score1 +
+        user1.wins * win_bonus +
+        user1.loses * lose_bonus +
+        user1.matches * match_bonus
+    )
+    points_user2 = ( score2 +
+        user2.wins * win_bonus +
+        user2.loses * lose_bonus +
+        user2.matches * match_bonus
+    )
+    # Update points
+    user1.points += points_user1
+    user2.points += points_user2
+    # Save changes to the database
+    user1.save()
+    user2.save()
+    History.objects.create(
+        player=user1,
+        opponent=user2,
+        game_room=user1.game_room,
+        win=res_user1,
+        lose=not res_user1,
+        oponent_points=user2.points,
+        image=user1.image
+    )
+    
+    History.objects.create(
+        player=user2,
+        opponent=user1,
+        game_room=user2.game_room,
+        win=res_user2,
+        lose=not res_user2,
+        oponent_points=user1.points,
+        image=user2.image
+    )
 
 class SendInviteRequest(APIView):
     permission_classes = [IsAuthenticated]
@@ -369,13 +385,13 @@ class SendInviteRequest(APIView):
             if sender.game_room and opponent.game_room and sender.game_room == opponent.game_room:
                 return JsonResponse({"success": "false", "error": "Opponent is already in the same game room"}, status=status.HTTP_400_BAD_REQUEST)
             invite_request = GameInvite.objects.filter(sender=sender, receiver=opponent).first()
-            print("✅", invite_request)
             if invite_request:
                 if invite_request.rejected:
                     invite_request.delete()
                 else:
                     return Response({"success": "false", "error": "Invitation already sent"}, status=status.HTTP_400_BAD_REQUEST)
             GameInvite.objects.create(sender=sender, receiver=opponent)
+            request_data = GameInvite.objects.get(sender=sender, receiver=opponent)
             return Response({"success": "true", "message": "Invitation sent successfully"}, status=status.HTTP_200_OK)
         except Person.DoesNotExist:
             return Response({"success": "false", "error": "User or opponent not found"}, status=status.HTTP_404_NOT_FOUND)
