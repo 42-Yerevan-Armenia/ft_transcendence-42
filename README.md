@@ -73,11 +73,12 @@ Web Designe
 - non
 
 ## Modules
-
+Major 1
+Minor 1
 ### Web
 
-- Major module: Use a Framework as backend. `Aram`
-- Minor module: Use a database for the backend. `Aram`
+- Major module: Use a Framework as backend. `Aram` ✅
+- Minor module: Use a database for the backend. `Aram` ✅
 
 ### User
 
