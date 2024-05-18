@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- Home -->
@@ -56,7 +57,8 @@
     <body class="bodyClassAllForGame">
         <div class="addBodyStile">
         </div>
-        <script  src="./src/app/models/Home/game/game.js"></script>
+
+       
         <main id="mainSectionUsually">
 
             <!-- Confirm -->
@@ -88,10 +90,6 @@
                     &copy; 2024 all rights reserved
                 </footer>
             </div>
-
-
-
-
 
             <!-- SignupPage -->
             <div class="SignupPage">
@@ -127,8 +125,6 @@
                     &copy; 2024 all rights reserved
                 </footer>
             </div>
-
-
             
             <!-- password -->
             <div class="PasswordPage">
@@ -156,7 +152,6 @@
                 </footer>
             </div>
 
-
             <!-- Reset -->
             <div class="ResetPage">
                 <div class="ResetPageConteiner">
@@ -176,7 +171,6 @@
                     &copy; 2024 all rights reserved
                 </footer>
             </div>
-
 
             <!-- Login -->
             <div class="LoginPage">
@@ -239,10 +233,6 @@
                     &copy; 2024 all rights reserved
                 </footer>
             </div>
-
-
-
-
 
             <!-- Home -->
             <div class="homeSection">
@@ -361,7 +351,6 @@
                                                     <path d="M12 4.354v6.651l7.442-.001L17.72 9.28a.75.75 0 0 1-.073-.976l.073-.084a.75.75 0 0 1 .976-.073l.084.073 2.997 2.997a.75.75 0 0 1 .073.976l-.073.084-2.996 3.004a.75.75 0 0 1-1.134-.975l.072-.085 1.713-1.717-7.431.001L12 19.25a.75.75 0 0 1-.88.739l-8.5-1.502A.75.75 0 0 1 2 17.75V5.75a.75.75 0 0 1 .628-.74l8.5-1.396a.75.75 0 0 1 .872.74Zm-1.5.883-7 1.15V17.12l7 1.236V5.237Z" fill="#ffffff"/>
                                                     <path d="M13 18.501h.765l.102-.006a.75.75 0 0 0 .648-.745l-.007-4.25H13v5.001ZM13.002 10 13 8.725V5h.745a.75.75 0 0 1 .743.647l.007.102.007 4.251h-1.5Z" fill="#ffffff"/>
                                                 </svg>
-                                                
                                             </div>
                                             <p class="navLinkP">Log Out</p>
                                         </div>
@@ -998,7 +987,7 @@
                                     <div class="ProfileMidleHeaderMain">
                                         <p class="ProfileMidleHeaderMainWinCount" 
                                             id="ProfileMidleHeaderToInvit1" >
-                                            Win Count:   23
+                                            Win Count:   <span id="ProfileMidleHeaderToInvit1id1"></span>
                                         </p>
                                     </div>
                                     <div class="ProfileMidleHeaderMain">
@@ -1012,7 +1001,7 @@
                                     </div>
                                     <div class="ProfileMidleHeaderMain">
                                         <div class="ProfileMidleHeaderMainLossCount">
-                                            <p class="ProfileMidleHeaderMainLossCountLossCount" id="ProfileMidleHeaderToInvit2">Loss Count:   15</p>
+                                            <p class="ProfileMidleHeaderMainLossCountLossCount" id="ProfileMidleHeaderToInvit2">Loss Count:   <span id="ProfileMidleHeaderToInvit2id2"> </span></p>
                                         </div>
                                     </div>
                                 </div>
@@ -1284,42 +1273,53 @@
             </div>
 
         </main>
-        <script  src="./public/playIcon.js"></script>
-        <script  src="./src/app/models/HtmlElement.js"></script>
-        <script  src="./src/app/Utils.js"></script>
-        <script  src="./src/app/MyStorages.js"></script>
-        <script  src="./src/app/Controllers.js"></script>
-        
-        <script src="./src/app/models/Home/HomeLeft.js"></script>
-        <script src="./src/app/models/Home/AccountUser.js"></script>
-        <script  src="./src/app/models/Home/HomeRight.js"></script>
-        <script src="./src/app/models/Home/Middle.js"></script>
-        <script src="./src/app/models/Home/MidleCup.js"></script>
-        <script src="./src/app/models/Home/MidleCommunity.js"></script>
-        <script src="./src/app/models/Home/JoinList.js"></script>
-        <script src="./src/app/models/Home/MidleHistoryGame.js"></script>
-        <script src="./src/app/models/Home/Profile.js"></script>
-        <script src="./src/app/models/Home/JoinListInvit.js"></script>
-        
-        <script  id="GameRoomNewClientID"></script>
-        <script src="./src/app/models/Home/MidleSettings.js"></script>
-        
-        <script src="./src/app/models/User.js"></script>
-        <script src="./src/app/models/SignupPage.js"></script>
-        <script src="./src/app/models/ResetPage.js"></script>
-        <script src="./src/app/models/RegisterPage.js"></script>
-        <script src="./src/app/models/PasswordPage.js"></script>
-        <script src="./src/app/models/LoginPage.js"></script>
-        <script src="./src/app/PagesMeneger.js"></script>
-        <script  src="./src/app/models/Chat.js"></script>
-        <script  src="./src/app/models/Messag.js"></script>
-        <script src="./src/app/models/HomePage.js"></script>
-        <script src="./src/app/models/ConfirmPage.js"></script>
-        
-        <script  src="./src/app/managePages.js"></script>
-        <script src="./src/app/socketListener.js"></script>
-        <script src="./src/app/eventListener.js"></script>
-        <script  src="./src/app/load.js"></script>
+         <!-- Scripting -->
+            <script  src="./public/playIcon.js"></script>
+            <script  src="./src/app/models/HtmlElement.js"></script>
+            <script  src="./src/app/Utils.js"></script>
+            <script  src="./src/app/MyStorages.js"></script>
+            <script  src="./src/app/Controllers.js"></script>
             
+            <script src="./src/app/models/Home/HomeLeft.js"></script>
+            <script src="./src/app/models/Home/AccountUser.js"></script>
+            <script  src="./src/app/models/Home/HomeRight.js"></script>
+            <script src="./src/app/models/Home/Middle.js"></script>
+            <script src="./src/app/models/Home/MidleCup.js"></script>
+            <script src="./src/app/models/Home/MidleCommunity.js"></script>
+            <script src="./src/app/models/Home/JoinList.js"></script>
+            <script src="./src/app/models/Home/MidleHistoryGame.js"></script>
+            <script src="./src/app/models/Home/Profile.js"></script>
+            <script src="./src/app/models/Home/JoinListInvit.js"></script>
+            
+            <script  id="GameRoomNewClientID"></script>
+            <script src="./src/app/models/Home/MidleSettings.js"></script>
+            
+            <script src="./src/app/models/User.js"></script>
+            <script src="./src/app/models/SignupPage.js"></script>
+            <script src="./src/app/models/ResetPage.js"></script>
+            <script src="./src/app/models/RegisterPage.js"></script>
+            <script src="./src/app/models/PasswordPage.js"></script>
+            <script src="./src/app/models/LoginPage.js"></script>
+            <script src="./src/app/PagesMeneger.js"></script>
+            <script  src="./src/app/models/Chat.js"></script>
+            <script  src="./src/app/models/Messag.js"></script>
+            <script src="./src/app/models/HomePage.js"></script>
+            <script src="./src/app/models/ConfirmPage.js"></script>
+            
+            <script  src="./src/app/managePages.js"></script>
+            <script type="importmap">
+                {
+                "imports": {
+                    "three": "https://unpkg.com/three@latest/build/three.module.js",
+                    "three/addons/": "https://unpkg.com/three@latest/examples/jsm/"
+                }
+                }
+            </script>
+            <script src="./src/app/socketListener.js"></script>
+            <script src="./src/app/eventListener.js"></script>
+            <script src="./src/app/load.js"></script>
+            <script type="module" src="./src/app/models/Home/game/pongGame.js"></script>
+            <script src="./src/app/models/Home/game/game.js"></script>
+        <!-- End Scripting -->
     </body>
 </html>

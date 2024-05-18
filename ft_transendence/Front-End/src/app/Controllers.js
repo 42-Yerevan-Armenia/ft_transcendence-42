@@ -4,7 +4,7 @@
 const HostPort="http://10.12.11.2:8000"
 
 let INTRA_API_URL="https://api.intra.42.fr/";
-let INTRA_API_UID="u-s4t2ud-0b391bc545deef39af3fb3f0afa178783df06731c0fe9c387812a11d36f51d90";
+let INTRA_API_UID="u-s4t2ud-1cd616aa7279a41f3410720fbc7b56429f94114c40825b988cd2877c2070c236";
 let INTRA_REDIRECT_URI="http%3A%2F%2F10.12.11.2%3A3000%2F";
 
 //if create 
@@ -104,8 +104,9 @@ async function ControllerPessPassword(password, User) {
     return { state: false, message: error.message };
   }
 }
-//fetch universal POST request
+//fetch universal POST request ❌
 async function FetchRequest(Tomethod, Torequest, ToObj) {
+  // debugger
   try {
     const response = await fetch(`${HostPort}/${Torequest}/`, {
       method: Tomethod,
@@ -126,8 +127,9 @@ async function FetchRequest(Tomethod, Torequest, ToObj) {
     return { state: false, message: error.message };
   }
 }
-//fetch universal  GET request
+//fetch universal  GET request ❌
 async function getFetchRequest(ToRequest) {
+  // debugger
   //get access tocken and id
   const ToObj = User.getAccessTocken();
   if (!ToObj || !ToObj.access)
@@ -153,8 +155,31 @@ async function getFetchRequest(ToRequest) {
     return { state: false, message: error.message };
   }
 }
-//fetch universal POST request
+// async function getFetchRequest(ToRequest) {
+//   debugger
+//   try {
+//     const response = await fetch(`${HostPort}/${ToRequest}/`, {
+//       method: "GET",
+//       headers: {
+//         "Content-Type": "application/json",
+//       }
+//     });
+//     if (!response.ok)
+//       throw new Error(`Failed to fetch. Status: ${response.status}`);
+//     const data = await response.json();
+//     if (!data || typeof data !== 'object')
+//       throw new Error("Invalid response data");
+//     return { state: true, message: data };
+//   }
+//   catch (error) {
+//     console.error("Error:", error);
+//     return { state: false, message: error.message };
+//   }
+// }
+
+//fetch universal POST request ❌
 async function putRequest(Tomethod, Torequest, ToObj) {
+  // debugger
   const token =  await User.getAccessTocken();
   try {
     const response = await fetch(`${HostPort}/${Torequest}/`, {
@@ -177,8 +202,9 @@ async function putRequest(Tomethod, Torequest, ToObj) {
     return { state: false, message: error.message };
   }
 }
-//fetch universal Get request prune
+//fetch universal Get request prune ❌
 async function getPureFetchRequest(Torequest) {
+  // debugger
   try {
     const response = await fetch(`${HostPort}/${Torequest}/`)
     if (!response.ok)

@@ -51,6 +51,7 @@ import base64
 import os
 
 from django.shortcuts import render
+from asgiref.sync import async_to_sync, sync_to_async
 
 #TODO: activate intra Tokens
 
@@ -60,16 +61,8 @@ class UserAPIView(APIView):
         serializer = UserSerializer(queryset, many=True)
         return JsonResponse(serializer.data, safe=False)
 
-    def post(self, request):
-        data = json.loads(request.body)
-        return Response(data)
-
-    def delete(self, request):
-        data = {'message': 'Hello, world! This is delete request!'}
-        return Response(data)
-
-class UsersAPIView(APIView):
-    permission_classes = [IsAuthenticated]
+class PersonsAPIView(APIView):
+    # permission_classes = [IsAuthenticated]
     def get(self, request, pk):
         user = Person.objects.get(id=pk)
         if user:
@@ -272,6 +265,8 @@ class Login(APIView):
                     "nickname": person.nickname,
                     "email": person.email,
                     "image": person.image,
+                    "wins": person.wins,
+                    "loses": person.loses,
                 }
             }
             if person.twofactor is True:
@@ -421,7 +416,6 @@ class Leaderboard(APIView):
         return JsonResponse({"success": "true", "leaderboard": [leaderboard_data]}, safe=False)
 
 class Home(APIView):
-
     def get(self, request, pk):
         try:
             user = Person.objects.get(id=pk)
@@ -463,13 +457,18 @@ def save_base64_image(image_path):
         return base64.b64encode(img_file.read()).decode('utf-8')
 
 class JoinList(APIView):
+    # authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.pt = PlayTournament()
+        self.channel_layer = None
+        self.group_name = None
+        # print(channel_layer)
+        # self.pt = PlayTournament()
 
-    def get_response_data(self):
-        print("self.pt.get_response_data() = ", self.pt.get_response_data())
-        return self.pt.get_response_data()
+    # def get_response_data(self):
+    #     print("self.pt.get_response_data() = ", self.pt.get_response_data())
+    #     return self.pt.get_response_data()
 
     def get(self, request, pk):
         try:
@@ -479,7 +478,7 @@ class JoinList(APIView):
             for person in persons:
                 game_room_data[person.game_room_id].append(person)
             # Construct JSON response
-            result = {"success": True, "method": "", "game_rooms": []}
+            result = {"success": True, "method": "join_list_room", "game_rooms": []}
             for game_room_id, persons_in_room in game_room_data.items():
                 # Ensure there are at least two persons in the room
                 if len(persons_in_room) >= 1:
@@ -509,10 +508,10 @@ class JoinList(APIView):
                                 "urlClient": default_img  # Replace with your default image URL
                             })
                         room_data["type"] = "User"
-                        if (game_room.is_full()):
-                            method = "start_game"
-                        else:
-                            method = "join_list_room"
+                        # if (game_room.is_full()):
+                        #     method = "start_game"
+                        # else:
+                        method = "join_list_room"
                     else:
                         # Add only player IDs when there are not exactly two players
                         cup = os.path.join(os.path.dirname(__file__), 'cup.jpg')
@@ -527,10 +526,10 @@ class JoinList(APIView):
                             "isJoin": game_room.ongoing,
                             "type": "Tournament"
                         }
-                        if (game_room.is_full()):
-                            method = "start_game"
-                        else:
-                            method = "join_list_room"
+                        # if (game_room.is_full()):
+                        #     method = "start_game"
+                        # else:
+                        method = "join_list_room"
                     # Add the game room data to the result
                     result["game_rooms"].append(room_data)
                     result["method"] = method
@@ -571,9 +570,26 @@ class JoinList(APIView):
         except Exception as e:
             return JsonResponse({"success": "false", "error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+    async def do_broadcast(self):
+        print("🔥 do_broadcast")
+        print(self.channel_layer,"dsgd", self.group_name)
+        if not (self.channel_layer is None) and not (self.group_name is None):
+            response = await sync_to_async(self.get)(None, None)
+            await self.channel_layer.group_send(
+                self.group_name,
+                {"type": "stream", "response": response,},
+            )
+            print("🔥 do_broadcast", response)
+
+    def set_channel_layer(self, channel_layer):
+        self.channel_layer = channel_layer
+    
+    def set_group_name(self, group_name):
+        self.group_name = group_name
+
 class CreateRoom(APIView):
     authentication_classes = [TokenAuthentication]
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     def post(self, request, pk):
         try:
             creator = Person.objects.get(id=pk)
@@ -641,8 +657,11 @@ class HistoryView(APIView):
     def get(self, request, pk):
         try:
             user = Person.objects.get(id=pk)
+            print("❌", user)
             history_data = History.objects.filter(player=user)
+            print("❌", history_data)
             serializer = HistorySerializer(history_data, many=True)
+            print(serializer.data)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Person.DoesNotExist:
             return JsonResponse({"success": False, "error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
