@@ -439,19 +439,6 @@ class WaitingRoom(APIView):
         except User.DoesNotExist:
             return JsonResponse({"success": "false", "error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
 
-    def post(self, request, pk):
-        try:
-            user = Person.objects.get(id=pk)
-            opponent_id = request.data.get('opponent_id')
-            print(opponent_id)
-            print(user)
-            opponent = Person.objects.get(id=opponent_id)
-            if opponent.ongoing is not None:
-                return JsonResponse({"success": "false", "error": "Opponent is already in a game room"}, status=status.HTTP_400_BAD_REQUEST)
-            return Response({"success": "true", "method": "invite_room", "message": "Invitation sent successfully"}, status=status.HTTP_200_OK)
-        except Person.DoesNotExist:
-            return Response({"success": "false", "error": "User or opponent not found"}, status=status.HTTP_404_NOT_FOUND)
-
 def save_base64_image(image_path):
     with open(image_path, "rb") as img_file:
         return base64.b64encode(img_file.read()).decode('utf-8')
