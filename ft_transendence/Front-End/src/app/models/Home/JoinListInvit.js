@@ -15,7 +15,7 @@ class JoinListInvit extends HtmlElement{
     6 <td class="JoinListInvitetbodyTd"><button class="JoinListInviteClass" id="JoinListInviteid">Invite</button></td>
 </tr> */
     JoinListInvitetbodyTr(Item){
-        //debugger
+        // debugger
         const tr = document.createElement("tr");
         tr.setAttribute("class", "JoinListInvitetbodyTr");
         const td1 = document.createElement("td");
