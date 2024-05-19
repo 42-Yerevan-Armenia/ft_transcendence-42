@@ -22,8 +22,8 @@ Join_Ws.onmessage = message => {
     const mainOnHtml = document.getElementById("mainSectionUsually");
     const body = document.querySelector(".addBodyStile");
     if (response.method === "start_game" && User._getAccess) {
-        debugger
-        debugger
+        //debugger
+        //debugger
         response.liveGames.forEach(async element => {
             if (User._Id == element.game_room.left_id || User._Id == element.game_room.right_id)
             {
@@ -44,7 +44,7 @@ Join_Ws.onmessage = message => {
 
 
     // if (response.method === "updateLiveGames" && User._getAccess) {
-    //     debugger;
+    //     //debugger;
     //     response.liveGames.forEach(async element => {
     //         if (User._Id == element.game_room.left_id || User._Id == element.game_room.right_id) {
     //             //main displey none
