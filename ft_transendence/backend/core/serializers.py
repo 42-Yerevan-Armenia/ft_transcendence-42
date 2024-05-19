@@ -156,14 +156,16 @@ class GameRoomSerializer(serializers.ModelSerializer):
         return game_room
 
 class HistorySerializer(serializers.ModelSerializer):
-    player = serializers.CharField(source='player.nickname')
     opponent = serializers.CharField(source='opponent.nickname', read_only=True)
     win = serializers.SerializerMethodField()
     lose = serializers.SerializerMethodField()
+    gamemode = serializers.CharField(source='opponent.gamemode', read_only=True)
+    matches = serializers.IntegerField(source='opponent.matches', read_only=True)
+    mode = serializers.CharField(source='gamemode', read_only=True)
 
     class Meta:
         model = History
-        fields = ['player', 'opponent', 'game_room', 'date', 'win', 'lose', 'image', 'oponent_points']
+        fields = ['image', 'opponent', 'gamemode', 'oponent_points', 'matches', 'date', 'win', 'lose', 'mode']
 
     def get_win(self, obj):
         return 1 if obj.win else 0
@@ -175,7 +177,7 @@ class FullHistorySerializer(serializers.ModelSerializer):
     game_date = serializers.SerializerMethodField()
     class Meta:
         model = Person
-        fields = ('id', 'nickname', 'image', 'gamemode', 'points', 'matches', 'wins', 'loses', 'game_date')
+        fields = ('id', 'nickname', 'gamemode', 'points', 'matches', 'game_date')
     
     def get_game_date(self, obj):
         try:

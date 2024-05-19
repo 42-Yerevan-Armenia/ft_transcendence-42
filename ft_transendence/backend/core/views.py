@@ -647,14 +647,14 @@ class HistoryView(APIView):
             user = Person.objects.get(id=pk)
             history_data = History.objects.filter(player=user)
             history_serializer = HistorySerializer(history_data, many=True)
-            full_history_serializer = FullHistorySerializer(user)
+            # full_history_serializer = FullHistorySerializer(user)
 
-            response_data = {
-                "success": True,
-                "history": history_serializer.data,
-                "full_history": full_history_serializer.data
-            }
-            return Response(response_data, status=status.HTTP_200_OK)
+            # response_data = {
+            #     "success": True,
+            #     "history": history_serializer.data,
+                # "full_history": full_history_serializer.data
+            # }
+            return Response(history_serializer.data, status=status.HTTP_200_OK)
         except Person.DoesNotExist:
             return JsonResponse({"success": False, "error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
 
