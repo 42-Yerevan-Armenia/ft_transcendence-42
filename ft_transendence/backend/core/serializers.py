@@ -132,26 +132,16 @@ class FriendSerializer(serializers.ModelSerializer):
         model = Friend
         fields = ('id', 'to_user_id')
 
-class GameInviteSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = GameInvite
-        fields = ('id', 'sender', 'receiver', 'accepted', 'rejected')
-
 class ProfileSerializer(serializers.ModelSerializer):
     friends = serializers.SerializerMethodField()
-    game_invite = serializers.SerializerMethodField()
 
     class Meta:
         model = Person
-        fields = ('id', 'nickname', 'image', 'background', 'wins', 'loses', 'friends', 'game_invite')
+        fields = ('id', 'nickname', 'image', 'background', 'wins', 'loses', 'friends')
 
     def get_friends(self, obj):
         friends = Friend.objects.friends(obj.user)
         return FriendSerializer(friends, many=True).data if friends else []
-
-    def get_invite(self, obj):
-        game_invite = GameInvite.objects(obj.user)
-        return GameInviteSerializer(game_invite, many=True).data if game_invite else []
 
 class GameRoomSerializer(serializers.ModelSerializer):
     class Meta:

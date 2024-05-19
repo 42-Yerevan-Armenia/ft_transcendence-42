@@ -2,7 +2,7 @@ from django.http import JsonResponse
 from django.shortcuts import render
 from django.utils import timezone
 from friendship.models import Friend, FriendshipRequest, Block
-from core.serializers import FriendSerializer, ProfileSerializer, FriendListSerializer
+from core.serializers import FriendListSerializer
 from core.models import User, Person
 from rest_framework import generics, status, viewsets
 from rest_framework.views import APIView
