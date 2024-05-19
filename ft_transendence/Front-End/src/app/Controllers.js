@@ -1,7 +1,7 @@
 "use strict"
 // const HostPort="http://localhost:5001"
-const HostPort="http://10.12.11.1:8000"
-// const HostPort="http://10.12.11.2:8000"
+// const HostPort="http://10.12.11.1:8000"
+const HostPort="http://10.12.11.2:8000"
 
 let INTRA_API_URL="https://api.intra.42.fr/";
 let INTRA_API_UID="u-s4t2ud-1cd616aa7279a41f3410720fbc7b56429f94114c40825b988cd2877c2070c236";
@@ -156,7 +156,7 @@ async function getFetchRequest(ToRequest) {
   }
 }
 // async function getFetchRequest(ToRequest) {
-//   debugger
+// debugger
 //   try {
 //     const response = await fetch(`${HostPort}/${ToRequest}/`, {
 //       method: "GET",

@@ -4,13 +4,14 @@ import constants
 import asyncio
 from time import sleep
 
-from core.models import Person
+from core.models import Person, GameRoom
 from django.http import JsonResponse
+from django.core.exceptions import ObjectDoesNotExist
 
 from .pong_controller import PaddleController, BallController
 from .thread_pool import ThreadPool
 
-from asgiref.sync import async_to_sync
+from asgiref.sync import async_to_sync, sync_to_async
 from channels.generic.websocket import WebsocketConsumer, AsyncWebsocketConsumer
 import time
 
@@ -20,6 +21,8 @@ from game.views import PlayTournament, MatchmakingSystem, PlayerPool, LiveGames,
 from constants import *
 
 class PongConsumer(AsyncWebsocketConsumer):
+    game_info = {}
+
     def __init__(self, *args, **kwargs):
         self.game = None
         self.game_id = None
@@ -44,18 +47,31 @@ class PongConsumer(AsyncWebsocketConsumer):
         await self.accept()
 
         self.joinList.set_channel_layer(self.channel_layer)
-        print(f"✅Connected to game ID: {self.game_id}, channel name: {self.channel_name}")
+        print(f"❌Connected to game ID: {self.game_id}, channel name: {self.channel_name}")
 
 
     async def disconnect(self, close_code):
         print(f"⭕️Disconnecting: {self.id}, close_code: {close_code}")
+        sleep(0.1)
         await self.channel_layer.group_discard(self.game_id, self.channel_name)
+        print(f"❌Disconnected: {self.id}")
         if self.id:
+            print("❌Disconnected:self.id ", self.id)
             self.game[str(self.paddle_controller)] = False
             self.game["active"] = False
             self.game["stop_event"].set()
-            await ThreadPool.del_game(self.game_id)
-        print(f"⭕️Disconnected: {self.id}")
+            # await ThreadPool.del_game(self.game_id)
+        # await LiveGames().del_game(self.game_id)
+        # game_room = await sync_to_async(GameRoom.objects.get)(id=self.game_id[:-2])
+        # game_room.ongoing = False
+        # game_room.save()
+        # players = await sync_to_async(list)(game_room.players.all())
+        # for player in players:
+        #     player.playing = False
+        #     player.save()
+        
+
+        # print(f"⭕️Disconnected: {self.id}")
 
     async def receive(self, text_data):
         data = json.loads(text_data)
@@ -63,7 +79,6 @@ class PongConsumer(AsyncWebsocketConsumer):
             data["method"]
         except KeyError:
             return
-
         if data["method"] == "updateKey" and self.game:
             if not self.paddle_controller:
                 print("Error: Paddle controller is not initialized")
@@ -71,9 +86,20 @@ class PongConsumer(AsyncWebsocketConsumer):
                 direction = data.get("direction")
                 await self.paddle_controller.move(direction)
         elif data["method"] == "connect":
-            print(f"✅Connect method called with clientId: {data['clientId']}")
+            # try:
+            #     game_room_id = self.game_id[:-2]
+            #     game_room = await sync_to_async(GameRoom.objects.get)(id=game_room_id)
+            #     players = await sync_to_async(list)(game_room.players.all())
+            #     if len(players) == 2:
+            #         user_id1 = players[0].id
+            #         user_id2 = players[1].id
+            #         self.game_info[self.game_id] = (user_id1, user_id2, game_room_id)
+            #         print("❌ all_user_ids = ", self.game_info[self.game_id])
+            #     else:
+            #         print(f"❌ Error: Expected 2 players, found {len(players)} in game room {self.game_id}")
+            # except ObjectDoesNotExist:
+            #     print(f"❌ Error: GameRoom with id {self.game_id} does not exist")
             if not self.game["paddle1"]:
-                print("🅿️ Assigning paddle1")
                 self.paddle_controller = PaddleController("paddle1", self.game["state"])
                 self.game["paddle1"] = True
                 self.id = data["clientId"]
@@ -90,9 +116,7 @@ class PongConsumer(AsyncWebsocketConsumer):
                     }
                 }
                 await self.send(text_data=json.dumps(payload))
-                print(f"🅿️ Assigned paddle1 to clientId: {self.id}")
             elif not self.game["paddle2"]:
-                print("🅿️ Assigning paddle2")
                 self.paddle_controller = PaddleController("paddle2", self.game["state"])
                 self.game["paddle2"] = True
 
@@ -110,21 +134,23 @@ class PongConsumer(AsyncWebsocketConsumer):
                     }
                 }
                 await self.send(text_data=json.dumps(payload))
-                print(f"🅿️ Assigned paddle2 to clientId: {self.id}")
-            else:
-                print("🅿️🅿️ Both paddles are already assigned")
+                # user_id1 = self.game["state"]["paddle1"]["id"]
+                # user_id2 = self.game["state"]["paddle2"]["id"]
+                # self.game_info[self.game_id] = (user_id1, user_id2, self.game_id)
+                # print("❌ all_user_ids = ", self.game_info[self.game_id])
             if self.game["paddle1"] and self.game["paddle2"]:
                 if not self.game["thread"].is_alive():
                     self.game["thread"].start()
                     self.game["active"] = True
                     print("❎Game started")
 
+
     def propagate_state_wrapper(self, thread_event):
         asyncio.run(self.propagate_state(thread_event))
 
     async def propagate_state(self, thread_event):
         i = 0
-        while not thread_event.is_set() and self.game["state"]["winner"] is None:
+        while self.game["state"]["winner"] is None:
             if self.game:
                 if self.game["active"]:
                     ball = self.game["ball"]
@@ -134,11 +160,16 @@ class PongConsumer(AsyncWebsocketConsumer):
                         {"type": "stream_state", "state": self.game["state"], "method": "update"},
                     )
                 elif not self.game["paddle1"]:
-                    self.game["state"]["winner"] = self.game["paddle2"]["id"]
-                    await LiveGames().set_winner(self.game["state"]["winner"], self.game["paddle1"]["id"])
+                    print("self.game[paddle2]", self.game["paddle2"])
+                    self.game["state"]["winner"] = self.game["state"]["paddle2"]["id"]
+                    await LiveGames().set_winner(self.game["state"]["winner"], self.game["state"]["paddle1"]["id"])
                 elif not self.game["paddle2"]:
-                    self.game["state"]["winner"] = self.game["paddle1"]["id"]
-                    await LiveGames().set_winner(self.game["state"]["winner"], self.game["paddle2"]["id"])
+                    print("self.game[paddle1]", self.game["paddle1"])
+                    self.game["state"]["winner"] = self.game["state"]["paddle1"]["id"]
+                    await LiveGames().set_winner(self.game["state"]["winner"], self.game["state"]["paddle2"]["id"])
+                # if thread_event.is_set():
+                #     break
+
             sleep(0.005)
                 # self.time = time.time()
 

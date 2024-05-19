@@ -143,13 +143,12 @@ class LiveGames():
     def set_group_name(self, group_name):
         self._group_name = group_name
 
-
     def get_game(self, game_id):
         return self.games[game_id]
 
     def get_all_games(self):
         return self.games
-    
+
     def set_channel_name(self, channel_name):
         self._channel_name = channel_name
 
@@ -415,7 +414,6 @@ class SendInviteRequest(APIView):
             return Response({"success": "true", "message": "Invitation sent successfully"}, status=status.HTTP_200_OK)
         except Person.DoesNotExist:
             return Response({"success": "false", "error": "User or opponent not found"}, status=status.HTTP_404_NOT_FOUND)
-
 
 class AcceptInviteRequest(APIView):
     permission_classes = [IsAuthenticated]
