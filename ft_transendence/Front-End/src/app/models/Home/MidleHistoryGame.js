@@ -1,4 +1,4 @@
-//debugger
+// debugger
 class MidleHistoryGame extends HtmlElement{
     constructor(){
         super(".MidleHistoryGame");
@@ -200,7 +200,7 @@ class MidleHistoryGame extends HtmlElement{
         this.profilWil.appendChild(this.FullHistory);
     }
     async listUsers(){
-        debugger
+        // debugger
         this.profilWil.innerHTML = "";
 
         const history = await getFetchRequest("api/v1/history/" + User._Id);

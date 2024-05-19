@@ -70,7 +70,6 @@ class LiveGames():
         winner_person = await sync_to_async(Person.objects.get)(id=winner)
         game_room = await sync_to_async(lambda: winner_person.game_room)()
         await sync_to_async(game_results_history)(winner, loser, winner)
-        print("game_room = ", game_room)
         if game_room.max_players == 2:
             game_room.ongoing = False
             await sync_to_async(game_room.save)()
@@ -91,7 +90,6 @@ class LiveGames():
     def next_match(self, game_room):
         if len(game_room.players.all()) == 4:
             if not len([p for p in game_room.players.all() if p.game_room_id is None]) == 3: 
-                print("❌")                 
                 last_round_winners = Round.objects.filter(game_room=game_room).order_by('-id')[:2]
                 player_1_id = None
                 player_2_id = None
@@ -143,13 +141,12 @@ class LiveGames():
     def set_group_name(self, group_name):
         self._group_name = group_name
 
-
     def get_game(self, game_id):
         return self.games[game_id]
 
     def get_all_games(self):
         return self.games
-    
+
     def set_channel_name(self, channel_name):
         self._channel_name = channel_name
 
@@ -415,7 +412,6 @@ class SendInviteRequest(APIView):
             return Response({"success": "true", "message": "Invitation sent successfully"}, status=status.HTTP_200_OK)
         except Person.DoesNotExist:
             return Response({"success": "false", "error": "User or opponent not found"}, status=status.HTTP_404_NOT_FOUND)
-
 
 class AcceptInviteRequest(APIView):
     permission_classes = [IsAuthenticated]
