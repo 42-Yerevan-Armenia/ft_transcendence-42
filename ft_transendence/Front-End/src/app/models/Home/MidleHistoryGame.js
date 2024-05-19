@@ -5,6 +5,7 @@ class MidleHistoryGame extends HtmlElement{
         this._style.display = "none";
         this.FullHistory = this.createFullHistory();
         this._classname.appendChild(this.FullHistory);
+        this.profilWil = document.querySelector(".FullHistoryContainerTableALL");
     };
     createFullHistoryTableBodyContainerPlayedGames(dateContent, winContent, loseContent, modeContent)
     {
@@ -69,10 +70,10 @@ class MidleHistoryGame extends HtmlElement{
         divImgInsideDiv.classList.add("imgInsideDiv");
 
         const imgUser = document.createElement("img");
-        imgUser.src = "./public/User2.png";  // TODO img
-        imgUser.width = "40";
-        imgUser.height = "40";
-        imgUser.alt = "Users";
+        imgUser.setAttribute("src", "./public/User2.png");
+        imgUser.setAttribute("width", "40");
+        imgUser.setAttribute("height", "40");
+        imgUser.setAttribute("alt", "Users");
         imgUser.setAttribute("class", "FullHistoryTableImageBody");
 
         const pName = document.createElement("p");
@@ -196,17 +197,16 @@ class MidleHistoryGame extends HtmlElement{
 
 
         FullHistoryTableBodyUser.appendChild(this.createFullHistoryTableBodyContainerPlayedGames("0", "2", "3", "4"));
-        this._classname.appendChild(this.FullHistory);
+        this.profilWil.appendChild(this.FullHistory);
     }
     async listUsers(){
+        debugger
+        this.profilWil.innerHTML = "";
+
         const history = await getFetchRequest("api/v1/history/" + User._Id);
 
         if (history && history.state && history.message)
         {
-
-            //history.message
-            // this._classname.innerHTML = getContentFullHistory();
-            this._classname.innerHTML = "";
             history?.message?.forEach(e => {
                 this.appandDiv(e);
             });
