@@ -90,35 +90,55 @@ class LiveGames():
 
     def next_match(self, game_room):
         if len(game_room.players.all()) == 4:
-            last_round_winners = Round.objects.filter(game_room=game_room).order_by('-id')[:2]
-            player_1_id = None
-            player_2_id = None
-            # Find the players for the match
-            for winner in last_round_winners:
-                player_1_id = winner.winner_id
-                other_winner = [w for w in last_round_winners if w != winner and w.winner.game_room_id == game_room.id]
-                if other_winner:
-                    player_2_id = other_winner[0].winner_id
-                    break
-            if player_1_id and player_2_id:
-                mms = MatchmakingSystem()
-                mms.start_match(player_1_id, player_2_id, game_room.id)
+            if not len([p for p in game_room.players.all() if p.game_room_id is None]) == 3: 
+                print("❌")                 
+                last_round_winners = Round.objects.filter(game_room=game_room).order_by('-id')[:2]
+                player_1_id = None
+                player_2_id = None
+                for winner in last_round_winners:
+                    player_1_id = winner.winner_id
+                    other_winner = [w for w in last_round_winners if w != winner and w.winner.game_room_id == game_room.id]
+                    if other_winner:
+                        player_2_id = other_winner[0].winner_id
+                        break
+                if player_1_id and player_2_id:
+                    mms = MatchmakingSystem()
+                    mms.start_match(player_1_id, player_2_id, game_room.id)
+                    Round.objects.filter(game_room=game_room).delete()
+            else:
                 Round.objects.filter(game_room=game_room).delete()
+                game_room.ongoing = False
+                game_room.save()
+                players = list(game_room.players.all())
+                for player in players:
+                    player.ongoing = False
+                    player.save()
+                Person.objects.filter(game_room_id=game_room.id).update(game_room_id=None)
         elif len(game_room.players.all()) == 8:
-            last_round_winners = Round.objects.filter(game_room=game_room).order_by('-id')[:4]
-            player_1_id = None
-            player_2_id = None
-            # Find the players for the match
-            for winner in last_round_winners:
-                player_1_id = winner.winner_id
-                other_winner = [w for w in last_round_winners if w != winner and w.winner.game_room_id == game_room.id]
-                if other_winner:
-                    player_2_id = other_winner[0].winner_id
-                    break
-            if player_1_id and player_2_id:
-                mms = MatchmakingSystem()
-                mms.start_match(player_1_id, player_2_id, game_room.id)
+            if not len([p for p in game_room.players.all() if p.game_room_id is None]) == 7: 
+                last_round_winners = Round.objects.filter(game_room=game_room).order_by('-id')[:2]
+                player_1_id = None
+                player_2_id = None
+                # Find the players for the match
+                for winner in last_round_winners:
+                    player_1_id = winner.winner_id
+                    other_winner = [w for w in last_round_winners if w != winner and w.winner.game_room_id == game_room.id]
+                    if other_winner:
+                        player_2_id = other_winner[0].winner_id
+                        break
+                if player_1_id and player_2_id:
+                    mms = MatchmakingSystem()
+                    mms.start_match(player_1_id, player_2_id, game_room.id)
+                    Round.objects.filter(game_room=game_room).delete()
+            else:
                 Round.objects.filter(game_room=game_room).delete()
+                game_room.ongoing = False
+                game_room.save()
+                players = list(game_room.players.all())
+                for player in players:
+                    player.ongoing = False
+                    player.save()
+                Person.objects.filter(game_room_id=game_room.id).update(game_room_id=None)
 
     def set_group_name(self, group_name):
         self._group_name = group_name
@@ -390,11 +410,12 @@ class SendInviteRequest(APIView):
                     invite_request.delete()
                 else:
                     return Response({"success": "false", "error": "Invitation already sent"}, status=status.HTTP_400_BAD_REQUEST)
-            GameInvite.objects.create(sender=sender, receiver=opponent)
-            request_data = GameInvite.objects.get(sender=sender, receiver=opponent)
+            res = GameInvite.objects.create(sender=sender, receiver=opponent)
+            print("✅", res)
             return Response({"success": "true", "message": "Invitation sent successfully"}, status=status.HTTP_200_OK)
         except Person.DoesNotExist:
             return Response({"success": "false", "error": "User or opponent not found"}, status=status.HTTP_404_NOT_FOUND)
+
 
 class AcceptInviteRequest(APIView):
     permission_classes = [IsAuthenticated]

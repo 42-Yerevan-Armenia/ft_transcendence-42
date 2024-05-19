@@ -46,9 +46,10 @@ function disableScroll() {
  }
 
 async function pongGame(objUser ,gameid) {
-    disableScroll();
+    debugger;
     if (isStarted)
         return;
+    disableScroll();
     function isOpen(ws) { return ws.readyState === ws.OPEN }
     //HTML elements
     let clientId = objUser._Id;
@@ -64,7 +65,6 @@ async function pongGame(objUser ,gameid) {
     if (!clientId)
         clientId = uuid();
     let gameId = gameid;
-    let playerColor = null;
     // let ws = new WebSocket("ws://" + window.location.host + "/ws/game/" + gameId)
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -226,12 +226,10 @@ async function pongGame(objUser ,gameid) {
 
 function getPongContent() {
     return `
-    <div id="board">
-        <div id="paddle1" class="paddle" style="width: 20px; height: 100px; left: 0px; top: 200px;"></div>
-        <div id="paddle2" class="paddle" style="width: 20px; height: 100px; left: 680px; top: 200px;"></div>
-        <div class="ball" id="ball" style="width: 14px; height: 14px; border-radius: 30px; left: 194.5px; top: 250px;"></div>
-        <span class="score" id="score1">0</span>
-        <span class="score" id="score2">0</span>
-    </div>
+    <div id="paddle1" class="paddle" style="width: 20px; height: 100px; left: 0px; top: 200px;"></div>
+    <div id="paddle2" class="paddle" style="width: 20px; height: 100px; left: 680px; top: 200px;"></div>
+    <div class="ball" id="ball" style="width: 14px; height: 14px; border-radius: 30px; left: 194.5px; top: 250px;"></div>
+    <span class="score" id="score1">0</span>
+    <span class="score" id="score2">0</span>
     `;
 }
