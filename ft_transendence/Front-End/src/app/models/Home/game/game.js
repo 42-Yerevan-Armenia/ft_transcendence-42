@@ -46,7 +46,11 @@ function disableScroll() {
  }
 
 async function pongGame(objUser ,gameid) {
+<<<<<<< HEAD
     //debugger;
+=======
+    console.log("isStarted = ", isStarted);
+>>>>>>> 7ba4e7feb507dd4d7119e08098e0659729336ff7
     if (isStarted)
         return;
     disableScroll();
@@ -153,6 +157,7 @@ async function pongGame(objUser ,gameid) {
                 body.style.display = "none";
                 enableScroll();
                 isStarted = false;
+                isStartedUrish = false;
                 return
             }
         }
@@ -216,7 +221,7 @@ async function pongGame(objUser ,gameid) {
             score2.textContent = response.state.paddle2.score;
         }
         //join
-        if (response.method === "join"){
+        if (response.method === "join") {
             board.innerHTML = getPongContent();
         }
     }

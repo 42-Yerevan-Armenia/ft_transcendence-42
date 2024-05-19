@@ -641,24 +641,22 @@ class GameRoom(APIView):
 
 class HistoryView(APIView):
     permission_classes = [IsAuthenticated]
+
     def get(self, request, pk):
         try:
             user = Person.objects.get(id=pk)
             history_data = History.objects.filter(player=user)
-            serializer = HistorySerializer(history_data, many=True)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            history_serializer = HistorySerializer(history_data, many=True)
+            full_history_serializer = FullHistorySerializer(user)
+
+            response_data = {
+                "success": True,
+                "history": history_serializer.data,
+                "full_history": full_history_serializer.data
+            }
+            return Response(response_data, status=status.HTTP_200_OK)
         except Person.DoesNotExist:
             return JsonResponse({"success": False, "error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
-
-class FullHistoryView(APIView):
-
-    def get(self, request, pk):
-        try:
-            user = Person.objects.get(id=pk)
-            serializer = FullHistorySerializer(user)
-        except Person.DoesNotExist:
-            return JsonResponse({"success": "false", "error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
-        return JsonResponse({"success": "true", "profile": serializer.data}, safe=False)
 
 class CustomTokenRefreshView(TokenRefreshView):
     def post(self, request, *args, **kwargs):
