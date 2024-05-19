@@ -217,3 +217,57 @@ class MidleHistoryGame extends HtmlElement{
     }
 }
 // document.getElementById("FullHistoryTableBodyUserId").appendChild(createFullHistoryTableBodyContainerPlayedGames("0", "2", "3", "4"));
+
+
+
+function getContentFullHistory(data) {
+    return `
+    <div class="FullHistory">
+        <div class="FullHistoryProfil">
+            <div class="FullHistoryHeroAll">
+                <div class="FullHistoryHero">
+                    <div class="FullHistoryHeroDiv"></div>
+                </div>
+            </div>
+            <div class="FullHistoryEdit">
+                <div class="FullHistoryContainerTable">
+                    <div class="FullHistoryTable">
+                        <div class="FullHistoryTableElems">id</div>
+                        <div class="FullHistoryTableElems">Player list</div>
+                        <div class="FullHistoryTableElems">Preference</div>
+                        <div class="FullHistoryTableElems">Points</div>
+                        <div class="FullHistoryTableElems">Matches</div>
+                        </div><div class="FullHistoryContainerTableALL"></div>
+                    </div>
+                </div>
+            </div>
+    </div>
+    `
+}
+
+function getFullHistoryTableBodyUser() {
+    return `
+    <div class="FullHistoryTableBodyUser" id="2">
+        <div class="FullHistoryTableBody">
+        <div><p>2</p></div>
+        <div class="FullHistoryPlayerList">
+        <div class="imgInsideDiv"><img src="./public/User2.png" width="40" height="40" alt="Users" class="FullHistoryTableImageBody"></div>
+        <p></p></div>
+        <div><p>undefined</p></div>
+        <div><p>undefined </p></div>
+        <div><p>undefined</p></div>
+        <div id="FullHistoryTableBodyMoreDiv"><button class="FullHistoryTableBodyMembers" id="FullHistoryTableBodyMore"><img src="undefined" class="FullHistoryTableBodyNAmeImg"></button></div>
+    </div>
+    <div class="FullHistoryTableBodyContainerPlayedGames">
+        <div class="FullHistoryTablePlayedGames">
+            <div>Date</div><div>Win</div><div>Lose</div>
+            <div>Mode</div></div><div class="FullHistoryTableBodyPlayedGamesContent">
+                <div>0</div>
+                <div>2</div>
+                <div>3</div>
+                <div>4</div>
+            </div>
+        </div>
+    </div>
+    `
+}
