@@ -20,7 +20,14 @@
     background-color: black;
     border-radius: 30px;
 }
-
+.MidleCubEditSection{
+    overflow-y: scroll;
+    height: 40rem;
+}
+.MidleCommunityEditSection{
+    overflow-y: scroll;
+    height: 40rem;
+}
 /* 
 #line {
     width: 2px;

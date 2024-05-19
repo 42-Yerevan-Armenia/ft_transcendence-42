@@ -52,7 +52,7 @@ class HomePage extends HtmlElement {
     }
 
     async draw() {
-      // debugger
+      // //debugger
       ManageMidle.Manage("midle")
       // ManageMidle.Manage("JoinList");
       await this.usersDro();

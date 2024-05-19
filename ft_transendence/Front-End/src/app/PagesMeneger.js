@@ -1,4 +1,8 @@
+<<<<<<< HEAD
+//debugger
+=======
 // debugger
+>>>>>>> 7ba4e7feb507dd4d7119e08098e0659729336ff7
 // create an object that maps the url to the template, title, and description
 const urlRoutes = {
 	404: {
@@ -115,15 +119,28 @@ var navigationHistoryA = [];
 const links = document.querySelectorAll("a");
 
 async function NavigateHistoryALLITEM(pathname, href, isATag){
+<<<<<<< HEAD
+	debugger
+	// let index = -1;
+
+	if (href.slice(0,4) != "http")
+		href = window.location.protocol + "//" + href;
+=======
 	// debugger
 	let index = -1;
+>>>>>>> 7ba4e7feb507dd4d7119e08098e0659729336ff7
 	//get the index from the page of the already existing one
-	index = isInNavigationStack(pathname);
-	if (navigationHistoryA.length > 1 &&  index != -1)
-			changStack(navigationHistoryA.length, index);
-		else
-        	urlRoute(pathname, href);
-	await urlLocationHandler(isATag);
+	
+	
+	
+	// index = isInNavigationStack(pathname);
+	// if (navigationHistoryA.length > 1 &&  index != -1)
+	// 		changStack(navigationHistoryA.length, index);
+	// 	else
+	
+	
+		addNewUrlRoute(pathname, href);
+	await urlLocationHandler(isATag, pathname, href);
 }
 
 links.forEach(link => {
@@ -137,13 +154,17 @@ links.forEach(link => {
 			await NavigateHistoryALLITEM(event.target.pathname, event.target.href, true);
 		}
 		catch(e){
-			console.log("PagesMeneger tag error" + e);
+			console.log("PagesMeneger tag error+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=" + e);
 		}
     });
 });
 
 // create a function that watches the url and calls the urlLocationHandler
+<<<<<<< HEAD
+const addNewUrlRoute = (pathname, href) => {
+=======
 const urlRoute = (pathname, href) => {
+>>>>>>> 7ba4e7feb507dd4d7119e08098e0659729336ff7
 	// debugger
 	// event = event || window.event; // get window.event if event argument not provided
 	// event.preventDefault();
@@ -154,6 +175,8 @@ const urlRoute = (pathname, href) => {
 	// window.history.pushState(state, unused, target link);
 	let statePage = new StatePage();
 	statePage.page = ++pageIndex;
+	if (href.slice(0,4) != "http")
+		href = window.location.protocol + "//" + href;
 	window.history.pushState(statePage, route.title, href);
 	// window.history.pushState(statePage, route.title, window.location.href);
 	navigationHistoryA.push({statePage, title:route.title, href:href, path: pathname});
@@ -161,14 +184,10 @@ const urlRoute = (pathname, href) => {
 
 //change page and draw in screen
 async function drawHtmlScreen(route, isATag){
+
 	if (isATag)
 		await ManageAllPage.Manage(route.title)
-	// if (route.title !== "404" || route.title !== "Home")
-	// {
-	// 	const html = await fetch(route.path).then((response) => response.text());
-	// 	if (!html)
-	// 		document.querySelector(route.class).innerHTML = html;
-	// }
+
 	// set the title of the document to the title of the route
 	document.title = route.title;
 	// set the description of the document to the description of the route
@@ -178,11 +197,19 @@ async function drawHtmlScreen(route, isATag){
 }
 
 // create a function that handles the url location
+<<<<<<< HEAD
+const urlLocationHandler =  async (isATag, pathname, href) => {
+	//debugger
+	const Url = pathname; //window.location.pathname; // get the url path
+	console.log("window.location.pathname == " + window.location.pathname + "    pathname   " + pathname);
+	console.log(window.state)
+=======
 const urlLocationHandler =  async (isATag) => {
 	// debugger
 	const Url = window.location.pathname; // get the url path
 	console.log("window.location.pathname == " + window.location.pathname);
 
+>>>>>>> 7ba4e7feb507dd4d7119e08098e0659729336ff7
 	if (typeof(Url) !== "string")
 	{
 		let x = Url.pathname;
@@ -197,7 +224,11 @@ const urlLocationHandler =  async (isATag) => {
 
 // Function to check if a state is in the navigation stack
 function  isInNavigationStack(path) {
+<<<<<<< HEAD
+	//debugger
+=======
 	// debugger
+>>>>>>> 7ba4e7feb507dd4d7119e08098e0659729336ff7
     // const index =  navigationHistoryA?.findLastIndex((element) => element.path == path)
 	const index =  navigationHistoryA?.findIndex((element) => element.path == path)
 	return index;
@@ -259,8 +290,6 @@ const urlRouteForward = () => {
 	// debugger
 	let statePage = new StatePage();
 
-		// window.history.pushState({page:1}, "Home", document.location.href);
-		// navigationHistory.push({page:1, title: "Home", href: document.location.href, path:window.location.pathname});
 
 
 	window.history.pushState(statePage, "Home",document.location.href);
@@ -272,6 +301,8 @@ const urlRouteForward = () => {
 };
 
 urlRouteForward();
+<<<<<<< HEAD
+=======
 
 
 
@@ -571,3 +602,4 @@ urlRouteForward();
 
 
 
+>>>>>>> 7ba4e7feb507dd4d7119e08098e0659729336ff7

@@ -46,7 +46,11 @@ function disableScroll() {
  }
 
 async function pongGame(objUser ,gameid) {
+<<<<<<< HEAD
+    //debugger;
+=======
     console.log("isStarted = ", isStarted);
+>>>>>>> 7ba4e7feb507dd4d7119e08098e0659729336ff7
     if (isStarted)
         return;
     disableScroll();
@@ -83,7 +87,7 @@ async function pongGame(objUser ,gameid) {
     console.log("ws = ", window.location.host);
     // const txtGameId = document.getElementById("txtGameId");
     // const divPlayers = document.getElementById("divPlayers");
-    // debugger
+    // //debugger
     const board = document.getElementById("board");
 
     clearBox("board");
@@ -144,7 +148,7 @@ async function pongGame(objUser ,gameid) {
         const body = document.querySelector(".addBodyStile");
         if (response?.method === "finish_match" && User?._getAccess) {
             if (User._Id == response.state.game_room.left_id || User._Id == response.state.game_room.right_id) {
-                // debugger;
+                // //debugger;
                 clearInterval(interval);
                 ws.close();
                 clearBox("board");
