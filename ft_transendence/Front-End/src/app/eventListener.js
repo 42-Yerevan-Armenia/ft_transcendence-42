@@ -1,3 +1,8 @@
+debugger
+
+const localhostPage = window.location.host;
+console.log("const localhostPage = window.location.host;  " + window.location.host);
+
 Home._NAV._SETTINGS._classname?.addEventListener("click",()=>{
   ManageMidle.Manage("MidleSettings")
 })
@@ -74,7 +79,7 @@ Home?._NAV?._Community?._classname?.addEventListener("click",()=>{
 //whene create new list item for game
 //_MidleJoinList Create button
 Home._MidleJoinList?._CreateButton?.addEventListener("click", async () => {
-  // debugger
+    debugger
   console.log("click... \n");
   const Players = document.querySelector("#JoinListHeroDivProfilPlayers");
   const LiveOnOff = document.querySelector("#LiveOnOff");
@@ -131,18 +136,18 @@ Home._HomeLeft?._ExploreMessag?.addEventListener("click",  ()=>{
 Home._HomeLeft._LongOut.addEventListener("click", async () => {
   myStorages.longOut();
   await ManageAllPage.Manage("Home");
-  await  NavigateHistory("/", HostPort + '/', false)
+  await  NavigateHistoryALLITEM("/", localhostPage + '/', false)
 })
 
 Home._HomeLeft._NavLoginOut.addEventListener("click", async () => {
   myStorages.longOut();
   await ManageAllPage.Manage("Home");
-  await  NavigateHistory("/", HostPort + '/', false)
+  await  NavigateHistoryALLITEM("/", localhostPage + '/', false)
 })
 //---------------------------------------------------------------------   Login
 //when want to login you press button login
-Login?._LoginPageContinue?.addEventListener("click", async (e) => {
-  // debugger
+Login?._LoginPageContinue?.addEventListener("click", async (e) =>  {
+// debugger
   e.preventDefault();
   //check is correct email and password
   if (Login.ButtonSignIn())
@@ -161,7 +166,7 @@ Login?._LoginPageContinue?.addEventListener("click", async (e) => {
       {
         // Confirm.setDisplayBlock(Home);
         ManageAllPage.Manage("Confirm");
-        await  NavigateHistory("/confirm", HostPort + '/confirm', false);
+        await  NavigateHistoryALLITEM("/confirm", localhostPage + '/confirm', false);
         return;
       }
       //set local storage data access and refresh tokin
@@ -171,7 +176,7 @@ Login?._LoginPageContinue?.addEventListener("click", async (e) => {
         const SignInButton = document.querySelector(".LoginPageContinue");
         SignInButton.setAttribute("href", "/");
         await ManageAllPage.Manage("Home");
-        await  NavigateHistory("/", HostPort + '/', false)
+        await  NavigateHistoryALLITEM("/", localhostPage + '/', false)
         Login._LoginEmail.value = "";
         Login._LoginPassword.value = "";
       }
@@ -183,16 +188,16 @@ Login?._LoginPageContinue?.addEventListener("click", async (e) => {
   }
 })
 // when forgot password
-Login?._LoginPageForgot?.addEventListener("click", async() => {
-  //debugger
+Login?._LoginPageForgot?.addEventListener("click", async () => {
+  debugger
   await ManageAllPage.Manage("ResetPage");
-  await  NavigateHistory("/reset", HostPort + '/reset', false)
+  await  NavigateHistoryALLITEM("/reset", localhostPage + '/reset', false)
   ManageMidle.Manage("");
 })
 //-------------------------------------------------------------------  Reset
 let isReset = false;
 Reset?._ConfirmReset?.addEventListener('click', async () => {
-  // debugger
+    debugger
   const isValid = Reset.checkValidEmail();
   if (!isValid)
     return ;
@@ -200,14 +205,14 @@ Reset?._ConfirmReset?.addEventListener('click', async () => {
   if (!res)
     return ;
   ManageAllPage.Manage("Confirm");
-  await  NavigateHistory("/confirm", HostPort + '/confirm', false);
+  await  NavigateHistoryALLITEM("/confirm", localhostPage + '/confirm', false);
 
   isReset = true;
 })
-// await  NavigateHistory("/confirm", HostPort + '/confirm', false)
+// await  NavigateHistoryALLITEM("/confirm", localhostPage + '/confirm', false)
 //-------------------------------------------------------------------  Confirm  ---------
 Confirm.ConfirmYourEmail.addEventListener('click', async () => {
-  // debugger
+    debugger
   const data = await Confirm.ConfirmPageContinue(isReset);
   Confirm.ValuesAllEmpty();
   console.log("isReset    " + isReset);
@@ -215,16 +220,16 @@ Confirm.ConfirmYourEmail.addEventListener('click', async () => {
   if (isReset)
   {
     ManageAllPage.Manage("Confirm");
-    await  NavigateHistory("/confirm", HostPort + '/confirm', false);
+    await  NavigateHistoryALLITEM("/confirm", localhostPage + '/confirm', false);
     if (!data || !data.state)
     { 
       await ManageAllPage.Manage("ResetPage");
-      await  NavigateHistory("/reset", HostPort + '/reset', false)
+      await  NavigateHistoryALLITEM("/reset", localhostPage + '/reset', false)
       return ;
     }
     User._ConfirmEmail = true;
     await ManageAllPage.Manage("Password");     //go to password page for create new password
-    await  NavigateHistory("/password", HostPort + '/password', false)
+    await  NavigateHistoryALLITEM("/password", localhostPage + '/password', false)
     return ;
   }
   console.log("    data == " + JSON.stringify(data));
@@ -239,25 +244,25 @@ Confirm.ConfirmYourEmail.addEventListener('click', async () => {
         myStorages.setStorageLogin(data?.message?.data)
       ManageMidle.Manage("midle");
       await ManageAllPage.Manage("Home")
-      await  NavigateHistory("/", HostPort + '/', false)
+      await  NavigateHistoryALLITEM("/", localhostPage + '/', false)
       return;
     }
     User._ConfirmEmail = true;
     Confirm.DisplayNone();
     await SignUp.DisplayBlock();
-    await  NavigateHistory("/setdata", HostPort + '/setdata', false)
+    await  NavigateHistoryALLITEM("/setdata", localhostPage + '/setdata', false)
   }
   else if (data.message.substr(-3) == "408") {
     User._ConfirmEmail = false;
     ManageMidle.Manage("midle");
     await ManageAllPage.Manage("Home")
-    await  NavigateHistory("/", HostPort + '/', false)
+    await  NavigateHistoryALLITEM("/", localhostPage + '/', false)
   }
   isReset = false;
 })
 //-------------------------------------------------------------------  Password
 Password.PasswordConfirm.addEventListener("click", async () => {
-  // debugger
+    debugger
   const isCorrectPassword = Password.PasswordConfirmButton();
   if (isCorrectPassword)
   {
@@ -268,13 +273,13 @@ Password.PasswordConfirm.addEventListener("click", async () => {
     {
       myStorages.longOut();
       await ManageAllPage.Manage("Login");
-      await  NavigateHistory("/signin", HostPort + '/signin', false)
+      await  NavigateHistoryALLITEM("/signin", localhostPage + '/signin', false)
     }
   }
 })
 //-------------------------------------------------------------------  SignUp
 SignUp.SignupPageContinue.addEventListener("click", async () => {
-  // debugger
+    debugger
   const isCorrectPassword = SignUp.PasswordConfirmButton();
   const ischeckNameNickname = SignUp.checkNameNickname();
   const errorNickname = document.querySelector(".SignupPageinputDivErrorNickname");
@@ -286,7 +291,7 @@ SignUp.SignupPageContinue.addEventListener("click", async () => {
     if (codeSesion.state) {
       SignUp.DisplayNone();
       Login.DisplayBlock();
-      await  NavigateHistory("/signin", HostPort + '/signin', false)
+      await  NavigateHistoryALLITEM("/signin", localhostPage + '/signin', false)
     }
     else {
       const status = codeSesion.message.slice(codeSesion.message.length - 3)
@@ -299,12 +304,12 @@ SignUp.SignupPageContinue.addEventListener("click", async () => {
 })
 //RegisterPage click confirm email
 Register?._RegisterPageContinue?.addEventListener("click",  async () => {
-  // debugger
+    debugger
       let value = await Register.RegistersWithEmail();
       if (value) {
         Register.RegisterPageDisplayNone();
         ManageAllPage.Manage("Confirm");
-        await  NavigateHistory("/confirm", HostPort + '/confirm', false);
+        await  NavigateHistoryALLITEM("/confirm", localhostPage + '/confirm', false);
       }
 });
 
