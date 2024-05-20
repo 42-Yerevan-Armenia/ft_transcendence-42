@@ -1,18 +1,75 @@
-const express = require('express');
-const path = require('path');
+const express = require("express");
+const path = require("path");
 
 const app = express();
-app.use('/src', express.static('src'));
-app.use('/signin', express.static('signin'));
-app.use('/signup', express.static('signup'));
-app.use('/public', express.static('public'));
 
-app.use(express.static('.'));
+// Serve static files from various directories
+app.use(express.static(path.join(__dirname, "/")));
+app.use(express.static(path.join(__dirname, "/Start")));
+app.use(express.static(path.join(__dirname, "/src/app")));
+app.use(express.static(path.join(__dirname, "/src/app/models")));
+app.use(express.static(path.join(__dirname, "/src/app/styles")));
+app.use(express.static(path.join(__dirname, "/src/app/models/Home")));
+app.use(express.static(path.join(__dirname, "/src/app/models/Home/public")));
+app.use(express.static(path.join(__dirname, "/src/app/models/Home/game")));
 
-app.get("/",(req,res)=>{return ;})
-app.get('/', (req, res) => {res.sendFile(path.resolve('index.html'));});
-app.get('/index.html', (req, res) => {res.sendFile(path.resolve('index.html'));});
-app.get('*', (req, res) => {res.redirect("/")});
+// Handle specific routes first
+app.get("/", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "Start", "index.html"));
+});
 
-const port = process.env.PORT || 3000;
-app.listen(port, () => console.log('Server working...on port:'+port));
+// Handle specific routes first
+app.get("/signin", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "Start", "index.html"));
+});
+
+// Handle specific routes first
+app.get("/register", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "Start", "index.html"));
+});
+
+// Handle specific routes first
+app.get("/confirm", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "Start", "index.html"));
+});
+// Handle specific routes first
+app.get("/register", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "Start", "index.html"));
+});
+
+// Handle specific routes first
+app.get("/reset", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "Start", "index.html"));
+});
+
+// Handle specific routes first
+app.get("/setdata", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "Start", "index.html"));
+});
+
+// Handle all other routes with a wildcard
+app.all("/setdata", (req, res) => {
+    res.status(404).send("404 - Page Not Found");
+});
+
+// Start the server
+const port = 3006;
+app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// "dev": "nodemon --require dotenv/config  ./index.js"

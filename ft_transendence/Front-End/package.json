@@ -1,7 +1,7 @@
 {
   "scripts": {
     "build": "npm install http-server && npm run dev",
-    "dev": "nodemon --require dotenv/config  ./index.js"
+    "dev": "node ./index.js"
   },
   "dependencies": {
     "express": "^4.19.2",
@@ -11,5 +11,10 @@
   "main": "index.js",
   "devDependencies": {
     "dotenv": "^16.4.5"
-  }
+  },
+  "name": "y",
+  "version": "1.0.0",
+  "author": "",
+  "license": "ISC",
+  "description": ""
 }
