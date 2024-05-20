@@ -58,9 +58,9 @@ class PongConsumer(AsyncWebsocketConsumer):
         if self.id:
             print("❌Disconnected:self.id ", self.id)
             self.game[str(self.paddle_controller)] = False
-            self.game["active"] = False
-            self.game["stop_event"].set()
+            # self.game["active"] = False
             # await ThreadPool.del_game(self.game_id)
+            await ThreadPool.del_game(self.game_id)
         # await LiveGames().del_game(self.game_id)
         # game_room = await sync_to_async(GameRoom.objects.get)(id=self.game_id[:-2])
         # game_room.ongoing = False
@@ -69,6 +69,8 @@ class PongConsumer(AsyncWebsocketConsumer):
         # for player in players:
         #     player.playing = False
         #     player.save()
+
+        print(f"❌Disconnected threads: {ThreadPool.threads}")
         
 
         # print(f"⭕️Disconnected: {self.id}")
@@ -174,6 +176,7 @@ class PongConsumer(AsyncWebsocketConsumer):
                 # self.time = time.time()
 
         await LiveGames().del_game(self.game_id)
+        await LiveGames().do_bradcast()
         await self.joinList.do_broadcast()
         # get left and right ids from self.game_id
         paddle1_id = self.game["state"]["paddle1"]["id"]
@@ -194,6 +197,7 @@ class PongConsumer(AsyncWebsocketConsumer):
             self.game_id,
             {"type": "stream_state", "state": finish_response, "method": "finish_match"},
         )
+
 
     async def stream_state(self, event):
         state = event["state"]
