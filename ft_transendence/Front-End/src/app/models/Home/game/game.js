@@ -46,11 +46,7 @@ function disableScroll() {
  }
 
 async function pongGame(objUser ,gameid) {
-<<<<<<< HEAD
     //debugger;
-=======
-    console.log("isStarted = ", isStarted);
->>>>>>> 7ba4e7feb507dd4d7119e08098e0659729336ff7
     if (isStarted)
         return;
     disableScroll();

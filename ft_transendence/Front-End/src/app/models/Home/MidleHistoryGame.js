@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 ////debugger
-=======
-// debugger
->>>>>>> 7ba4e7feb507dd4d7119e08098e0659729336ff7
 class MidleHistoryGame extends HtmlElement{
     constructor(){
         super(".MidleHistoryGame");
@@ -75,20 +71,15 @@ class MidleHistoryGame extends HtmlElement{
     }
 
     async listUsers(){
-        // debugger
-<<<<<<< HEAD
         this._classname.innerHTML = "";
         this._classname.innerHTML = this.getConetntFullHistoryContainerTable();
         const historyPlayers = document.querySelector("#FullHistoryContainerTableALLId");
-=======
-        this.profilWil.innerHTML = "";
->>>>>>> 7ba4e7feb507dd4d7119e08098e0659729336ff7
 
         const history = await getFetchRequest("api/v1/history/" + User._Id);
 
+        debugger;
         if (history && history.state && history.message)
         {
-            debugger;
             history?.message?.forEach(e => {
                 historyPlayers.innerHTML += this.getContentFullHistoryTableBodyUser(e);
                 historyPlayers.innerHTML += this.getConetntFullHistoryTableBodyContainerPlayedGames({})
@@ -100,6 +91,7 @@ class MidleHistoryGame extends HtmlElement{
         }
     }
     async draw(){
+        // debugger
         await this.listUsers();
     }
 }

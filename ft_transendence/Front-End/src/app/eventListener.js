@@ -79,11 +79,7 @@ Home?._NAV?._Community?._classname?.addEventListener("click",()=>{
 //whene create new list item for game
 //_MidleJoinList Create button
 Home._MidleJoinList?._CreateButton?.addEventListener("click", async () => {
-<<<<<<< HEAD
-    //debugger
-=======
     // debugger
->>>>>>> 7ba4e7feb507dd4d7119e08098e0659729336ff7
   console.log("click... \n");
   const Players = document.querySelector("#JoinListHeroDivProfilPlayers");
   const LiveOnOff = document.querySelector("#LiveOnOff");
@@ -192,7 +188,6 @@ Login?._LoginPageContinue?.addEventListener("click", async (e) =>  {
   }
 })
 // when forgot password
-<<<<<<< HEAD
 // Login?._LoginPageForgot?.addEventListener("click", async (e) => {
 //   debugger
 // e.preventDefault();
@@ -204,18 +199,6 @@ Login?._LoginPageContinue?.addEventListener("click", async (e) =>  {
 let isReset = false;
 Reset?._ConfirmReset?.addEventListener('click', async () => {
     //debugger
-=======
-Login?._LoginPageForgot?.addEventListener("click", async () => {
-  // debugger
-  await ManageAllPage.Manage("ResetPage");
-  await  NavigateHistoryALLITEM("/reset", localhostPage + '/reset', false)
-  ManageMidle.Manage("");
-})
-//-------------------------------------------------------------------  Reset
-let isReset = false;
-Reset?._ConfirmReset?.addEventListener('click', async () => {
-    // debugger
->>>>>>> 7ba4e7feb507dd4d7119e08098e0659729336ff7
   const isValid = Reset.checkValidEmail();
   if (!isValid)
     return ;
@@ -229,11 +212,7 @@ Reset?._ConfirmReset?.addEventListener('click', async () => {
 })
 //-------------------------------------------------------------------  Confirm  ---------
 Confirm.ConfirmYourEmail.addEventListener('click', async () => {
-<<<<<<< HEAD
     //debugger
-=======
-    // debugger
->>>>>>> 7ba4e7feb507dd4d7119e08098e0659729336ff7
   const data = await Confirm.ConfirmPageContinue(isReset);
   Confirm.ValuesAllEmpty();
   console.log("isReset    " + isReset);
@@ -283,11 +262,7 @@ Confirm.ConfirmYourEmail.addEventListener('click', async () => {
 })
 //-------------------------------------------------------------------  Password
 Password.PasswordConfirm.addEventListener("click", async () => {
-<<<<<<< HEAD
-    //debugger
-=======
     // debugger
->>>>>>> 7ba4e7feb507dd4d7119e08098e0659729336ff7
   const isCorrectPassword = Password.PasswordConfirmButton();
   if (isCorrectPassword)
   {
@@ -304,11 +279,7 @@ Password.PasswordConfirm.addEventListener("click", async () => {
 })
 //-------------------------------------------------------------------  SignUp
 SignUp.SignupPageContinue.addEventListener("click", async () => {
-<<<<<<< HEAD
-    //debugger
-=======
     // debugger
->>>>>>> 7ba4e7feb507dd4d7119e08098e0659729336ff7
   const isCorrectPassword = SignUp.PasswordConfirmButton();
   const ischeckNameNickname = SignUp.checkNameNickname();
   const errorNickname = document.querySelector(".SignupPageinputDivErrorNickname");
@@ -333,11 +304,7 @@ SignUp.SignupPageContinue.addEventListener("click", async () => {
 })
 //RegisterPage click confirm email
 Register?._RegisterPageContinue?.addEventListener("click",  async () => {
-<<<<<<< HEAD
-    //debugger
-=======
     // debugger
->>>>>>> 7ba4e7feb507dd4d7119e08098e0659729336ff7
       let value = await Register.RegistersWithEmail();
       if (value) {
         Register.RegisterPageDisplayNone();

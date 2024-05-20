@@ -44,7 +44,7 @@ class HomePage extends HtmlElement {
         }
     }
     ButtonSignIn = (email = "") => {
-      if (email.length > 0){} // ❓❓❓
+      if (email.length > 0){} 
       this._style.display = "none";
     }
     ButtonSignUp = () => {
