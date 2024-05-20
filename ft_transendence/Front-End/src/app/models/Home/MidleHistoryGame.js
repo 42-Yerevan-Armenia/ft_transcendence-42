@@ -71,16 +71,15 @@ class MidleHistoryGame extends HtmlElement{
     }
 
     async listUsers(){
-        debugger
         this._classname.innerHTML = "";
         this._classname.innerHTML = this.getConetntFullHistoryContainerTable();
         const historyPlayers = document.querySelector("#FullHistoryContainerTableALLId");
 
         const history = await getFetchRequest("api/v1/history/" + User._Id);
 
+        debugger;
         if (history && history.state && history.message)
         {
-            debugger;
             history?.message?.forEach(e => {
                 historyPlayers.innerHTML += this.getContentFullHistoryTableBodyUser(e);
                 historyPlayers.innerHTML += this.getConetntFullHistoryTableBodyContainerPlayedGames({})
@@ -92,7 +91,7 @@ class MidleHistoryGame extends HtmlElement{
         }
     }
     async draw(){
-        debugger
+        // debugger
         await this.listUsers();
     }
 }

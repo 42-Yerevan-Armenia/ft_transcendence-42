@@ -170,14 +170,14 @@ class MidleProfile extends HtmlElement {
       const gameinvite_requests = UserData.gameinvite_requests;
 
       if (friendship_requests) {
-        debugger
+        // debugger
         friendship_requests.forEach((item)=>{
           if (!item.rejected)
           this.profilBody(item, "FriendRequest");
         })
       }
       if (gameinvite_requests ) {
-          debugger
+          // debugger
           gameinvite_requests.forEach((item)=>{
             if (!item.rejected)
             this.profilBody(item, "JoinRequest");
