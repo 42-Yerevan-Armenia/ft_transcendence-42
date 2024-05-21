@@ -2,7 +2,6 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_slug, validate_email
 from django.contrib.auth.password_validation import validate_password
-from django.http import JsonResponse
 from django.core.mail import send_mail
 import secrets
 

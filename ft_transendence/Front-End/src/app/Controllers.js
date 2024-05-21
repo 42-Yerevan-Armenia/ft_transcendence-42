@@ -1,11 +1,11 @@
 "use strict"
 // const HostPort="http://localhost:5001"
-const HostPort="http://10.12.11.1:8000"
-// const HostPort="http://10.12.11.2:8000"
+// const HostPort="http://10.12.11.1:8000"
+const HostPort="http://10.12.11.2:8000"
 
 let INTRA_API_URL="https://api.intra.42.fr/";
-let INTRA_API_UID="u-s4t2ud-1cd616aa7279a41f3410720fbc7b56429f94114c40825b988cd2877c2070c236";
-let INTRA_REDIRECT_URI="http%3A%2F%2F10.12.11.1%3A3000%2F";
+let INTRA_API_UID="u-s4t2ud-0b391bc545deef39af3fb3f0afa178783df06731c0fe9c387812a11d36f51d90";
+let INTRA_REDIRECT_URI="http%3A%2F%2F10.12.11.2%3A3000%2F";
 
 //if create 
 async function ControllerCheckEmail(email) {

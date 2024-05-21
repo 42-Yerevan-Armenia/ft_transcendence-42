@@ -40,9 +40,9 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'daphne', #web server for ASGI
+    'daphne',
     'django.contrib.staticfiles',
-    'channels', #channels for websockets async communication
+    'channels',
     'corsheaders',
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
@@ -158,7 +158,7 @@ REST_FRAMEWORK = {
     )
 }
 
-ALGORITHM = os.environ.get('ALGORITHM')
+ALGORITHM = os.environ.get('ALGORITHM', 'HS256')
 AUTH_COOKIE = os.environ.get('AUTH_COOKIE', 'auth_token')
 REFRESH_COOKIE = os.environ.get('REFRESH_COOKIE', 'refresh_token')
 ISSUER = os.environ.get('ISSUER')
