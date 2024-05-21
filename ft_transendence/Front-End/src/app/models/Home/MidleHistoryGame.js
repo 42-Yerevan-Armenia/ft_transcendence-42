@@ -3,7 +3,7 @@ class MidleHistoryGame extends HtmlElement{
     constructor(){
         super(".MidleHistoryGame");
         this._style.display = "none";
-
+        this._fullHistory = {};
     };
 
     getConetntFullHistoryContainerTable() {
@@ -33,29 +33,28 @@ class MidleHistoryGame extends HtmlElement{
                         <img src=data:image/png;base64,${data.image} width="40" height="40"
                         alt="Users" class="FullHistoryTableImageBody"></img>
                     </div>
-                    <p>name</p>
+                    <p>${data.nickname}</p>
                 </div>
-                <div><p>Classic /Hard Easy</p></div>
-                <div><p>${data.oponent_points}</p></div>
-                <div><p>${data.mathces}</p></div>
+                <div><p>${data.gamemode}</p></div>
+                <div><p>${data.points}</p></div>
+                <div><p>${data.matches}</p></div>
                 <div id="FullHistoryTableBodyMoreDiv">
                     <button class="FullHistoryTableBodyMembers" id="FullHistoryTableBodyMore:${data.opponent_id}"><img src="./public/ButtonU.png" class="FullHistoryTableBodyNAmeImg"/></button>
                 </div>
             </div>
         </div>
         `
+                    // <img src="./public/ButtonU.png" class="FullHistoryTableBodyNAmeImg"></img>
     }
     
     getConetntFullHistoryTableBodyContainerPlayedGames(data) {
         return `
-        <div class="FullHistoryTableBodyContainerPlayedGames">
             <div class="FullHistoryTablePlayedGames">
-                    <div>data</div>
-                    <div>Win</div>
-                    <div>Lose</div>
-                    <div>gamemode</div>
+                <div>data</div>
+                <div>Win</div>
+                <div>Lose</div>
+                <div>gamemode</div>
             </div>
-        </div>
         `
     }
 
@@ -78,18 +77,40 @@ class MidleHistoryGame extends HtmlElement{
         const history = await getFetchRequest("api/v1/history/" + User._Id);
 
         console.log("history = ", history);
-        debugger;
-
-        if (history && history.state && history.message)
+        if (history && history.state && history.message && history.message.history)
         {
-            history?.message?.forEach(e => {
-                historyPlayers.innerHTML += this.getContentFullHistoryTableBodyUser(e);
-                historyPlayers.innerHTML += this.getConetntFullHistoryTableBodyContainerPlayedGames({})
+            const data = history.message.history;
+            // this._data = history.message.history;
+            data.forEach(e => {
+                const opponent_id = e.opponent_id;
+                const div = fromHTML(this.getContentFullHistoryTableBodyUser(e));
+                historyPlayers.append(div);
+                const moreButton = document.getElementById("FullHistoryTableBodyMore:" + opponent_id);
+                this._fullHistory[opponent_id] = e.full_history;
+                moreButton.addEventListener("click", () => {
+                    
+                    // if (moreButton.pressed) {
+                    //     moreButton.pressed = false;
+                    // } else {
+                    //     moreButton.pressed = true;
+                    // }
 
-                const FullHistoryTableBodyUserId = document.querySelector(`#FullHistoryTableBodyUserId${e.opponent_id} .FullHistoryTableBodyContainerPlayedGames`)
-                FullHistoryTableBodyUserId.innerHTML += this.getConetntFullHistoryTableBodyPlayedGamesContent(e)
+                    const fullHistory = this._fullHistory[moreButton.id.split(":").at(-1)]
+                    console.log("event");
+                    fullHistory?.forEach((e) => {
+                        const userContext = document.getElementById("FullHistoryTableBodyUserId:" + opponent_id);
 
+                        while (userContext.children.length > 1) {
+                            userContext.removeChild(userContext.lastChild);
+                        }
+
+                        console.log("e = ", e);
+                        userContext.append(fromHTML(this.getConetntFullHistoryTableBodyContainerPlayedGames()));
+                        userContext.append(fromHTML(this.getConetntFullHistoryTableBodyPlayedGamesContent(e)));
+                    })
+                })
             });
+
         }
     }
     async draw(){
@@ -97,3 +118,20 @@ class MidleHistoryGame extends HtmlElement{
         await this.listUsers();
     }
 }
+
+
+function fromHTML(html, trim = true) {
+    // Process the HTML string.
+    html = trim ? html.trim() : html;
+    if (!html) return null;
+  
+    // Then set up a new template element.
+    const template = document.createElement('template');
+    template.innerHTML = html;
+    const result = template.content.children;
+  
+    // Then return either an HTMLElement or HTMLCollection,
+    // based on whether the input HTML had one or more roots.
+    if (result.length === 1) return result[0];
+    return result;
+  }
