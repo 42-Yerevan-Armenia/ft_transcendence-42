@@ -1,4 +1,4 @@
-// debugger
+//debugger
 
 const localhostPage = window.location.host;
 console.log("const localhostPage = window.location.host;  " + window.location.host);
@@ -147,7 +147,7 @@ Home._HomeLeft._NavLoginOut.addEventListener("click", async () => {
 //---------------------------------------------------------------------   Login
 //when want to login you press button login
 Login?._LoginPageContinue?.addEventListener("click", async (e) =>  {
-// debugger
+// //debugger
   e.preventDefault();
   //check is correct email and password
   if (Login.ButtonSignIn())
@@ -188,16 +188,17 @@ Login?._LoginPageContinue?.addEventListener("click", async (e) =>  {
   }
 })
 // when forgot password
-Login?._LoginPageForgot?.addEventListener("click", async () => {
-  // debugger
-  await ManageAllPage.Manage("ResetPage");
-  await  NavigateHistoryALLITEM("/reset", localhostPage + '/reset', false)
-  ManageMidle.Manage("");
-})
+// Login?._LoginPageForgot?.addEventListener("click", async (e) => {
+//   debugger
+// e.preventDefault();
+//   await ManageAllPage.Manage("ResetPage");
+//   await  NavigateHistoryALLITEM("/reset", localhostPage + '/reset', false)
+//   ManageMidle.Manage("");
+// })
 //-------------------------------------------------------------------  Reset
 let isReset = false;
 Reset?._ConfirmReset?.addEventListener('click', async () => {
-    // debugger
+    //debugger
   const isValid = Reset.checkValidEmail();
   if (!isValid)
     return ;
@@ -209,10 +210,9 @@ Reset?._ConfirmReset?.addEventListener('click', async () => {
 
   isReset = true;
 })
-// await  NavigateHistoryALLITEM("/confirm", localhostPage + '/confirm', false)
 //-------------------------------------------------------------------  Confirm  ---------
 Confirm.ConfirmYourEmail.addEventListener('click', async () => {
-    // debugger
+    //debugger
   const data = await Confirm.ConfirmPageContinue(isReset);
   Confirm.ValuesAllEmpty();
   console.log("isReset    " + isReset);
