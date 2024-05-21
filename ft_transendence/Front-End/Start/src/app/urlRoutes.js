@@ -5,15 +5,15 @@ const urlRoutes = {
 		title: "404",
 		description: "Page not found Error",
 	},
-	"/signin": {
-		url: "/signin",
+	"/login": {
+		url: "/login",
 		class:".LoginPage",
 		path: "/signin/signin.html",
 		title: "Login",
 		description: "This is the SignIn page",
 	},
-	"/signin/": {
-		url: "/signin",
+	"/login/": {
+		url: "/login",
 		class:".LoginPage",
 		path: "/signin/signin.html",
 		title: "Login",

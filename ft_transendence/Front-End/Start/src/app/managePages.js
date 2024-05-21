@@ -22,7 +22,7 @@ var ManageAllPage = {
         });
     },
     pages: [
-        {"Login": Login},              //http://10.12.11.1:3000/signin
+        {"Login": Login},              //http://10.12.11.1:3000/login
         {"Confirm": Confirm},          //http://10.12.11.1:3000/confirm
         {"Register": Register},        //http://10.12.11.1:3000/register
         {"Home": Home},                //http://10.12.11.1:3000/password

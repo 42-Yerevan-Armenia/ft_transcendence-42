@@ -15,7 +15,7 @@ var navigationHistoryA = [];
 const links = document.querySelectorAll("a");
 
 async function NavigateHistoryALLITEM(pathname, href, isATag){
-	//debugger
+	debugger
 	// let index = -1;
 
 	//get the index from the page of the already existing one
@@ -47,7 +47,7 @@ links.forEach(link => {
 
 // create a function that watches the url and calls the urlLocationHandler
 const addNewUrlRoute = (pathname, href) => {
-	// //debugger
+	debugger
 	// event = event || window.event; // get window.event if event argument not provided
 	// event.preventDefault();
 	// Url  = event.target.pathname;
@@ -80,7 +80,7 @@ async function drawHtmlScreen(route, isATag){
 
 // create a function that handles the url location
 const urlLocationHandler =  async (isATag, pathname, href) => {
-	////debugger
+	debugger
 	const Url = pathname; //window.location.pathname; // get the url path
 	console.log("window.location.pathname == " + window.location.pathname + "    pathname   " + pathname);
 	console.log(window.state)
@@ -98,7 +98,7 @@ const urlLocationHandler =  async (isATag, pathname, href) => {
 
 // Function to check if a state is in the navigation stack
 function  isInNavigationStack(path) {
-	////debugger
+	debugger
     // const index =  navigationHistoryA?.findLastIndex((element) => element.path == path)
 	const index =  navigationHistoryA?.findIndex((element) => element.path == path)
 	return index;
@@ -106,7 +106,7 @@ function  isInNavigationStack(path) {
 
 //change stack navigationHistoryA
 function changStack(n, index) {
-	// //debugger
+	debugger
 	let currentTop = navigationHistoryA[n - 1];
 	let newTop =  navigationHistoryA[index];
 
@@ -120,7 +120,7 @@ function changStack(n, index) {
 
 //function  back()  and   forward()
 const urlLocationHandlerForNavigateBackForward = async () => {
-	// //debugger
+	debugger
 	const Url =  window.location.pathname; // get the url path
 	if (typeof(Url) !== "string") {
 		let x = Url.pathname;
@@ -150,7 +150,7 @@ const urlLocationHandlerForNavigateBackForward = async () => {
 
 //add an event listener to the window that watches for url changes "-> or <-"
 window.addEventListener("popstate", async function(event) {
-	// //debugger
+	debugger
     console.log("History state changed:", event.state);
 
 	await urlLocationHandlerForNavigateBackForward();
@@ -158,7 +158,7 @@ window.addEventListener("popstate", async function(event) {
 
 // create a function that watches the url and calls the urlLocationHandler
 const urlRouteForward = async () => {
-	// //debugger
+	debugger
 	let statePage = new StatePage();
 	
 	const href = document.location.href;

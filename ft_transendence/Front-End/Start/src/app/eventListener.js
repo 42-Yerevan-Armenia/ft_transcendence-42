@@ -273,7 +273,7 @@ Password.PasswordConfirm.addEventListener("click", async () => {
     {
       myStorages.longOut();
       await ManageAllPage.Manage("Login");
-      await  NavigateHistoryALLITEM("/signin", localhostPage + '/signin', false)
+      await  NavigateHistoryALLITEM("/login", localhostPage + '/login', false)
     }
   }
 })
@@ -291,7 +291,7 @@ SignUp.SignupPageContinue.addEventListener("click", async () => {
     if (codeSesion.state) {
       SignUp.DisplayNone();
       Login.DisplayBlock();
-      await  NavigateHistoryALLITEM("/signin", localhostPage + '/signin', false)
+      await  NavigateHistoryALLITEM("/login", localhostPage + '/login', false)
     }
     else {
       const status = codeSesion.message.slice(codeSesion.message.length - 3)
