@@ -1,7 +1,4 @@
-
-//confirm Page
 class ConfirmPage extends HtmlElement {
-  debugger
     constructor() {
       super(".ConfirmPage")
       this._style.display = "none";
@@ -23,15 +20,14 @@ class ConfirmPage extends HtmlElement {
       setTimeout(() => {
         if (User._ConfirmEmail)
           return true;
-        if (current <= 0)
-        {
+        if (current <= 0) {
           this._style.display = "none";
           User._ConfirmEmail = false;
           Home.DisplayBlock();
           this.ValuesAllEmpty();
           return false;
         }
-        else{
+        else {
           this.TimeDureationPermission()
           this.TimeDureation.innerHTML = current; //minuts
         }
@@ -60,9 +56,9 @@ class ConfirmPage extends HtmlElement {
       this.err.innerHTML = message;
       this.ValuesAllEmpty();
     }
-  
     //click confirm button and check respons
     async ConfirmPageContinue(isReset) {
+      
       this.err.innerHTML = "";
       this.v0.value += ""
       this.v1.value += ""
@@ -70,42 +66,35 @@ class ConfirmPage extends HtmlElement {
       this.v3.value += ""
       this.v4.value += ""
       //each input must not be empty
-      if (!this.v0.value || !this.v1.value || !this.v2.value || !this.v3.value || !this.v4.value)
-      {
+      if (!this.v0.value || !this.v1.value || !this.v2.value || !this.v3.value || !this.v4.value) {
         this.err.style.color = "";
         this.err.innerHTML = "all items must be recorded";
       }
       else {
         if (this.v0.value.length !== 1 || this.v1.value.length !== 1 || this.v2.value.length !== 1
-                || this.v3.value.length !== 1 || this.v4.value.length !== 1)
-        {
+                || this.v3.value.length !== 1 || this.v4.value.length !== 1) {
           this.ErrorHandling("each element must be one number");
         }
         else {
           //the code must be a string for the request sent
           const code = this.v0.value + "" + this.v1.value + this.v2.value + this.v3.value + this.v4.value;
           let data ;
-          if(isReset)
-          {
+          if(isReset) {
             data =  await FetchRequest("POST", "forget_confirm", {code: code, email: User._Email});
             return data;
           }
           else
             data =  await ControllerCheckReplayCode(code);
-  
           //Error message
-          if (!data.state)
-          {
+          if (!data.state) {
             const message = data.message.substring(0, data.message.length - 3);
             this.ErrorHandling(message + "");
           }
-  
           return data;
         }
       }
       return null;
     }
-    draw(){
-      this.setDisplayBlock(Home);
-    }
+    draw(){this.setDisplayBlock(Home);}
   }
+  

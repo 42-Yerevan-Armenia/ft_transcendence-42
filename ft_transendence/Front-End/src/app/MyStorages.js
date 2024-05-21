@@ -1,19 +1,14 @@
-//-------------------------------------------------       browser storage     ----------------------------------------
-
-//manag browser storage
 const myStorages = {
     setStorageLogin(tockens) {
-      debugger
-      debugger
-
+      // //debugger
+      // //debugger
+      // //debugger
       console.log("tockens     --------   " + tockens)
       console.log(tockens);
       const {refresh, success, access} = tockens;
   
       if (!success || !access || !refresh || !tockens.user)
         return false;
-  
-  
       User._Name = tockens.user.name;
       User._Nickname = tockens.user.nickname;
       User._ID = tockens.user.id;
@@ -23,6 +18,8 @@ const myStorages = {
       User._SignIn = true;
       User._Gamemode = tockens.user.gamemode || "Easy";
       User._Twofactor = tockens.user.twofactor || false;
+      User._WinCount = tockens.user?.wins || 0;
+      User._LoseCount = tockens.user?.loses || 0;
 
       localStorage.setItem("id", User._ID + "")
       localStorage.setItem("access", access + "")
@@ -40,9 +37,13 @@ const myStorages = {
       localStorage.setItem("refresh", data.access.access_token + "")
       localStorage.setItem("id",  data.user.id + "")
     },
+    setAccsessTockenForIntra(data){
+      localStorage.setItem("access", data.access + "")
+      localStorage.setItem("refresh", data.refresh + "")
+      localStorage.setItem("id",  data.user.id + "")
+    },
     
     async longOut() {
-      //debugger
       // api/v1/logout/
       const dataUrs={
         "pk":User._Id
@@ -52,15 +53,10 @@ const myStorages = {
       localStorage.removeItem("id");
       localStorage.removeItem("access");
       localStorage.removeItem("refresh");
-      
-
-
-      
-
       User.Destruc();
       window.location.search = ""
     },
-    
+
     checkSignIn() {
       this._getAccess = localStorage.getItem("access");
       this._geRefresh = localStorage.getItem("refresh");
@@ -71,8 +67,6 @@ const myStorages = {
       else
         this._SignIn = false;
       return this._SignIn;
-
     }
   }
-  
   

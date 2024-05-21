@@ -6,7 +6,7 @@ from game.views import (
     PlayTournament,
     SendInviteRequest,
     AcceptInviteRequest,
-    RejectInviteRequest
+    RejectInviteRequest,
 )
 
 urlpatterns = [

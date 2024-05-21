@@ -8,7 +8,7 @@ BUTTON_COLOR = (0, 0, 0)
 PADDLE_STEP = 8
 
 VEL = 10
-MAX_VEL = 0.5
+MAX_VEL = 3
 FPS = 60
 
 

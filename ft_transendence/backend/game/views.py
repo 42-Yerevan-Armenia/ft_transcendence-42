@@ -14,14 +14,24 @@ from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 
 from channels.layers import get_channel_layer
-from asgiref.sync import async_to_sync
+
+from asgiref.sync import async_to_sync, sync_to_async
+from django.db.models import Q
 
 import time
 import random
 
+import asyncio
+
+# await channel_layer.send("channel_name", {
+#     "type": "chat.message",
+#     "text": "Hello there!",
+# })
+
 class LiveGames():
     _instance = None
-   
+    _channel_layer = get_channel_layer()
+
     def __new__(cls):
         if cls._instance is None:
             cls._channel_layer = get_channel_layer()
@@ -31,83 +41,116 @@ class LiveGames():
             cls._instance.player_pool = []  # Initialize player_pool only once
         return cls._instance
 
-    def add_game(self, game_id, game):
-        self.games.append(game)
+    async def do_bradcast(self):
+        print("❌ LiveGames do_bradcast", self._group_name)
         if self._group_name:
-            async_to_sync(self._channel_layer.group_send)(
+            await self._channel_layer.group_send(
                 self._group_name,
                 {
                     "type": "stream_sate_live",
                     "liveGames": self.games
                 }
             )
+            print
+        print("❌ LiveGames do_bradcast ", self.games)
 
-    def del_game(self, game_id):
+    def add_game(self, game_id, game):
+
+        self.games.append(game)
+        # if self._group_name:
+        #     async_to_sync(self._channel_layer.group_send)(
+        #         self._group_name,
+        #         {
+        #             "type": "stream_sate_live",
+        #             "liveGames": self.games
+        #         }
+        #     )
+
+    async def del_game(self, game_id):
         for i, game in enumerate(self.games):
             if game["game_room"]["room_id"] == game_id:
                 del self.games[i]
                 break
-        print("❌ del_game = ", self.games)
-        if self._group_name:
-            print("❌ self._group_name = ", self._group_name)
-            async_to_sync(self._channel_layer.group_send)(
-                self._group_name,
-                {
-                    "type": "stream_sate_live",
-                    "liveGames": self.games
-                }
-            )
+        # if self._group_name:
+        #     await self._channel_layer.group_send(
+        #         self._group_name,
+        #         {
+        #             "type": "stream_sate_live",
+        #             "liveGames": self.games
+        #         }
+        #     )
 
-    def set_winner(self, winner, loser):
-        winner_person = Person.objects.get(id=winner)
-        game_room = winner_person.game_room
-        # TournamentSystem.game_results_history(winner, loser, winner)
+    async def set_winner(self, winner, loser):
+        winner_person = await sync_to_async(Person.objects.get)(id=winner)
+        game_room = await sync_to_async(lambda: winner_person.game_room)()
+        await sync_to_async(game_results_history)(winner, loser, winner)
         if game_room.max_players == 2:
             game_room.ongoing = False
-            game_room.players.update(game_room_id=None)
-            game_room.save()
-            for player in game_room.players.all():
+            await sync_to_async(game_room.save)()
+            players = await sync_to_async(list)(game_room.players.all())
+            for player in players:
                 player.ongoing = False
-                player.save()
-            Person.objects.filter(game_room_id=game_room.id).update(game_room_id=None)
+                await sync_to_async(player.save)()
+            await sync_to_async(Person.objects.filter(game_room_id=game_room.id).update)(game_room_id=None)
         else:
-            loser_person = Person.objects.get(id=loser)
+            loser_person = await sync_to_async(Person.objects.get)(id=loser)
             loser_person.game_room_id = None
             loser_person.ongoing = False
-            loser_person.save()
-            Round.objects.create(winner=winner_person, game_room=game_room)
+            await sync_to_async(loser_person.save)()
+            await sync_to_async(Round.objects.create)(winner=winner_person, game_room=game_room)
+        await sync_to_async(self.next_match)(game_room)
+        
 
     def next_match(self, game_room):
         if len(game_room.players.all()) == 4:
-            last_round_winners = Round.objects.filter(game_room=game_room).order_by('-id')[:2]
-            player_1_id = None
-            player_2_id = None
-            # Find the players for the match
-            for winner in last_round_winners:
-                player_1_id = winner.winner_id
-                other_winner = [w for w in last_round_winners if w != winner and w.winner.game_room_id == game_room.id]
-                if other_winner:
-                    player_2_id = other_winner[0].winner_id
-                    break
-            if player_1_id and player_2_id:
-                mms = MatchmakingSystem()
-                mms.start_match(player_1_id, player_2_id, game_room.id)
+            if not len([p for p in game_room.players.all() if p.game_room_id is None]) == 3: 
+                last_round_winners = Round.objects.filter(game_room=game_room).order_by('-id')[:2]
+                player_1_id = None
+                player_2_id = None
+                for winner in last_round_winners:
+                    player_1_id = winner.winner_id
+                    other_winner = [w for w in last_round_winners if w != winner and w.winner.game_room_id == game_room.id]
+                    if other_winner:
+                        player_2_id = other_winner[0].winner_id
+                        break
+                if player_1_id and player_2_id:
+                    mms = MatchmakingSystem()
+                    mms.start_match(player_1_id, player_2_id, game_room.id)
+                    Round.objects.filter(game_room=game_room).delete()
+            else:
                 Round.objects.filter(game_room=game_room).delete()
+                game_room.ongoing = False
+                game_room.save()
+                players = list(game_room.players.all())
+                for player in players:
+                    player.ongoing = False
+                    player.save()
+                Person.objects.filter(game_room_id=game_room.id).update(game_room_id=None)
         elif len(game_room.players.all()) == 8:
-            last_round_winners = Round.objects.filter(game_room=game_room).order_by('-id')[:4]
-            player_1_id = None
-            player_2_id = None
-            # Find the players for the match
-            for winner in last_round_winners:
-                player_1_id = winner.winner_id
-                other_winner = [w for w in last_round_winners if w != winner and w.winner.game_room_id == game_room.id]
-                if other_winner:
-                    player_2_id = other_winner[0].winner_id
-                    break
-            if player_1_id and player_2_id:
-                mms = MatchmakingSystem()
-                mms.start_match(player_1_id, player_2_id, game_room.id)
+            if not len([p for p in game_room.players.all() if p.game_room_id is None]) == 7: 
+                last_round_winners = Round.objects.filter(game_room=game_room).order_by('-id')[:2]
+                player_1_id = None
+                player_2_id = None
+                # Find the players for the match
+                for winner in last_round_winners:
+                    player_1_id = winner.winner_id
+                    other_winner = [w for w in last_round_winners if w != winner and w.winner.game_room_id == game_room.id]
+                    if other_winner:
+                        player_2_id = other_winner[0].winner_id
+                        break
+                if player_1_id and player_2_id:
+                    mms = MatchmakingSystem()
+                    mms.start_match(player_1_id, player_2_id, game_room.id)
+                    Round.objects.filter(game_room=game_room).delete()
+            else:
                 Round.objects.filter(game_room=game_room).delete()
+                game_room.ongoing = False
+                game_room.save()
+                players = list(game_room.players.all())
+                for player in players:
+                    player.ongoing = False
+                    player.save()
+                Person.objects.filter(game_room_id=game_room.id).update(game_room_id=None)
 
     def set_group_name(self, group_name):
         self._group_name = group_name
@@ -214,7 +257,7 @@ class MatchmakingSystem():
             room_id = str(room_id) + str(player1_id) + str(player2_id)
             response_data = {
                 "success": True,
-                "method": "start_mutch",
+                "method": "start_mutch",  # TODO
                 "game_room": {
                         "room_id": room_id,
                         "left_id": player1_id,
@@ -223,6 +266,8 @@ class MatchmakingSystem():
             }
             print("❌", response_data)
             LiveGames().add_game(room_id, response_data)
+            asyncio.run(LiveGames().do_bradcast())
+            print("❌ stex", response_data)
         except Exception as e:
             return JsonResponse({"success": False, "error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
@@ -284,57 +329,73 @@ class TournamentSystem:
             mms = MatchmakingSystem()
             mms.start_match(player_1, player_2, self.room_id)
 
-    def game_results_history(player1_id, player2_id, win):# ✅
-        user1 = Person.objects.get(id=player1_id)
-        user2 = Person.objects.get(id=player2_id)
-        if win == player1_id:
-            result_user1 = 1
-            result_user2 = 0
-        else:
-            result_user1 = 0
-            result_user2 = 1
-        res_user1 = result_user1 == 1
-        res_user2 = result_user2 == 1
-        History.objects.create(player=user1, opponent=user2, game_room=user1.game_room, win=res_user1, lose=not res_user1)
-        History.objects.create(player=user2, opponent=user1, game_room=user2.game_room, win=res_user2, lose=not res_user2)  
-
-        # Update game results
-        if result_user1 == 1:
-            user1.wins += 1
-            score1 = 100
-        else:
-            user1.loses += 1
-            score1 = 50
-        if result_user2 == 1:
-            user2.wins += 1
-            score2 = 100
-        else:
-            user2.loses += 1
-            score2 = 50
-        # Update match count
-        user1.matches += 1
-        user2.matches += 1
-        # Set percentage bonus
-        win_bonus = 0.5
-        lose_bonus = 0.25
-        match_bonus = 0.1
-        # Calculate points
-        points_user1 = ( score1 +
-            user1.wins * win_bonus +
-            user1.loses * lose_bonus +
-            user1.matches * match_bonus
-        )
-        points_user2 = ( score2 +
-            user2.wins * win_bonus +
-            user2.loses * lose_bonus +
-            user2.matches * match_bonus
-        )
-        # Update points
-        user1.points += points_user1
-        user2.points += points_user2
-        # Save changes to the database
-        user1.save()
-        user2.save()
+def game_results_history(player1_id, player2_id, win):# ✅
+    user1 = Person.objects.get(id=player1_id)
+    user2 = Person.objects.get(id=player2_id)
+    if win == player1_id:
+        result_user1 = 1
+        result_user2 = 0
+    else:
+        result_user1 = 0
+        result_user2 = 1
+    res_user1 = result_user1 == 1
+    res_user2 = result_user2 == 1
+    # Update game results
+    if result_user1 == 1:
+        user1.wins += 1
+        score1 = 100
+    else:
+        user1.loses += 1
+        score1 = 50
+    if result_user2 == 1:
+        user2.wins += 1
+        score2 = 100
+    else:
+        user2.loses += 1
+        score2 = 50
+    # Update match count
+    user1.matches += 1
+    user2.matches += 1
+    # Set percentage bonus
+    win_bonus = 0.5
+    lose_bonus = 0.25
+    match_bonus = 0.1
+    # Calculate points
+    points_user1 = ( score1 +
+        user1.wins * win_bonus +
+        user1.loses * lose_bonus +
+        user1.matches * match_bonus
+    )
+    points_user2 = ( score2 +
+        user2.wins * win_bonus +
+        user2.loses * lose_bonus +
+        user2.matches * match_bonus
+    )
+    # Update points
+    user1.points += points_user1
+    user2.points += points_user2
+    # Save changes to the database
+    user1.save()
+    user2.save()
+    History.objects.create(
+        player=user1,
+        opponent=user2,
+        game_room=user1.game_room,
+        win=res_user1,
+        lose=not res_user1,
+        oponent_points=user2.points,
+        image=user1.image
+    )
+    
+    History.objects.create(
+        player=user2,
+        opponent=user1,
+        game_room=user2.game_room,
+        win=res_user2,
+        lose=not res_user2,
+        oponent_points=user1.points,
+        image=user2.image
+    )
 
 class SendInviteRequest(APIView):
     permission_classes = [IsAuthenticated]
@@ -359,7 +420,8 @@ class SendInviteRequest(APIView):
                     invite_request.delete()
                 else:
                     return Response({"success": "false", "error": "Invitation already sent"}, status=status.HTTP_400_BAD_REQUEST)
-            GameInvite.objects.create(sender=sender, receiver=opponent)
+            res = GameInvite.objects.create(sender=sender, receiver=opponent)
+            print("✅", res)
             return Response({"success": "true", "message": "Invitation sent successfully"}, status=status.HTTP_200_OK)
         except Person.DoesNotExist:
             return Response({"success": "false", "error": "User or opponent not found"}, status=status.HTTP_404_NOT_FOUND)

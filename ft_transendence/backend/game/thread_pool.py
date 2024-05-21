@@ -38,9 +38,10 @@ class ThreadPool:
         if game_name not in cls.threads:
             return    
         thread = cls.threads[game_name]
-        thread["active"] = False
+        # thread["active"] = False
         thread["stop_event"].set()
-        thread["thread"].join()
+        if thread["thread"].is_alive():
+            thread["thread"].join()
         if game_name in cls.threads:
             del cls.threads[game_name]
         # print(thread.join())

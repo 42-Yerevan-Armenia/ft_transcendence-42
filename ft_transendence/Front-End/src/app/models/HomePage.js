@@ -1,7 +1,6 @@
 // Home Page
 class HomePage extends HtmlElement {
     constructor(){
-      // debugger;
       super(".homeSection");
       this._style.display = "block";
       this._Midle = new MiddleSECTION();
@@ -29,29 +28,23 @@ class HomePage extends HtmlElement {
     _NavSigninSignout = {
       _NavSignin : document.querySelector(".NavSignin"),
       _NavSignin1 :  document.querySelector(".RightsigninButton"),
-  
       // _NavSignUp : document.querySelector(".NavSignUp"),
       // _NavSignUp1 : document.querySelector(".RightgninupButton"),
     };
     usersDro = async () => {
-        if (await User.menegAccsess())
-        {
+        if (await User.menegAccsess()) {
           document.querySelector("#homeNavigation").style.display  = "block";
           document.querySelector(".User").style.display  = "flex";
           ManageRight.Manage("Message");
         }
-        else
-        {
+        else {
           document.querySelector("#homeNavigation").style.display  = "none";
           document.querySelector(".User").style.display  = "none";
           ManageRight.Manage("right");
         }
     }
     ButtonSignIn = (email = "") => {
-      if (email.length > 0)
-      {
-  
-      }
+      if (email.length > 0){} 
       this._style.display = "none";
     }
     ButtonSignUp = () => {
@@ -59,6 +52,7 @@ class HomePage extends HtmlElement {
     }
 
     async draw() {
+      // //debugger
       ManageMidle.Manage("midle")
       // ManageMidle.Manage("JoinList");
       await this.usersDro();

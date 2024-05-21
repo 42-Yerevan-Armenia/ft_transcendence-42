@@ -11,45 +11,34 @@ class ResetPageA extends HtmlElement {
   checkValidEmail() {
     this._ErrorEmail.innerHTML = "";
     this._ErrorEmail.style.color = "red";
-    if (!this._Email || !this._Email.value)
-    {
+    if (!this._Email || !this._Email.value) {
       this._ErrorEmail.innerHTML = "Email cannot be empty";
       return false;
     }
     const respons =  ValidateEmail(this._Email.value);
-    if (!respons || respons[0] !== "V")
-    {
+    if (!respons || respons[0] !== "V") {
       this._ErrorEmail.innerHTML = "Email is not correct";
       return false
     }
     User._Email = this._Email.value;
-
-
     return true;
   }
 
   async ResetEmail() {
     this._ErrorEmail.innerHTML = "";
     this._ErrorEmail.style.color = "red";
-
   
-    if (!this._Email || !this._Email.value)
-    {
+    if (!this._Email || !this._Email.value) {
       this._ErrorEmail.innerHTML = "Email cannot be empty";
       return false;
     }
-
     const res = await FetchRequest("POST", "password_reset", {email:this._Email.value});
-  
-    if (!res.state)
-    {
+    if (!res.state) {
       this._ErrorEmail.innerHTML = "Email is not correct";
       return false
     }
     return true;
   }
-  draw(){
-      
-  }
+  draw(){}
 }
   

@@ -23,25 +23,21 @@ class PasswordPage extends HtmlElement {
       const RepeatPasswordError = document.querySelector(".RepeatPasswordError")
       NewPasswordError.innerHTML = "";
       RepeatPasswordError.innerHTML = "";
-      if (!this._NewPassword.value)
-      {
+      if (!this._NewPassword.value) {
         NewPasswordError.innerHTML = "must not be Empty";
         NewPasswordError.style.color = "red";
         return false;
       }
       if (!PasswordisCorrect(this._NewPassword, NewPasswordError))
         return false;
-
-      if (!this._RepeatPassword.value)
-      {
+      if (!this._RepeatPassword.value) {
         RepeatPasswordError.innerHTML = "must not be Empty";
         RepeatPasswordError.style.color = "red";
         return false;
       }
       if (!PasswordisCorrect(this._RepeatPassword, RepeatPasswordError))
         return false;
-      if (this._RepeatPassword.value !== this._NewPassword.value)
-      {
+      if (this._RepeatPassword.value !== this._NewPassword.value) {
         RepeatPasswordError.innerHTML = "replay password must be equal to password";
         RepeatPasswordError.style.color = "red";
         return false;
@@ -52,13 +48,10 @@ class PasswordPage extends HtmlElement {
   
     async PasswordConfirmWithServer() {
       let Hash_code = HashCodeGeneration();
-      
       return await ControllerPessPassword(Hash_code + "" + User._Password + "" + Hash_code, User);
     }
 
-    draw(){
-      this.errorSetNull();
-    }
+    draw(){this.errorSetNull();}
   }
   
   

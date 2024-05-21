@@ -7,7 +7,6 @@ class MidleCommunity extends HtmlElement {
         this.MidleCubImage = document.querySelector(".MidleCommunityImage");
         this.Items = "";
       }
-      
 
       async eventsListenerAddAccount() {
         const accounts = document.querySelectorAll(".CommunitySeeUser")
@@ -16,12 +15,10 @@ class MidleCommunity extends HtmlElement {
           e.addEventListener("click", async (item) => {
 
             let id = item.target.id.slice(item.target.id.lastIndexOf(':') + 1);
-
             const userAccount =  this.Items.message.find((e)=>e.id == id);
             
             if (!userAccount)
               return;
-
             const state = await getFetchRequest("users");
             Home._AccountUser.State = {
               _Id:userAccount.id,
@@ -35,8 +32,6 @@ class MidleCommunity extends HtmlElement {
           })
         })
       }
-
-
       isfriends(Item){
         if(!Item.friends)
           return ;
@@ -44,20 +39,14 @@ class MidleCommunity extends HtmlElement {
       }
 
       eventsListenerAddFriends() {
-       debugger
         const notFriends = document.querySelectorAll(".CommunityAddFriends");
         //[{0:CommunityAddFriends},{1:CommunityAddFriends} , {2:CommunityAddFriends} ]
         notFriends.forEach((e) => {
             //{0:CommunityAddFriends}.addEventListener
           e.addEventListener("click", async (item)=>{
             //<button id=""CommunityAddFriends:1">
-            //debugger
             let id = item.target.id.slice(item.target.id.lastIndexOf(':')+ 1);
-
-            const sendFrend = {
-                      receiver_id: id
-                  }
-
+            const sendFrend = {receiver_id: id}
             const friendAdd = await putRequest("POST", "api/v1/send/" + User._Id, sendFrend)
             if (!friendAdd.state)
               return
@@ -86,17 +75,13 @@ class MidleCommunity extends HtmlElement {
   //     </div>
   // </div>
     MidleCommunityTableBodyI(i, Item) {
-      //debugger
-            //1
             const div1 = document.createElement("div");
             div1.setAttribute("class", "MidleCommunityTableBody");
-            
-            //2
+
             const div2 = document.createElement("div");
             div2.setAttribute("class", "MidleCommunityTableBodyNAme");
             div2.innerHTML = i;
-      
-            //3
+
             const div3 =  document.createElement("div");
             div3.setAttribute("class", "MidleCommunityTd");
             const img = document.createElement("img");
@@ -112,28 +97,23 @@ class MidleCommunity extends HtmlElement {
             div3.appendChild(img);
             div3.appendChild(div3div);
 
-            //4
             const div4 = document.createElement("div");
             div4.setAttribute("class", "MidleCommunityTableBodyNAme");
             div4.innerHTML = Item.points;
 
-            //5
             const div5 = document.createElement("div");
             div5.setAttribute("class", "MidleCommunityTableBodyNAme");
             const div5Buddon = document.createElement("button");
             div5Buddon.setAttribute("class", "CommunityAddFriends");
             div5Buddon.setAttribute("id", "CommunityAddFriends:" + Item.id);
-
             // check if user already friend or note
-            if (this.isfriends(Item))
-            {
+            if (this.isfriends(Item)) {
               div5Buddon.setAttribute("disabled","true");
               div5Buddon.style.backgroundColor = "#dddddd";
             }
             div5Buddon.innerHTML = "Add Friend";
             div5.appendChild(div5Buddon);
 
-            //6
             const div6 = document.createElement("div");
             div6.setAttribute("class", "MidleCommunityTableBodyNAme");
             const div6Buddon = document.createElement("button");
@@ -141,7 +121,7 @@ class MidleCommunity extends HtmlElement {
             div6Buddon.setAttribute("id", "CommunitySeeUser:" + Item.id);
             div6Buddon.innerHTML = "Account";
             div6.appendChild(div6Buddon);
-            //All
+
             div1.appendChild(div2);
             div1.appendChild(div3);
             div1.appendChild(div4);
@@ -150,10 +130,8 @@ class MidleCommunity extends HtmlElement {
             const domDat = document.querySelector(".MidleCommunityEditSection")
             domDat.appendChild(div1);
     }
-
     //Section Cup Drow DOM
     async setHero(){
-      //debugger
       let i = 1;
       this.Items = "";
       const domDat = document.querySelector(".MidleCommunityEditSection")
@@ -172,13 +150,12 @@ class MidleCommunity extends HtmlElement {
         if (Item.id != User._Id)
           this.MidleCommunityTableBodyI(i++, Item)
       });
-
       this.eventsListenerAddFriends();
       this.eventsListenerAddAccount();
     }
 
     async draw(){
-      //debugger
+      ////debugger
       await this.setHero();
     }
 }

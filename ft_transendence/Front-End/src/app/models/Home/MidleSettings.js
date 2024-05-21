@@ -3,7 +3,6 @@ class MiddleSettings extends HtmlElement {
       super(".MidleSettings")
       this._style.display = "none";
     }
-    debugger
     _Save = document.querySelector("#DeleteAccountSaveSave");
     _DeleteAccount = document.querySelector("#DeleteAccountSaveAccount");
     _ImageFileAccess = document.querySelector("#ImageFileAccess")                        //Edit Profile Photo.
@@ -15,7 +14,6 @@ class MiddleSettings extends HtmlElement {
       this._MidleSettingsHeroName.innerHTML = User._Name;
       this._MidleSettingImage.src =  `data:image/png;base64,${User._Image}`;
     }
-
     //For medium settings, you need to check that all arguments are empty, and when they are, do nothing
     isArgumentsEmpty(){
       const MidleSettingsBlocksPName = document.querySelector("#MidleSettingsBlocksPName");
@@ -28,9 +26,7 @@ class MiddleSettings extends HtmlElement {
       if (!MidleSettingsBlocksPName.value && !MidleSettingsBlocksPGameMode.value && !MidleSettingsBlocksPEditProfileUsername.value && !MidleSettingsBlocksP2FAAuthenticator.value && !MidleSettingsBlocksPEmail.value && !MidleSettingsBlocksPPassword.value && !ImageFileAccess.value)
           return false;
         return true;
-
     }
-
     //for settings middle need to check the password
     checkPassword(){
       const NewPasswordError = document.querySelector("#MidleSettingsBlocksPChangePassword");
@@ -40,14 +36,11 @@ class MiddleSettings extends HtmlElement {
 
       if (!RepeatPassword.value)
         return true;
-
-      if (!PasswordisCorrect(RepeatPassword, NewPasswordError))
-      {
+      if (!PasswordisCorrect(RepeatPassword, NewPasswordError)) {
         RepeatPassword.value = "";
         return false;
       }
       NewPasswordError.innerHTML = "";
-
       return true;
     }
     //for settings middle need to check the email
@@ -59,7 +52,6 @@ class MiddleSettings extends HtmlElement {
       ErrorEmail.innerHTML = "";
       if (!Email.value)
         return true;
-
       const respons =  ValidateEmail(Email.value);
       if (!respons || respons[0] !== "V")
       {
@@ -105,5 +97,4 @@ class MiddleSettings extends HtmlElement {
     async draw(){
       await this.changeUser();
     }
-  
   }
