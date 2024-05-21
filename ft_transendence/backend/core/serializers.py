@@ -258,8 +258,8 @@ class HistorySerializer(serializers.ModelSerializer):
 #             ('opponent_id', 2),
 #             ('nickname', 'Userb'),
 #             ('gamemode', 'classic'),
-#             ('points', 458),
-#             ('matches', 7),
+#             ('points', 0),
+#             ('matches', 0),
 #             ('full_history', [])]),
 #         OrderedDict([
 #             ('opponent_id', 3),
