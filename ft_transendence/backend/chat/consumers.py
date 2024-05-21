@@ -1,5 +1,3 @@
-# файл, в котором будут выполняться все асинхронные функции
-
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
 from friendship.models import Friend
@@ -49,7 +47,6 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
             self.room_group_name,
             self.channel_name
         )
-
         await self.accept()  # Принятие соединения
 
     async def disconnect(self, close_code):
@@ -58,19 +55,16 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
             self.room_group_name,
             self.channel_name
         )
-
     # Получение сообщения от WebSocket
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
         message = text_data_json['message']
         sender = self.scope['user'].username  # Получение имени отправителя
-
         # Сохранение сообщения в памяти
         if self.chatId in self.messages:
             self.messages[self.chatId].append({"sender": sender, "message": message})
         else:
             self.messages[self.chatId] = [{"sender": sender, "message": message}]
-
         # Отправка сообщения в группу комнат
         await self.channel_layer.group_send(
             self.room_group_name,
@@ -80,7 +74,6 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
                 'sender': sender
             }
         )
-
     # Получение сообщения от группы комнат
     async def chat_message(self, event):
         message = event['message']
