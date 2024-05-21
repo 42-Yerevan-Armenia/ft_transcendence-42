@@ -176,7 +176,7 @@ class OpponentHistorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Person
-        fields = ('opponent_id', 'nickname', 'gamemode', 'points', 'matches', 'full_history')
+        fields = ('opponent_id', 'image', 'nickname', 'gamemode', 'points', 'matches', 'full_history')
 
     def get_full_history(self, obj):
         history_data = History.objects.filter(opponent=obj)
@@ -201,7 +201,7 @@ class HistorySerializer(serializers.ModelSerializer):
         fields = ('opponents_history',)
 
     def get_opponents_history(self, obj):
-        opponents = Person.objects.all()  # Assuming you want all persons
+        opponents = Person.objects.all()
         opponents_history_serializer = OpponentHistorySerializer(opponents, many=True)
         return opponents_history_serializer.data
 

@@ -58,7 +58,7 @@ class GameRoom(models.Model):
     THEME_CHOICES = (
         ('light', 'Light'),
         ('dark', 'Dark'),
-        ('other', 'Other'),
+        ('random', 'Random'),
     )
     GAMEMODE_CHOICES = (
         ('easy', 'Easy'),

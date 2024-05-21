@@ -42,7 +42,6 @@ class LiveGames():
         return cls._instance
 
     async def do_bradcast(self):
-        print("❌ LiveGames do_bradcast", self._group_name)
         if self._group_name:
             await self._channel_layer.group_send(
                 self._group_name,
@@ -51,8 +50,6 @@ class LiveGames():
                     "liveGames": self.games
                 }
             )
-            print
-        print("❌ LiveGames do_bradcast ", self.games)
 
     def add_game(self, game_id, game):
 
@@ -264,10 +261,8 @@ class MatchmakingSystem():
                         "right_id": player2_id
                 }
             }
-            print("❌", response_data)
             LiveGames().add_game(room_id, response_data)
             asyncio.run(LiveGames().do_bradcast())
-            print("❌ stex", response_data)
         except Exception as e:
             return JsonResponse({"success": False, "error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
@@ -421,7 +416,6 @@ class SendInviteRequest(APIView):
                 else:
                     return Response({"success": "false", "error": "Invitation already sent"}, status=status.HTTP_400_BAD_REQUEST)
             res = GameInvite.objects.create(sender=sender, receiver=opponent)
-            print("✅", res)
             return Response({"success": "true", "message": "Invitation sent successfully"}, status=status.HTTP_200_OK)
         except Person.DoesNotExist:
             return Response({"success": "false", "error": "User or opponent not found"}, status=status.HTTP_404_NOT_FOUND)

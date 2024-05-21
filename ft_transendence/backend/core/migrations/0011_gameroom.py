@@ -17,7 +17,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(primary_key=True, serialize=False)),
                 ('max_players', models.IntegerField(default=2)),
                 ('live', models.BooleanField(default=False)),
-                ('theme', models.CharField(choices=[('light', 'Light'), ('dark', 'Dark'), ('other', 'Other')], default='light', max_length=50)),
+                ('theme', models.CharField(choices=[('light', 'Light'), ('dark', 'Dark'), ('random', 'Random')], default='light', max_length=50)),
                 ('gamemode', models.CharField(choices=[('easy', 'Easy'), ('classic', 'Classic'), ('hard', 'Hard')], default='easy', max_length=50)),
                 ('creator', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='core.person')),
                 ('players', models.ManyToManyField(blank=True, related_name='joined_players', to='core.Person')),
