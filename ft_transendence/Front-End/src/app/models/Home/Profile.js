@@ -24,18 +24,31 @@ class MidleProfile extends HtmlElement {
         button.addEventListener("click", async (e) => {
           //tack id
           const id = e.target.id.slice(e.target.id.lastIndexOf(':') + 1)
+          
+          //create data
           const sendFrend = {
             sender_id: id
           }
+
+          //AcceptRejectAccept:2
           if (className == ".AcceptRejectAccept") {
             // path('api/v1/accept/<int:pk>/', AcceptFriendRequest.as_view()),  
-            const friendAdd = await putRequest("POST", "api/v1/accept/" + User._Id, sendFrend)
+            let friendAdd;
+            if (e.target.innerHTML == "Join")
+              friendAdd = await putRequest("POST", "api/v1/acceptinvite/" + User._Id, sendFrend)
+            else
+              friendAdd = await putRequest("POST", "api/v1/accept/" + User._Id, sendFrend)
+
             if (!friendAdd.state)
               return;
           }
           else {
             // path('api/v1/reject/<int:pk>/', RejectFriendRequest.as_view()),
-            const friendAdd = await putRequest("POST", "api/v1/reject/" + User._Id, sendFrend)
+            let friendAdd;
+            if (e.target.innerHTML == "Ignore")
+              friendAdd = await putRequest("POST", "api/v1/rejectinvite/" + User._Id, sendFrend)
+            else
+              friendAdd = await putRequest("POST", "api/v1/reject/" + User._Id, sendFrend)
             if (!friendAdd.state)
               return;
           }
@@ -80,7 +93,7 @@ class MidleProfile extends HtmlElement {
   //   </div>
   // </div>
   // Request for Accept Ignore
-    profilBody(Item){
+    profilBody(Item, Request){
       const div1 = document.createElement("div");
       div1.setAttribute("class","ProfileMidleBodyItem");
 
@@ -109,11 +122,19 @@ class MidleProfile extends HtmlElement {
       const div2_Accept = document.createElement("div");
       div2_Accept.setAttribute("class","AcceptRejectAccept");
       div2_Accept.setAttribute("id","AcceptRejectAccept:"+Item.id);
-      div2_Accept.innerHTML = "Accept";
+      if (Request == "FriendRequest")
+        div2_Accept.innerHTML = "Accept";
+      else
+        div2_Accept.innerHTML = "Join";
       const div2_Reject = document.createElement("div");
       div2_Reject.setAttribute("class", "AcceptRejectReject")
       div2_Reject.setAttribute("id", "AcceptRejectReject:"+ Item.id)
-      div2_Reject.innerHTML = "Reject";
+
+      if (Request == "FriendRequest")
+        div2_Reject.innerHTML = "Reject";
+      else
+        div2_Reject.innerHTML = "Ignore";
+      
       div2_3.appendChild(div2_Accept);
       div2_3.appendChild(div2_Reject);
       div2.appendChild(div2_3);
@@ -140,18 +161,27 @@ class MidleProfile extends HtmlElement {
       this._ProfileMidleFooterDiv.appendChild(divProf);
     }
     async getFriends(){
-      // debugger
+      // //debugger
       this.profilHeader();
       const users = await getFetchRequest("users");
       // Of all the users, only my data was taken
       const UserData = users.message.find((e)=>e.id == User._Id);
       const friendship_requests = UserData.friendship_requests;
+      const gameinvite_requests = UserData.gameinvite_requests;
 
       if (friendship_requests) {
+        // debugger
         friendship_requests.forEach((item)=>{
           if (!item.rejected)
-          this.profilBody(item);
+          this.profilBody(item, "FriendRequest");
         })
+      }
+      if (gameinvite_requests ) {
+          // debugger
+          gameinvite_requests.forEach((item)=>{
+            if (!item.rejected)
+            this.profilBody(item, "JoinRequest");
+          })
         //event listener in to friendship requests Accept
         this.addEventListenerAcceptOrReject(".AcceptRejectAccept");
         //event listener in to friendship requests Reject
@@ -165,6 +195,12 @@ class MidleProfile extends HtmlElement {
       }
     }
     async draw(){
+      // debugger
       await this.getFriends();
     }
 }
+
+
+
+// fields = ('id', 'name', 'nickname', 'email', 'image', 'phone', 'wins', 'loses', 'matches',
+//                 'points', 'gamemode', 'live', 'is_online', 'friends', 'friendship_requests', 'gameinvite_requests')
