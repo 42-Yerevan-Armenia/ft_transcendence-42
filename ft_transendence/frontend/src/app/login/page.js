@@ -11,7 +11,7 @@ export default function LoginPage(){
                             <h2 className={Style.LoginPageH2}>Welcome Back</h2>
                             <p className={Style.LoginPageP}>Signin to your account</p>
                         </div>
-                        <input placeholder='northstargroup@gmail.com' className={Style.LoginPageinput}></input>
+                        <input placeholder='Enter your email' className={Style.LoginPageinput}></input>
                         <input placeholder='password' className={Style.password}></input>
                         <Link href="/" className={Style.LoginPageForgot}>Forgot Password?</Link>
                         <div className={Style.LoginPageContinue}>Signin</div>

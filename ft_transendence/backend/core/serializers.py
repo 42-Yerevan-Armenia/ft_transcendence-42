@@ -155,15 +155,14 @@ class GameRoomSerializer(serializers.ModelSerializer):
         game_room.players.set(players_data)
         return game_room
 
-class HistorySerializer(serializers.ModelSerializer):
-    player = serializers.CharField(source='player.nickname')
-    opponent = serializers.CharField(source='opponent.nickname', read_only=True)
+class FullHistorySerializer(serializers.ModelSerializer):
     win = serializers.SerializerMethodField()
     lose = serializers.SerializerMethodField()
+    gamemode = serializers.CharField(source='opponent.gamemode', read_only=True)
 
     class Meta:
         model = History
-        fields = ['player', 'opponent', 'game_room', 'date', 'win', 'lose', 'image', 'oponent_points']
+        fields = ['gamemode', 'date', 'win', 'lose']
 
     def get_win(self, obj):
         return 1 if obj.win else 0
@@ -171,19 +170,132 @@ class HistorySerializer(serializers.ModelSerializer):
     def get_lose(self, obj):
         return 1 if obj.lose else 0
 
-class FullHistorySerializer(serializers.ModelSerializer):
-    game_date = serializers.SerializerMethodField()
+class OpponentHistorySerializer(serializers.ModelSerializer):
+    full_history = serializers.SerializerMethodField()
+    opponent_id = serializers.IntegerField(source='id')
+
     class Meta:
         model = Person
-        fields = ('id', 'nickname', 'image', 'gamemode', 'points', 'matches', 'wins', 'loses', 'game_date')
+        fields = ('opponent_id', 'nickname', 'gamemode', 'points', 'matches', 'full_history')
+
+    def get_full_history(self, obj):
+        history_data = History.objects.filter(opponent=obj)
+        full_history_serializer = FullHistorySerializer(history_data, many=True)
+        grouped_full_history = {}
+        for entry in full_history_serializer.data:
+            opponent_id = obj.id
+            if opponent_id not in grouped_full_history:
+                grouped_full_history[opponent_id] = []
+            grouped_full_history[opponent_id].append(entry)
+        response_full_history = [
+            {"opponent_id": opponent_id, "played_games": games}
+            for opponent_id, games in grouped_full_history.items()
+        ]
+        return response_full_history
+
+class HistorySerializer(serializers.ModelSerializer):
+    opponents_history = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Person
+        fields = ('opponents_history',)
+
+    def get_opponents_history(self, obj):
+        opponents = Person.objects.all()  # Assuming you want all persons
+        opponents_history_serializer = OpponentHistorySerializer(opponents, many=True)
+        return opponents_history_serializer.data
+
+# [{
+#     'success': True,
+#     'history': [
+#         {
+#             'opponent.id': 3,
+#             'nickname': 'Userc',
+#             'gamemode': 'classic',
+#             'points': 769,
+#             'matches': 9,
+#             'full_history': [
+#                 {
+#                     'opponent_id': '3',
+#                     'played_games': [OrderedDict([('gamemode', 'easy'), ('date', '2024-05-20T17:10:57.838057Z'), ('win', 1), ('lose', 0)]),
+#                                     OrderedDict([('gamemode', 'classic'), ('date', '2024-05-20T17:18:18.367714Z'), ('win', 0), ('lose', 1)])]
+#                 },
+#             ]
+#         },
+#         {
+#             'opponent.id': 4,
+#             'nickname': 'Usera',
+#             'gamemode': 'classic',
+#             'points': 7569,
+#             'matches': 29,
+#             'full_history': [
+#                 {
+#                     'opponent_id': '4',
+#                     'played_games': [OrderedDict([('gamemode', 'hard'), ('date', '2024-05-21T17:10:57.838057Z'), ('win', 1), ('lose', 0)]),
+#                                     OrderedDict([('gamemode', 'hard'), ('date', '2024-05-21T17:18:18.367714Z'), ('win', 0), ('lose', 1)])]
+#                 },
+#             ]
+#         },
+#     ]
     
-    def get_game_date(self, obj):
-        try:
-            game_rooms = GameRoom.objects.filter(players=obj)
-            if game_rooms.exists():
-                # Return the game_date from the first GameRoom instance
-                return game_rooms.first().game_date
-            else:
-                return None
-        except GameRoom.DoesNotExist:
-            return None
+# }]
+
+# {
+#     'success': True,
+#     'history': [
+#         OrderedDict([
+#             ('opponent_id', 1),
+#             ('nickname', 'Usera'),
+#             ('gamemode', 'classic'),
+#             ('points', 720),
+#             ('matches', 10),
+#             ('full_history', [
+#                 {
+#                     'opponent_id': 1,
+#                     'played_games': [OrderedDict([('gamemode', 'classic'), ('date', '2024-05-20T17:18:42.431301Z'), ('win', 1), ('lose', 0)])]
+#                 }
+#             ])
+#         ]),
+#         OrderedDict([
+#             ('opponent_id', 2),
+#             ('nickname', 'Userb'),
+#             ('gamemode', 'classic'),
+#             ('points', 458),
+#             ('matches', 7),
+#             ('full_history', [])]),
+#         OrderedDict([
+#             ('opponent_id', 3),
+#             ('nickname', 'Userc'),
+#             ('gamemode', 'classic'),
+#             ('points', 874),
+#             ('matches', 10),
+#             ('full_history',
+#                 [{
+#                     'opponent_id': 3,
+#                     'played_games': [
+#                                         OrderedDict([('gamemode', 'classic'), ('date', '2024-05-20T17:10:57.844553Z'), ('win', 0), ('lose', 1)]),
+#                                         OrderedDict([('gamemode', 'classic'), ('date', '2024-05-20T17:18:18.363081Z'), ('win', 1), ('lose', 0)]),
+#                                         OrderedDict([('gamemode', 'classic'), ('date', '2024-05-20T17:18:42.436042Z'), ('win', 0), ('lose', 1)]),
+#                                         OrderedDict([('gamemode', 'classic'), ('date', '2024-05-20T17:53:58.746545Z'), ('win', 0), ('lose', 1)])
+#                                     ]
+#                 }]
+#             )]),
+#         OrderedDict([
+#             ('opponent_id', 4),
+#             ('nickname', 'Userd'),
+#             ('gamemode', 'classic'),
+#             ('points', 719),
+#             ('matches', 9),
+#             ('full_history',
+#                 [{
+#                     'opponent_id': 4,
+#                     'played_games': [
+#                                         OrderedDict([('gamemode', 'classic'), ('date', '2024-05-20T17:10:57.838057Z'), ('win', 1), ('lose', 0)]),
+#                                         OrderedDict([('gamemode', 'classic'), ('date', '2024-05-20T17:18:18.367714Z'), ('win', 0), ('lose', 1)]),
+#                                         OrderedDict([('gamemode', 'classic'), ('date', '2024-05-20T17:53:58.742563Z'), ('win', 1), ('lose', 0)])
+#                                     ]
+#                 }]
+#             )
+#             ])
+#     ]
+# }

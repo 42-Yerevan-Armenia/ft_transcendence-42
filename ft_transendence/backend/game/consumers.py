@@ -36,10 +36,8 @@ class PongConsumer(AsyncWebsocketConsumer):
 
 
     async def connect(self):
-        print("✅Connection initiated")
         self.game_id = self.scope["path"].strip("/").replace(" ", "_")
         self.game_id = self.game_id.split("/")[-1]
-        print(f"✅Connecting to game ID: {self.game_id}")
         if self.game_id not in ThreadPool.threads:
             await ThreadPool.add_game(self.game_id, self)
         self.game = ThreadPool.threads[self.game_id]
@@ -47,20 +45,16 @@ class PongConsumer(AsyncWebsocketConsumer):
         await self.accept()
 
         self.joinList.set_channel_layer(self.channel_layer)
-        print(f"❌Connected to game ID: {self.game_id}, channel name: {self.channel_name}")
 
 
     async def disconnect(self, close_code):
-        print(f"⭕️Disconnecting: {self.id}, close_code: {close_code}")
         sleep(0.1)
         await self.channel_layer.group_discard(self.game_id, self.channel_name)
-        print(f"❌Disconnected: {self.id}")
         if self.id:
-            print("❌Disconnected:self.id ", self.id)
             self.game[str(self.paddle_controller)] = False
-            self.game["active"] = False
-            self.game["stop_event"].set()
+            # self.game["active"] = False
             # await ThreadPool.del_game(self.game_id)
+            await ThreadPool.del_game(self.game_id)
         # await LiveGames().del_game(self.game_id)
         # game_room = await sync_to_async(GameRoom.objects.get)(id=self.game_id[:-2])
         # game_room.ongoing = False
@@ -69,9 +63,6 @@ class PongConsumer(AsyncWebsocketConsumer):
         # for player in players:
         #     player.playing = False
         #     player.save()
-        
-
-        # print(f"⭕️Disconnected: {self.id}")
 
     async def receive(self, text_data):
         data = json.loads(text_data)
@@ -142,8 +133,6 @@ class PongConsumer(AsyncWebsocketConsumer):
                 if not self.game["thread"].is_alive():
                     self.game["thread"].start()
                     self.game["active"] = True
-                    print("❎Game started")
-
 
     def propagate_state_wrapper(self, thread_event):
         asyncio.run(self.propagate_state(thread_event))
@@ -174,6 +163,7 @@ class PongConsumer(AsyncWebsocketConsumer):
                 # self.time = time.time()
 
         await LiveGames().del_game(self.game_id)
+        await LiveGames().do_bradcast()
         await self.joinList.do_broadcast()
         # get left and right ids from self.game_id
         paddle1_id = self.game["state"]["paddle1"]["id"]
@@ -189,11 +179,11 @@ class PongConsumer(AsyncWebsocketConsumer):
                 "right_id": paddle2_id
             } 
         }
-        print("✅ finish_response", finish_response)
         await self.channel_layer.group_send(
             self.game_id,
             {"type": "stream_state", "state": finish_response, "method": "finish_match"},
         )
+
 
     async def stream_state(self, event):
         state = event["state"]
@@ -268,7 +258,6 @@ class joinListConsumer(WebsocketConsumer):
             self.send(response_json)
         except Exception as e:
             print("Error", e)
-
 
     # def stream_state(self, event):
     #     # Handle the "stream_state" message type here

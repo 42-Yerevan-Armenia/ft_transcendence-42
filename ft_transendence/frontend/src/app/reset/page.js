@@ -10,7 +10,7 @@ export default function ResetPage(){
                             <h2 className={Style.ResetPageH2}>Reset Password</h2>
                             <p className={Style.ResetPageP}>Enter your email address <br/> for reset password</p>
                         </div>
-                        <input placeholder='northstargroup@gmail.com' className={Style.ResetPageinput}></input>
+                        <input placeholder='Enter your email' className={Style.ResetPageinput}></input>
                         <div className={Style.ResetPageContinue}>Confirm reset</div>
                     </div>
                 </div>        

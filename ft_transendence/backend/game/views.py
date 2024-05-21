@@ -21,6 +21,8 @@ from django.db.models import Q
 import time
 import random
 
+import asyncio
+
 # await channel_layer.send("channel_name", {
 #     "type": "chat.message",
 #     "text": "Hello there!",
@@ -29,7 +31,6 @@ import random
 class LiveGames():
     _instance = None
     _channel_layer = get_channel_layer()
-    _channel_name = None
 
     def __new__(cls):
         if cls._instance is None:
@@ -40,23 +41,8 @@ class LiveGames():
             cls._instance.player_pool = []  # Initialize player_pool only once
         return cls._instance
 
-    def add_game(self, game_id, game):
-
-        self.games.append(game)
-        if self._group_name:
-            async_to_sync(self._channel_layer.group_send)(
-                self._group_name,
-                {
-                    "type": "stream_sate_live",
-                    "liveGames": self.games
-                }
-            )
-
-    async def del_game(self, game_id):
-        for i, game in enumerate(self.games):
-            if game["game_room"]["room_id"] == game_id:
-                del self.games[i]
-                break
+    async def do_bradcast(self):
+        print("❌ LiveGames do_bradcast", self._group_name)
         if self._group_name:
             await self._channel_layer.group_send(
                 self._group_name,
@@ -65,6 +51,34 @@ class LiveGames():
                     "liveGames": self.games
                 }
             )
+            print
+        print("❌ LiveGames do_bradcast ", self.games)
+
+    def add_game(self, game_id, game):
+
+        self.games.append(game)
+        # if self._group_name:
+        #     async_to_sync(self._channel_layer.group_send)(
+        #         self._group_name,
+        #         {
+        #             "type": "stream_sate_live",
+        #             "liveGames": self.games
+        #         }
+        #     )
+
+    async def del_game(self, game_id):
+        for i, game in enumerate(self.games):
+            if game["game_room"]["room_id"] == game_id:
+                del self.games[i]
+                break
+        # if self._group_name:
+        #     await self._channel_layer.group_send(
+        #         self._group_name,
+        #         {
+        #             "type": "stream_sate_live",
+        #             "liveGames": self.games
+        #         }
+        #     )
 
     async def set_winner(self, winner, loser):
         winner_person = await sync_to_async(Person.objects.get)(id=winner)
@@ -146,9 +160,6 @@ class LiveGames():
 
     def get_all_games(self):
         return self.games
-
-    def set_channel_name(self, channel_name):
-        self._channel_name = channel_name
 
 class PlayerPool():
     def __init__(self):
@@ -255,6 +266,8 @@ class MatchmakingSystem():
             }
             print("❌", response_data)
             LiveGames().add_game(room_id, response_data)
+            asyncio.run(LiveGames().do_bradcast())
+            print("❌ stex", response_data)
         except Exception as e:
             return JsonResponse({"success": False, "error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
