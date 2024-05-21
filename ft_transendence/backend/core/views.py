@@ -19,7 +19,7 @@ from .serializers import (
     JoinListSerializer,
     WaitingRoomSerializer,
     HistorySerializer,
-    FullHistorySerializer,
+    # FullHistorySerializer,
     GameRoomSerializer,
     MatchSerializer,
     CustomSerializer
@@ -639,24 +639,51 @@ class GameRoom(APIView):
         else:
             return JsonResponse({"success": "false", "error": "Invalid response"}, status=status.HTTP_400_BAD_REQUEST)
 
+# class HistoryView(APIView):
+#     permission_classes = [IsAuthenticated]
+
+#     def get(self, request, pk):
+#         try:
+#             user = Person.objects.get(id=pk)
+#             history_data = History.objects.filter(player=user)
+#             history_serializer = HistorySerializer(user)
+#             full_history_serializer = FullHistorySerializer(history_data, many=True)
+#             grouped_full_history = {}
+#             for entry in full_history_serializer.data:
+#                 opponent_id = entry['opponent_id']
+#                 if opponent_id not in grouped_full_history:
+#                     grouped_full_history[opponent_id] = []
+#                 grouped_full_history[opponent_id].append(entry)
+#             response_full_history = [
+#                 {"opponent_id": opponent_id, "played_games": games}
+#                 for opponent_id, games in grouped_full_history.items()
+#             ]
+#             response_data = [{
+#                 "success": True,
+#                 "history": history_serializer.data,
+#                 "full_history": response_full_history
+#             }]
+#             print(response_data)
+#             return Response(response_data, status=status.HTTP_200_OK)
+#         except Person.DoesNotExist:
+#             return JsonResponse({"success": False, "error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+
 class HistoryView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, pk):
         try:
             user = Person.objects.get(id=pk)
-            history_data = History.objects.filter(player=user)
-            history_serializer = HistorySerializer(history_data, many=True)
-            # full_history_serializer = FullHistorySerializer(user)
-
-            # response_data = {
-            #     "success": True,
-            #     "history": history_serializer.data,
-                # "full_history": full_history_serializer.data
-            # }
-            return Response(history_serializer.data, status=status.HTTP_200_OK)
+            history_serializer = HistorySerializer(user)
+            response_data = {
+                "success": True,
+                "history": history_serializer.data['opponents_history']
+            }
+            print(response_data)
+            return Response(response_data, status=status.HTTP_200_OK)
         except Person.DoesNotExist:
             return JsonResponse({"success": False, "error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+
 
 class CustomTokenRefreshView(TokenRefreshView):
     def post(self, request, *args, **kwargs):

@@ -14,7 +14,7 @@ export default function RegisterPage(){
                                 42intra account.
                             </p>
                         </div>
-                        <input placeholder='northstargroup@gmail.com' className={Style.RegisterPageinput}></input>
+                        <input placeholder='Enter your email' className={Style.RegisterPageinput}></input>
                         <div className={Style.RegisterPageContinue}>Continue with email</div>
                         <div className={Style.RegisterPageOR}>
                             <div className={Style.Registerline}></div>OR<div className={Style.Registerline}></div>

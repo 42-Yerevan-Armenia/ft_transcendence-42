@@ -204,7 +204,7 @@ class MidleHistoryGame extends HtmlElement{
         this.profilWil.innerHTML = "";
 
         const history = await getFetchRequest("api/v1/history/" + User._Id);
-
+        console.log("history = ", history);
         if (history && history.state && history.message)
         {
             history?.message?.forEach(e => {
