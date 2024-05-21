@@ -5,8 +5,6 @@ from .models import User, Person, GameRoom, History
 from game.models import GameInvite
 from friendship.models import Friend, FriendshipRequest
 
-#TODO 42 intra user in Serializer
-
 class UserSerializer(serializers.ModelSerializer):
     friends = serializers.SerializerMethodField()
     friendship_requests = serializers.SerializerMethodField()
@@ -176,7 +174,7 @@ class OpponentHistorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Person
-        fields = ('opponent_id', 'nickname', 'gamemode', 'points', 'matches', 'full_history')
+        fields = ('opponent_id', 'image', 'nickname', 'gamemode', 'points', 'matches', 'full_history')
 
     def get_full_history(self, obj):
         history_data = History.objects.filter(opponent=obj)
@@ -201,7 +199,7 @@ class HistorySerializer(serializers.ModelSerializer):
         fields = ('opponents_history',)
 
     def get_opponents_history(self, obj):
-        opponents = Person.objects.all()  # Assuming you want all persons
+        opponents = Person.objects.all()
         opponents_history_serializer = OpponentHistorySerializer(opponents, many=True)
         return opponents_history_serializer.data
 
@@ -260,8 +258,8 @@ class HistorySerializer(serializers.ModelSerializer):
 #             ('opponent_id', 2),
 #             ('nickname', 'Userb'),
 #             ('gamemode', 'classic'),
-#             ('points', 458),
-#             ('matches', 7),
+#             ('points', 0),
+#             ('matches', 0),
 #             ('full_history', [])]),
 #         OrderedDict([
 #             ('opponent_id', 3),
