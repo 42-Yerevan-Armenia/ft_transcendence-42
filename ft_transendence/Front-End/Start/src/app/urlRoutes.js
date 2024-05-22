@@ -101,5 +101,36 @@ const urlRoutes = {
 		title: "SignUp",
 		description: "This is the SignIn page",
 	},
-
+	"/midle/": {
+		midle:true,
+		url: "/midle",
+		class:".midle",
+		path: "/LEFTHOME",
+		title: "midle",
+		description: "This is the midle section",
+	},
+	"/midle": {
+		midle:true,
+		url: "/midle",
+		class:".midle",
+		path: "/LEFTHOME",
+		title: "midle",
+		description: "This is the midle section",
+	},
+	"/profil/": {
+		midle:true,
+		url: "/profil",
+		class:".PROFIL",
+		path: "/profil",
+		title: "ProfileMidle",
+		description: "This is the profil section",
+	},
+	"/profil": {
+		midle:true,
+		url: "/",
+		class:".PROFIL",
+		path: "/profil",
+		title: "ProfileMidle",
+		description: "This is the profil section",
+	}
 };

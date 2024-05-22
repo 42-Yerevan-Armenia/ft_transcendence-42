@@ -67,8 +67,21 @@ const addNewUrlRoute = (pathname, href) => {
 //change page and draw in screen
 async function drawHtmlScreen(route, isATag){
 
+
 	if (isATag)
-		await ManageAllPage.Manage(route.title)
+	{
+		if (route.midle)
+		{
+			await ManageAllPage.Manage("Home")
+			await ManageMidle.Manage(route.midle)
+		}
+		else
+			await ManageAllPage.Manage(route.title)
+
+
+
+
+	}
 
 	// set the title of the document to the title of the route
 	document.title = route.title;

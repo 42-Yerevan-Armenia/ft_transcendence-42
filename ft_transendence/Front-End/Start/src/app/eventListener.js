@@ -61,10 +61,12 @@ Home?._MidleJoinList?._InviteButton?.addEventListener("click",async ()=>{       
 })
 Home?._NAV?._Home?._classname?.addEventListener("click",()=>{
   ManageMidle.Manage("midle");
+  NavigateHistoryALLITEM("/midle", localhostPage + '/midle', false)
 } );
 Home?._NAV?._Profile?._classname?.addEventListener("click", async ()=>{
-  console.log("Home._NAV?._Profile?._classname?.addEventListener");
+  debugger
   ManageMidle.Manage("ProfileMidle");
+  NavigateHistoryALLITEM("/profil", localhostPage + '/profil', false);
 })
 Home?._NAV?._JoinListGame?._classname?.addEventListener("click",()=>{
   ManageMidle.Manage("JoinList");
@@ -127,9 +129,11 @@ Home._HomeLeft?._ExploreMessag?.addEventListener("click",  ()=>{
   console.log("d.display == " + style.display)
   const flag = style.display == "none" ? "block" : "none";
   if (flag == "block")
+  {
     ManageRight.Manage("Message");
+  }
   else
-  style.display = "none";
+    style.display = "none";
 })
 //-------------------------------------------------------------------- left User
 // IconExit
