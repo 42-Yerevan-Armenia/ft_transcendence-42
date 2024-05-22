@@ -34,7 +34,6 @@ class PongConsumer(AsyncWebsocketConsumer):
         self.joinList_group_name = "joinlist"
         self.joinList.set_group_name(self.joinList_group_name)
 
-
     async def connect(self):
         self.game_id = self.scope["path"].strip("/").replace(" ", "_")
         self.game_id = self.game_id.split("/")[-1]
@@ -43,26 +42,14 @@ class PongConsumer(AsyncWebsocketConsumer):
         self.game = ThreadPool.threads[self.game_id]
         await self.channel_layer.group_add(self.game_id, self.channel_name)
         await self.accept()
-
         self.joinList.set_channel_layer(self.channel_layer)
 
-
     async def disconnect(self, close_code):
-        sleep(0.1)
-        await self.channel_layer.group_discard(self.game_id, self.channel_name)
         if self.id:
             self.game[str(self.paddle_controller)] = False
-            # self.game["active"] = False
-            # await ThreadPool.del_game(self.game_id)
+            self.game["active"] = False
             await ThreadPool.del_game(self.game_id)
-        # await LiveGames().del_game(self.game_id)
-        # game_room = await sync_to_async(GameRoom.objects.get)(id=self.game_id[:-2])
-        # game_room.ongoing = False
-        # game_room.save()
-        # players = await sync_to_async(list)(game_room.players.all())
-        # for player in players:
-        #     player.playing = False
-        #     player.save()
+        await self.channel_layer.group_discard(self.game_id, self.channel_name)
 
     async def receive(self, text_data):
         data = json.loads(text_data)
@@ -77,19 +64,6 @@ class PongConsumer(AsyncWebsocketConsumer):
                 direction = data.get("direction")
                 await self.paddle_controller.move(direction)
         elif data["method"] == "connect":
-            # try:
-            #     game_room_id = self.game_id[:-2]
-            #     game_room = await sync_to_async(GameRoom.objects.get)(id=game_room_id)
-            #     players = await sync_to_async(list)(game_room.players.all())
-            #     if len(players) == 2:
-            #         user_id1 = players[0].id
-            #         user_id2 = players[1].id
-            #         self.game_info[self.game_id] = (user_id1, user_id2, game_room_id)
-            #         print("❌ all_user_ids = ", self.game_info[self.game_id])
-            #     else:
-            #         print(f"❌ Error: Expected 2 players, found {len(players)} in game room {self.game_id}")
-            # except ObjectDoesNotExist:
-            #     print(f"❌ Error: GameRoom with id {self.game_id} does not exist")
             if not self.game["paddle1"]:
                 self.paddle_controller = PaddleController("paddle1", self.game["state"])
                 self.game["paddle1"] = True
@@ -110,7 +84,6 @@ class PongConsumer(AsyncWebsocketConsumer):
             elif not self.game["paddle2"]:
                 self.paddle_controller = PaddleController("paddle2", self.game["state"])
                 self.game["paddle2"] = True
-
                 self.id = data["clientId"]
                 self.game["state"][self.id] = "paddle2"
                 self.game["state"]["paddle2"]["id"] = self.id
@@ -125,58 +98,38 @@ class PongConsumer(AsyncWebsocketConsumer):
                     }
                 }
                 await self.send(text_data=json.dumps(payload))
-                # user_id1 = self.game["state"]["paddle1"]["id"]
-                # user_id2 = self.game["state"]["paddle2"]["id"]
-                # self.game_info[self.game_id] = (user_id1, user_id2, self.game_id)
-                # print("❌ all_user_ids = ", self.game_info[self.game_id])
             if self.game["paddle1"] and self.game["paddle2"]:
                 if not self.game["thread"].is_alive():
                     self.game["thread"].start()
                     self.game["active"] = True
+            print("self.id = ", self.id)
+            print("livegames = ", LiveGames().get_all_games())
 
     def propagate_state_wrapper(self, thread_event):
         asyncio.run(self.propagate_state(thread_event))
 
     async def propagate_state(self, thread_event):
-        i = 0
-        while self.game["state"]["winner"] is None:
+        while  not self.game["stop_event"].is_set() and self.game["state"]["winner"] is None:
             if self.game:
                 if self.game["active"]:
                     ball = self.game["ball"]
                     await ball.move()
-                    try:
-                        await self.channel_layer.group_send(
-                            self.game_id,
-                            {"type": "stream_state", "state": self.game["state"], "method": "update"},
-                        )
-                    except Exception as e:
-                        print(e)
-                    # await self.channel_layer.group_send(
-                    #     self.game_id,
-                    #     {"type": "stream_state", "state": self.game["state"], "method": "update"},
-                    # )
-                elif not self.game["paddle1"]:
-                    print("self.game[paddle2]", self.game["paddle2"])
-                    self.game["state"]["winner"] = self.game["state"]["paddle2"]["id"]
-                    await LiveGames().set_winner(self.game["state"]["winner"], self.game["state"]["paddle1"]["id"])
-                elif not self.game["paddle2"]:
-                    print("self.game[paddle1]", self.game["paddle1"])
-                    self.game["state"]["winner"] = self.game["state"]["paddle1"]["id"]
-                    await LiveGames().set_winner(self.game["state"]["winner"], self.game["state"]["paddle2"]["id"])
-                # if thread_event.is_set():
-                #     break
-
+                    await self.channel_layer.group_send(
+                        self.game_id,
+                        {"type": "stream_state", "state": self.game["state"], "method": "update"},
+                    )
             sleep(0.005)
-                # self.time = time.time()
-
-        await LiveGames().del_game(self.game_id)
-        await LiveGames().do_bradcast()
-        await self.joinList.do_broadcast()
-        # get left and right ids from self.game_id
+        
+        if not self.game["paddle1"]:
+            print("self.game[paddle2]", self.game["paddle2"])
+            self.game["state"]["winner"] = self.game["state"]["paddle2"]["id"]
+            await LiveGames().set_winner(self.game["state"]["winner"], self.game["state"]["paddle1"]["id"])
+        elif not self.game["paddle2"]:
+            print("self.game[paddle1]", self.game["paddle1"])
+            self.game["state"]["winner"] = self.game["state"]["paddle1"]["id"]
+            await LiveGames().set_winner(self.game["state"]["winner"], self.game["state"]["paddle2"]["id"])
         paddle1_id = self.game["state"]["paddle1"]["id"]
         paddle2_id = self.game["state"]["paddle2"]["id"]
-
-        # Construct the JSON response with the finish signal
         finish_response = {
             "success": True,
             "method": "finish_match",
@@ -190,7 +143,9 @@ class PongConsumer(AsyncWebsocketConsumer):
             self.game_id,
             {"type": "stream_state", "state": finish_response, "method": "finish_match"},
         )
-
+        await LiveGames().del_game(self.game_id)
+        await self.joinList.do_broadcast()
+        await LiveGames().do_bradcast()
 
     async def stream_state(self, event):
         state = event["state"]
@@ -204,88 +159,61 @@ class PongConsumer(AsyncWebsocketConsumer):
         except Exception as e:
             print(e)
 
-class joinListConsumer(WebsocketConsumer):
+class joinListConsumer(AsyncWebsocketConsumer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # self.roomId = None
-        # self.pt = PlayTournament()
-        # self.playerPool = PlayerPool()
         self.joinList = JoinList()
         self.joinList_group_name = "joinlist"
 
-    def connect(self):
+    async def connect(self):
+        print("connect skizb")
         # self.joinList_group_name = self.scope["path"].strip("/").replace(" ", "_")
-        async_to_sync(self.channel_layer.group_add)(self.joinList_group_name, self.channel_name)
-        self.accept()
-        response = self.joinList.get(None, None)
+        await self.channel_layer.group_add(self.joinList_group_name, self.channel_name)
+        await self.accept()
+        response = await sync_to_async(self.joinList.get)(None, None)
         LiveGames().set_group_name(self.joinList_group_name)
-        async_to_sync(self.channel_layer.group_send)(
+        await self.channel_layer.group_send(
             self.joinList_group_name,
             {"type": "stream", "response": response,},
         )
 
-    def disconnect(self, close_code):
-        async_to_sync(self.channel_layer.group_discard)(self.joinList_group_name, self.channel_name)
+    async def disconnect(self, close_code):
+        await self.channel_layer.group_discard(self.joinList_group_name, self.channel_name)
 
-    def receive(self, text_data):
+    async def receive(self, text_data):
         request = json.loads(text_data)
         method = request.get("method")
         print("method = ", method)
         if method == "create":
             user_id = request.get("pk")
-            response = CreateRoom.post(self, request, user_id)
-            all_user_ids = list(Person.objects.values_list('id', flat=True))
-            response["all_user_ids"] = all_user_ids
-            response = self.joinList.get(None, None)
+            response = await sync_to_async(CreateRoom.post)(self, request, user_id)
+            response = await sync_to_async(self.joinList.get)(None, None)
             response["method"] = "create"
-            async_to_sync(self.channel_layer.group_send)(
+            await self.channel_layer.group_send(
                 self.joinList_group_name,
                 {"type": "stream", "response": response,},
             )
         elif method == "join" or method == "invite":
             user_id = request.get("user_id")
-            json_data = self.joinList.post(request, user_id)
-            response = self.joinList.get(None, None)
-            all_user_ids = list(Person.objects.values_list('id', flat=True))
-            response["all_user_ids"] = all_user_ids
+            json_data = await sync_to_async(self.joinList.post)(request, user_id)
+            response =  await sync_to_async(self.joinList.get)(None, None)
             response["method"] = "join"
         else:
             response = {"error": "Invalid method"}
-        async_to_sync(self.channel_layer.group_send)(
+        await self.channel_layer.group_send(
             self.joinList_group_name,
             {"type": "stream", "response": response,},
         )
 
-    def stream(self, event):
+    async def stream(self, event):
         response = event["response"]
         response_json = response.content.decode("utf-8")
-        # print("❇️ response_json = ", response_json)
-        try:
-            # self.send(text_data=json.dumps(response_json))
-            self.send(response_json)
-        except Exception as e:
-            print("Error", e)
+        await self.send(response_json)
 
-    # def stream_state(self, event):
-    #     # Handle the "stream_state" message type here
-    #     state = event["state"]
-    #     # Process the incoming state message as needed
-    #     payload = {
-    #         "method": "update_state",
-    #         "state": state
-    #     }
-    #     try:
-    #         self.send(text_data=json.dumps(playload))
-    #     except Exception as e:
-    #         print("Error", e)
-
-    def stream_sate_live(self, event):
+    async def stream_sate_live(self, event):
         liveGames = event["liveGames"]
         playload = {
             "method": "updateLiveGames",
             "liveGames": liveGames
         }
-        try:
-            self.send(text_data=json.dumps(playload))
-        except Exception as e:
-            print("Error", e)
+        await self.send(text_data=json.dumps(playload))

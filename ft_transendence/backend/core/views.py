@@ -242,6 +242,19 @@ class Login(APIView):
         except User.DoesNotExist:
             return JsonResponse({"success": "false", "error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
         if check_password(password, person.password):
+            gameroom = person.game_room
+            if gameroom and gameroom.creator_id == person.id:
+                for player in gameroom.players.all():
+                    player.ongoing = False
+                    player.game_room_id = None
+                    player.save()
+                gameroom.players.clear()
+                gameroom.delete()
+            elif gameroom and gameroom.creator_id != person.id:
+                gameroom.players.remove(person)
+                person.ongoing = False
+                person.game_room_id = None
+            person.game_room = None
             person.is_online = True
             person.save()
             token_serializer = TokenObtainPairSerializer()
@@ -297,6 +310,7 @@ class Logout(APIView):
             person.ongoing = False
             person.game_room_id = None
         person.is_online = False
+        person.game_room = None
         person.save()
         return Response({"success": "true", "message": "Logged out successfully"}, status=status.HTTP_200_OK)
 
@@ -580,21 +594,6 @@ class CreateRoom(APIView):
                 return JsonResponse({"success": "false", "error": game_room_serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             return JsonResponse({"success": "false", "error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-# class HistoryView(APIView):
-#     permission_classes = [IsAuthenticated]
-
-#     def get(self, request, pk):
-#         try:
-#             user = Person.objects.get(id=pk)
-#             history_serializer = HistorySerializer(user)
-#             response_data = {
-#                 "success": True,
-#                 "history": history_serializer.data['opponents_history']
-#             }
-#             return Response(response_data, status=status.HTTP_200_OK)
-#         except Person.DoesNotExist:
-#             return JsonResponse({"success": False, "error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
 
 class HistoryView(APIView):
     permission_classes = [IsAuthenticated]

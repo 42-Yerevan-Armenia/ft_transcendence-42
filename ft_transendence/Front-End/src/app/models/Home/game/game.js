@@ -45,7 +45,7 @@ function disableScroll() {
      window.onscroll = function() {};
  }
 
-async function pongGame(objUser ,gameid) {
+function pongGame(objUser ,gameid) {
     //debugger;
     if (isStarted)
         return;
