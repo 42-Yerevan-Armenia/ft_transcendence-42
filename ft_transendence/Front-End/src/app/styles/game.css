@@ -13,6 +13,8 @@
     height: 500px;
     background-color: aquamarine;
     justify-content: space-between;
+    margin: auto;
+    top: 15%;
 }
 
 .ball {

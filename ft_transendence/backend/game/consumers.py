@@ -144,10 +144,17 @@ class PongConsumer(AsyncWebsocketConsumer):
                 if self.game["active"]:
                     ball = self.game["ball"]
                     await ball.move()
-                    await self.channel_layer.group_send(
-                        self.game_id,
-                        {"type": "stream_state", "state": self.game["state"], "method": "update"},
-                    )
+                    try:
+                        await self.channel_layer.group_send(
+                            self.game_id,
+                            {"type": "stream_state", "state": self.game["state"], "method": "update"},
+                        )
+                    except Exception as e:
+                        print(e)
+                    # await self.channel_layer.group_send(
+                    #     self.game_id,
+                    #     {"type": "stream_state", "state": self.game["state"], "method": "update"},
+                    # )
                 elif not self.game["paddle1"]:
                     print("self.game[paddle2]", self.game["paddle2"])
                     self.game["state"]["winner"] = self.game["state"]["paddle2"]["id"]

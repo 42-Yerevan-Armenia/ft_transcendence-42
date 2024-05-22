@@ -23,6 +23,15 @@ import random
 
 import asyncio
 
+
+def call_async(coro):
+    try:
+        loop = asyncio.get_running_loop()
+    except RuntimeError:
+        return asyncio.run(coro)
+    else:
+        return loop.run_until_complete(coro)
+
 # await channel_layer.send("channel_name", {
 #     "type": "chat.message",
 #     "text": "Hello there!",
@@ -262,7 +271,7 @@ class MatchmakingSystem():
                 }
             }
             LiveGames().add_game(room_id, response_data)
-            asyncio.run(LiveGames().do_bradcast())
+            call_async(LiveGames().do_bradcast())
         except Exception as e:
             return JsonResponse({"success": False, "error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
@@ -379,6 +388,7 @@ def game_results_history(player1_id, player2_id, win):# ✅
         win=res_user1,
         lose=not res_user1,
         oponent_points=user2.points,
+        gamemode=user1.game_room.gamemode,
         image=user1.image
     )
     
@@ -389,6 +399,7 @@ def game_results_history(player1_id, player2_id, win):# ✅
         win=res_user2,
         lose=not res_user2,
         oponent_points=user1.points,
+        gamemode=user2.game_room.gamemode,
         image=user2.image
     )
 

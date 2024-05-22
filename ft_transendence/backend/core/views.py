@@ -604,7 +604,7 @@ class HistoryView(APIView):
             user = Person.objects.get(id=pk)
             if opponent_id:
                 opponent = Person.objects.get(id=opponent_id)
-                history_data = History.objects.filter(opponent=opponent)
+                history_data = History.objects.filter(player=user, opponent=opponent)
                 if history_data.exists():
                     full_history_serializer = FullHistorySerializer(history_data, many=True)
                     grouped_full_history = {
@@ -625,13 +625,8 @@ class HistoryView(APIView):
                         "history": []
                     }
             else:
-                opponents = Person.objects.all()
-                opponents_with_history = []
-                for opponent in opponents:
-                    history_data = History.objects.filter(opponent=opponent)
-                    if history_data.exists():
-                        opponents_with_history.append(opponent)
-
+                history_data = History.objects.filter(player=user)
+                opponents_with_history = {history.opponent for history in history_data}
                 opponents_history_serializer = OpponentHistorySerializer(opponents_with_history, many=True)
                 response_data = {
                     "success": True,

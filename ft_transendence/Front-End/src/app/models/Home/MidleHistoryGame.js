@@ -86,28 +86,34 @@ class MidleHistoryGame extends HtmlElement{
                 const div = fromHTML(this.getContentFullHistoryTableBodyUser(e));
                 historyPlayers.append(div);
                 const moreButton = document.getElementById("FullHistoryTableBodyMore:" + opponent_id);
+                moreButton.pressed = false;
                 this._fullHistory[opponent_id] = e.full_history;
                 moreButton.addEventListener("click", () => {
-                    
-                    // if (moreButton.pressed) {
-                    //     moreButton.pressed = false;
-                    // } else {
-                    //     moreButton.pressed = true;
-                    // }
-
-                    const fullHistory = this._fullHistory[moreButton.id.split(":").at(-1)]
                     console.log("event");
-                    fullHistory?.forEach((e) => {
-                        const userContext = document.getElementById("FullHistoryTableBodyUserId:" + opponent_id);
+                    const userContext = document.getElementById("FullHistoryTableBodyUserId:" + opponent_id);
+                    
+                    while (userContext.children.length > 1) {
+                        userContext.removeChild(userContext.lastChild);
+                    }
 
-                        while (userContext.children.length > 1) {
-                            userContext.removeChild(userContext.lastChild);
-                        }
+                    if (moreButton.pressed) {
 
-                        console.log("e = ", e);
-                        userContext.append(fromHTML(this.getConetntFullHistoryTableBodyContainerPlayedGames()));
-                        userContext.append(fromHTML(this.getConetntFullHistoryTableBodyPlayedGamesContent(e)));
-                    })
+                        moreButton.innerHTML = "<img src='./public/Buttonu.png' class='FullHistoryTableBodyNAmeImg'/>";
+                    } else {
+
+                        const fullHistory = this._fullHistory[moreButton.id.split(":").at(-1)]
+                        moreButton.innerHTML = "<img src='./public/ButtonD.png' class='FullHistoryTableBodyNAmeImg'/>";
+                        
+                        fullHistory?.forEach((e) => {
+                            
+                            
+                            console.log("e = ", e);
+                            userContext.append(fromHTML(this.getConetntFullHistoryTableBodyContainerPlayedGames()));
+                            userContext.append(fromHTML(this.getConetntFullHistoryTableBodyPlayedGamesContent(e)));
+                        })
+                    }
+
+                    moreButton.pressed = !moreButton.pressed;
                 })
             });
 
