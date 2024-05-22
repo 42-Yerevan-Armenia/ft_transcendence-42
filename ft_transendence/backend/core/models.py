@@ -87,6 +87,7 @@ class History(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     win = models.BooleanField()
     lose = models.BooleanField()
+    gamemode = models.CharField(max_length=50, choices=GameRoom.GAMEMODE_CHOICES, default='easy')
     image = models.TextField(blank=True, null=True)
     oponent_points = models.IntegerField(default=0)
 

@@ -156,7 +156,8 @@ class GameRoomSerializer(serializers.ModelSerializer):
 class FullHistorySerializer(serializers.ModelSerializer):
     win = serializers.SerializerMethodField()
     lose = serializers.SerializerMethodField()
-    gamemode = serializers.CharField(source='opponent.gamemode', read_only=True)
+    gamemode = serializers.CharField(source='game_room.gamemode', read_only=True)
+    date = serializers.DateTimeField(format="%Y-%m-%d %H:%M", read_only=True)
 
     class Meta:
         model = History
@@ -179,17 +180,7 @@ class OpponentHistorySerializer(serializers.ModelSerializer):
     def get_full_history(self, obj):
         history_data = History.objects.filter(opponent=obj)
         full_history_serializer = FullHistorySerializer(history_data, many=True)
-        grouped_full_history = {}
-        for entry in full_history_serializer.data:
-            opponent_id = obj.id
-            if opponent_id not in grouped_full_history:
-                grouped_full_history[opponent_id] = []
-            grouped_full_history[opponent_id].append(entry)
-        response_full_history = [
-            {"opponent_id": opponent_id, "played_games": games}
-            for opponent_id, games in grouped_full_history.items()
-        ]
-        return response_full_history
+        return full_history_serializer.data
 
 class HistorySerializer(serializers.ModelSerializer):
     opponents_history = serializers.SerializerMethodField()
@@ -199,8 +190,12 @@ class HistorySerializer(serializers.ModelSerializer):
         fields = ('opponents_history',)
 
     def get_opponents_history(self, obj):
-        opponents = Person.objects.all()
-        opponents_history_serializer = OpponentHistorySerializer(opponents, many=True)
+        opponents_with_history = []
+        history_data = History.objects.filter(player=obj)
+        for history in history_data:
+            opponents_with_history.append(history.opponent)
+        unique_opponents = set(opponents_with_history)
+        opponents_history_serializer = OpponentHistorySerializer(unique_opponents, many=True)
         return opponents_history_serializer.data
 
 # [{

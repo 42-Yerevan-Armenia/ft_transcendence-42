@@ -20,13 +20,15 @@ from django.db.models import Q
 
 import time
 import random
-
 import asyncio
 
-# await channel_layer.send("channel_name", {
-#     "type": "chat.message",
-#     "text": "Hello there!",
-# })
+def call_async(coro):
+    try:
+        loop = asyncio.get_running_loop()
+    except RuntimeError:
+        return asyncio.run(coro)
+    else:
+        return loop.run_until_complete(coro)
 
 class LiveGames():
     _instance = None
@@ -38,7 +40,7 @@ class LiveGames():
             cls._group_name = None
             cls._instance = super().__new__(cls)
             cls.games = []
-            cls._instance.player_pool = []  # Initialize player_pool only once
+            cls._instance.player_pool = []
         return cls._instance
 
     async def do_bradcast(self):
@@ -52,30 +54,14 @@ class LiveGames():
             )
 
     def add_game(self, game_id, game):
-
         self.games.append(game)
-        # if self._group_name:
-        #     async_to_sync(self._channel_layer.group_send)(
-        #         self._group_name,
-        #         {
-        #             "type": "stream_sate_live",
-        #             "liveGames": self.games
-        #         }
-        #     )
+
 
     async def del_game(self, game_id):
         for i, game in enumerate(self.games):
             if game["game_room"]["room_id"] == game_id:
                 del self.games[i]
                 break
-        # if self._group_name:
-        #     await self._channel_layer.group_send(
-        #         self._group_name,
-        #         {
-        #             "type": "stream_sate_live",
-        #             "liveGames": self.games
-        #         }
-        #     )
 
     async def set_winner(self, winner, loser):
         winner_person = await sync_to_async(Person.objects.get)(id=winner)
@@ -96,7 +82,6 @@ class LiveGames():
             await sync_to_async(loser_person.save)()
             await sync_to_async(Round.objects.create)(winner=winner_person, game_room=game_room)
         await sync_to_async(self.next_match)(game_room)
-        
 
     def next_match(self, game_room):
         if len(game_room.players.all()) == 4:
@@ -111,6 +96,7 @@ class LiveGames():
                         player_2_id = other_winner[0].winner_id
                         break
                 if player_1_id and player_2_id:
+                    print("NEXT [", player_1_id, player_2_id, "]")
                     mms = MatchmakingSystem()
                     mms.start_match(player_1_id, player_2_id, game_room.id)
                     Round.objects.filter(game_room=game_room).delete()
@@ -128,7 +114,6 @@ class LiveGames():
                 last_round_winners = Round.objects.filter(game_room=game_room).order_by('-id')[:2]
                 player_1_id = None
                 player_2_id = None
-                # Find the players for the match
                 for winner in last_round_winners:
                     player_1_id = winner.winner_id
                     other_winner = [w for w in last_round_winners if w != winner and w.winner.game_room_id == game_room.id]
@@ -262,7 +247,7 @@ class MatchmakingSystem():
                 }
             }
             LiveGames().add_game(room_id, response_data)
-            asyncio.run(LiveGames().do_bradcast())
+            call_async(LiveGames().do_bradcast())
         except Exception as e:
             return JsonResponse({"success": False, "error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
@@ -379,6 +364,7 @@ def game_results_history(player1_id, player2_id, win):# ✅
         win=res_user1,
         lose=not res_user1,
         oponent_points=user2.points,
+        gamemode=user1.game_room.gamemode,
         image=user1.image
     )
     
@@ -389,6 +375,7 @@ def game_results_history(player1_id, player2_id, win):# ✅
         win=res_user2,
         lose=not res_user2,
         oponent_points=user1.points,
+        gamemode=user2.game_room.gamemode,
         image=user2.image
     )
 

@@ -115,7 +115,6 @@ var navigationHistoryA = [];
 const links = document.querySelectorAll("a");
 
 async function NavigateHistoryALLITEM(pathname, href, isATag){
-	debugger
 	// let index = -1;
 
 	if (href.slice(0,4) != "http")

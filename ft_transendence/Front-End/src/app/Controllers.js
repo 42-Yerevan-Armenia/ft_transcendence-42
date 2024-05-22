@@ -179,7 +179,6 @@ async function getFetchRequest(ToRequest) {
 
 //fetch universal POST request ❌
 async function putRequest(Tomethod, Torequest, ToObj) {
-  debugger
   const token =  await User.getAccessTocken();
   try {
     const response = await fetch(`${HostPort}/${Torequest}/`, {

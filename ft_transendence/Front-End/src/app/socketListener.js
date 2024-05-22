@@ -109,6 +109,8 @@ Join_Ws.onmessage = message => {
     // }
     if (response.method === "updateLiveGames" && User._getAccess) {
         console.log("response = ", response);
+        console.log("User._Id = ", User._Id);
+        console.log("isStartedUrish = ", isStartedUrish);
         response.liveGames.forEach(async element => {
             if (isStartedUrish === false && (User._Id == element.game_room.left_id || User._Id == element.game_room.right_id)) {
                 //main displey none
@@ -126,7 +128,7 @@ Join_Ws.onmessage = message => {
                 // }
                 //call game function for start game
                 isStartedUrish = true;
-                await pongGame(User, element.game_room.room_id);
+                pongGame(User, element.game_room.room_id);
             }
         });
     }

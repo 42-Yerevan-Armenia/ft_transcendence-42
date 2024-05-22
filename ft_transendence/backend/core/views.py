@@ -242,6 +242,19 @@ class Login(APIView):
         except User.DoesNotExist:
             return JsonResponse({"success": "false", "error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
         if check_password(password, person.password):
+            gameroom = person.game_room
+            if gameroom and gameroom.creator_id == person.id:
+                for player in gameroom.players.all():
+                    player.ongoing = False
+                    player.game_room_id = None
+                    player.save()
+                gameroom.players.clear()
+                gameroom.delete()
+            elif gameroom and gameroom.creator_id != person.id:
+                gameroom.players.remove(person)
+                person.ongoing = False
+                person.game_room_id = None
+            person.game_room = None
             person.is_online = True
             person.save()
             token_serializer = TokenObtainPairSerializer()
@@ -297,6 +310,7 @@ class Logout(APIView):
             person.ongoing = False
             person.game_room_id = None
         person.is_online = False
+        person.game_room = None
         person.save()
         return Response({"success": "true", "message": "Logged out successfully"}, status=status.HTTP_200_OK)
 
@@ -581,21 +595,6 @@ class CreateRoom(APIView):
         except Exception as e:
             return JsonResponse({"success": "false", "error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-# class HistoryView(APIView):
-#     permission_classes = [IsAuthenticated]
-
-#     def get(self, request, pk):
-#         try:
-#             user = Person.objects.get(id=pk)
-#             history_serializer = HistorySerializer(user)
-#             response_data = {
-#                 "success": True,
-#                 "history": history_serializer.data['opponents_history']
-#             }
-#             return Response(response_data, status=status.HTTP_200_OK)
-#         except Person.DoesNotExist:
-#             return JsonResponse({"success": False, "error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
-
 class HistoryView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -604,7 +603,7 @@ class HistoryView(APIView):
             user = Person.objects.get(id=pk)
             if opponent_id:
                 opponent = Person.objects.get(id=opponent_id)
-                history_data = History.objects.filter(opponent=opponent)
+                history_data = History.objects.filter(player=user, opponent=opponent)
                 if history_data.exists():
                     full_history_serializer = FullHistorySerializer(history_data, many=True)
                     grouped_full_history = {
@@ -625,13 +624,8 @@ class HistoryView(APIView):
                         "history": []
                     }
             else:
-                opponents = Person.objects.all()
-                opponents_with_history = []
-                for opponent in opponents:
-                    history_data = History.objects.filter(opponent=opponent)
-                    if history_data.exists():
-                        opponents_with_history.append(opponent)
-
+                history_data = History.objects.filter(player=user)
+                opponents_with_history = {history.opponent for history in history_data}
                 opponents_history_serializer = OpponentHistorySerializer(opponents_with_history, many=True)
                 response_data = {
                     "success": True,
