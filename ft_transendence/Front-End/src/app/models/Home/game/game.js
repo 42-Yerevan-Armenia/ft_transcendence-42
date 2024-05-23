@@ -154,6 +154,9 @@ function pongGame(objUser ,gameid) {
                 enableScroll();
                 isStarted = false;
                 isStartedUrish = false;
+                setTimeout(() => {
+                    Join_Ws.send(JSON.stringify({"method": "updateLiveGames"})); 
+                }, 10000);
                 return
             }
         }

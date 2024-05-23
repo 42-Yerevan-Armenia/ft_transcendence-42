@@ -43,7 +43,7 @@ class LiveGames():
             cls._instance.player_pool = []
         return cls._instance
 
-    async def do_bradcast(self):
+    async def do_broadcast(self):
         if self._group_name:
             await self._channel_layer.group_send(
                 self._group_name,
@@ -247,7 +247,7 @@ class MatchmakingSystem():
                 }
             }
             LiveGames().add_game(room_id, response_data)
-            call_async(LiveGames().do_bradcast())
+            # async_to_sync(LiveGames().do_broadcast())
         except Exception as e:
             return JsonResponse({"success": False, "error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 

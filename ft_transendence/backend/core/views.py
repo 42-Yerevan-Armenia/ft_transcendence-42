@@ -312,6 +312,12 @@ class Logout(APIView):
         person.is_online = False
         person.game_room = None
         person.save()
+        token = request.data['refresh']
+        try:
+            refresh = RefreshToken(token)
+            refresh.blacklist()
+        except TokenError:
+            return JsonResponse({"success": "false", "error": "Invalid token"}, status=status.HTTP_400_BAD_REQUEST)
         return Response({"success": "true", "message": "Logged out successfully"}, status=status.HTTP_200_OK)
 
 class Profile(APIView):
