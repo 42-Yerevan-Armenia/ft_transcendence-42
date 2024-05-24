@@ -118,7 +118,7 @@
 .ProfileMidleHeaderImage {
     width: 100%;
     height: 50%;
-    background-image: url("../../../public/conva.png");
+    background-image: url("../../public/conva.png");
     background-position: center center;
     background-repeat: no-repeat;
     background-size: cover;

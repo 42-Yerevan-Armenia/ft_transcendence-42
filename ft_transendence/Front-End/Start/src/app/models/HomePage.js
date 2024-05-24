@@ -25,12 +25,7 @@ class HomePage extends HtmlElement {
       _Community : new HtmlElement(".LIVE"),
       _SETTINGS : new HtmlElement(".SETTINGS"),
     };
-    _NavSigninSignout = {
-      _NavSignin : document.querySelector(".NavSignin"),
-      _NavSignin1 :  document.querySelector(".RightsigninButton"),
-      // _NavSignUp : document.querySelector(".NavSignUp"),
-      // _NavSignUp1 : document.querySelector(".RightgninupButton"),
-    };
+
     usersDro = async () => {
         if (await User.menegAccsess()) {
           document.querySelector("#homeNavigation").style.display  = "block";
