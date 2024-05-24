@@ -67,6 +67,7 @@ class PongConsumer(AsyncWebsocketConsumer):
             data["method"]
         except KeyError:
             return
+        # print("🔵  data[method] = ",  data["method"])
         if data["method"] == "updateKey" and self.game:
             if not self.paddle_controller:
                 print("Error: Paddle controller is not initialized")
@@ -112,12 +113,29 @@ class PongConsumer(AsyncWebsocketConsumer):
                     }
                 }
                 await self.send(text_data=json.dumps(payload))
-            if self.game["paddle1"] and self.game["paddle2"]:
+            # if self.game["paddle1"] and self.game["paddle2"]:
+            #     if not self.game["thread"].is_alive():
+            #         self.game["thread"].start()
+            #         self.game["active"] = True
+        elif data["method"] == "view":
+            payload = {
+                "method": "connect",
+                "state": self.game["state"],
+                "constants": {
+                    "paddle_step": constants.PADDLE_STEP,
+                    "screen_width": constants.SCREEN_WIDTH,
+                    "screen_height": constants.SCREEN_HEIGHT,
+                }
+            }
+            await self.send(text_data=json.dumps(payload))
+        elif data["method"] == "ready":
+            self.game["ready"].add(self.id)
+            if self.game["paddle1"] and self.game["paddle2"] and len(self.game["ready"]) == 2:
                 if not self.game["thread"].is_alive():
                     self.game["thread"].start()
                     self.game["active"] = True
-        elif data["method"] == "view":
-            pass
+
+
 
     def propagate_state_wrapper(self, thread_event):
         asyncio.run(self.propagate_state(thread_event))
