@@ -40,7 +40,7 @@ export default class Ball {
         // context.arc(this._x, this._y, this.radius, 0, 2 * Math.PI);
         // // context.arc(100, 75, 5, 0, 2 * Math.PI);
         // // context.fillStyle = this._style;
-        // console.log(this);
+        // //console.log(this);
         // context.fill();
         // context.fillRect(50, 50, 20, 20);
         // context.fill();
@@ -84,17 +84,17 @@ class Paddle {
             // this._box.position.y = -(this._y);
             // this._box.width = this._width;
             // this._box.heght = this._heght;
-            // console.log(this);
+            // //console.log(this);
             // this._box.scale.set( this._width, 1, this._heght)
             this._box.color = this.color;
-            // console.log(this._box);
+            // //console.log(this._box);
             this._scene.add(this._box);
         }
         // context.beginPath();
         // context.arc(this._x, this._y, this.radius, 0, 2 * Math.PI);
         // // context.arc(100, 75, 5, 0, 2 * Math.PI);
         // // context.fillStyle = this._style;
-        // console.log(this);
+        // //console.log(this);
         // context.fill();
         // context.fillRect(50, 50, 20, 20);
         // context.fill();
@@ -158,7 +158,7 @@ class PongGame
 
         this._renderer = new THREE.WebGLRenderer({antialias: true, alpha: true});
         this._renderer.setSize(this.w, this.h);
-        console.log(this._renderer);
+        //console.log(this._renderer);
         document.body.appendChild( this._renderer.domElement );
 
         this._ball = new Ball(this._ballInitialState.x,
@@ -192,6 +192,6 @@ class PongGame
     animate() {
         requestAnimationFrame(this.animate.bind(this))
         this._renderer.render( this._scene, this._camera );
-        // console.log("A");
+        // //console.log("A");
     }
 }

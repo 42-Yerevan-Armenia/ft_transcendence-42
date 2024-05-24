@@ -1,6 +1,6 @@
 /*
 function handleMainLoad(User) {
-    console.log("Main element is loaded");
+    //console.log("Main element is loaded");
 
         const getAccess = localStorage.getItem("access_token");
         const geRefresh = localStorage.getItem("refresh_token");
@@ -28,15 +28,15 @@ if (mainElement) {
     // Start observing changes in the DOM, including when the main element is added
     observer.observe(document.body, { childList: true, subtree: true });
 } else {
-    console.log("Main element not found");
+    //console.log("Main element not found");
 }
 "dev": "npx http-server . -p 3000"
 */
 document.addEventListener("DOMContentLoaded", async () => {
     debugger
-    console.log(" console.log(window.history);")
+    //console.log(" //console.log(window.history);")
 
-    console.log(window.location.href);
+    //console.log(window.location.href);
     
     if(User.checkSignIn()) {
         //once expiration a new refresh token is generated
@@ -44,7 +44,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (await User.menegAccsess()) {
             if (await User.setDataFromBackEnd())
             {
-                console.log("true +++++++++++++++++  " + window.location.href);
+                //console.log("true +++++++++++++++++  " + window.location.href);
                 const href = window.location.href;
                 NavigateHistoryALLITEM(window.location.pathname, href, "true");
                 return ;

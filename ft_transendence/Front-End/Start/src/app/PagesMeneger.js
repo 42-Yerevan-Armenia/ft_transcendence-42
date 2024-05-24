@@ -1,3 +1,4 @@
+"use strict"
 // create an object that maps the url to the template, title, and description
 const urlRoutes = {
 	"404": {
@@ -132,16 +133,74 @@ const urlRoutes = {
 		path: "/profil",
 		title: "ProfileMidle",
 		description: "This is the profil section",
+	},
+	"/game/": {
+		midle:true,
+		url: "/game",
+		class:".JoinList",
+		path: "/profil",
+		title: "JoinList",
+		description: "This is the game section",
+	},
+	"/game": {
+		midle:true,
+		url: "/",
+		class:".JoinList",
+		path: "/game",
+		title: "JoinList",
+		description: "This is the game section",
+	},
+	"/liderboard/": {
+		midle:true,
+		url: "/liderboard",
+		class:".MidleCub",
+		path: "/profil",
+		title: "MidleCub",
+		description: "This is the liderboard section",
+	},
+	"/liderboard": {
+		midle:true,
+		url: "/liderboard",
+		class:".MidleCub",
+		path: "/liderboard",
+		title: "MidleCub",
+		description: "This is the liderboard section",
+	},
+	"/community/": {
+		midle:true,
+		url: "/community",
+		class:".MidleCommunity",
+		path: "/community",
+		title: "MidleCommunity",
+		description: "This is the community section",
+	},
+	"/community": {
+		midle:true,
+		url: "/community",
+		class:".MidleCommunity",
+		path: "/community",
+		title: "MidleCommunity",
+		description: "This is the community section",
+	},
+	"/settings/": {
+		midle:true,
+		url: "/settings",
+		class:".MidleSettings",
+		path: "/settings",
+		title: "MidleSettings",
+		description: "This is the settings section",
+	},
+	"/settings": {
+		midle:true,
+		url: "/settings",
+		class:".MidleSettings",
+		path: "/settings",
+		title: "MidleSettings",
+		description: "This is the settings section",
 	}
 };
 
 
-
-
-
-
-////debugger
-"use strict"
 
 let pageIndex = 0
 function StatePage (){
@@ -183,7 +242,7 @@ links.forEach(link => {
 			await NavigateHistoryALLITEM(event.target.pathname, event.target.href, true);
 		}
 		catch(e){
-			console.log("PagesMeneger tag error+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=" + e);
+			//console.log("PagesMeneger tag error+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=" + e);
 		}
     });
 });
@@ -191,9 +250,8 @@ links.forEach(link => {
 // create a function that watches the url and calls the urlLocationHandler
 const addNewUrlRoute = (pathname, href) => {
 	debugger
-	// event = event || window.event; // get window.event if event argument not provided
-	// Url  = event.target.pathname;
-	Url  = pathname;
+	
+	let Url  = pathname;
 	// get the route object from the urlRoutes object
 	const route = urlRoutes[Url] || urlRoutes["404"];
 	// window.history.pushState(state, unused, target link);
@@ -214,7 +272,7 @@ async function drawHtmlScreen(route, isATag){
 		if (route.midle)
 		{
 			await ManageAllPage.Manage("Home")
-			await ManageMidle.Manage(route.midle)
+			await ManageMidle.Manage(route.title)
 		}
 		else
 			await ManageAllPage.Manage(route.title)
@@ -232,8 +290,8 @@ async function drawHtmlScreen(route, isATag){
 const urlLocationHandler =  async (isATag, pathname, href) => {
 	debugger
 	const Url = pathname; //window.location.pathname; // get the url path
-	console.log("window.location.pathname == " + window.location.pathname + "    pathname   " + pathname);
-	console.log(window.state)
+	//console.log("window.location.pathname == " + window.location.pathname + "    pathname   " + pathname);
+	//console.log(window.state)
 	if (typeof(Url) !== "string")
 	{
 		let x = Url.pathname;
@@ -301,7 +359,7 @@ const urlLocationHandlerForNavigateBackForward = async () => {
 //add an event listener to the window that watches for url changes "-> or <-"
 window.addEventListener("popstate", async function(event) {
 	debugger
-    console.log("History state changed:", event.state);
+    //console.log("History state changed:", event.state);
 
 	await urlLocationHandlerForNavigateBackForward();
 });

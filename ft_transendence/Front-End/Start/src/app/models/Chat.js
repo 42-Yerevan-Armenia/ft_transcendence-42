@@ -4,11 +4,11 @@
 const chatSocket = new WebSocket("ws://" + HostPort.slice(7) + "/");
 //Whene opened socket
 chatSocket.onopen = function (e) {
-    console.log("The connection was setup successfully !");
+    //console.log("The connection was setup successfully !");
 };
 //When Have Error
 chatSocket.onclose = function (e) {
-    console.log("Something unexpected happened !");
+    //console.log("Something unexpected happened !");
 };
 
 document.querySelector("#id_message_send_input").focus();

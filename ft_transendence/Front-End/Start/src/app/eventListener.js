@@ -1,15 +1,11 @@
 ////debugger
-
 const localhostPage = window.location.host;
-console.log("const localhostPage = window.location.host;  " + window.location.host);
+//console.log("const localhostPage = window.location.host;  " + window.location.host);
 
-Home._NAV._SETTINGS._classname?.addEventListener("click",()=>{
-  ManageMidle.Manage("MidleSettings")
-})
 //Home Page Settings Middle Button Save
 //Validate Settings
 Home._MiddleSettings?._Save?.addEventListener("click", async ()=>{
-  console.log("SAVE")
+  //console.log("SAVE")
   if(!Home._MiddleSettings.isArgumentsEmpty())
     return
   if (!Home._MiddleSettings.checkPassword())
@@ -19,7 +15,7 @@ Home._MiddleSettings?._Save?.addEventListener("click", async ()=>{
   await Home._MiddleSettings.changeData();
 })
 Home._MiddleSettings?._DeleteAccount.addEventListener("click",async ()=>{
-  console.log("_DeleteAccount")
+  //console.log("_DeleteAccount")
   const deleteUser = await putRequest("DELETE", `api/v1/settings/${User._Id}`,{});
   myStorages.longOut();
 })
@@ -31,7 +27,7 @@ Home._MiddleSettings?._ImageFileAccess?.addEventListener("change", (event)=>{
   // Closure to capture the file information.
   reader.onload = function(event) {
     //white Base64
-    console.log(event.target.result);
+    //console.log(event.target.result);
     base64EncodedImage = event.target.result + ""
     // Get the base64 encoded image data
     // <<data:image/png;base64,>> .length === 22
@@ -39,55 +35,70 @@ Home._MiddleSettings?._ImageFileAccess?.addEventListener("change", (event)=>{
     if (base64EncodedImage[0] == ",")
       base64EncodedImage  = base64EncodedImage.slice(1);
     // You can now send the base64EncodedImage to the server via AJAX or any other method.
-    console.log(base64EncodedImage);
+    //console.log(base64EncodedImage);
   };
   // Read in the image file as a data URL.
   reader.readAsDataURL(file);
 })
+
+
+
 // ProfileMidleHeaderToInvit
 Home?._HomeMidleProfile?._ProfileMidleHeaderToInvit1?.addEventListener("click", async ()=>{
-  console.log("_ProfileMidleHeaderToInvit call1");
+
   ManageMidle.Manage("MidleHistoryGame");
 })
+
 Home?._HomeMidleProfile?._ProfileMidleHeaderToInvit2?.addEventListener("click",async ()=>{
-  console.log("_ProfileMidleHeaderToInvit call2");
   ManageMidle.Manage("MidleHistoryGame");
 })
 //JoinList Invite Button
 // #JoinListHeroDivButtonBInvite
-Home?._MidleJoinList?._InviteButton?.addEventListener("click",async ()=>{             //  --------------------
-  console.log("_ProfileMidleHeaderToInvit call2");
+Home?._MidleJoinList?._InviteButton?.addEventListener("click",async ()=>{
   await ManageMidle.Manage("JoinListInvite");
+})
+
+
+
+Home._NAV._SETTINGS._classname?.addEventListener("click",()=>{
+  ManageMidle.Manage("MidleSettings")
+  NavigateHistoryALLITEM("/settings", localhostPage + '/settings', false)
 })
 Home?._NAV?._Home?._classname?.addEventListener("click",()=>{
   ManageMidle.Manage("midle");
   NavigateHistoryALLITEM("/midle", localhostPage + '/midle', false)
-} );
+});
+
 Home?._NAV?._Profile?._classname?.addEventListener("click", async ()=>{
   debugger
   ManageMidle.Manage("ProfileMidle");
   NavigateHistoryALLITEM("/profil", localhostPage + '/profil', false);
 })
+
 Home?._NAV?._JoinListGame?._classname?.addEventListener("click",()=>{
   ManageMidle.Manage("JoinList");
-
-} )
+  NavigateHistoryALLITEM("/game", localhostPage + '/game', false);
+})
+// LEADERBOARD
 Home?._NAV?._LEADERBOARD?._classname?.addEventListener("click",()=>{
   ManageMidle.Manage("MidleCub");
+  NavigateHistoryALLITEM("/liderboard", localhostPage + '/liderboard', false);
 } )
+//  NavCommunity
 Home?._NAV?._Community?._classname?.addEventListener("click",()=>{
   ManageMidle.Manage("MidleCommunity");
+  NavigateHistoryALLITEM("/community", localhostPage + '/community', false);
 } )
 //whene create new list item for game
 //_MidleJoinList Create button
 Home._MidleJoinList?._CreateButton?.addEventListener("click", async () => {
     // //debugger
-  console.log("click... \n");
+  //console.log("click... \n");
   const Players = document.querySelector("#JoinListHeroDivProfilPlayers");
   const LiveOnOff = document.querySelector("#LiveOnOff");
   const JoinTheme = document.querySelector("#JoinTheme");
   const JoinListHeroDivGameMode = document.querySelector("#JoinListHeroDivGameMode");
-  console.log(Players.value);
+  //console.log(Players.value);
   const objCreate = {
     max_players:Players.value,
     live:LiveOnOff.value,
@@ -108,12 +119,12 @@ Home._MidleJoinList?._CreateButton?.addEventListener("click", async () => {
   if (!Join_Ws)
     return;
   if (Join_Ws.readyState === WebSocket.OPEN) {
-    console.log('WebSocket connection is open 222222222222');
+    //console.log('WebSocket connection is open 222222222222');
     Join_Ws.send(str);
   }
   //When Have Error
   Join_Ws.onclose = function (e) {
-    console.log("Something unexpected happened ! Join_Ws closed");
+    //console.log("Something unexpected happened ! Join_Ws closed");
   };
   Players.value = "";
   LiveOnOff.value = "";
@@ -126,7 +137,7 @@ Home._HomeLeft?._ExploreMessag?.addEventListener("click",  ()=>{
     return;
 
   const style = Home._HomeMessage?._style;
-  console.log("d.display == " + style.display)
+  //console.log("d.display == " + style.display)
   const flag = style.display == "none" ? "block" : "none";
   if (flag == "block")
   {
@@ -219,7 +230,7 @@ Confirm.ConfirmYourEmail.addEventListener('click', async () => {
     ////debugger
   const data = await Confirm.ConfirmPageContinue(isReset);
   Confirm.ValuesAllEmpty();
-  console.log("isReset    " + isReset);
+  //console.log("isReset    " + isReset);
   //when came this page in Reset Password page
   if (isReset)
   {
@@ -236,7 +247,7 @@ Confirm.ConfirmYourEmail.addEventListener('click', async () => {
     await  NavigateHistoryALLITEM("/password", localhostPage + '/password', false)
     return ;
   }
-  console.log("    data == " + JSON.stringify(data));
+  //console.log("    data == " + JSON.stringify(data));
   //when came this page Welcome to ft_transcendence
   if (!data) {
     User._ConfirmEmail = false;
@@ -271,7 +282,7 @@ Password.PasswordConfirm.addEventListener("click", async () => {
   if (isCorrectPassword)
   {
     const codeSesion = await Password.PasswordConfirmWithServer();
-    console.log("codeSesion = " + codeSesion + " typeof(codeSesion) " + typeof(codeSesion));
+    //console.log("codeSesion = " + codeSesion + " typeof(codeSesion) " + typeof(codeSesion));
     
     if (codeSesion.state)
     {
@@ -291,7 +302,7 @@ SignUp.SignupPageContinue.addEventListener("click", async () => {
 
   if (isCorrectPassword && ischeckNameNickname) {
    const codeSesion = await SignUp.PasswordConfirmWithServer();
-   console.log(codeSesion);
+   //console.log(codeSesion);
     if (codeSesion.state) {
       SignUp.DisplayNone();
       Login.DisplayBlock();

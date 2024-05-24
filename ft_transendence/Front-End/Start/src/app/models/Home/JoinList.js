@@ -188,7 +188,7 @@ class JoinList extends HtmlElement {
       button.addEventListener("click", async function(e) {
         // Item.id + ":JoinListTableID:" + Item.creator_id
         // api/v1/joinlist/<int:pk>/' POST
-        console.log("  +++    " + e.target.id);
+        //console.log("  +++    " + e.target.id);
         const creator_id = e.target.id.slice(e.target.id.lastIndexOf(':')+1);
         const game_room_id = e.target.id.slice(0, e.target.id.indexOf(':'));
         // const creator_id = idLeft;
@@ -207,12 +207,12 @@ class JoinList extends HtmlElement {
         const str = JSON.stringify(paload);
 
         if (Join_Ws.readyState === WebSocket.OPEN) {
-          console.log('WebSocket connection is open 222222222222');
+          //console.log('WebSocket connection is open 222222222222');
           Join_Ws.send(str);
         }
         //When Have Error
         Join_Ws.onclose = function (e) {
-          console.log("Something unexpected happened ! Join_Ws closed");
+          //console.log("Something unexpected happened ! Join_Ws closed");
         };
       })
     })
@@ -220,16 +220,16 @@ class JoinList extends HtmlElement {
     buttonsView.forEach(button => {
       button.addEventListener("click", async function(e) {
               // Your code here
-              console.log(JSON.stringify(e.target.id));
-              console.log("buttonsView");
+              //console.log(JSON.stringify(e.target.id));
+              //console.log("buttonsView");
         })
     })
     //    Iterate over each button and attach an event listener Members
     buttonsMembers.forEach(button => {
       button.addEventListener("click", async function(e) {
               // Your code here
-              console.log(JSON.stringify(e.target.id));
-              console.log("buttonsMembers!");
+              //console.log(JSON.stringify(e.target.id));
+              //console.log("buttonsMembers!");
           })
       })
   }

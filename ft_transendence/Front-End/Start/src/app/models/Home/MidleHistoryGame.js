@@ -7,7 +7,7 @@ class MidleHistoryGame extends HtmlElement{
     };
 
     getConetntFullHistoryContainerTable() {
-        console.log("barev");
+        //console.log("barev");
         return `
         <div class="FullHistoryContainerTable">
                 <div class="FullHistoryTable">
