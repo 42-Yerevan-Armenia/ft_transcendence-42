@@ -45,7 +45,7 @@ function disableScroll() {
      window.onscroll = function() {};
  }
 
-function pongGame(objUser ,gameid) {
+function pongGame(objUser ,gameid, mode) {
     //debugger;
     if (isStarted)
         return;
@@ -74,16 +74,14 @@ function pongGame(objUser ,gameid) {
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     const payLoad = {
-        "method": "connect",
+        "method": mode,
         "clientId": clientId,
         "gameId": gameId
     }
+
     ws.onopen = () => ws.send(JSON.stringify(payLoad));
     console.log("ws://" + window.location.host + "/ws/game/");
     console.log("ws = ", window.location.host);
-    // const txtGameId = document.getElementById("txtGameId");
-    // const divPlayers = document.getElementById("divPlayers");
-    // //debugger
     const board = document.getElementById("board");
 
     clearBox("board");
@@ -101,20 +99,9 @@ function pongGame(objUser ,gameid) {
         if (event.key === "ArrowUp") {
             payLoad["direction"] = "up";
             pressed = true;
-            // const paddle = document.getElementById(paddleName); // paddle2
-            // setTimeout(delayedFunction, 2000);
-            // setTimeout(function() {
-            //     movePaddle(paddle , "up", board.offsetHeight, constants.paddle_step);
-            // }, 100);
-            // movePaddle(paddle , "up", board.offsetHeight, constants.paddle_step);
         }
         else if (event.key === "ArrowDown") {
             payLoad["direction"] = "down";
-            // const paddle = document.getElementById(paddleName); // paddle1
-            // setTimeout(function() {
-            //     movePaddle(paddle, "down", board.offsetHeight, constants.paddle_step);
-            // }, 100);
-            // movePaddle(paddle, "down", board.offsetHeight, constants.paddle_step);
         }
         else
             return;
@@ -127,7 +114,7 @@ function pongGame(objUser ,gameid) {
         document.getElementById(elementID).innerHTML = "";
     }
 
-    ws.onmessage = message => {
+    ws.onmessage = async message => {
         //message.data
         // console.log("✅ message = ", message);
         let response;
@@ -143,22 +130,19 @@ function pongGame(objUser ,gameid) {
         const mainOnHtml = document.getElementById("mainSectionUsually");
         const body = document.querySelector(".addBodyStile");
         if (response?.method === "finish_match" && User?._getAccess) {
-            if (User._Id == response.state.game_room.left_id || User._Id == response.state.game_room.right_id) {
-                // //debugger;
-                clearInterval(interval);
-                ws.close();
-                clearBox("board");
-                // update when game terminate
-                mainOnHtml.style.display = "block";
-                body.style.display = "none";
-                enableScroll();
-                isStarted = false;
-                isStartedUrish = false;
-                setTimeout(() => {
-                    Join_Ws.send(JSON.stringify({"method": "updateLiveGames"})); 
-                }, 10000);
-                return
-            }
+            // //debugger;
+            await new Promise(resolve => setTimeout(resolve, 5000));
+            clearInterval(interval);
+            ws.close();
+            clearBox("board");
+            // update when game terminate
+            mainOnHtml.style.display = "block";
+            body.style.display = "none";
+            enableScroll();
+            isStarted = false;
+            isStartedUrish = false;
+            Join_Ws.send(JSON.stringify({"method": "updateLiveGames"})); 
+            return
         }
         if (response.method === "connect"){
             console.log("response = ", response);
@@ -222,6 +206,7 @@ function pongGame(objUser ,gameid) {
         //join
         if (response.method === "join") {
             board.innerHTML = getPongContent();
+            
         }
     }
 }

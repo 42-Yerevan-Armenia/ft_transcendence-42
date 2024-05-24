@@ -15,14 +15,12 @@ from .serializers import (
     HomeSerializer,
     LeaderboardSerializer,
     ProfileSerializer,
-    JoinListSerializer,
     WaitingRoomSerializer,
     HistorySerializer,
     OpponentHistorySerializer,
     FullHistorySerializer,
     GameRoomSerializer,
-    MatchSerializer,
-    CustomSerializer
+    MatchSerializer
 )
 from .validations import (
     email_validation,
@@ -461,7 +459,7 @@ class JoinList(APIView):
     def get(self, request, pk):
         try:
             persons = Person.objects.exclude(game_room=None).select_related('game_room').order_by('game_room_id')
-            game_room_data = defaultdict(list) # Group persons by game_room_id
+            game_room_data = defaultdict(list)
             for person in persons:
                 game_room_data[person.game_room_id].append(person)
             result = {"success": True, "method": "join_list_room", "game_rooms": []}

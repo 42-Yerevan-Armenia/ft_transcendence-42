@@ -72,39 +72,6 @@ class SettingsSerializer(serializers.ModelSerializer):
         model = Person
         fields = ('id', 'name', 'nickname', 'email', 'password', 'phone', 'image', 'background', 'gamemode')
 
-class JoinListSerializer(serializers.ModelSerializer):
-    max_players = serializers.SerializerMethodField()
-    class Meta:
-        model = Person
-        fields = ('id', 'image', 'game_room_id', 'gamemode', 'max_players')
-    
-    def get_max_players(self, obj):
-        try:
-            game_room = GameRoom.objects.get(players=obj)
-            return game_room.max_players
-        except GameRoom.DoesNotExist:
-            return None
-
-class CustomSerializer(serializers.ModelSerializer):
-    person_id = serializers.IntegerField(source='id')
-    person_image = serializers.CharField(source='image')
-    gameroom_id = serializers.SerializerMethodField()
-    gameroom_max_players = serializers.SerializerMethodField()
-    gameroom_gamemode = serializers.SerializerMethodField()
-
-    class Meta:
-        model = Person
-        fields = ('person_id', 'person_image', 'gameroom_id', 'gameroom_max_players', 'gameroom_gamemode')
-
-    def get_gameroom_id(self, obj):
-        return obj.game_room.id if obj.game_room else None
-
-    def get_gameroom_max_players(self, obj):
-        return obj.game_room.max_players if obj.game_room else None
-
-    def get_gameroom_gamemode(self, obj):
-        return obj.game_room.gamemode if obj.game_room else None
-
 class WaitingRoomSerializer(serializers.ModelSerializer):
     class Meta:
         model = Person
@@ -114,11 +81,6 @@ class MatchSerializer(serializers.ModelSerializer):
     class Meta:
         model = Person
         fields = ('id', 'wins', 'loses', 'matches', 'points')
-
-class UsersSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ('id', 'username')
 
 class FriendListSerializer(serializers.ModelSerializer):
     class Meta:
@@ -197,98 +159,3 @@ class HistorySerializer(serializers.ModelSerializer):
         unique_opponents = set(opponents_with_history)
         opponents_history_serializer = OpponentHistorySerializer(unique_opponents, many=True)
         return opponents_history_serializer.data
-
-# [{
-#     'success': True,
-#     'history': [
-#         {
-#             'opponent.id': 3,
-#             'nickname': 'Userc',
-#             'gamemode': 'classic',
-#             'points': 769,
-#             'matches': 9,
-#             'full_history': [
-#                 {
-#                     'opponent_id': '3',
-#                     'played_games': [OrderedDict([('gamemode', 'easy'), ('date', '2024-05-20T17:10:57.838057Z'), ('win', 1), ('lose', 0)]),
-#                                     OrderedDict([('gamemode', 'classic'), ('date', '2024-05-20T17:18:18.367714Z'), ('win', 0), ('lose', 1)])]
-#                 },
-#             ]
-#         },
-#         {
-#             'opponent.id': 4,
-#             'nickname': 'Usera',
-#             'gamemode': 'classic',
-#             'points': 7569,
-#             'matches': 29,
-#             'full_history': [
-#                 {
-#                     'opponent_id': '4',
-#                     'played_games': [OrderedDict([('gamemode', 'hard'), ('date', '2024-05-21T17:10:57.838057Z'), ('win', 1), ('lose', 0)]),
-#                                     OrderedDict([('gamemode', 'hard'), ('date', '2024-05-21T17:18:18.367714Z'), ('win', 0), ('lose', 1)])]
-#                 },
-#             ]
-#         },
-#     ]
-    
-# }]
-
-# {
-#     'success': True,
-#     'history': [
-#         OrderedDict([
-#             ('opponent_id', 1),
-#             ('nickname', 'Usera'),
-#             ('gamemode', 'classic'),
-#             ('points', 720),
-#             ('matches', 10),
-#             ('full_history', [
-#                 {
-#                     'opponent_id': 1,
-#                     'played_games': [OrderedDict([('gamemode', 'classic'), ('date', '2024-05-20T17:18:42.431301Z'), ('win', 1), ('lose', 0)])]
-#                 }
-#             ])
-#         ]),
-#         OrderedDict([
-#             ('opponent_id', 2),
-#             ('nickname', 'Userb'),
-#             ('gamemode', 'classic'),
-#             ('points', 0),
-#             ('matches', 0),
-#             ('full_history', [])]),
-#         OrderedDict([
-#             ('opponent_id', 3),
-#             ('nickname', 'Userc'),
-#             ('gamemode', 'classic'),
-#             ('points', 874),
-#             ('matches', 10),
-#             ('full_history',
-#                 [{
-#                     'opponent_id': 3,
-#                     'played_games': [
-#                                         OrderedDict([('gamemode', 'classic'), ('date', '2024-05-20T17:10:57.844553Z'), ('win', 0), ('lose', 1)]),
-#                                         OrderedDict([('gamemode', 'classic'), ('date', '2024-05-20T17:18:18.363081Z'), ('win', 1), ('lose', 0)]),
-#                                         OrderedDict([('gamemode', 'classic'), ('date', '2024-05-20T17:18:42.436042Z'), ('win', 0), ('lose', 1)]),
-#                                         OrderedDict([('gamemode', 'classic'), ('date', '2024-05-20T17:53:58.746545Z'), ('win', 0), ('lose', 1)])
-#                                     ]
-#                 }]
-#             )]),
-#         OrderedDict([
-#             ('opponent_id', 4),
-#             ('nickname', 'Userd'),
-#             ('gamemode', 'classic'),
-#             ('points', 719),
-#             ('matches', 9),
-#             ('full_history',
-#                 [{
-#                     'opponent_id': 4,
-#                     'played_games': [
-#                                         OrderedDict([('gamemode', 'classic'), ('date', '2024-05-20T17:10:57.838057Z'), ('win', 1), ('lose', 0)]),
-#                                         OrderedDict([('gamemode', 'classic'), ('date', '2024-05-20T17:18:18.367714Z'), ('win', 0), ('lose', 1)]),
-#                                         OrderedDict([('gamemode', 'classic'), ('date', '2024-05-20T17:53:58.742563Z'), ('win', 1), ('lose', 0)])
-#                                     ]
-#                 }]
-#             )
-#             ])
-#     ]
-# }

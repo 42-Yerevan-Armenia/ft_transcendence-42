@@ -87,8 +87,7 @@ Join_Ws.onmessage = message => {
     }
     console.log("=========================   response.method == " + response.method)
     // update JoinList->invite list
-    const mainOnHtml = document.getElementById("mainSectionUsually");
-    const body = document.querySelector(".addBodyStile");
+    
     // if (response.method === "start_game" && User._getAccess) {
     // debugger
     // debugger
@@ -114,6 +113,9 @@ Join_Ws.onmessage = message => {
         response.liveGames.forEach(async element => {
             if (isStartedUrish === false && (User._Id == element.game_room.left_id || User._Id == element.game_room.right_id)) {
                 //main displey none
+                const mainOnHtml = document.getElementById("mainSectionUsually");
+                const body = document.querySelector(".addBodyStile");
+
                 mainOnHtml.style.display = "none";
 //add game
                 if (document.getElementById("board")){
@@ -126,7 +128,7 @@ Join_Ws.onmessage = message => {
     // }
                 //call game function for start game
                 isStartedUrish = true;
-                pongGame(User, element.game_room.room_id);
+                pongGame(User, element.game_room.room_id, "connect");
             }
         });
     }
