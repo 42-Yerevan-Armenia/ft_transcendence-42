@@ -15,14 +15,12 @@ from .serializers import (
     HomeSerializer,
     LeaderboardSerializer,
     ProfileSerializer,
-    JoinListSerializer,
     WaitingRoomSerializer,
     HistorySerializer,
     OpponentHistorySerializer,
     FullHistorySerializer,
     GameRoomSerializer,
-    MatchSerializer,
-    CustomSerializer
+    MatchSerializer
 )
 from .validations import (
     email_validation,
@@ -295,14 +293,16 @@ class Login(APIView):
 
 class Logout(APIView):
     def post(self, request, pk):
-        person = Person.objects.get(id=pk)
+        try:
+            person = Person.objects.get(id=pk)
+        except Person.DoesNotExist:
+            return JsonResponse({"success": "false", "error": "Person not found"}, status=status.HTTP_404_NOT_FOUND)
         gameroom = person.game_room
         if gameroom and gameroom.creator_id == person.id:
             for player in gameroom.players.all():
                 player.ongoing = False
                 player.game_room_id = None
                 player.save()
-            # LiveGames().del_game(gameroom.id)
             gameroom.players.clear()
             gameroom.delete()
         elif gameroom and gameroom.creator_id != person.id:
@@ -312,6 +312,12 @@ class Logout(APIView):
         person.is_online = False
         person.game_room = None
         person.save()
+        token = request.data['refresh']
+        try:
+            refresh = RefreshToken(token)
+            refresh.blacklist()
+        except TokenError:
+            return JsonResponse({"success": "false", "error": "Invalid token"}, status=status.HTTP_400_BAD_REQUEST)
         return Response({"success": "true", "message": "Logged out successfully"}, status=status.HTTP_200_OK)
 
 class Profile(APIView):
@@ -392,12 +398,14 @@ class SettingsById(APIView):
 
     def delete(self, request, pk):
         try:
-            user = User.objects.get(pk=pk)
             person = Person.objects.get(pk=pk)
+            user = User.objects.get(pk=pk)
         except Person.DoesNotExist:
             return JsonResponse({"success": "false", "error": "person not found"}, status=status.HTTP_404_NOT_FOUND)
-        user.delete()
+        print("❌", person)
+        print("❌", user)
         person.delete()
+        user.delete()
         return JsonResponse({"success": "true", "message": "User deleted successfully"})
 
 class Leaderboard(APIView):
@@ -455,7 +463,7 @@ class JoinList(APIView):
     def get(self, request, pk):
         try:
             persons = Person.objects.exclude(game_room=None).select_related('game_room').order_by('game_room_id')
-            game_room_data = defaultdict(list) # Group persons by game_room_id
+            game_room_data = defaultdict(list)
             for person in persons:
                 game_room_data[person.game_room_id].append(person)
             result = {"success": True, "method": "join_list_room", "game_rooms": []}

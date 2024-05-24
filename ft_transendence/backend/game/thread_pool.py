@@ -21,7 +21,8 @@ class ThreadPool:
             "ball": None,
             "active": False,
             "viewers": [],
-            "state": copy.deepcopy(INITIAL_STATE)
+            "state": copy.deepcopy(INITIAL_STATE),
+            "ready": set()
         }
         game = cls.threads[game_name]
         game["ball"] = BallController(game["state"])

@@ -43,7 +43,7 @@ class LiveGames():
             cls._instance.player_pool = []
         return cls._instance
 
-    async def do_bradcast(self):
+    async def do_broadcast(self):
         if self._group_name:
             await self._channel_layer.group_send(
                 self._group_name,
@@ -84,6 +84,7 @@ class LiveGames():
         await sync_to_async(self.next_match)(game_room)
 
     def next_match(self, game_room):
+        game_size = len(game_room.players.all())
         if len(game_room.players.all()) == 4:
             if not len([p for p in game_room.players.all() if p.game_room_id is None]) == 3: 
                 last_round_winners = Round.objects.filter(game_room=game_room).order_by('-id')[:2]
@@ -98,7 +99,10 @@ class LiveGames():
                 if player_1_id and player_2_id:
                     print("NEXT [", player_1_id, player_2_id, "]")
                     mms = MatchmakingSystem()
-                    mms.start_match(player_1_id, player_2_id, game_room.id)
+                    room_id = str(game_room.id)
+                    if game_size != 2:
+                        room_id = str(room_id) + str(player_1_id) + str(player_2_id)
+                    mms.start_match(player_1_id, player_2_id, room_id)
                     Round.objects.filter(game_room=game_room).delete()
             else:
                 Round.objects.filter(game_room=game_room).delete()
@@ -122,7 +126,10 @@ class LiveGames():
                         break
                 if player_1_id and player_2_id:
                     mms = MatchmakingSystem()
-                    mms.start_match(player_1_id, player_2_id, game_room.id)
+                    room_id = str(game_room.id)
+                    if game_size != 2:
+                        room_id = str(room_id) + str(player_1_id) + str(player_2_id)
+                    mms.start_match(player_1_id, player_2_id, room_id)
                     Round.objects.filter(game_room=game_room).delete()
             else:
                 Round.objects.filter(game_room=game_room).delete()
@@ -138,7 +145,10 @@ class LiveGames():
         self._group_name = group_name
 
     def get_game(self, game_id):
-        return self.games[game_id]
+        for i, game in enumerate(self.games):
+            if str(game["game_room"]["room_id"]) == str(game_id):
+                return game
+        return None
 
     def get_all_games(self):
         return self.games
@@ -182,11 +192,11 @@ class MatchmakingSystem():
     def __new__(cls):
         if cls._instance is None:
             cls._instance = super().__new__(cls)
-            cls._instance.player_pool = []  # Initialize player_pool only once
+            cls._instance.player_pool = []
         return cls._instance
 
     def add_player_to_pool(self, player_id):
-        if player_id.id not in self.player_pool:  # Append the id of the player
+        if player_id.id not in self.player_pool:
             self.player_pool.append(player_id.id)
             self.match_players()
     
@@ -194,27 +204,25 @@ class MatchmakingSystem():
         if player_id in self.player_pool:
             self.player_pool.remove(player_id)
 
-    def get_player_info(self, player_id):  # Define the function within the class
+    def get_player_info(self, player_id):
         try:
             player = Person.objects.get(id=player_id)
-            serializer = MatchSerializer(player)  # Assuming MatchSerializer is properly defined
+            serializer = MatchSerializer(player)
             return serializer.data
         except Person.DoesNotExist:
-            # Handle the case where the player is not found
             return None
 
     def match_players(self):
         if len(self.player_pool) < 2:
-            return # Not enough players to match
+            return
         start_time = time.time()
-        while time.time() - start_time < 180: # Try matching for 3 minutes
-            players = [self.get_player_info(player_id) for player_id in self.player_pool]  # Use self.get_player_info
+        while time.time() - start_time < 180:
+            players = [self.get_player_info(player_id) for player_id in self.player_pool]
             sorted_players = sorted(players, key=lambda x: (x['wins'] - x['loses']) / x['matches'] if x['matches'] > 0 else 0, reverse=True)
-            # Pair players with similar points
             while len(sorted_players) >= 2:
                 player_1 = sorted_players.pop(0)
                 player_2 = sorted_players.pop(0)
-                self.start_match(player_1['id'], player_2['id']) # Redirect to game application
+                self.start_match(player_1['id'], player_2['id'])
                 self.remove_player_from_pool(player_1['id'])
                 self.remove_player_from_pool(player_2['id'])
                 return
@@ -223,23 +231,21 @@ class MatchmakingSystem():
 
     def match_players_by_points(self):
         if len(self.player_pool) < 2:
-            return  # Not enough players to match
-        players = [self.get_player_info(player_id) for player_id in self.player_pool]  # Use self.get_player_info
+            return
+        players = [self.get_player_info(player_id) for player_id in self.player_pool]
         sorted_players = sorted(players, key=lambda x: x['points'])
-        # Pair players with similar points
         while len(sorted_players) >= 2:
             player_1 = sorted_players.pop(0)
             player_2 = sorted_players.pop(0)
-            self.start_match(player_1['id'], player_2['id'])  # Redirect to game application
+            self.start_match(player_1['id'], player_2['id'])
             self.remove_player_from_pool(player_1['id'])
             self.remove_player_from_pool(player_2['id'])
 
     def start_match(self, player1_id, player2_id, room_id):
         try:
-            room_id = str(room_id) + str(player1_id) + str(player2_id)
             response_data = {
                 "success": True,
-                "method": "start_mutch",  # TODO
+                "method": "start_mutch",
                 "game_room": {
                         "room_id": room_id,
                         "left_id": player1_id,
@@ -247,7 +253,7 @@ class MatchmakingSystem():
                 }
             }
             LiveGames().add_game(room_id, response_data)
-            call_async(LiveGames().do_bradcast())
+            # async_to_sync(LiveGames().do_broadcast())
         except Exception as e:
             return JsonResponse({"success": False, "error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
@@ -288,28 +294,32 @@ class TournamentSystem:
         self.groups = []
         self.room_id = game_room_id
     
-    def run_tournament(self): # ✅
-        self.create_groups() # Divide players into initial groups
+    def run_tournament(self):
+        self.create_groups()
         for group in self.groups:
-            self.run_rounds(group)  # Run initial matches for each group
+            self.run_rounds(group)
 
-    def create_groups(self): # ✅
-        player_ids = list(self.players.values_list('id', flat=True))  # Extract player IDs from queryset
-        random.shuffle(player_ids)  # Shuffle the list of player IDs
+    def create_groups(self):
+        player_ids = list(self.players.values_list('id', flat=True))
+        random.shuffle(player_ids)
+        self.num_players_in_turnament = len(player_ids)
         num_players = len(player_ids)
         num_groups = num_players // 2
         # Divide shuffled player IDs into groups of two
         self.groups = [player_ids[i:i+2] for i in range(0, num_players, 2)]
         print("START", self.groups)
 
-    def run_rounds(self, group): # ✅
+    def run_rounds(self, group):
         for i in range(0, len(group), 2):
             player_1 = group[i]
             player_2 = group[i+1]
+            room_id = str(self.room_id)
+            if int(self.num_players_in_turnament) != 2:
+                room_id = str(room_id) + str(player_1) + str(player_2)
             mms = MatchmakingSystem()
-            mms.start_match(player_1, player_2, self.room_id)
+            mms.start_match(player_1, player_2, room_id)
 
-def game_results_history(player1_id, player2_id, win):# ✅
+def game_results_history(player1_id, player2_id, win):
     user1 = Person.objects.get(id=player1_id)
     user2 = Person.objects.get(id=player2_id)
     if win == player1_id:
@@ -320,7 +330,6 @@ def game_results_history(player1_id, player2_id, win):# ✅
         result_user2 = 1
     res_user1 = result_user1 == 1
     res_user2 = result_user2 == 1
-    # Update game results
     if result_user1 == 1:
         user1.wins += 1
         score1 = 100
@@ -351,10 +360,8 @@ def game_results_history(player1_id, player2_id, win):# ✅
         user2.loses * lose_bonus +
         user2.matches * match_bonus
     )
-    # Update points
     user1.points += points_user1
     user2.points += points_user2
-    # Save changes to the database
     user1.save()
     user2.save()
     History.objects.create(

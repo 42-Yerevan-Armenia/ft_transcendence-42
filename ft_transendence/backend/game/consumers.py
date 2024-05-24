@@ -43,6 +43,16 @@ class PongConsumer(AsyncWebsocketConsumer):
         await self.channel_layer.group_add(self.game_id, self.channel_name)
         await self.accept()
         self.joinList.set_channel_layer(self.channel_layer)
+        try:
+            game_room = LiveGames().get_game(int(self.game_id))
+            players_set = set()
+            players_set.add(int(game_room["game_room"]["left_id"]))
+            players_set.add(int(game_room["game_room"]["right_id"]))
+            self.game_info[self.game_id] = players_set
+            print("❌ all_user_ids = ", self.game_info[self.game_id])
+        except ObjectDoesNotExist:
+            print(f"❌ Error: GameRoom with id {self.game_id} does not exist")
+            return await self.close(code=4006)
 
     async def disconnect(self, close_code):
         if self.id:
@@ -57,6 +67,7 @@ class PongConsumer(AsyncWebsocketConsumer):
             data["method"]
         except KeyError:
             return
+        # print("🔵  data[method] = ",  data["method"])
         if data["method"] == "updateKey" and self.game:
             if not self.paddle_controller:
                 print("Error: Paddle controller is not initialized")
@@ -64,10 +75,15 @@ class PongConsumer(AsyncWebsocketConsumer):
                 direction = data.get("direction")
                 await self.paddle_controller.move(direction)
         elif data["method"] == "connect":
+            try:
+                self.id = int(data["clientId"])
+            except KeyError:
+                return await self.close(code=4004)
+            if self.id not in self.game_info[self.game_id]:
+                return await self.close(code=4005)
             if not self.game["paddle1"]:
                 self.paddle_controller = PaddleController("paddle1", self.game["state"])
                 self.game["paddle1"] = True
-                self.id = data["clientId"]
                 self.game["state"][self.id] = "paddle1"
                 self.game["state"]["paddle1"]["id"] = self.id
                 self.game["paddle1_channel_name"] = self.channel_name
@@ -84,7 +100,6 @@ class PongConsumer(AsyncWebsocketConsumer):
             elif not self.game["paddle2"]:
                 self.paddle_controller = PaddleController("paddle2", self.game["state"])
                 self.game["paddle2"] = True
-                self.id = data["clientId"]
                 self.game["state"][self.id] = "paddle2"
                 self.game["state"]["paddle2"]["id"] = self.id
                 self.game["paddle2_channel_name"] = self.channel_name
@@ -98,12 +113,29 @@ class PongConsumer(AsyncWebsocketConsumer):
                     }
                 }
                 await self.send(text_data=json.dumps(payload))
-            if self.game["paddle1"] and self.game["paddle2"]:
+            # if self.game["paddle1"] and self.game["paddle2"]:
+            #     if not self.game["thread"].is_alive():
+            #         self.game["thread"].start()
+            #         self.game["active"] = True
+        elif data["method"] == "view":
+            payload = {
+                "method": "connect",
+                "state": self.game["state"],
+                "constants": {
+                    "paddle_step": constants.PADDLE_STEP,
+                    "screen_width": constants.SCREEN_WIDTH,
+                    "screen_height": constants.SCREEN_HEIGHT,
+                }
+            }
+            await self.send(text_data=json.dumps(payload))
+        elif data["method"] == "ready":
+            self.game["ready"].add(self.id)
+            if self.game["paddle1"] and self.game["paddle2"] and len(self.game["ready"]) == 2:
                 if not self.game["thread"].is_alive():
                     self.game["thread"].start()
                     self.game["active"] = True
-            print("self.id = ", self.id)
-            print("livegames = ", LiveGames().get_all_games())
+
+
 
     def propagate_state_wrapper(self, thread_event):
         asyncio.run(self.propagate_state(thread_event))
@@ -120,32 +152,34 @@ class PongConsumer(AsyncWebsocketConsumer):
                     )
             sleep(0.005)
         
-        if not self.game["paddle1"]:
-            print("self.game[paddle2]", self.game["paddle2"])
-            self.game["state"]["winner"] = self.game["state"]["paddle2"]["id"]
-            await LiveGames().set_winner(self.game["state"]["winner"], self.game["state"]["paddle1"]["id"])
-        elif not self.game["paddle2"]:
-            print("self.game[paddle1]", self.game["paddle1"])
-            self.game["state"]["winner"] = self.game["state"]["paddle1"]["id"]
-            await LiveGames().set_winner(self.game["state"]["winner"], self.game["state"]["paddle2"]["id"])
+        await LiveGames().del_game(self.game_id)
+
         paddle1_id = self.game["state"]["paddle1"]["id"]
         paddle2_id = self.game["state"]["paddle2"]["id"]
+
         finish_response = {
             "success": True,
             "method": "finish_match",
             "game_room": {
                 "room_id": self.game_id,
                 "left_id": paddle1_id,
-                "right_id": paddle2_id
+                "right_id": paddle2_id,
+                "winner": self.game["state"]["winner"]
             } 
         }
         await self.channel_layer.group_send(
             self.game_id,
             {"type": "stream_state", "state": finish_response, "method": "finish_match"},
         )
-        await LiveGames().del_game(self.game_id)
+
+        if not self.game["paddle1"]:
+            self.game["state"]["winner"] = self.game["state"]["paddle2"]["id"]
+            await LiveGames().set_winner(self.game["state"]["winner"], self.game["state"]["paddle1"]["id"])
+        elif not self.game["paddle2"]:
+            self.game["state"]["winner"] = self.game["state"]["paddle1"]["id"]
+            await LiveGames().set_winner(self.game["state"]["winner"], self.game["state"]["paddle2"]["id"])
+        print("🏆 winner = ", self.game["state"]["winner"])
         await self.joinList.do_broadcast()
-        await LiveGames().do_bradcast()
 
     async def stream_state(self, event):
         state = event["state"]
@@ -166,8 +200,6 @@ class joinListConsumer(AsyncWebsocketConsumer):
         self.joinList_group_name = "joinlist"
 
     async def connect(self):
-        print("connect skizb")
-        # self.joinList_group_name = self.scope["path"].strip("/").replace(" ", "_")
         await self.channel_layer.group_add(self.joinList_group_name, self.channel_name)
         await self.accept()
         response = await sync_to_async(self.joinList.get)(None, None)
@@ -183,7 +215,6 @@ class joinListConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         request = json.loads(text_data)
         method = request.get("method")
-        print("method = ", method)
         if method == "create":
             user_id = request.get("pk")
             response = await sync_to_async(CreateRoom.post)(self, request, user_id)
@@ -198,12 +229,16 @@ class joinListConsumer(AsyncWebsocketConsumer):
             json_data = await sync_to_async(self.joinList.post)(request, user_id)
             response =  await sync_to_async(self.joinList.get)(None, None)
             response["method"] = "join"
+            await self.channel_layer.group_send(
+                self.joinList_group_name,
+                {"type": "stream", "response": response,},
+            )
+        elif method == "liveGamesRequest":
+            await LiveGames().do_broadcast()
+            return
         else:
             response = {"error": "Invalid method"}
-        await self.channel_layer.group_send(
-            self.joinList_group_name,
-            {"type": "stream", "response": response,},
-        )
+        await LiveGames().do_broadcast()
 
     async def stream(self, event):
         response = event["response"]
