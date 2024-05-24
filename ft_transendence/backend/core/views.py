@@ -293,14 +293,16 @@ class Login(APIView):
 
 class Logout(APIView):
     def post(self, request, pk):
-        person = Person.objects.get(id=pk)
+        try:
+            person = Person.objects.get(id=pk)
+        except Person.DoesNotExist:
+            return JsonResponse({"success": "false", "error": "Person not found"}, status=status.HTTP_404_NOT_FOUND)
         gameroom = person.game_room
         if gameroom and gameroom.creator_id == person.id:
             for player in gameroom.players.all():
                 player.ongoing = False
                 player.game_room_id = None
                 player.save()
-            # LiveGames().del_game(gameroom.id)
             gameroom.players.clear()
             gameroom.delete()
         elif gameroom and gameroom.creator_id != person.id:
@@ -396,12 +398,14 @@ class SettingsById(APIView):
 
     def delete(self, request, pk):
         try:
-            user = User.objects.get(pk=pk)
             person = Person.objects.get(pk=pk)
+            user = User.objects.get(pk=pk)
         except Person.DoesNotExist:
             return JsonResponse({"success": "false", "error": "person not found"}, status=status.HTTP_404_NOT_FOUND)
-        user.delete()
+        print("❌", person)
+        print("❌", user)
         person.delete()
+        user.delete()
         return JsonResponse({"success": "true", "message": "User deleted successfully"})
 
 class Leaderboard(APIView):
