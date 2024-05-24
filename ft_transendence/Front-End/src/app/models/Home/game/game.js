@@ -241,6 +241,7 @@ function getPongContent() {
     <div id="paddle2" class="paddle" style="width: 20px; height: 100px; left: 680px; top: 200px;"></div>
     <div class="ball" id="ball" style="width: 14px; height: 14px; border-radius: 30px; left: 350px; top: 250px;"></div>
     <span id="result" style="display: none">default</span>
+    <span id="forStart">default</span>
     <span class="score" id="score1">0</span>
     <span class="score" id="score2">0</span>
     `;
