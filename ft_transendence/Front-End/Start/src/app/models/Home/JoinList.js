@@ -218,10 +218,33 @@ class JoinList extends HtmlElement {
     })
     //    Iterate over each button and attach an event listener to View
     buttonsView.forEach(button => {
-      button.addEventListener("click", async function(e) {
+        button.addEventListener("click", async function(e) {
               // Your code here
-              //console.log(JSON.stringify(e.target.id));
-              //console.log("buttonsView");
+            const creator_id = e.target.id.slice(e.target.id.lastIndexOf(':')+1);
+            const game_room_id = e.target.id.slice(0, e.target.id.indexOf(':'));
+            console.log(JSON.stringify(e.target.id));
+            console.log("buttonsView");
+
+            if (isStartedUrish === false) {
+                const mainOnHtml = document.getElementById("mainSectionUsually");
+                const body = document.querySelector(".addBodyStile");
+                
+                //main displey none
+                mainOnHtml.style.display = "none";
+//add game
+                if (document.getElementById("board")){
+                    body.innerHTML = null;
+                }
+                const gameOnHtml = document.createElement("div");
+                gameOnHtml.setAttribute("id", "board")
+                body.style.display = "block";
+                body.appendChild(gameOnHtml)
+    // }
+                //call game function for start game
+                isStartedUrish = true;
+                console.log("game_room_id = ", game_room_id);
+                pongGame(User, game_room_id, "view");
+            }
         })
     })
     //    Iterate over each button and attach an event listener Members

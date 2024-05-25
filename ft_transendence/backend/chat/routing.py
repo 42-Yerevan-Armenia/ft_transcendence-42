@@ -3,8 +3,6 @@ from channels.auth import AuthMiddlewareStack  # Middleware для аутент�
 from django.urls import path, re_path  # Импорт функции re_path для определения URL-шаблонов
 from chat import consumers  # Импорт консьюмера для WebSocket
 
-# Here, "" is routing to the URL ChatConsumer which 
-# will handle the chat functionality.
 # Определение URL-шаблонов для WebSocket
 websocket_urlpatterns = [
 	path("" , consumers.ChatConsumer.as_asgi()) , 

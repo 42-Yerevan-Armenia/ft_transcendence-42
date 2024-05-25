@@ -113,7 +113,36 @@ class MiddleSECTION extends HtmlElement {
         })
       }
     }
+  setEventAllButton() {
+    debugger
+    const buttonsPlayNow =  document.querySelectorAll(".JoinListTableClassPlayNow");
 
+    buttonsPlayNow.forEach(button => {
+      button.addEventListener("click", async function(e) {
+        console.log("  +++    " + e.target.id);
+        const creator_id = e.target.id.slice(e.target.id.lastIndexOf(':')+1);
+        const game_room_id = e.target.id.slice(0, e.target.id.indexOf(':'));
+
+        const paload = {
+          "method": "play_now",
+          "pk":User._Id,
+          "user_id":User._Id,
+          "creator_id": creator_id,
+          'game_room_id': game_room_id
+        }
+        const str = JSON.stringify(paload);
+
+        if (Join_Ws.readyState === WebSocket.OPEN) {
+          console.log('WebSocket connection is open 222222222222');
+          Join_Ws.send(str);
+        }
+        //When Have Error
+        Join_Ws.onclose = function (e) {
+          console.log("Something unexpected happened ! Join_Ws closed");
+        };
+      })
+    })
+  }
   async draw() {
     await this.drawList();
   }

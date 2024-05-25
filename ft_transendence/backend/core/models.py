@@ -58,21 +58,21 @@ class GameRoom(models.Model):
     THEME_CHOICES = (
         ('light', 'Light'),
         ('dark', 'Dark'),
-        ('other', 'Other'),
+        ('random', 'Random'),
     )
     GAMEMODE_CHOICES = (
         ('easy', 'Easy'),
         ('classic', 'Classic'),
         ('hard', 'Hard'),
     )
-    max_players = models.IntegerField(default=2)  # Number of players in the room
-    live = models.BooleanField(default=False)  # Indicates if the game room is live or not
-    theme = models.CharField(max_length=50, choices=THEME_CHOICES, default='light')  # Theme of the game room
-    gamemode = models.CharField(max_length=50, choices=GAMEMODE_CHOICES, default='easy')  # Game mode
-    creator = models.ForeignKey(Person, on_delete=models.CASCADE)  # Relationship with the Person who created the game room
-    players = models.ManyToManyField(Person, related_name='joined_players', blank=True)  # Relationship with the players in the game room
-    ongoing = models.BooleanField(default=False)  # Indicates if the game is ongoing or not
-    game_date = models.DateTimeField(null=True, blank=True) # Date of the game
+    max_players = models.IntegerField(default=2)
+    live = models.BooleanField(default=False)
+    theme = models.CharField(max_length=50, choices=THEME_CHOICES, default='light')
+    gamemode = models.CharField(max_length=50, choices=GAMEMODE_CHOICES, default='easy')
+    creator = models.ForeignKey(Person, on_delete=models.CASCADE)
+    players = models.ManyToManyField(Person, related_name='joined_players', blank=True)
+    ongoing = models.BooleanField(default=False)
+    game_date = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return f"GameRoom {self.id}"
@@ -87,6 +87,7 @@ class History(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     win = models.BooleanField()
     lose = models.BooleanField()
+    gamemode = models.CharField(max_length=50, choices=GameRoom.GAMEMODE_CHOICES, default='easy')
     image = models.TextField(blank=True, null=True)
     oponent_points = models.IntegerField(default=0)
 

@@ -46,7 +46,8 @@ const myStorages = {
     async longOut() {
       // api/v1/logout/
       const dataUrs={
-        "pk":User._Id
+        "pk":User._Id,
+        "refresh":localStorage.getItem("refresh")
       }
       const res = await FetchRequest("POST", "api/v1/logout/" +User._Id, dataUrs);
   

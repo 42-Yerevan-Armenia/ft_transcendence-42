@@ -10,8 +10,6 @@ from game.views import (
 )
 
 urlpatterns = [
-    # path('game/', game_views.index, name='index'),
-    # path('joinlist/', game_views.joinlist, name='joinlist'),
     path('tournament/', PlayTournament.as_view()),
     path('api/v1/random/<int:pk>/', PlayRandom.as_view()),
     path('api/v1/invite/<int:pk>/', SendInviteRequest.as_view()),

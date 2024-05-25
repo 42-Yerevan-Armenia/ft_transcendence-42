@@ -18,7 +18,6 @@ from core.views import (
     HistoryView,
     Leaderboard,
     CreateRoom,
-    GameRoom,
     SettingsById
 )
 
@@ -41,7 +40,5 @@ urlpatterns = [
     path('api/v1/waitingroom/<int:pk>/', WaitingRoom.as_view()),
     path('api/v1/history/<int:pk>/', HistoryView.as_view()),
     path('api/v1/settings/<int:pk>/', SettingsById.as_view()),
-
     path('api/v1/createroom/<int:pk>/', CreateRoom.as_view()),
-    path('api/v1/gameroom/<int:pk>/', GameRoom.as_view()),
 ]
