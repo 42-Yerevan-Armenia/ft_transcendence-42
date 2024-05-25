@@ -62,7 +62,7 @@
     font-size: clamp(12px, 2.5vw, 20px);
 }
 
-#FullHistoryTableBodyMore img {
+.FullHistoryTableBodyMembers img {
     height: 100%;
     width: 100%;
     display: block;
@@ -80,6 +80,10 @@
     height: 34px;
     border: none;
     background-color: transparent;
+}
+
+.FullHistoryTableBodyMembers:hover {
+    cursor: pointer;
 }
 
 #FullHistoryTableBodyMoreDiv {

@@ -5,8 +5,6 @@ from .models import User, Person, GameRoom, History
 from game.models import GameInvite
 from friendship.models import Friend, FriendshipRequest
 
-#TODO 42 intra user in Serializer
-
 class UserSerializer(serializers.ModelSerializer):
     friends = serializers.SerializerMethodField()
     friendship_requests = serializers.SerializerMethodField()
@@ -74,39 +72,6 @@ class SettingsSerializer(serializers.ModelSerializer):
         model = Person
         fields = ('id', 'name', 'nickname', 'email', 'password', 'phone', 'image', 'background', 'gamemode')
 
-class JoinListSerializer(serializers.ModelSerializer):
-    max_players = serializers.SerializerMethodField()
-    class Meta:
-        model = Person
-        fields = ('id', 'image', 'game_room_id', 'gamemode', 'max_players')
-    
-    def get_max_players(self, obj):
-        try:
-            game_room = GameRoom.objects.get(players=obj)
-            return game_room.max_players
-        except GameRoom.DoesNotExist:
-            return None
-
-class CustomSerializer(serializers.ModelSerializer):
-    person_id = serializers.IntegerField(source='id')
-    person_image = serializers.CharField(source='image')
-    gameroom_id = serializers.SerializerMethodField()
-    gameroom_max_players = serializers.SerializerMethodField()
-    gameroom_gamemode = serializers.SerializerMethodField()
-
-    class Meta:
-        model = Person
-        fields = ('person_id', 'person_image', 'gameroom_id', 'gameroom_max_players', 'gameroom_gamemode')
-
-    def get_gameroom_id(self, obj):
-        return obj.game_room.id if obj.game_room else None
-
-    def get_gameroom_max_players(self, obj):
-        return obj.game_room.max_players if obj.game_room else None
-
-    def get_gameroom_gamemode(self, obj):
-        return obj.game_room.gamemode if obj.game_room else None
-
 class WaitingRoomSerializer(serializers.ModelSerializer):
     class Meta:
         model = Person
@@ -116,11 +81,6 @@ class MatchSerializer(serializers.ModelSerializer):
     class Meta:
         model = Person
         fields = ('id', 'wins', 'loses', 'matches', 'points')
-
-class UsersSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ('id', 'username')
 
 class FriendListSerializer(serializers.ModelSerializer):
     class Meta:
@@ -155,15 +115,15 @@ class GameRoomSerializer(serializers.ModelSerializer):
         game_room.players.set(players_data)
         return game_room
 
-class HistorySerializer(serializers.ModelSerializer):
-    player = serializers.CharField(source='player.nickname')
-    opponent = serializers.CharField(source='opponent.nickname', read_only=True)
+class FullHistorySerializer(serializers.ModelSerializer):
     win = serializers.SerializerMethodField()
     lose = serializers.SerializerMethodField()
+    gamemode = serializers.CharField(source='game_room.gamemode', read_only=True)
+    date = serializers.DateTimeField(format="%Y-%m-%d %H:%M", read_only=True)
 
     class Meta:
         model = History
-        fields = ['player', 'opponent', 'game_room', 'date', 'win', 'lose', 'image', 'oponent_points']
+        fields = ['gamemode', 'date', 'win', 'lose']
 
     def get_win(self, obj):
         return 1 if obj.win else 0
@@ -171,19 +131,31 @@ class HistorySerializer(serializers.ModelSerializer):
     def get_lose(self, obj):
         return 1 if obj.lose else 0
 
-class FullHistorySerializer(serializers.ModelSerializer):
-    game_date = serializers.SerializerMethodField()
+class OpponentHistorySerializer(serializers.ModelSerializer):
+    full_history = serializers.SerializerMethodField()
+    opponent_id = serializers.IntegerField(source='id')
+
     class Meta:
         model = Person
-        fields = ('id', 'nickname', 'image', 'gamemode', 'points', 'matches', 'wins', 'loses', 'game_date')
-    
-    def get_game_date(self, obj):
-        try:
-            game_rooms = GameRoom.objects.filter(players=obj)
-            if game_rooms.exists():
-                # Return the game_date from the first GameRoom instance
-                return game_rooms.first().game_date
-            else:
-                return None
-        except GameRoom.DoesNotExist:
-            return None
+        fields = ('opponent_id', 'image', 'nickname', 'gamemode', 'points', 'matches', 'full_history')
+
+    def get_full_history(self, obj):
+        history_data = History.objects.filter(opponent=obj)
+        full_history_serializer = FullHistorySerializer(history_data, many=True)
+        return full_history_serializer.data
+
+class HistorySerializer(serializers.ModelSerializer):
+    opponents_history = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Person
+        fields = ('opponents_history',)
+
+    def get_opponents_history(self, obj):
+        opponents_with_history = []
+        history_data = History.objects.filter(player=obj)
+        for history in history_data:
+            opponents_with_history.append(history.opponent)
+        unique_opponents = set(opponents_with_history)
+        opponents_history_serializer = OpponentHistorySerializer(unique_opponents, many=True)
+        return opponents_history_serializer.data

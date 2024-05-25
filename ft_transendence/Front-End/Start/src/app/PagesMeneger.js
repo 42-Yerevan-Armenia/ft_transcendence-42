@@ -217,7 +217,6 @@ var navigationHistoryA = [];
 const links = document.querySelectorAll("a");
 
 async function NavigateHistoryALLITEM(pathname, href, isATag){
-	debugger
 	// let index = -1;
 
 	//get the index from the page of the already existing one
