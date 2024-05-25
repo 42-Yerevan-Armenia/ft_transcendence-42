@@ -342,7 +342,13 @@ Register?._ContinueWith42Intra?.addEventListener("click", async () => {
 
 
 //play game local
-localGameEvent?.playNow?.addEventListener("click", () =>{
-  console.log("localGameEvent")
-})
+local_game_front_start?.playNow?.addEventListener("click", async () =>{
 
+
+  await ManageMidle.Manage("");
+  await ManageAllPage.Manage("local_game_front_start");
+  await  NavigateHistoryALLITEM("/local_game_front_start", localhostPage + '/local_game_front_start', false)
+  const mainOnHtml = document.querySelector("#mainSectionUsually");
+  
+  mainOnHtml.style.display = "none";
+})

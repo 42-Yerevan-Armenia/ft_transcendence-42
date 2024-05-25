@@ -50,11 +50,18 @@
     <link rel="stylesheet" href="src/app/styles/game.css">
     <!-- JoinListInvite -->
     <link rel="stylesheet" href="src/app/styles/JoinListInvite.css">
-    
+
+    <!-- local Game start -->
+    <link rel="stylesheet" href="src/app/styles/StuleLocalGame.css">
+
     <meta name="description" content="">
     <title name="Home">Home</title>
 </head>
     <body class="bodyClassAllForGame">
+
+        <div id="local_game_front_start" class="local_game_front_start">
+        </div>
+        
         <div class="addBodyStile">
         </div>
 
@@ -1007,7 +1014,7 @@
                                     </div>
                                     <div class="ProfileMidleHeaderMain">
                                         <div class="ProfileMidleHeaderMainAvatar">
-                                            <img src="./Start/src/public/avatar.png" alt="Avatar" id="ProfileMidleHeaderMainAvatarImage">
+                                            <img src="./src/public/avatar.png" alt="Avatar" id="ProfileMidleHeaderMainAvatarImage">
                                         </div>
                                         <div class="ProfileMidleHeaderMainData">
                                             <h5 class="ProfileMidleHeaderMainDataName">Zaak Sidki</h5>
@@ -1074,7 +1081,7 @@
                                     </div>
                                     <div class="AccountMidleHeaderMain">
                                         <div class="AccountMidleHeaderMainAvatar">
-                                            <img src="./Start/src/public/avatar.png" alt="Avatar" id="AccountMidleHeaderMainAvatarImage">
+                                            <img src="./src/public/avatar.png" alt="Avatar" id="AccountMidleHeaderMainAvatarImage">
                                         </div>
                                         <div class="AccountMidleHeaderMainData">
                                             <h5 class="AccountMidleHeaderMainDataName">Zaak Sidki</h5>
@@ -1288,56 +1295,58 @@
             </div>
 
         </main>
-         <!-- Scripting -->
-            <script  src="Start/src/app/models/localGame.js"></script>
-            <script  src="Start/src/public/playIcon.js"></script>
-            <script  src="Start/src/app/models/HtmlElement.js"></script>
-            <script  src="Start/src/app/Utils.js"></script>
-            <script  src="Start/src/app/MyStorages.js"></script>
-            <script  src="Start/src/app/Controllers.js"></script>
-            <script  src="Start/src/app/models/get42config.js"></script>
+        <!-- Scripting -->
+        <script  src="Start/src/app/models/HtmlElement.js"></script>
+        <script  src="Start/src/app/models/local_game_front.js"></script>
+        <script  src="Start/src/app/models/localGame.js"></script>
 
-            <script src="Start/src/app/models/Home/HomeLeft.js"></script>
-            <script src="Start/src/app/models/Home/AccountUser.js"></script>
-            <script src="Start/src/app/models/Home/HomeRight.js"></script>
-            <script src="Start/src/app/models/Home/Middle.js"></script>
-            <script src="Start/src/app/models/Home/MidleCup.js"></script>
-            <script src="Start/src/app/models/Home/MidleCommunity.js"></script>
-            <script src="Start/src/app/models/Home/JoinList.js"></script>
-            <script src="Start/src/app/models/Home/MidleHistoryGame.js"></script>
-            <script src="Start/src/app/models/Home/Profile.js"></script>
-            <script src="Start/src/app/models/Home/JoinListInvit.js"></script>
+        <script  src="Start/src/public/playIcon.js"></script>
+        <script  src="Start/src/app/Utils.js"></script>
+        <script  src="Start/src/app/MyStorages.js"></script>
+        <script  src="Start/src/app/Controllers.js"></script>
+        <script  src="Start/src/app/models/get42config.js"></script>
 
-            <script  id="GameRoomNewClientID"></script>
-            <script src="Start/src/app/models/Home/MidleSettings.js"></script>
-            
-            <script src="Start/src/app/models/User.js"></script>
-            <script src="Start/src/app/models/SignupPage.js"></script>
-            <script src="Start/src/app/models/ResetPage.js"></script>
-            <script src="Start/src/app/models/PasswordPage.js"></script>
-            <script src="Start/src/app/models/RegisterPage.js"></script>
-            <script src="Start/src/app/models/LoginPage.js"></script>
-            <script src="Start/src/app/PagesMeneger.js"></script>
-            <script  src="Start/src/app/models/Chat.js"></script>
-            <script  src="Start/src/app/models/Messag.js"></script>
-            <script src="Start/src/app/models/HomePage.js"></script>
-            <script src="Start/src/app/models/ConfirmPage.js"></script>
-            <script src="Start/src/app/models/ErrorPage.js"></script>
-            
-            <script  src="Start/src/app/managePages.js"></script>
-            <script type="importmap">
-                {
-                    "imports": {
-                        "three": "https://unpkg.com/three@latest/build/three.module.js",
-                        "three/addons/": "https://unpkg.com/three@latest/examples/jsm/"
-                    }
+        <script src="Start/src/app/models/Home/HomeLeft.js"></script>
+        <script src="Start/src/app/models/Home/AccountUser.js"></script>
+        <script src="Start/src/app/models/Home/HomeRight.js"></script>
+        <script src="Start/src/app/models/Home/Middle.js"></script>
+        <script src="Start/src/app/models/Home/MidleCup.js"></script>
+        <script src="Start/src/app/models/Home/MidleCommunity.js"></script>
+        <script src="Start/src/app/models/Home/JoinList.js"></script>
+        <script src="Start/src/app/models/Home/MidleHistoryGame.js"></script>
+        <script src="Start/src/app/models/Home/Profile.js"></script>
+        <script src="Start/src/app/models/Home/JoinListInvit.js"></script>
+
+        <script  id="GameRoomNewClientID"></script>
+        <script src="Start/src/app/models/Home/MidleSettings.js"></script>
+        
+        <script src="Start/src/app/models/User.js"></script>
+        <script src="Start/src/app/models/SignupPage.js"></script>
+        <script src="Start/src/app/models/ResetPage.js"></script>
+        <script src="Start/src/app/models/PasswordPage.js"></script>
+        <script src="Start/src/app/models/RegisterPage.js"></script>
+        <script src="Start/src/app/models/LoginPage.js"></script>
+        <script src="Start/src/app/PagesMeneger.js"></script>
+        <script  src="Start/src/app/models/Chat.js"></script>
+        <script  src="Start/src/app/models/Messag.js"></script>
+        <script src="Start/src/app/models/HomePage.js"></script>
+        <script src="Start/src/app/models/ConfirmPage.js"></script>
+        <script src="Start/src/app/models/ErrorPage.js"></script>
+        
+        <script  src="Start/src/app/managePages.js"></script>
+        <script type="importmap">
+            {
+                "imports": {
+                    "three": "https://unpkg.com/three@latest/build/three.module.js",
+                    "three/addons/": "https://unpkg.com/three@latest/examples/jsm/"
                 }
-            </script>
-            <script src="Start/src/app/socketListener.js"></script>
-            <script src="Start/src/app/eventListener.js"></script>
-            <script src="Start/src/app/load.js"></script>
-            <script type="module" src="Start/src/app/models/Home/game/pongGame.js"></script>
-            <script src="Start/src/app/models/Home/game/game.js"></script>
+            }
+        </script>
+        <script src="Start/src/app/socketListener.js"></script>
+        <script src="Start/src/app/eventListener.js"></script>
+        <script src="Start/src/app/load.js"></script>
+        <script type="module" src="Start/src/app/models/Home/game/pongGame.js"></script>
+        <script src="Start/src/app/models/Home/game/game.js"></script>
         <!-- End Scripting -->
     </body>
 </html>
