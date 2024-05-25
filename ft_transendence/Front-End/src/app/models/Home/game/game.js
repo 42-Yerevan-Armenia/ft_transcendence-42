@@ -144,7 +144,9 @@ function pongGame(objUser ,gameid, mode) {
         const body = document.querySelector(".addBodyStile");
         if (response?.method === "finish_match" && User?._getAccess) {
             const resultText = document.getElementById('result');
-            if (response?.state?.game_room?.winner == clientId)
+            if (mode == "view")
+                resultText.innerHTML = response?.state?.game_room?.winner + "won the game";
+            else if (response?.state?.game_room?.winner == clientId)
                 resultText.innerHTML = 'you won';
             else
                 resultText.innerHTML = 'you lost';
@@ -175,9 +177,14 @@ function pongGame(objUser ,gameid, mode) {
                 board.innerHTML = getPongContent();
                 // await new Promise(resolve => setTimeout(resolve, 5000));
             }
-            await waitingKeypress();
-            if (ws.readyState === ws.OPEN)
-                ws.send(JSON.stringify({"method": "ready"}));
+            if (mode != "view") {
+                const forStart = document.getElementById("forStart");
+                forStart.style.display = "block";
+                await waitingKeypress();
+                forStart.style.display = "none";
+                if (ws.readyState === ws.OPEN)
+                    ws.send(JSON.stringify({"method": "ready"}));
+            }
             interval = setInterval(() => {
                 try {
                     if (ws.readyState === ws.OPEN)
@@ -186,6 +193,7 @@ function pongGame(objUser ,gameid, mode) {
                     clearInterval(interval);
                 }
             }, 10);
+
         }
         //create
         if (response.method === "create"){
@@ -241,7 +249,7 @@ function getPongContent() {
     <div id="paddle2" class="paddle" style="width: 20px; height: 100px; left: 680px; top: 200px;"></div>
     <div class="ball" id="ball" style="width: 14px; height: 14px; border-radius: 30px; left: 350px; top: 250px;"></div>
     <span id="result" style="display: none">default</span>
-    <span id="forStart">default</span>
+    <span id="forStart" style="display: none">Press any key to start</span>
     <span class="score" id="score1">0</span>
     <span class="score" id="score2">0</span>
     `;
