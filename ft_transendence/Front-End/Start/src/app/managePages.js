@@ -7,6 +7,7 @@ var Home = new HomePage();
 var Password = new PasswordPage();
 var SignUp = new SignupPage();
 var ErrornotPage = new ErrorPage();
+var get42Conf = new get42Config();
 
 var ManageAllPage = {
     Manage: async function(pageName) {
