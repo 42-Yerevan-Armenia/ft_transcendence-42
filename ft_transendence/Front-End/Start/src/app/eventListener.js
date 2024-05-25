@@ -328,6 +328,13 @@ Register?._RegisterPageContinue?.addEventListener("click",  async () => {
       }
 });
 
-Login._ContinueWith42Intra.addEventListener("click", async () => {
+
+
+//42 registration
+Login?._ContinueWith42Intra?.addEventListener("click", async () => {
   const respons =  await Login.Get42Connect();
+})
+
+Register?._ContinueWith42Intra?.addEventListener("click", async () => {
+  const respons = await Register.Get42Connect();
 })

@@ -81,7 +81,7 @@
     padding: 4px;
     color: rgba(101, 94, 105, 1);
     font-weight: bold;
-    mask-type: button;
+    cursor: pointer;
 }
 
 .RegisterPageP{
@@ -104,14 +104,12 @@
     .RegisterPageConteiner{
        width: 800px;
     }
-
 }
 
 @media only screen and (max-width: 834px){
     .RegisterPageConteiner{
        width: 600px;
     }
-
 }
 
 @media only screen and (max-width: 634px){
