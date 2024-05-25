@@ -11,5 +11,10 @@
   "main": "index.js",
   "devDependencies": {
     "dotenv": "^16.4.5"
-  }
+  },
+  "name": "y",
+  "version": "1.0.0",
+  "author": "",
+  "license": "ISC",
+  "description": ""
 }
