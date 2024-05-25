@@ -1,3 +1,4 @@
+var localGameEvent = new localGame();
 var User = new USER();
 var Confirm = new ConfirmPage();
 var Login = new LoginPage();

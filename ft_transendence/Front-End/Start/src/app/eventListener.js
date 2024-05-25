@@ -338,3 +338,11 @@ Login?._ContinueWith42Intra?.addEventListener("click", async () => {
 Register?._ContinueWith42Intra?.addEventListener("click", async () => {
   const respons = await Register.Get42Connect();
 })
+
+
+
+//play game local
+localGameEvent?.playNow?.addEventListener("click", () =>{
+  console.log("localGameEvent")
+})
+
