@@ -35,11 +35,7 @@ async function ControllerCheckEmail(email) {
     return {state:false, "message": error};
   }
 }
-// headers: { 
-//   'Content-Type': 'application/json',
-//   'AuthToken': '123456'
-//  } // Fixed 'header' to 'headers'
-// });
+
 async function ControllerCheckReplayCode(code) {
   try {
       const response = await fetch(`${HostPort}/confirm/`, {

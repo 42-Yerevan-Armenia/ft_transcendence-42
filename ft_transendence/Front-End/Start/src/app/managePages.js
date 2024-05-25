@@ -1,3 +1,5 @@
+var Pong = Object.assign({}, Game);
+var local_game_front_start = new localGame();
 var User = new USER();
 var Confirm = new ConfirmPage();
 var Login = new LoginPage();
@@ -15,6 +17,7 @@ var ManageAllPage = {
             const [key, obj] = Object.entries(element)[0]; // Get the key-value pair of the element
 
             if (key === pageName) {
+                debugger
                 obj.DisplayBlock();
                 await obj.draw();
             }
@@ -23,15 +26,17 @@ var ManageAllPage = {
         });
     },
     pages: [
-        {"Login": Login},              //http://10.12.11.1:3000/login
-        {"Confirm": Confirm},          //http://10.12.11.1:3000/confirm
-        {"Register": Register},        //http://10.12.11.1:3000/register
-        {"Home": Home},                //http://10.12.11.1:3000/password
-        {"Password": Password},        //http://10.12.11.1:3000/pass
-        {"SignUp": SignUp},            //http://10.12.11.1:3000/setdata
-        {"ResetPage": Reset}           //http://10.12.11.1:3000/password
+        {"Login": Login},                                             //http://10.12.11.1:3000/login
+        {"Confirm": Confirm},                                         //http://10.12.11.1:3000/confirm
+        {"Register": Register},                                       //http://10.12.11.1:3000/register
+        {"Home": Home},                                               //http://10.12.11.1:3000/password
+        {"Password": Password},                                       //http://10.12.11.1:3000/pass
+        {"SignUp": SignUp},                                           //http://10.12.11.1:3000/setdata
+        {"ResetPage": Reset},                                         //http://10.12.11.1:3000/password
+        {"local_game_front_start": local_game_front_start}            //http://10.12.11.1:3000/local_game_front
     ]
 };
+
 //manage Home Page in middle sections
 //give name section name what we need show in middle Home->Midl section
 var ManageMidle = {

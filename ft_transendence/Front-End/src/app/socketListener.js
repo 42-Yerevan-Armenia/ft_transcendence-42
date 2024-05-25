@@ -117,7 +117,7 @@ Join_Ws.onmessage = message => {
                 const body = document.querySelector(".addBodyStile");
 
                 mainOnHtml.style.display = "none";
-//add game
+    //add game
                 if (document.getElementById("board")){
                     body.innerHTML = null;
                 }

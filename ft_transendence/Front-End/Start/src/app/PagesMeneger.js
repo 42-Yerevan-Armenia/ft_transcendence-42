@@ -197,9 +197,23 @@ const urlRoutes = {
 		path: "/settings",
 		title: "MidleSettings",
 		description: "This is the settings section",
+	},
+	"/local_game_front_start/": {
+
+		url: "/local_game_front_start",
+		class:".local_game_front_start",
+		path: "/local_game_front_start",
+		title: "local_game_front_start",
+		description: "This is the local_game_front_start section",
+	},
+	"/local_game_front_start": {
+		url: "/local_game_front_start",
+		class:".local_game_front_start",
+		path: "/local_game_front_start",
+		title: "local_game_front_start",
+		description: "This is the local_game_front_start section",
 	}
 };
-
 
 
 let pageIndex = 0
@@ -359,6 +373,9 @@ const urlLocationHandlerForNavigateBackForward = async () => {
 window.addEventListener("popstate", async function(event) {
 	debugger
     //console.log("History state changed:", event.state);
+	const mainOnHtml = document.querySelector("#mainSectionUsually");
+  	if (mainOnHtml.style.display == "none")
+		mainOnHtml.style.display = "block";
 
 	await urlLocationHandlerForNavigateBackForward();
 });
