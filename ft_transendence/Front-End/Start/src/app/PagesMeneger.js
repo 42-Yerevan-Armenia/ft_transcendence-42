@@ -128,27 +128,27 @@ const urlRoutes = {
 	},
 	"/profil": {
 		midle:true,
-		url: "/",
+		url: "/profil",
 		class:".PROFIL",
 		path: "/profil",
 		title: "ProfileMidle",
 		description: "This is the profil section",
 	},
-	"/game/": {
+	"/gamesa/": {
 		midle:true,
-		url: "/game",
+		url: "/gamesa",
 		class:".JoinList",
-		path: "/profil",
+		path: "/gamesa",
 		title: "JoinList",
-		description: "This is the game section",
+		description: "This is the gamesa section",
 	},
-	"/game": {
+	"/gamesa": {
 		midle:true,
-		url: "/",
+		url: "/gamesa",
 		class:".JoinList",
-		path: "/game",
+		path: "/gamesa",
 		title: "JoinList",
-		description: "This is the game section",
+		description: "This is the gamesa section",
 	},
 	"/liderboard/": {
 		midle:true,

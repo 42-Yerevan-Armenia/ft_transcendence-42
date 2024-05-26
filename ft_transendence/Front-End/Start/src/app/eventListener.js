@@ -77,7 +77,7 @@ Home?._NAV?._Profile?._classname?.addEventListener("click", async ()=>{
 
 Home?._NAV?._JoinListGame?._classname?.addEventListener("click",()=>{
   ManageMidle.Manage("JoinList");
-  NavigateHistoryALLITEM("/game", localhostPage + '/game', false);
+  NavigateHistoryALLITEM("/gamesa", localhostPage + '/gamesa', false);
 })
 // LEADERBOARD
 Home?._NAV?._LEADERBOARD?._classname?.addEventListener("click",()=>{

@@ -24,26 +24,27 @@ let interval = null;
 
 function disableScroll() {
     // Get the current page scroll position in the vertical direction
-   scrollTop =
-       window.pageYOffset || document.documentElement.scrollTop;
+    scrollTop =
+        window.pageYOffset || document.documentElement.scrollTop;
         
         
-// Get the current page scroll position in the horizontal direction 
+    // Get the current page scroll position in the horizontal direction 
 
- scrollLeft =
-   window.pageXOffset || document.documentElement.scrollLeft;
-   
-   
-  // if any scroll is attempted,
- // set this to the previous value
- window.onscroll = function() {
-  window.scrollTo(scrollLeft, scrollTop);
- };
+    scrollLeft =
+    window.pageXOffset || document.documentElement.scrollLeft;
+
+
+    // if any scroll is attempted,
+    // set this to the previous value
+    window.onscroll = function() {
+    window.scrollTo(scrollLeft, scrollTop);
+    };
 }
 
-  function enableScroll() {
-     window.onscroll = function() {};
- }
+function enableScroll() {
+    debugger
+    window.onscroll = function() {};
+}
 
 async function pongGame(objUser ,gameid) {
     //debugger;
@@ -144,7 +145,7 @@ async function pongGame(objUser ,gameid) {
         const body = document.querySelector(".addBodyStile");
         if (response?.method === "finish_match" && User?._getAccess) {
             if (User._Id == response.state.game_room.left_id || User._Id == response.state.game_room.right_id) {
-                // //debugger;
+                debugger;
                 clearInterval(interval);
                 ws.close();
                 clearBox("board");

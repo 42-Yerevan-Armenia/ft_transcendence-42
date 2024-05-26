@@ -79,7 +79,7 @@ app.get("/profil", (req, res) => {
 });
 
 // Handle specific routes first
-app.get("/game", (req, res) => {
+app.get("/gamesa", (req, res) => {
     res.sendFile(path.resolve(__dirname, "Start", "index.html"));
 });
 
