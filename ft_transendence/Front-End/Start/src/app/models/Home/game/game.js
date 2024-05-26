@@ -144,6 +144,7 @@ function pongGame(objUser ,gameid, mode) {
         const body = document.querySelector(".addBodyStile");
         if (response?.method === "finish_match" && User?._getAccess) {
             const resultText = document.getElementById('result');
+            console.log("response?.state?.game_room = ", response?.state?.game_room);
             if (mode == "view")
                 resultText.innerHTML = response?.state?.game_room?.winner + "won the game";
             else if (response?.state?.game_room?.winner == clientId)

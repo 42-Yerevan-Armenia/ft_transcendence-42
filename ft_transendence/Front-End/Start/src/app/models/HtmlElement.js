@@ -3,6 +3,7 @@ let GameRoomNewClientID = "";
 let reader;
 let base64EncodedImage;
 
+
 class HtmlElement {
     constructor(name) {
       this._classname = document.querySelector(name);

@@ -233,6 +233,13 @@ class joinListConsumer(AsyncWebsocketConsumer):
         elif method == "liveGamesRequest":
             await LiveGames().do_broadcast()
             return
+        elif method == "get":
+            response = await sync_to_async(self.joinList.get)(None, None)
+            response["method"] = "get"
+            await self.channel_layer.group_send(
+                self.joinList_group_name,
+                {"type": "stream", "response": response,},
+            )
         else:
             response = {"error": "Invalid method"}
         await LiveGames().do_broadcast()

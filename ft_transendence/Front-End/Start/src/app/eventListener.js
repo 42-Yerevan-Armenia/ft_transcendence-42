@@ -76,6 +76,9 @@ Home?._NAV?._Profile?._classname?.addEventListener("click", async ()=>{
 })
 
 Home?._NAV?._JoinListGame?._classname?.addEventListener("click",()=>{
+  Join_Ws.send(JSON.stringify({
+      "method": "get"
+  }));
   ManageMidle.Manage("JoinList");
   NavigateHistoryALLITEM("/game", localhostPage + '/game', false);
 })
@@ -115,7 +118,7 @@ Home._MidleJoinList?._CreateButton?.addEventListener("click", async () => {
   const str = JSON.stringify(paload)
   //   await FetchRequest("POST", url, objCreate);
   //redirect
-  
+
   if (!Join_Ws)
     return;
   if (Join_Ws.readyState === WebSocket.OPEN) {
