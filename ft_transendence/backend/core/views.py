@@ -402,8 +402,6 @@ class SettingsById(APIView):
             user = User.objects.get(pk=pk)
         except Person.DoesNotExist:
             return JsonResponse({"success": "false", "error": "person not found"}, status=status.HTTP_404_NOT_FOUND)
-        print("❌", person)
-        print("❌", user)
         person.delete()
         user.delete()
         return JsonResponse({"success": "true", "message": "User deleted successfully"})
@@ -547,7 +545,6 @@ class JoinList(APIView):
             return JsonResponse({"success": "false", "error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     async def do_broadcast(self):
-        print(self.channel_layer,"dsgd", self.group_name)
         if not (self.channel_layer is None) and not (self.group_name is None):
             response = await sync_to_async(self.get)(None, None)
             await self.channel_layer.group_send(

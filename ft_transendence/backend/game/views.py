@@ -97,7 +97,6 @@ class LiveGames():
                         player_2_id = other_winner[0].winner_id
                         break
                 if player_1_id and player_2_id:
-                    print("NEXT [", player_1_id, player_2_id, "]")
                     mms = MatchmakingSystem()
                     room_id = str(game_room.id)
                     if game_size != 2:
@@ -181,7 +180,6 @@ class PlayRandom(APIView):
                 return JsonResponse({"success": "false", "error": "User is already in a game room"}, status=status.HTTP_400_BAD_REQUEST)
             else:
                 game = mms.add_player_to_pool(user_id)
-                print("✅", game)
                 return JsonResponse({"success": "true", "message": "User successfully added in a game room"}, status=status.HTTP_200_OK)
         except Person.DoesNotExist:
             return Response({"success": "false", "error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
@@ -307,7 +305,6 @@ class TournamentSystem:
         num_groups = num_players // 2
         # Divide shuffled player IDs into groups of two
         self.groups = [player_ids[i:i+2] for i in range(0, num_players, 2)]
-        print("START", self.groups)
 
     def run_rounds(self, group):
         for i in range(0, len(group), 2):
