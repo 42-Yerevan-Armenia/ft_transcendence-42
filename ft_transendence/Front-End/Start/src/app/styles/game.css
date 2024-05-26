@@ -31,6 +31,7 @@
 }
 
 .score {
+    position: absolute;
     top: 5%;
     justify-content: space-between;
     font-size: 50px;
@@ -72,13 +73,27 @@
 }
 
 #score1 {
+    left: 5%;
     /* background-color: bisque; */
     /* top: 5%; */
     /* left: 5%; */
 }
 
 #score2 {
+    right: 5%;
     /* background-color: blue; */
     /* top: 5%; */
     /* left: 95%; */
+}
+
+#username1 {
+    top: 1%;
+    position: absolute;
+    left: 2%;
+}
+
+#username2 {
+    top: 1%;
+    position: absolute;
+    right: 2%;
 }

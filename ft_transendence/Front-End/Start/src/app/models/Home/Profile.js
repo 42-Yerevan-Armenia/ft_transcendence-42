@@ -27,15 +27,25 @@ class MidleProfile extends HtmlElement {
           
           //create data
           const sendFrend = {
+            // "method" : "invite",
             sender_id: id
           }
-
-          //AcceptRejectAccept:2
+          // Join_Ws.send(JSON.stringify(sendFrend));
+          AcceptRejectAccept:2
           if (className == ".AcceptRejectAccept") {
             // path('api/v1/accept/<int:pk>/', AcceptFriendRequest.as_view()),  
             let friendAdd;
             if (e.target.innerHTML == "Join")
+            {
+              debugger
               friendAdd = await putRequest("POST", "api/v1/acceptinvite/" + User._Id, sendFrend)
+              if (friendAdd?.state)
+              {
+                Join_Ws.send(JSON.stringify({
+                  "method": "no_action"
+                }));
+              }
+            }
             else
               friendAdd = await putRequest("POST", "api/v1/accept/" + User._Id, sendFrend)
 
@@ -53,6 +63,7 @@ class MidleProfile extends HtmlElement {
               return;
           }
           ManageMidle.Manage("ProfileMidle");
+         
         })
       })
     }
@@ -176,9 +187,9 @@ class MidleProfile extends HtmlElement {
           this.profilBody(item, "FriendRequest");
         })
       }
-      if (gameinvite_requests ) {
+      if (gameinvite_requests) {
           // //debugger
-          gameinvite_requests.forEach((item)=>{
+          gameinvite_requests.forEach((item) => {
             if (!item.rejected)
             this.profilBody(item, "JoinRequest");
           })

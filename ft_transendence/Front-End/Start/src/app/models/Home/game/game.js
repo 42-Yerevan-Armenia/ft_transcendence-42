@@ -58,7 +58,8 @@ function enableScroll() {
     window.onscroll = function() {};
 }
 
-function pongGame(objUser ,gameid, mode) {
+function pongGame(objUser, gameRoom, mode) {
+    const gameid = gameRoom.room_id;
     //debugger;
     if (isStarted)
         return;
@@ -143,6 +144,7 @@ function pongGame(objUser ,gameid, mode) {
         console.log("response method = ", response.method);
         const mainOnHtml = document.getElementById("mainSectionUsually");
         const body = document.querySelector(".addBodyStile");
+
         if (response?.method === "finish_match" && User?._getAccess) {
             const resultText = document.getElementById('result');
             console.log("response?.state?.game_room = ", response?.state?.game_room);
@@ -180,6 +182,18 @@ function pongGame(objUser ,gameid, mode) {
                 board.innerHTML = getPongContent();
                 // await new Promise(resolve => setTimeout(resolve, 5000));
             }
+            const username1 = document.getElementById("username1");
+            const username2 = document.getElementById("username2");
+
+            username1.textContent = gameRoom.left_name;
+            username2.textContent = gameRoom.right_name;
+            // if (paddleName === "paddle1") {
+            //     const usnername = getElementById("username1");
+            //     usnername.textContent = response.state.paddle1.username;
+            // } else if (paddleName === "paddle2") {
+            //     const usnername = getElementById("username2");
+            //     usnername.textContent = response.state.paddle2.username;
+            // }
             if (mode != "view") {
                 const forStart = document.getElementById("forStart");
                 forStart.style.display = "block";
@@ -255,5 +269,7 @@ function getPongContent() {
     <span id="forStart" style="display: none">Press any key to start</span>
     <span class="score" id="score1">0</span>
     <span class="score" id="score2">0</span>
+    <span class="username1" id="username1">username1</span>
+    <span class="username2" id="username2">username2</span>
     `;
 }

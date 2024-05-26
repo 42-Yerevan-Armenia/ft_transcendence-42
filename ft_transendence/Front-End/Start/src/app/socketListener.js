@@ -205,7 +205,7 @@ console.log("response.method = ", response.method);
     // }
                 //call game function for start game
                 isStartedUrish = true;
-                pongGame(User, element.game_room.room_id, "connect");
+                pongGame(User, element.game_room, "connect");
             }
         });
     }

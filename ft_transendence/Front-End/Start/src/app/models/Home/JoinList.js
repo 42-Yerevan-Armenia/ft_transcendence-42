@@ -38,6 +38,19 @@
 //     type: "Tournament"
 //   }
 // ]
+
+function funcStartGameWithSocket(str){
+  if (Join_Ws.readyState === WebSocket.OPEN) {
+    //console.log('WebSocket connection is open 222222222222');
+    Join_Ws.send(str);
+  }
+  //When Have Error
+  Join_Ws.onclose = function (e) {
+    //console.log("Something unexpected happened ! Join_Ws closed");
+  };
+}
+
+
 var GameRom = {
   creator_id :0,
   game_room_id : 0
@@ -206,14 +219,16 @@ class JoinList extends HtmlElement {
         }
         const str = JSON.stringify(paload);
 
-        if (Join_Ws.readyState === WebSocket.OPEN) {
-          //console.log('WebSocket connection is open 222222222222');
-          Join_Ws.send(str);
-        }
-        //When Have Error
-        Join_Ws.onclose = function (e) {
-          //console.log("Something unexpected happened ! Join_Ws closed");
-        };
+        // if (Join_Ws.readyState === WebSocket.OPEN) {
+        //   //console.log('WebSocket connection is open 222222222222');
+        //   Join_Ws.send(str);
+        // }
+        // //When Have Error
+        // Join_Ws.onclose = function (e) {
+        //   //console.log("Something unexpected happened ! Join_Ws closed");
+        // };
+
+        funcStartGameWithSocket(str);
       })
     })
     //    Iterate over each button and attach an event listener to View

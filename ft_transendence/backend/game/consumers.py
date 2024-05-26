@@ -216,6 +216,7 @@ class joinListConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         request = json.loads(text_data)
         method = request.get("method")
+        print(f"Method: {method}")
         if method == "create":
             user_id = request.get("pk")
             response = await sync_to_async(CreateRoom.post)(self, request, user_id)

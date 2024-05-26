@@ -241,13 +241,17 @@ class MatchmakingSystem():
 
     def start_match(self, player1_id, player2_id, room_id):
         try:
+            player1 = Person.objects.get(id=player1_id).nickname
+            player2 = Person.objects.get(id=player2_id).nickname
             response_data = {
                 "success": True,
                 "method": "start_mutch",
                 "game_room": {
                         "room_id": room_id,
                         "left_id": player1_id,
-                        "right_id": player2_id
+                        "left_name": player1,
+                        "right_id": player2_id,
+                        "right_name": player2,
                 }
             }
             LiveGames().add_game(room_id, response_data)
