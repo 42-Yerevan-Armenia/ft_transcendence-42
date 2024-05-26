@@ -1,7 +1,7 @@
 "use strict"
 // const HostPort="http://localhost:5001"
-const HostPort="http://10.12.11.1:8000"
-// const HostPort="http://10.12.11.2:8000"
+// const HostPort="http://10.12.11.1:8000"
+const HostPort="http://10.12.11.2:8000"
 
 let INTRA_API_URL="https://api.intra.42.fr/";
 let INTRA_API_UID="u-s4t2ud-0b391bc545deef39af3fb3f0afa178783df06731c0fe9c387812a11d36f51d90";

@@ -22,6 +22,18 @@ let interval = null;
 //     }
 // };
 
+function waitingKeypress() {
+    return new Promise((resolve) => {
+        document.addEventListener('keydown', onKeyHandler);
+        function onKeyHandler(e) {
+            if (true) {
+                document.removeEventListener('keydown', onKeyHandler);
+                resolve();
+            }
+        }
+    });
+}
+
 function disableScroll() {
     // Get the current page scroll position in the vertical direction
     scrollTop =
@@ -46,7 +58,7 @@ function enableScroll() {
     window.onscroll = function() {};
 }
 
-async function pongGame(objUser ,gameid) {
+function pongGame(objUser ,gameid, mode) {
     //debugger;
     if (isStarted)
         return;
@@ -75,16 +87,14 @@ async function pongGame(objUser ,gameid) {
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     const payLoad = {
-        "method": "connect",
+        "method": mode,
         "clientId": clientId,
         "gameId": gameId
     }
+
     ws.onopen = () => ws.send(JSON.stringify(payLoad));
     console.log("ws://" + window.location.host + "/ws/game/");
     console.log("ws = ", window.location.host);
-    // const txtGameId = document.getElementById("txtGameId");
-    // const divPlayers = document.getElementById("divPlayers");
-    // //debugger
     const board = document.getElementById("board");
 
     clearBox("board");
@@ -102,20 +112,9 @@ async function pongGame(objUser ,gameid) {
         if (event.key === "ArrowUp") {
             payLoad["direction"] = "up";
             pressed = true;
-            // const paddle = document.getElementById(paddleName); // paddle2
-            // setTimeout(delayedFunction, 2000);
-            // setTimeout(function() {
-            //     movePaddle(paddle , "up", board.offsetHeight, constants.paddle_step);
-            // }, 100);
-            // movePaddle(paddle , "up", board.offsetHeight, constants.paddle_step);
         }
         else if (event.key === "ArrowDown") {
             payLoad["direction"] = "down";
-            // const paddle = document.getElementById(paddleName); // paddle1
-            // setTimeout(function() {
-            //     movePaddle(paddle, "down", board.offsetHeight, constants.paddle_step);
-            // }, 100);
-            // movePaddle(paddle, "down", board.offsetHeight, constants.paddle_step);
         }
         else
             return;
@@ -128,7 +127,7 @@ async function pongGame(objUser ,gameid) {
         document.getElementById(elementID).innerHTML = "";
     }
 
-    ws.onmessage = message => {
+    ws.onmessage = async message => {
         //message.data
         // console.log("✅ message = ", message);
         let response;
@@ -141,22 +140,31 @@ async function pongGame(objUser ,gameid) {
                 return console.error(e);
             }
         }
+        console.log("response method = ", response.method);
         const mainOnHtml = document.getElementById("mainSectionUsually");
         const body = document.querySelector(".addBodyStile");
         if (response?.method === "finish_match" && User?._getAccess) {
-            if (User._Id == response.state.game_room.left_id || User._Id == response.state.game_room.right_id) {
-                debugger;
-                clearInterval(interval);
-                ws.close();
-                clearBox("board");
-                // update when game terminate
-                mainOnHtml.style.display = "block";
-                body.style.display = "none";
-                enableScroll();
-                isStarted = false;
-                isStartedUrish = false;
-                return
-            }
+            const resultText = document.getElementById('result');
+            console.log("response?.state?.game_room = ", response?.state?.game_room);
+            if (mode == "view")
+                resultText.innerHTML = response?.state?.game_room?.winner + "won the game";
+            else if (response?.state?.game_room?.winner == clientId)
+                resultText.innerHTML = 'you won';
+            else
+                resultText.innerHTML = 'you lost';
+            resultText.style.display = 'block';
+            await new Promise(resolve => setTimeout(resolve, 5000));
+            clearInterval(interval);
+            ws.close();
+            clearBox("board");
+            // update when game terminate
+            mainOnHtml.style.display = "block";
+            body.style.display = "none";
+            enableScroll();
+            isStarted = false;
+            isStartedUrish = false;
+            Join_Ws.send(JSON.stringify({"method": "updateLiveGames"})); 
+            return
         }
         if (response.method === "connect"){
             console.log("response = ", response);
@@ -166,6 +174,19 @@ async function pongGame(objUser ,gameid) {
             constants.screen_width = response.constants.screen_width;
             constants.screen_height = response.constants.screen_height;
             console.log("Client id Set successfully " + clientId)
+            if (isStarted === false) {
+                isStarted = true;
+                board.innerHTML = getPongContent();
+                // await new Promise(resolve => setTimeout(resolve, 5000));
+            }
+            if (mode != "view") {
+                const forStart = document.getElementById("forStart");
+                forStart.style.display = "block";
+                await waitingKeypress();
+                forStart.style.display = "none";
+                if (ws.readyState === ws.OPEN)
+                    ws.send(JSON.stringify({"method": "ready"}));
+            }
             interval = setInterval(() => {
                 try {
                     if (ws.readyState === ws.OPEN)
@@ -174,6 +195,7 @@ async function pongGame(objUser ,gameid) {
                     clearInterval(interval);
                 }
             }, 10);
+
         }
         //create
         if (response.method === "create"){
@@ -183,10 +205,6 @@ async function pongGame(objUser ,gameid) {
         }
         //update
         if (response.method === "update"){
-            if (isStarted === false) {
-                isStarted = true;
-                board.innerHTML = getPongContent();
-            }
             if (!response.state)
                 return;
             const ballObject = document.getElementById("ball");
@@ -218,9 +236,10 @@ async function pongGame(objUser ,gameid) {
             score2.textContent = response.state.paddle2.score;
         }
         //join
-        if (response.method === "join") {
-            board.innerHTML = getPongContent();
-        }
+        // if (response.method === "join") {
+        //     board.innerHTML = getPongContent();
+            
+        // }
     }
 }
 
@@ -230,7 +249,9 @@ function getPongContent() {
     return `
     <div id="paddle1" class="paddle" style="width: 20px; height: 100px; left: 0px; top: 200px;"></div>
     <div id="paddle2" class="paddle" style="width: 20px; height: 100px; left: 680px; top: 200px;"></div>
-    <div class="ball" id="ball" style="width: 14px; height: 14px; border-radius: 30px; left: 194.5px; top: 250px;"></div>
+    <div class="ball" id="ball" style="width: 14px; height: 14px; border-radius: 30px; left: 350px; top: 250px;"></div>
+    <span id="result" style="display: none">default</span>
+    <span id="forStart" style="display: none">Press any key to start</span>
     <span class="score" id="score1">0</span>
     <span class="score" id="score2">0</span>
     `;

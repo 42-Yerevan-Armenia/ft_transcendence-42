@@ -16,10 +16,10 @@ class PaddleController:
         self.item = self.state[paddle]
 
     async def move(self, direction):
-        if direction == "down" and self.item["y"] < constants.MAX_PADDLE_Y:
+        if direction == "down" and self.item["y"] < constants.MAX_PADDLE_Y - constants.PADDLE_STEP:
             self.item["y"] += constants.PADDLE_STEP
 
-        elif direction == "up" and self.item["y"] > 0:
+        elif direction == "up" and self.item["y"] > 0 + constants.PADDLE_STEP:
             self.item["y"] -= constants.PADDLE_STEP
 
     def __str__(self):
@@ -62,12 +62,13 @@ class BallController:
                 y_vel = difference_in_y / reduction_factor
 
                 self.vel_x = -self.vel_x
+                self.vel_x =  self.vel_x * 1.05
                 self.vel_y = -1 * y_vel
                 self.item["x"] += 7
 
         elif self.item["x"] < 0:
             self.paddle2["score"] += 1
-            if self.paddle2["score"] == 1:
+            if self.paddle2["score"] == 10:
                 self.state["winner"] = self.paddle2["id"]
                 await LiveGames().set_winner(self.state["winner"], self.paddle1["id"])
             self.reset_ball()
@@ -87,12 +88,13 @@ class BallController:
                 y_vel = difference_in_y / reduction_factor
 
                 self.vel_x = -self.vel_x
+                self.vel_x =  self.vel_x * 1.05
                 self.vel_y = -1 * y_vel
                 self.item["x"] -= 7
 
         elif self.item["x"] >= constants.SCREEN_WIDTH:
             self.paddle1["score"] += 1
-            if self.paddle1["score"] == 1:
+            if self.paddle1["score"] == 10:
                 self.state["winner"] = self.paddle1["id"]
                 await LiveGames().set_winner(self.state["winner"], self.paddle2["id"])
             self.reset_ball()

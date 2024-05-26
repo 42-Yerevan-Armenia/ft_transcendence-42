@@ -27,7 +27,7 @@ def send_confirmation_email(email):
     from_email = 'avanesvh@gmail.com'
     recipient_list = [email]
     send_mail(subject, message, from_email, recipient_list, fail_silently=False)
-    print(five_digits)
+    print("🔑 Confirm", five_digits)
     return five_digits
 
 def register_validation(data):
