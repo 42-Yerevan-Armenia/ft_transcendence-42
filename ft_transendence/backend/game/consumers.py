@@ -49,7 +49,6 @@ class PongConsumer(AsyncWebsocketConsumer):
             players_set.add(int(game_room["game_room"]["left_id"]))
             players_set.add(int(game_room["game_room"]["right_id"]))
             self.game_info[self.game_id] = players_set
-            print("❌ all_user_ids = ", self.game_info[self.game_id])
         except ObjectDoesNotExist:
             print(f"❌ Error: GameRoom with id {self.game_id} does not exist")
             return await self.close(code=4006)
@@ -67,7 +66,6 @@ class PongConsumer(AsyncWebsocketConsumer):
             data["method"]
         except KeyError:
             return
-        # print("🔵  data[method] = ",  data["method"])
         if data["method"] == "updateKey" and self.game:
             if not self.paddle_controller:
                 print("Error: Paddle controller is not initialized")
@@ -178,7 +176,6 @@ class PongConsumer(AsyncWebsocketConsumer):
         elif not self.game["paddle2"]:
             self.game["state"]["winner"] = self.game["state"]["paddle1"]["id"]
             await LiveGames().set_winner(self.game["state"]["winner"], self.game["state"]["paddle2"]["id"])
-        print("🏆 winner = ", self.game["state"]["winner"])
         await self.joinList.do_broadcast()
 
     async def stream_state(self, event):

@@ -37,6 +37,5 @@ class ThreadPool:
         thread["stop_event"].set()
         if thread["thread"].is_alive():
             thread["thread"].join()
-            print()
         if game_name in cls.threads:
             del cls.threads[game_name]
