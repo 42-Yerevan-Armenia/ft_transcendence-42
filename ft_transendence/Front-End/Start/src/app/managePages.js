@@ -1,5 +1,5 @@
 var Pong = Object.assign({}, Game);
-var local_game_front_start = new localGame();
+var local_game = new localGame();
 var User = new USER();
 var Confirm = new ConfirmPage();
 var Login = new LoginPage();
@@ -33,7 +33,7 @@ var ManageAllPage = {
         {"Password": Password},                                       //http://10.12.11.1:3000/pass
         {"SignUp": SignUp},                                           //http://10.12.11.1:3000/setdata
         {"ResetPage": Reset},                                         //http://10.12.11.1:3000/password
-        {"local_game_front_start": local_game_front_start}            //http://10.12.11.1:3000/local_game_front
+        {"local_game": local_game}            //http://10.12.11.1:3000/local_game_front
     ]
 };
 

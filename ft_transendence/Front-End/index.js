@@ -99,7 +99,7 @@ app.get("/settings", (req, res) => {
 });
 
 // Handle specific routes first
-app.get("/local_game_front_start", (req, res) => {
+app.get("/local_game", (req, res) => {
     res.sendFile(path.resolve(__dirname, "Start", "index.html"));
 });
 

@@ -98,6 +98,8 @@ var Game = {
 
         this.context.fillStyle = '#ffffff';
         this.context.fillText('Press any key to begin', this.canvas.width / 2, this.canvas.height / 2 + 15);
+        this.context.fillText('W and S', this.canvas.width / 5, this.canvas.height / 2 + 450);
+        this.context.fillText(' UP and Down', this.canvas.width / 1.4, this.canvas.height / 2 + 450);
     },
 
     update: function () {

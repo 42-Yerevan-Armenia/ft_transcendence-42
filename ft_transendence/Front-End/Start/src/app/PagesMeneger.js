@@ -198,20 +198,20 @@ const urlRoutes = {
 		title: "MidleSettings",
 		description: "This is the settings section",
 	},
-	"/local_game_front_start/": {
+	"/local_game/": {
 
-		url: "/local_game_front_start",
-		class:".local_game_front_start",
-		path: "/local_game_front_start",
-		title: "local_game_front_start",
-		description: "This is the local_game_front_start section",
+		url: "/local_game",
+		class:".local_game",
+		path: "/local_game",
+		title: "local_game",
+		description: "This is the local_game section",
 	},
-	"/local_game_front_start": {
-		url: "/local_game_front_start",
-		class:".local_game_front_start",
-		path: "/local_game_front_start",
-		title: "local_game_front_start",
-		description: "This is the local_game_front_start section",
+	"/local_game": {
+		url: "/local_game",
+		class:".local_game",
+		path: "/local_game",
+		title: "local_game",
+		description: "This is the local_game section",
 	}
 };
 

@@ -1,14 +1,13 @@
 class localGame extends HtmlElement {
     constructor(){
-        super(".local_game_front_start")
+        super(".local_game")
     }
     playNow = document.querySelector("#PlayNowTableID");
-    local_game_front = document.querySelector("#local_game_front_start");
+    local_game_front = document.querySelector("#local_game");
 
     htmlDrow = `
          <div id="local_game_front">
              <canvas></canvas>
-             <p>Left - W and S | Right - up and down arrow keys</p>
          </div>
      `;
 
