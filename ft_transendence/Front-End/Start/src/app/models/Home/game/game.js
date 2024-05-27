@@ -167,7 +167,7 @@ function pongGame(objUser, gameRoom, mode) {
             isStarted = false;
             isStartedUrish = false;
             await Join_Ws.send(JSON.stringify({"method": "updateLiveGames"}));
-            // document.querySelector("body").style.overflow = "show";
+            document.querySelector("body").style.overflow = "unset";
             return
         }
         if (response.method === "connect"){
@@ -181,7 +181,7 @@ function pongGame(objUser, gameRoom, mode) {
             if (isStarted === false) {
                 isStarted = true;
                 board.innerHTML = getPongContent();
-                // document.querySelector("body").style.overflow = "hidden";
+                document.querySelector("body").style.overflow = "hidden";
                 // await new Promise(resolve => setTimeout(resolve, 5000));
             }
             const username1 = document.getElementById("username1");
