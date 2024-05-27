@@ -1,8 +1,8 @@
 const myStorages = {
     setStorageLogin(tockens) {
-      // ////debugger
-      // ////debugger
-      // ////debugger
+      // ////// debugger
+      // ////// debugger
+      // ////// debugger
       //console.log("tockens     --------   " + tockens)
       //console.log(tockens);
       const {refresh, success, access} = tockens;

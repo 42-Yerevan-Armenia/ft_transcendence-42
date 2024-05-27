@@ -17,7 +17,7 @@ var ManageAllPage = {
             const [key, obj] = Object.entries(element)[0]; // Get the key-value pair of the element
 
             if (key === pageName) {
-                debugger
+                // debugger
                 obj.DisplayBlock();
                 await obj.draw();
             }

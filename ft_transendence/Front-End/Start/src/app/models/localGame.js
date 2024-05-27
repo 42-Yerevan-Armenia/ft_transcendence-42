@@ -12,7 +12,7 @@ class localGame extends HtmlElement {
      `;
 
     draw(){
-        debugger
+        // debugger
         this.local_game_front.innerHTML = this.htmlDrow;
         Pong.initialize();
     }

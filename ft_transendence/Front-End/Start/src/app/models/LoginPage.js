@@ -55,19 +55,19 @@ class LoginPage extends HtmlElement {
         LoginPageinput.value = email;
     }
     Get42Connect = async () => {
-      // ////debugger
+      // ////// debugger
       get42Conf.Get42Connect();
       // window.location.href = `${INTRA_API_URL}/oauth/authorize?client_id=${INTRA_API_UID}&redirect_uri=${INTRA_REDIRECT_URI}&response_type=code`
       //console.log("User.42")
     }
     Post42ConnectBackend = async () => {
-      debugger
+      // debugger
       //console.log("url42schools == " + User.url42schools);
       const res = await FetchRequest("POST","api/v1/login", JSON.stringify({
         "code": User.url42schools
       }))
       if (res.state) {
-        // ////debugger
+        // ////// debugger
         //console.log("respons == " + JSON.stringify(res, undefined, 2));
         myStorages.setAccsessTockenForIntra(res.message?.data);
         User.setDataFromBeckendTackIntra42(res.message?.data)

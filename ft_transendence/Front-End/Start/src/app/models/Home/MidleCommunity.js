@@ -155,7 +155,7 @@ class MidleCommunity extends HtmlElement {
     }
 
     async draw(){
-      //////debugger
+      //////// debugger
       await this.setHero();
     }
 }

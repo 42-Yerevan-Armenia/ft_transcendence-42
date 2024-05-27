@@ -1,9 +1,9 @@
 //user
 class USER {
     constructor() {
-      // ////debugger
-      // ////debugger
-      // ////debugger
+      // ////// debugger
+      // ////// debugger
+      // ////// debugger
       this._Name = "";
       this._Nickname = "";
       this._Password = "";
@@ -23,10 +23,10 @@ class USER {
     }
   
     checkSignIn() {
-      // ////debugger
-      // ////debugger
-      // ////debugger
-      // ////debugger
+      // ////// debugger
+      // ////// debugger
+      // ////// debugger
+      // ////// debugger
       this._getAccess = localStorage.getItem("access");
       this._geRefresh = localStorage.getItem("refresh");
       this._Id = localStorage.getItem("id");
@@ -39,9 +39,9 @@ class USER {
     }
 
     Destruc(){
-      // ////debugger
-      // ////debugger
-      // ////debugger
+      // ////// debugger
+      // ////// debugger
+      // ////// debugger
       this._Id = "";
       this._SignIn = false;
       this._Name = "";
@@ -57,20 +57,20 @@ class USER {
     }
   
     getAccessTocken(){
-      // ////debugger
+      // ////// debugger
       this.checkSignIn();
       return {"access" : this._getAccess, "id" : this._Id};
     }
 
     async setDataFromBackEnd(){
-      // ////debugger
-      // ////debugger
-      // ////debugger
+      // ////// debugger
+      // ////// debugger
+      // ////// debugger
       // check signin
       if (!await this.menegAccsess())
         return false
       //get for backend data
-      // ////debugger
+      // ////// debugger
       const dataUser = await getFetchRequest("api/v1/persons/" + this._Id);
       //get data from dataUser
       const {id, name, nickname, email, image, gamemode, twofactor} = dataUser.message;
@@ -90,7 +90,7 @@ class USER {
     }
 
     setData(data){
-      // ////debugger
+      // ////// debugger
       this._Name = data.name;
       this._Nickname = data.nickname;
       this._Email = data.email;
@@ -116,9 +116,9 @@ class USER {
     }
 
     async setDataFromBeckendTackIntra42(DataItem){
-      // ////debugger
-      // ////debugger
-      // ////debugger
+      // ////// debugger
+      // ////// debugger
+      // ////// debugger
       this._Name = DataItem.user.name;
       this._Nickname = DataItem.user.nickname
       this._ConfirmEmail = DataItem.success;

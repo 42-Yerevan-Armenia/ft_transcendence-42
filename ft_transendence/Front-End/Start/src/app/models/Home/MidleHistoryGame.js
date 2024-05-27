@@ -1,4 +1,4 @@
-//////debugger
+//////// debugger
 class MidleHistoryGame extends HtmlElement{
     constructor(){
         super(".MidleHistoryGame");
@@ -23,7 +23,7 @@ class MidleHistoryGame extends HtmlElement{
     }
     
     getContentFullHistoryTableBodyUser(data) {
-        // //debugger;
+        // //// debugger;
         return `
         <div class="FullHistoryTableBodyUser" id="FullHistoryTableBodyUserId:${data.opponent_id}">
             <div class="FullHistoryTableBody">
@@ -120,7 +120,7 @@ class MidleHistoryGame extends HtmlElement{
         }
     }
     async draw(){
-        // //debugger
+        // //// debugger
         await this.listUsers();
     }
 }

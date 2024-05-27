@@ -102,7 +102,7 @@ async function ControllerPessPassword(password, User) {
 }
 //fetch universal POST request ❌
 async function FetchRequest(Tomethod, Torequest, ToObj) {
-  // ////debugger
+  // ////// debugger
   try {
     const response = await fetch(`${HostPort}/${Torequest}/`, {
       method: Tomethod,
@@ -125,7 +125,7 @@ async function FetchRequest(Tomethod, Torequest, ToObj) {
 }
 //fetch universal  GET request ❌
 async function getFetchRequest(ToRequest) {
-  // ////debugger
+  // ////// debugger
   //get access tocken and id
   const ToObj = User.getAccessTocken();
   if (!ToObj || !ToObj.access)
@@ -152,7 +152,7 @@ async function getFetchRequest(ToRequest) {
   }
 }
 // async function getFetchRequest(ToRequest) {
-// //debugger
+// //// debugger
 //   try {
 //     const response = await fetch(`${HostPort}/${ToRequest}/`, {
 //       method: "GET",
@@ -199,7 +199,7 @@ async function putRequest(Tomethod, Torequest, ToObj) {
 }
 //fetch universal Get request prune ❌
 async function getPureFetchRequest(Torequest) {
-  // ////debugger
+  // ////// debugger
   try {
     const response = await fetch(`${HostPort}/${Torequest}/`)
     if (!response.ok)

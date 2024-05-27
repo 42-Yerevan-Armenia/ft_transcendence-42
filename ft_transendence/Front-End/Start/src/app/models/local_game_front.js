@@ -1,5 +1,5 @@
 "use strict"
-debugger
+// debugger
 // Global Variables
 var DIRECTION = {
     IDLE: 0,

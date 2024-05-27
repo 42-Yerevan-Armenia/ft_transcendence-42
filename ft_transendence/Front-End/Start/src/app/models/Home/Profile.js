@@ -37,7 +37,7 @@ class MidleProfile extends HtmlElement {
             let friendAdd;
             if (e.target.innerHTML == "Join")
             {
-              debugger
+              // debugger
               friendAdd = await putRequest("POST", "api/v1/acceptinvite/" + User._Id, sendFrend)
               if (friendAdd?.state)
               {
@@ -172,7 +172,7 @@ class MidleProfile extends HtmlElement {
       this._ProfileMidleFooterDiv.appendChild(divProf);
     }
     async getFriends(){
-      // ////debugger
+      // ////// debugger
       this.profilHeader();
       const users = await getFetchRequest("users");
       // Of all the users, only my data was taken
@@ -181,14 +181,14 @@ class MidleProfile extends HtmlElement {
       const gameinvite_requests = UserData.gameinvite_requests;
 
       if (friendship_requests) {
-        // //debugger
+        // //// debugger
         friendship_requests.forEach((item)=>{
           if (!item.rejected)
           this.profilBody(item, "FriendRequest");
         })
       }
       if (gameinvite_requests) {
-          // //debugger
+          // //// debugger
           gameinvite_requests.forEach((item) => {
             if (!item.rejected)
             this.profilBody(item, "JoinRequest");
@@ -206,7 +206,7 @@ class MidleProfile extends HtmlElement {
       }
     }
     async draw(){
-      // //debugger
+      // //// debugger
       await this.getFriends();
     }
 }

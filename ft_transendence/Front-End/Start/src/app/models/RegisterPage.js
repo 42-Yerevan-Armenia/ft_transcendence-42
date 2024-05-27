@@ -40,7 +40,7 @@ class RegisterPage extends HtmlElement {
       }
     }
     Get42Connect = async () => {
-      // ////debugger
+      // ////// debugger
       get42Conf.Get42Connect();
       // window.location.href = `${INTRA_API_URL}/oauth/authorize?client_id=${INTRA_API_UID}&redirect_uri=${INTRA_REDIRECT_URI}&response_type=code`
       //console.log("User.42")

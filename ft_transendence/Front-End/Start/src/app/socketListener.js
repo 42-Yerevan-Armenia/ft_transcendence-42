@@ -66,8 +66,8 @@
 //     const mainOnHtml = document.getElementById("mainSectionUsually");
 //     const body = document.querySelector(".addBodyStile");
 //     if (response.method === "start_game" && User._getAccess) {
-// debugger
-// debugger
+// // debugger
+// // debugger
 //         response.game_rooms.forEach(async element => {
 //             if (User._Id == element.creator_id || User._Id == element.current_players)
 //             {
@@ -88,7 +88,7 @@
 
 
 //     // if (response.method === "updateLiveGames" && User._getAccess) {
-//     // debugger;
+//     // // debugger;
 //     //     response.liveGames.forEach(async element => {
 //     //         if (User._Id == element.game_room.left_id || User._Id == element.game_room.right_id) {
 //     //             //main displey none
@@ -152,7 +152,7 @@ Join_Ws.onmessage = message => {
     if (!message.data)
     return;
 let response = JSON.parse(message.data);
-debugger;
+// debugger;
 console.log("response.method = ", response.method);
     // console.log(JSON.stringify(response))
     //update Join list items
@@ -166,8 +166,8 @@ console.log("response.method = ", response.method);
     // update JoinList->invite list
     
     // if (response.method === "start_game" && User._getAccess) {
-    // debugger
-    // debugger
+    // // debugger
+    // // debugger
     //     response.liveGames.forEach(async element => {
     //         if (User._Id == element.game_room.left_id || User._Id == element.game_room.right_id)
     //         {
