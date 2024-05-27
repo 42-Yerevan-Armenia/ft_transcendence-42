@@ -6,6 +6,8 @@ class AccountUser extends HtmlElement{
             _Image:"",
             _Name:"",
             _Nickname:"",
+            _Win:0,
+            _Lose:0,
         };
     }
     _AccountMidleHeaderToInvit1 = document.querySelector("#AccountMidleHeaderToInvit1");
@@ -18,6 +20,13 @@ class AccountUser extends HtmlElement{
       document.querySelector("#AccountMidleHeaderMainAvatarImage").src = `data:image/png;base64,${this.State._Image}`;
       document.querySelector(".AccountMidleHeaderMainDataName").innerHTML = this.State._Name;
       document.querySelector(".AccountMidleHeaderMainDataNickName").innerHTML = this.State._Nickname;
+      document.querySelector("#AccountMidleHeaderToInvit1").innerHTML = this.State._Win || 0;
+      document.querySelector("#AccountMidleHeaderToInvit2").innerHTML= this.State._Lose || 0;
+
+
+
+
+
       const AccountMidleFooterDiv  = document.querySelector(".AccountMidleFooterDiv");
       AccountMidleFooterDiv.innerHTML = ""
     }

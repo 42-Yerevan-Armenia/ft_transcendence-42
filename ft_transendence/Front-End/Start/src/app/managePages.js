@@ -1,3 +1,4 @@
+var ws;
 var Pong = Object.assign({}, Game);
 var local_game = new localGame();
 var User = new USER();

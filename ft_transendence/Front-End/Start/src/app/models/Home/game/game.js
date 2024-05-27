@@ -1,8 +1,6 @@
 // import {PongGame} from "./pongGame.js";
 
 // var gameInstance = new PongGame();
-let isStarted = false;
-let pressed = false;
 let interval = null;
 // function disableScrolling(){
 //     var x=window.scrollX;
@@ -60,9 +58,8 @@ function enableScroll() {
 
 function pongGame(objUser, gameRoom, mode) {
     const gameid = gameRoom.room_id;
-    //// debugger;
-    if (isStarted)
-        return;
+    let isStarted = false;
+
     disableScroll();
     function isOpen(ws) { return ws.readyState === ws.OPEN }
     //HTML elements
@@ -83,7 +80,7 @@ function pongGame(objUser, gameRoom, mode) {
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-    let ws = new WebSocket("ws://" + HostPort.slice(7) + "/ws/game/" + gameId)
+    ws = new WebSocket("ws://" + HostPort.slice(7) + "/ws/game/" + gameId)
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -112,7 +109,6 @@ function pongGame(objUser, gameRoom, mode) {
         // console.log("paddleName = ", paddleName);
         if (event.key === "ArrowUp") {
             payLoad["direction"] = "up";
-            pressed = true;
         }
         else if (event.key === "ArrowDown") {
             payLoad["direction"] = "down";
@@ -160,7 +156,7 @@ function pongGame(objUser, gameRoom, mode) {
             else
                 resultText.innerHTML = 'you lost';
             resultText.style.display = 'block';
-            await new Promise(resolve => setTimeout(resolve, 5000));
+            await new Promise(resolve => setTimeout(resolve, 3000));
             clearInterval(interval);
             ws.close();
             clearBox("board");
@@ -170,7 +166,8 @@ function pongGame(objUser, gameRoom, mode) {
             enableScroll();
             isStarted = false;
             isStartedUrish = false;
-            Join_Ws.send(JSON.stringify({"method": "updateLiveGames"})); 
+            await Join_Ws.send(JSON.stringify({"method": "updateLiveGames"}));
+            // document.querySelector("body").style.overflow = "show";
             return
         }
         if (response.method === "connect"){
@@ -184,6 +181,7 @@ function pongGame(objUser, gameRoom, mode) {
             if (isStarted === false) {
                 isStarted = true;
                 board.innerHTML = getPongContent();
+                // document.querySelector("body").style.overflow = "hidden";
                 // await new Promise(resolve => setTimeout(resolve, 5000));
             }
             const username1 = document.getElementById("username1");

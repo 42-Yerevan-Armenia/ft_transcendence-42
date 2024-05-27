@@ -371,9 +371,23 @@ const urlLocationHandlerForNavigateBackForward = async () => {
 
 //add an event listener to the window that watches for url changes "-> or <-"
 window.addEventListener("popstate", async function(event) {
-	// debugger
+	const mainOnHtml = document.getElementById("mainSectionUsually");
+	// const gameDisplay = document.querySelector(".addBodyStile");
+	console.log("navigationHistoryA = ");
+	if (isStartedUrish == true)
+	{
+		console.log("navigationHistoryA = ");
+		await ws.send(JSON.stringify({
+			"method": "give_up",
+		}))
+		// ws.close();
+		// isStartedUrish = false;
+		// gameDisplay.innerHTML = "";
+		// gameDisplay.style.display = "none";
+		// mainOnHtml.style.display = "block";
+	}
+
     //console.log("History state changed:", event.state);
-	const mainOnHtml = document.querySelector("#mainSectionUsually");
   	if (mainOnHtml.style.display == "none")
 		mainOnHtml.style.display = "block";
 

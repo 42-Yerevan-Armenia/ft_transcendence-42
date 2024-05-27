@@ -99,6 +99,8 @@ class PongConsumer(AsyncWebsocketConsumer):
             data["method"]
         except KeyError:
             return
+        if data["method"] == "no_action":
+            return
         if data["method"] == "updateKey" and self.game:
             if not self.paddle_controller:
                 print("Error: Paddle controller is not initialized")
@@ -165,6 +167,42 @@ class PongConsumer(AsyncWebsocketConsumer):
                 if not self.game["thread"].is_alive():
                     self.game["thread"].start()
                     self.game["active"] = True
+        elif data["method"] == "give_up":
+            if self.id:
+                self.game[str(self.paddle_controller)] = False
+                self.game["stop_event"].set()
+                if self.game["active"] == False and not self.game["state"]["winner"]:
+                    await LiveGames().del_game(self.game_id)
+
+
+                    paddle1_id = self.game["state"]["paddle1"]["id"]
+                    paddle2_id = self.game["state"]["paddle2"]["id"]
+
+                    if not self.game["paddle1"]:
+                        self.game["state"]["winner"] = self.game["state"]["paddle2"]["id"]
+                    elif not self.game["paddle2"]:
+                        self.game["state"]["winner"] = self.game["state"]["paddle1"]["id"]
+
+                    finish_response = {
+                        "success": True,
+                        "method": "finish_match",
+                        "game_room": {
+                            "room_id": self.game_id,
+                            "left_id": paddle1_id,
+                            "right_id": paddle2_id,
+                            "winner": self.game["state"]["winner"]
+                        } 
+                    }
+                    await self.channel_layer.group_send(
+                        self.game_id,
+                        {"type": "stream_state", "state": finish_response, "method": "finish_match"},
+                    )
+
+                    if not self.game["paddle1"]:
+                        await self.set_winner(self.game["state"]["paddle2"]["id"], self.game["state"]["paddle1"]["id"])
+                    elif not self.game["paddle2"]:
+                        await self.set_winner(self.game["state"]["paddle1"]["id"], self.game["state"]["paddle2"]["id"])
+            
 
 
 
@@ -213,6 +251,7 @@ class PongConsumer(AsyncWebsocketConsumer):
             await self.set_winner(self.game["state"]["winner"], self.game["state"]["paddle1"]["id"])
         elif not self.game["paddle2"]:
             await self.set_winner(self.game["state"]["winner"], self.game["state"]["paddle2"]["id"])
+        await self.joinList.do_broadcast()
 
     async def set_winner(self, winner, loser):
         await LiveGames().set_winner(winner, loser)
@@ -273,6 +312,7 @@ class joinListConsumer(AsyncWebsocketConsumer):
             )
         elif method == "liveGamesRequest":
             await LiveGames().do_broadcast()
+            await self.joinList.do_broadcast()
             return
         elif method == "get":
             response = await sync_to_async(self.joinList.get)(None, None)

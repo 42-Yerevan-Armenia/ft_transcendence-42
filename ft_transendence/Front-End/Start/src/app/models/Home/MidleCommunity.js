@@ -25,6 +25,8 @@ class MidleCommunity extends HtmlElement {
               _Image:userAccount.image,
               _Name:userAccount.name,
               _Nickname:userAccount.nickname,
+              _Win:userAccount.wins,
+              _Lose:userAccount.loses,
             }
 
             ManageMidle.Manage("AccountUser")
