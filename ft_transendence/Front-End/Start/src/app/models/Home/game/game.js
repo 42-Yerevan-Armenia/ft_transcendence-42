@@ -54,13 +54,13 @@ function disableScroll() {
 }
 
 function enableScroll() {
-    debugger
+    // debugger
     window.onscroll = function() {};
 }
 
 function pongGame(objUser, gameRoom, mode) {
     const gameid = gameRoom.room_id;
-    //debugger;
+    //// debugger;
     if (isStarted)
         return;
     disableScroll();
@@ -147,6 +147,10 @@ function pongGame(objUser, gameRoom, mode) {
 
         if (response?.method === "finish_match" && User?._getAccess) {
             const resultText = document.getElementById('result');
+            const forStart = document.getElementById("forStart");
+
+            forStart.style.display = "none";
+            
             console.log("response?.state?.game_room = ", response?.state?.game_room);
             console.log("response?.state?.game_room = ", response?.state?.game_room);
             if (mode == "view")
