@@ -258,7 +258,7 @@ class JoinList extends HtmlElement {
                 //call game function for start game
                 isStartedUrish = true;
                 console.log("game_room_id = ", game_room_id);
-                pongGame(User, game_room_id, "view");
+                pongGame(User, {"room_id": game_room_id}, "view");
             }
         })
     })
