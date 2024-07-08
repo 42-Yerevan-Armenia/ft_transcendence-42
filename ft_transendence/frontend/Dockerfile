@@ -1,10 +1,10 @@
 FROM node:21.6.0
 
-WORKDIR /app/Front-End
+WORKDIR /app/frontend
 
 RUN npm install -g npm@latest
 
-COPY Front-End/package*.json ./
+COPY frontend/package*.json ./
 
 COPY . .
 

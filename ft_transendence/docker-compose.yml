@@ -5,9 +5,9 @@ services:
     container_name: frontend
     build:
       context: .
-      dockerfile: Front-End/Dockerfile
+      dockerfile: frontend/Dockerfile
     volumes:
-      - ${PWD}/Front-End:/app/Front-End
+      - ${PWD}/frontend:/app/frontend
     ports:
       - 3000:3000
     restart: unless-stopped
